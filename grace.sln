@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34018.315
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "grace", "grace.csproj", "{C94C6207-23F5-4A04-B105-9BFA853558FD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "grace", "grace.csproj", "{C94C6207-23F5-4A04-B105-9BFA853558FD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "gracetest", "..\gracetest\gracetest.csproj", "{9CE1669C-7844-4D2A-8F9E-44FEA89BFA18}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{C94C6207-23F5-4A04-B105-9BFA853558FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C94C6207-23F5-4A04-B105-9BFA853558FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C94C6207-23F5-4A04-B105-9BFA853558FD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9CE1669C-7844-4D2A-8F9E-44FEA89BFA18}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9CE1669C-7844-4D2A-8F9E-44FEA89BFA18}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9CE1669C-7844-4D2A-8F9E-44FEA89BFA18}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9CE1669C-7844-4D2A-8F9E-44FEA89BFA18}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

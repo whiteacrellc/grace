@@ -9,10 +9,19 @@ namespace grace
 {
     public class Row
     {
-        public string Collection { get; set; }
-        public string Sku { get; set; }
-        public string Brand { get; set; }
-        public string Description { get; set; }
+        public Row() {
+            Collection = null;
+            Sku = null;
+            Brand = null;
+            Description = null;
+            Total = 0;
+
+        }
+
+        public string? Collection { get; set; }
+        public string? Sku { get; set; }
+        public string? Brand { get; set; }
+        public string? Description { get; set; }
         public int Total { get; set; }
     }
 

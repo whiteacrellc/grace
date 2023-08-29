@@ -1,3 +1,4 @@
+using OfficeOpenXml;
 using System.Windows.Forms;
 
 namespace grace
@@ -7,6 +8,9 @@ namespace grace
         public Vivian()
         {
             InitializeComponent();
+            // If you use EPPlus in a noncommercial context
+            // according to the Polyform Noncommercial license:
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
         }
 
         private void openFileButtonClick(object sender, EventArgs e)

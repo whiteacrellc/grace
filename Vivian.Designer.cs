@@ -28,38 +28,56 @@
         /// </summary>
         private void InitializeComponent()
         {
-            button1 = new Button();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Vivian));
+            openFileButton = new Button();
             openFileDialog = new OpenFileDialog();
+            pictureBox1 = new PictureBox();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
             // 
-            // button1
+            // openFileButton
             // 
-            button1.Location = new Point(122, 379);
-            button1.Name = "button1";
-            button1.Size = new Size(246, 69);
-            button1.TabIndex = 0;
-            button1.Text = "openFileButton";
-            button1.UseVisualStyleBackColor = true;
-            button1.Click += openFileButtonClick;
+            openFileButton.Location = new Point(122, 379);
+            openFileButton.Name = "openFileButton";
+            openFileButton.Size = new Size(246, 69);
+            openFileButton.TabIndex = 0;
+            openFileButton.Text = "Open File";
+            openFileButton.UseVisualStyleBackColor = true;
+            openFileButton.Click += openFileButtonClick;
             // 
             // openFileDialog
             // 
             openFileDialog.FileName = "openFileDialog";
+            // 
+            // pictureBox1
+            // 
+            pictureBox1.AccessibleDescription = "Logo";
+            pictureBox1.AccessibleName = "Logo";
+            pictureBox1.BackColor = SystemColors.ControlLight;
+            pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
+            pictureBox1.Location = new Point(42, 34);
+            pictureBox1.Name = "pictureBox1";
+            pictureBox1.Size = new Size(354, 134);
+            pictureBox1.TabIndex = 1;
+            pictureBox1.TabStop = false;
             // 
             // Vivian
             // 
             AutoScaleDimensions = new SizeF(13F, 32F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1038, 563);
-            Controls.Add(button1);
+            Controls.Add(pictureBox1);
+            Controls.Add(openFileButton);
             Name = "Vivian";
             Text = "VivianGrace";
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ResumeLayout(false);
         }
 
         #endregion
 
-        private Button button1;
+        private Button openFileButton;
         private OpenFileDialog openFileDialog;
+        private PictureBox pictureBox1;
     }
 }
