@@ -22,6 +22,7 @@ namespace grace
         public string? Sku { get; set; }
         public string? Brand { get; set; }
         public string? Description { get; set; }
+        public int PreviousTotal { get; set; }
         public int Total { get; set; }
     }
 
@@ -44,6 +45,7 @@ namespace grace
             {
                 return;
             }
+            r.Collection = key;
             if (collections.ContainsKey(key))
             {
                 List<Row> rows = collections[key];
@@ -76,6 +78,27 @@ namespace grace
 
         }
 
+        private int checkInt(object n)
+        {
+            int ret = 0;
+            try
+            {
+                ret = Convert.ToInt32((double)n);
+            }
+            catch
+            {
+                try
+                {
+                    ret = int.Parse((string)n);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
+
+            }
+            return ret;
+        }
         private string checkString(object n)
         {
             try
@@ -105,31 +128,13 @@ namespace grace
                 {
                     var entireRow = worksheet.Cells.EntireRow;
 
-                    Console.WriteLine(entireRow);
+                   // Console.WriteLine(entireRow);
                     Row r = new Row();
                     r.Brand = (string)worksheet.Cells[row, 1].Value;
                     r.Sku = checkString(worksheet.Cells[row, 2].Value);
                     r.Description = (string)worksheet.Cells[row, 3].Value;
-                    var total = worksheet.Cells[row, 11].Value;
-                    try
-                    {
-                        r.Total = Convert.ToInt32((double)total);
-                    }
-                    catch
-                    {
-                        try
-                        {
-                            r.Total = int.Parse((string)total);
-                        }
-                        catch (Exception e)
-                        {
-                            Console.WriteLine(e);
-                            r.Total = 0;
-                        }
-
-                    }
-
-
+                    r.PreviousTotal = checkInt(worksheet.Cells[row, 11].Value);
+                    r.Total= checkInt(worksheet.Cells[row, 11].Value);
 
                     var col1 = (string)worksheet.Cells[row, 4].Value;
                     addCollection(col1, r);
@@ -150,7 +155,7 @@ namespace grace
                     addCollection(col6, r);
                     addItem(r.Sku, col6);
 
-                    Console.WriteLine();
+                    //Console.WriteLine();
                 }
             }
         }
