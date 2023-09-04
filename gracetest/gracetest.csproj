@@ -21,4 +21,12 @@
     <ProjectReference Include="..\grace\grace.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <EditorConfigFiles Remove="C:\Users\tom\source\repos\grace\gracetest\.editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="C:\Users\tom\source\repos\grace\gracetest\.editorconfig" />
+  </ItemGroup>
+
 </Project>

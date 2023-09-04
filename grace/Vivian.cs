@@ -5,6 +5,8 @@ namespace grace
 {
     public partial class Vivian : Form
     {
+        private ExcelReader er = new ExcelReader();
+
         public Vivian()
         {
             InitializeComponent();
@@ -16,22 +18,49 @@ namespace grace
         private void openFileButtonClick(object sender, EventArgs e)
         {
             openFileDialog.FilterIndex = 1;  // Index of the filter that is selected by default
-
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            try
             {
-                // Get the selected file's path
-                using (OpenFileDialog openFileDialog = new OpenFileDialog())
+                using (var openFileDialog = new OpenFileDialog())
                 {
-                    openFileDialog.InitialDirectory = "C:\\Users\tom";  // Initial directory
+                    openFileDialog.CheckFileExists = true;
+                    openFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+                    openFileDialog.Multiselect = true;
                     openFileDialog.Filter = "Excel Files (*.xlsx)|*.xlsx|All Files (*.*)|*.*";  // File filter
+
+
+                    if (openFileDialog.ShowDialog() != DialogResult.OK)
+                        return;
+
                     string filePath = openFileDialog.FileName;
-                    ExcelReader er = new ExcelReader();
                     er.ReadExcelFile(filePath);
-                    // Read and process the file here
-                    // For demonstration, let's display the file path in a MessageBox
-                    //MessageBox.Show("Selected file: " + filePath, "File Selected", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
+            catch (Exception ex)
+            {
+                // Display an alert dialog with the exception message
+                MessageBox.Show($"There was a problem reading the file:\n\n{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+    
         }
+
+        private void generateAndSaveReport(object sender, EventArgs e)
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog
+            {
+                Filter = "Excel Files (*.xlsx)|*.xlsx",
+                FileName = $"report_{DateTime.Now.ToString("yyyyMMdd")}.xlsx"
+            };
+
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                string filePath = saveFileDialog.FileName;
+                var collections = er.Collections;
+                var items = er.Items;
+                Report report = new Report(collections, items);
+                report.WriteReport(filePath);
+            }
+
+        }
+
     }
 }

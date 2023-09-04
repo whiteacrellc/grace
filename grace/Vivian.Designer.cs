@@ -32,6 +32,7 @@
             openFileButton = new Button();
             openFileDialog = new OpenFileDialog();
             pictureBox1 = new PictureBox();
+            saveButton = new Button();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
             // 
@@ -61,11 +62,22 @@
             pictureBox1.TabIndex = 1;
             pictureBox1.TabStop = false;
             // 
+            // saveButton
+            // 
+            saveButton.Location = new Point(514, 379);
+            saveButton.Name = "saveButton";
+            saveButton.Size = new Size(246, 69);
+            saveButton.TabIndex = 2;
+            saveButton.Text = "Save Report";
+            saveButton.UseVisualStyleBackColor = true;
+            saveButton.Click += generateAndSaveReport;
+            // 
             // Vivian
             // 
             AutoScaleDimensions = new SizeF(13F, 32F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1038, 563);
+            Controls.Add(saveButton);
             Controls.Add(pictureBox1);
             Controls.Add(openFileButton);
             Name = "Vivian";
@@ -79,5 +91,6 @@
         private Button openFileButton;
         private OpenFileDialog openFileDialog;
         private PictureBox pictureBox1;
+        private Button saveButton;
     }
 }

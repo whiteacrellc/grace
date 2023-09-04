@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace grace
 {
-    class Report
+    public class Report
     {
         private Dictionary<string, List<string>> items;
         Dictionary<string, List<Row>> collections;
@@ -47,8 +47,9 @@ namespace grace
             worksheet.Cells[borderCellRange].Style.Border.BorderAround(ExcelBorderStyle.Medium);
 
         }
-        public void WriteReport()
+        public void WriteReport(string fileName)
         {
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             // Create a new Excel package
             using (var package = new ExcelPackage())
             {
@@ -70,12 +71,19 @@ namespace grace
                 {
                     currentRow += 2;
                     writeCollectoion(kvp, worksheet);
-
                 }
 
                 // Save the Excel package to a file
-                var fileInfo = new FileInfo("output.xlsx");
-                package.SaveAs(fileInfo);
+                try
+                {
+                    var fileInfo = new FileInfo(fileName);
+                    package.SaveAs(fileInfo);
+                }
+                catch (Exception ex)
+                {
+                    // Display an alert dialog with the exception message
+                    MessageBox.Show($"There was a problem writing the file:\n\n{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
 
             Console.WriteLine("Excel file created successfully.");

@@ -27,4 +27,12 @@
     </EmbeddedResource>
   </ItemGroup>
 
+  <ItemGroup>
+    <EditorConfigFiles Remove="C:\Users\tom\source\repos\grace\grace\.editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="C:\Users\tom\source\repos\grace\grace\.editorconfig" />
+  </ItemGroup>
+
 </Project>
