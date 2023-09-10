@@ -20,6 +20,8 @@ namespace grace
         private ExcelPackage package;
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         Vivian vivian;
+        private int endLastBlock = 0;
+        private int currentPage = 0;
 
         public Report(Dictionary<string, List<Row>> collections, Dictionary<string, List<string>> items, Vivian vivian)
         {
@@ -31,10 +33,11 @@ namespace grace
 
 
 
-        private void writeCollectoion(string collection, List<Row> rows, ExcelWorksheet worksheet)
+        private int writeCollectoion(string collection, List<Row> rows, ExcelWorksheet worksheet)
         {
             int startRow = currentRow;
-
+            endLastBlock = currentRow;
+            int rowsWritten = 0;
             foreach (Row row in rows)
             {
                 if (row == null || row.Sku == null) continue;
@@ -61,13 +64,33 @@ namespace grace
                     worksheet.Cells[currentRow, 11].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
                 }
                 currentRow++;
+                currentPage++;
+                rowsWritten++;
 
             }
             var borderCellRange = "A" + startRow + ":K" + currentRow;
             worksheet.Cells[borderCellRange].Style.Border.BorderAround(ExcelBorderStyle.Medium);
 
+            return rowsWritten;
         }
 
+        private void WriteHeader(ExcelWorksheet worksheet)
+        {
+            // Get the current date and format it as desired
+            string currentDate = DateTime.Now.ToString("yyyy-MM-dd");
+
+            // Create a header string with the current date
+            string headerText = $"Report for {currentDate}";
+
+            // Set the header text in the worksheet
+            worksheet.HeaderFooter.OddHeader.CenteredText = headerText;
+            worksheet.HeaderFooter.OddHeader.RightAlignedText = currentDate;
+            // Make the RightAlignedText red
+            
+
+
+
+        }
         public void GenerateReport()
         {
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
@@ -77,6 +100,10 @@ namespace grace
             var sortedKeys = collections.Keys.OrderBy(key => key).ToList();
 
             var worksheet = package.Workbook.Worksheets.Add("Report");
+            worksheet.Cells.Style.Font.Size = 14;
+
+            // Set the row height to 10 for all rows
+            worksheet.DefaultRowHeight = 20;
 
             // Set the column names
             worksheet.Cells["A1"].Value = "Brand";
@@ -86,15 +113,18 @@ namespace grace
             worksheet.Cells["D1:I1"].Value = "Collections";
             worksheet.Cells["J1"].Value = "Previous Count";
             worksheet.Cells["K1"].Value = "Total Count";
-
+            worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
+            /*
             for (int columnIndex = 1; columnIndex <= 11; columnIndex++)
             {
                 worksheet.Column(columnIndex).Width = 20;
 
             }
-            worksheet.Column(3).Width = 30;
+            worksheet.Column(3).Width = 40;
             worksheet.Column(10).Width = 15;
             worksheet.Column(11).Width = 15;
+            */
+
             // Loop through the sorted dictionary and write out the values grouped by key.
             foreach (var key in sortedKeys)
             {
@@ -102,7 +132,13 @@ namespace grace
                 vivian.DisplayLogMessage("Processing Collection = " + key);
                 currentRow += 2;
                 List<Row> rows = collections[key];
-                writeCollectoion(key, rows, worksheet);
+                int rowsWritten = writeCollectoion(key, rows, worksheet);
+
+                if (currentPage > 50)
+                {
+                    worksheet.Row(endLastBlock + 1).PageBreak = true;
+                    currentPage = rowsWritten;
+                }
             }
 
             using (var cells = worksheet.Cells[1, 1, worksheet.Dimension.End.Row, 11])
@@ -110,7 +146,7 @@ namespace grace
                 cells.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
             }
 
-            vivian.DisplayLogMessage("PEnd Processing, you can write the report now");
+            vivian.DisplayLogMessage("End Processing, you can write the report now");
         }
         public void WriteReport(string fileName)
         {

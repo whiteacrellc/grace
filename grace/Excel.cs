@@ -141,7 +141,7 @@ namespace grace
                     if (entireRow != null)
                     {
 
-                        vivian.DisplayLogMessage(entireRow.ToString());
+                        //vivian.DisplayLogMessage(entireRow.ToString());
                         Row r = new Row();
                         r.Brand = (string)worksheet.Cells[row, 1].Value;
                         r.Sku = checkString(worksheet.Cells[row, 2].Value);
