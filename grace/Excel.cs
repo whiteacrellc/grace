@@ -9,7 +9,8 @@ namespace grace
 {
     public class Row
     {
-        public Row() {
+        public Row()
+        {
             Collection = null;
             Sku = null;
             Brand = null;
@@ -33,9 +34,11 @@ namespace grace
 
         public Dictionary<string, List<Row>> Collections { get; }
         public Dictionary<string, List<string>> Items { get; }
+        private Vivian vivian;
 
-        public ExcelReader()
+        public ExcelReader(Vivian vivian)
         {
+            this.vivian = vivian;
             Collections = collections;
             Items = items;
         }
@@ -45,35 +48,39 @@ namespace grace
             {
                 return;
             }
-            r.Collection = key;
-            if (collections.ContainsKey(key))
+            var trimmedKey = key.Trim();
+            r.Collection = trimmedKey;
+            if (collections.ContainsKey(trimmedKey))
             {
-                List<Row> rows = collections[key];
+                List<Row> rows = collections[trimmedKey];
                 rows.Add(r);
+                collections[trimmedKey] = rows;
             }
             else
             {
                 List<Row> rowList = new List<Row>();
                 rowList.Add(r);
-                collections[key] = rowList;
+                collections[trimmedKey] = rowList;
             }
         }
         private void addItem(string key, string col)
         {
-            if (key == null)
+            if (key == null || col == null)
             {
                 return;
             }
-            if (items.ContainsKey(key))
+            var trimmedkey = key.Trim();
+            var tcol = col.Trim();
+            if (items.ContainsKey(trimmedkey))
             {
-                List<string> skus = items[key];
-                skus.Add(col);
+                List<string> skus = items[trimmedkey];
+                skus.Add(tcol);
             }
             else
             {
                 List<string> skuList = new List<string>();
-                skuList.Add(col);
-                items[key] = skuList;
+                skuList.Add(tcol);
+                items[trimmedkey] = skuList;
             }
 
         }
@@ -101,14 +108,17 @@ namespace grace
         }
         private string checkString(object n)
         {
+            string ret = "";
             try
             {
-                return (string)n;
+                ret = Convert.ToString((string)n);
+                return ret.Trim();
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                return ((double)n).ToString();
+                ret = ((double)n).ToString();
+                return ret.Trim();
             }
         }
 
@@ -128,34 +138,39 @@ namespace grace
                 {
                     var entireRow = worksheet.Cells.EntireRow;
 
-                   // Console.WriteLine(entireRow);
-                    Row r = new Row();
-                    r.Brand = (string)worksheet.Cells[row, 1].Value;
-                    r.Sku = checkString(worksheet.Cells[row, 2].Value);
-                    r.Description = (string)worksheet.Cells[row, 3].Value;
-                    r.PreviousTotal = checkInt(worksheet.Cells[row, 11].Value);
-                    r.Total= checkInt(worksheet.Cells[row, 11].Value);
+                    if (entireRow != null)
+                    {
 
-                    var col1 = (string)worksheet.Cells[row, 4].Value;
-                    addCollection(col1, r);
-                    addItem(r.Sku, col1);
-                    var col2 = (string)worksheet.Cells[row, 5].Value;
-                    addCollection(col2, r);
-                    addItem(r.Sku, col2);
-                    var col3 = (string)worksheet.Cells[row, 6].Value;
-                    addCollection(col3, r);
-                    addItem(r.Sku, col3);
-                    var col4 = (string)worksheet.Cells[row, 7].Value;
-                    addCollection(col4, r);
-                    addItem(r.Sku, col4);
-                    var col5 = (string)worksheet.Cells[row, 8].Value;
-                    addCollection(col5, r);
-                    addItem(r.Sku, col5);
-                    var col6 = (string)worksheet.Cells[row, 9].Value;
-                    addCollection(col6, r);
-                    addItem(r.Sku, col6);
+                        vivian.DisplayLogMessage(entireRow.ToString());
+                        Row r = new Row();
+                        r.Brand = (string)worksheet.Cells[row, 1].Value;
+                        r.Sku = checkString(worksheet.Cells[row, 2].Value);
+                        var sku = r.Sku;
 
-                    //Console.WriteLine();
+                        r.Description = (string)worksheet.Cells[row, 3].Value;
+                        r.PreviousTotal = Convert.ToInt32(worksheet.Cells[row, 10].Value);
+                        r.Total = Convert.ToInt32(worksheet.Cells[row, 11].Value);
+
+                        var col1 = (string)worksheet.Cells[row, 4].Value;
+                        addCollection(col1, r);
+                        addItem(r.Sku, col1);
+                        var col2 = (string)worksheet.Cells[row, 5].Value;
+                        addCollection(col2, r);
+                        addItem(r.Sku, col2);
+                        var col3 = (string)worksheet.Cells[row, 6].Value;
+                        addCollection(col3, r);
+                        addItem(r.Sku, col3);
+                        var col4 = (string)worksheet.Cells[row, 7].Value;
+                        addCollection(col4, r);
+                        addItem(r.Sku, col4);
+                        var col5 = (string)worksheet.Cells[row, 8].Value;
+                        addCollection(col5, r);
+                        addItem(r.Sku, col5);
+                        var col6 = (string)worksheet.Cells[row, 9].Value;
+                        addCollection(col6, r);
+                        addItem(r.Sku, col6);
+                    }
+
                 }
             }
         }

@@ -40,7 +40,7 @@ namespace Grace.Tests
             collections.Add("Collections2", rows);
 
 
-            var report = new Report(collections, items);
+            var report = new Report(collections, items, new Vivian());
 
             // Use a temporary file for testing
             var tempFileName = Path.GetTempFileName();

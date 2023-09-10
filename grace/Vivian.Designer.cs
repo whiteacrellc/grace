@@ -33,12 +33,13 @@
             openFileDialog = new OpenFileDialog();
             pictureBox1 = new PictureBox();
             saveButton = new Button();
+            debugTextBox = new TextBox();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
             // 
             // openFileButton
             // 
-            openFileButton.Location = new Point(122, 379);
+            openFileButton.Location = new Point(42, 190);
             openFileButton.Name = "openFileButton";
             openFileButton.Size = new Size(246, 69);
             openFileButton.TabIndex = 0;
@@ -64,7 +65,7 @@
             // 
             // saveButton
             // 
-            saveButton.Location = new Point(514, 379);
+            saveButton.Location = new Point(42, 286);
             saveButton.Name = "saveButton";
             saveButton.Size = new Size(246, 69);
             saveButton.TabIndex = 2;
@@ -72,11 +73,20 @@
             saveButton.UseVisualStyleBackColor = true;
             saveButton.Click += generateAndSaveReport;
             // 
+            // debugTextBox
+            // 
+            debugTextBox.Location = new Point(447, 48);
+            debugTextBox.Multiline = true;
+            debugTextBox.Name = "debugTextBox";
+            debugTextBox.Size = new Size(926, 732);
+            debugTextBox.TabIndex = 3;
+            // 
             // Vivian
             // 
             AutoScaleDimensions = new SizeF(13F, 32F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1038, 563);
+            ClientSize = new Size(1444, 830);
+            Controls.Add(debugTextBox);
             Controls.Add(saveButton);
             Controls.Add(pictureBox1);
             Controls.Add(openFileButton);
@@ -84,6 +94,7 @@
             Text = "VivianGrace";
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -92,5 +103,6 @@
         private OpenFileDialog openFileDialog;
         private PictureBox pictureBox1;
         private Button saveButton;
+        private TextBox debugTextBox;
     }
 }
