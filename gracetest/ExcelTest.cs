@@ -12,7 +12,7 @@ namespace gracetest
         public void TestReadExcelFile()
         {
             // Arrange
-            var excelReader = new ExcelReader();
+            var excelReader = new ExcelReader(new Vivian());
 
             // Act
             excelReader.ReadExcelFile(TestFilePath);
