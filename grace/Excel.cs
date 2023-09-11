@@ -136,13 +136,19 @@ namespace grace
 
                 for (int row = 2; row <= rowCount; row++)
                 {
-                    var entireRow = worksheet.Cells.EntireRow;
+                    var rowobj = worksheet.Cells[row, 1, row, worksheet.Dimension.Columns];
 
-                    if (entireRow != null)
+                    // Count non-empty cells in the row
+                    int cellCount = rowobj.Count(c => !string.IsNullOrWhiteSpace(c.Text));
+
+
+                    if (cellCount > 0)
                     {
 
                         //vivian.DisplayLogMessage(entireRow.ToString());
                         Row r = new Row();
+
+
                         r.Brand = (string)worksheet.Cells[row, 1].Value;
                         r.Sku = checkString(worksheet.Cells[row, 2].Value);
                         var sku = r.Sku;

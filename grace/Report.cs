@@ -57,28 +57,29 @@ namespace grace
                     i++;
                 }
                 worksheet.Cells[currentRow, 10].Value = row.PreviousTotal;
+               // worksheet.Cells[currentRow, 10].Style.Border.BorderAround(ExcelBorderStyle.Medium);
                 worksheet.Cells[currentRow, 11].Value = row.Total;
                 if (row.PreviousTotal != row.Total)
                 {
                     worksheet.Cells[currentRow, 11].Style.Fill.PatternType = ExcelFillStyle.Solid;
                     worksheet.Cells[currentRow, 11].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
                 }
+                var borderCellRange = "A" + (currentRow - 1) + ":K" + currentRow;
+                worksheet.Cells[borderCellRange].Style.Border.BorderAround(ExcelBorderStyle.Medium);
                 currentRow++;
                 currentPage++;
                 rowsWritten++;
 
             }
-            var borderCellRange = "A" + startRow + ":K" + currentRow;
-            worksheet.Cells[borderCellRange].Style.Border.BorderAround(ExcelBorderStyle.Medium);
+
 
             return rowsWritten;
         }
 
-        private void WriteHeader(ExcelWorksheet worksheet)
+        private void WritePrintHeader(ExcelWorksheet worksheet)
         {
             // Get the current date and format it as desired
-            string currentDate = DateTime.Now.ToString("yyyy-MM-dd");
-
+            string currentDate = DateTime.Now.ToString("MMMM dd, yyyy");
             // Create a header string with the current date
             string headerText = $"Report for {currentDate}";
 
@@ -86,9 +87,40 @@ namespace grace
             worksheet.HeaderFooter.OddHeader.CenteredText = headerText;
             worksheet.HeaderFooter.OddHeader.RightAlignedText = currentDate;
             // Make the RightAlignedText red
-            
+
+        }
+
+        private void WriteHeader(ExcelWorksheet worksheet, int row)
+        {
+            // Set the height of the inserted row to 20
+            worksheet.Row(row).Height = 30;
+
+            // Add some data to the inserted row (modify as needed)
+            worksheet.Cells[row, 1].Value = "Inserted Row Data";
+            worksheet.Cells["A" + row].Value = "Brand";
+            worksheet.Cells["B" + row].Value = "Item Number";
+            worksheet.Cells["C" + row].Value = "Description";
+            string spanIndex = "D" + row + ":I" + row;
+            worksheet.Cells[spanIndex].Merge = true;
+            worksheet.Cells[spanIndex].Value = "Collections";
+            worksheet.Cells["J" + row].Value = "Previous Count";
+            worksheet.Cells["K" + row].Value = "Total Count";
+
+            // Set the font size to 14 and make the text bold for the inserted row
+            worksheet.Cells[row, 1, row, 11].Style.Font.Size = 14;
+            worksheet.Cells[row, 1, row, 11].Style.Font.Bold = true;
+            currentRow++;
+            currentPage++;
+
+        }
 
 
+        private void InsertHeader(ExcelWorksheet worksheet, int rowIndexToInsert)
+        {
+            worksheet.InsertRow(rowIndexToInsert, 1);
+
+            // Set the height of the inserted row to 20
+            WriteHeader(worksheet, rowIndexToInsert);
 
         }
         public void GenerateReport()
@@ -105,7 +137,11 @@ namespace grace
             // Set the row height to 10 for all rows
             worksheet.DefaultRowHeight = 20;
 
-            // Set the column names
+            currentRow = 1;
+            currentPage = 1;
+            WriteHeader(worksheet, 1);
+
+            /*
             worksheet.Cells["A1"].Value = "Brand";
             worksheet.Cells["B1"].Value = "Item Number";
             worksheet.Cells["C1"].Value = "Description";
@@ -113,8 +149,11 @@ namespace grace
             worksheet.Cells["D1:I1"].Value = "Collections";
             worksheet.Cells["J1"].Value = "Previous Count";
             worksheet.Cells["K1"].Value = "Total Count";
-            worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
-            /*
+            */
+
+
+            // worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
+
             for (int columnIndex = 1; columnIndex <= 11; columnIndex++)
             {
                 worksheet.Column(columnIndex).Width = 20;
@@ -123,22 +162,31 @@ namespace grace
             worksheet.Column(3).Width = 40;
             worksheet.Column(10).Width = 15;
             worksheet.Column(11).Width = 15;
-            */
+
+            WritePrintHeader(worksheet);
 
             // Loop through the sorted dictionary and write out the values grouped by key.
             foreach (var key in sortedKeys)
             {
-                logger.Info("Processing Collection = " + key);
                 vivian.DisplayLogMessage("Processing Collection = " + key);
-                currentRow += 2;
                 List<Row> rows = collections[key];
                 int rowsWritten = writeCollectoion(key, rows, worksheet);
 
-                if (currentPage > 50)
+                if (currentPage > 35)
                 {
-                    worksheet.Row(endLastBlock + 1).PageBreak = true;
+                    worksheet.InsertRow(endLastBlock, 1);
+                    currentRow++;
+                    worksheet.Row(endLastBlock).PageBreak = true;
                     currentPage = rowsWritten;
+                    InsertHeader(worksheet, endLastBlock + 1);
+
+                    string msg = "currentrow " + currentRow + " endlastblock " + endLastBlock;
+                    vivian.DisplayLogMessage(msg);
                 }
+                worksheet.InsertRow(currentRow, 2);
+                currentRow += 2;
+                currentPage += 2;
+
             }
 
             using (var cells = worksheet.Cells[1, 1, worksheet.Dimension.End.Row, 11])
