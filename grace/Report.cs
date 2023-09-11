@@ -20,6 +20,8 @@ namespace grace
         private ExcelPackage package;
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         Vivian vivian;
+        private int endLastBlock = 0;
+        private int currentPage = 0;
 
         public Report(Dictionary<string, List<Row>> collections, Dictionary<string, List<string>> items, Vivian vivian)
         {
@@ -31,10 +33,11 @@ namespace grace
 
 
 
-        private void writeCollectoion(string collection, List<Row> rows, ExcelWorksheet worksheet)
+        private int writeCollectoion(string collection, List<Row> rows, ExcelWorksheet worksheet)
         {
             int startRow = currentRow;
-
+            endLastBlock = currentRow;
+            int rowsWritten = 0;
             foreach (Row row in rows)
             {
                 if (row == null || row.Sku == null) continue;
@@ -54,20 +57,72 @@ namespace grace
                     i++;
                 }
                 worksheet.Cells[currentRow, 10].Value = row.PreviousTotal;
+               // worksheet.Cells[currentRow, 10].Style.Border.BorderAround(ExcelBorderStyle.Medium);
                 worksheet.Cells[currentRow, 11].Value = row.Total;
                 if (row.PreviousTotal != row.Total)
                 {
                     worksheet.Cells[currentRow, 11].Style.Fill.PatternType = ExcelFillStyle.Solid;
                     worksheet.Cells[currentRow, 11].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
                 }
+                var borderCellRange = "A" + (currentRow - 1) + ":K" + currentRow;
+                worksheet.Cells[borderCellRange].Style.Border.BorderAround(ExcelBorderStyle.Medium);
                 currentRow++;
+                currentPage++;
+                rowsWritten++;
 
             }
-            var borderCellRange = "A" + startRow + ":K" + currentRow;
-            worksheet.Cells[borderCellRange].Style.Border.BorderAround(ExcelBorderStyle.Medium);
+
+
+            return rowsWritten;
+        }
+
+        private void WritePrintHeader(ExcelWorksheet worksheet)
+        {
+            // Get the current date and format it as desired
+            string currentDate = DateTime.Now.ToString("MMMM dd, yyyy");
+            // Create a header string with the current date
+            string headerText = $"Report for {currentDate}";
+
+            // Set the header text in the worksheet
+            worksheet.HeaderFooter.OddHeader.CenteredText = headerText;
+            worksheet.HeaderFooter.OddHeader.RightAlignedText = currentDate;
+            // Make the RightAlignedText red
 
         }
 
+        private void WriteHeader(ExcelWorksheet worksheet, int row)
+        {
+            // Set the height of the inserted row to 20
+            worksheet.Row(row).Height = 30;
+
+            // Add some data to the inserted row (modify as needed)
+            worksheet.Cells[row, 1].Value = "Inserted Row Data";
+            worksheet.Cells["A" + row].Value = "Brand";
+            worksheet.Cells["B" + row].Value = "Item Number";
+            worksheet.Cells["C" + row].Value = "Description";
+            string spanIndex = "D" + row + ":I" + row;
+            worksheet.Cells[spanIndex].Merge = true;
+            worksheet.Cells[spanIndex].Value = "Collections";
+            worksheet.Cells["J" + row].Value = "Previous Count";
+            worksheet.Cells["K" + row].Value = "Total Count";
+
+            // Set the font size to 14 and make the text bold for the inserted row
+            worksheet.Cells[row, 1, row, 11].Style.Font.Size = 14;
+            worksheet.Cells[row, 1, row, 11].Style.Font.Bold = true;
+            currentRow++;
+            currentPage++;
+
+        }
+
+
+        private void InsertHeader(ExcelWorksheet worksheet, int rowIndexToInsert)
+        {
+            worksheet.InsertRow(rowIndexToInsert, 1);
+
+            // Set the height of the inserted row to 20
+            WriteHeader(worksheet, rowIndexToInsert);
+
+        }
         public void GenerateReport()
         {
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
@@ -77,8 +132,16 @@ namespace grace
             var sortedKeys = collections.Keys.OrderBy(key => key).ToList();
 
             var worksheet = package.Workbook.Worksheets.Add("Report");
+            worksheet.Cells.Style.Font.Size = 14;
 
-            // Set the column names
+            // Set the row height to 10 for all rows
+            worksheet.DefaultRowHeight = 20;
+
+            currentRow = 1;
+            currentPage = 1;
+            WriteHeader(worksheet, 1);
+
+            /*
             worksheet.Cells["A1"].Value = "Brand";
             worksheet.Cells["B1"].Value = "Item Number";
             worksheet.Cells["C1"].Value = "Description";
@@ -86,23 +149,44 @@ namespace grace
             worksheet.Cells["D1:I1"].Value = "Collections";
             worksheet.Cells["J1"].Value = "Previous Count";
             worksheet.Cells["K1"].Value = "Total Count";
+            */
+
+
+            // worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
 
             for (int columnIndex = 1; columnIndex <= 11; columnIndex++)
             {
                 worksheet.Column(columnIndex).Width = 20;
 
             }
-            worksheet.Column(3).Width = 30;
+            worksheet.Column(3).Width = 40;
             worksheet.Column(10).Width = 15;
             worksheet.Column(11).Width = 15;
+
+            WritePrintHeader(worksheet);
+
             // Loop through the sorted dictionary and write out the values grouped by key.
             foreach (var key in sortedKeys)
             {
-                logger.Info("Processing Collection = " + key);
                 vivian.DisplayLogMessage("Processing Collection = " + key);
-                currentRow += 2;
                 List<Row> rows = collections[key];
-                writeCollectoion(key, rows, worksheet);
+                int rowsWritten = writeCollectoion(key, rows, worksheet);
+
+                if (currentPage > 35)
+                {
+                    worksheet.InsertRow(endLastBlock, 1);
+                    currentRow++;
+                    worksheet.Row(endLastBlock).PageBreak = true;
+                    currentPage = rowsWritten;
+                    InsertHeader(worksheet, endLastBlock + 1);
+
+                    string msg = "currentrow " + currentRow + " endlastblock " + endLastBlock;
+                    vivian.DisplayLogMessage(msg);
+                }
+                worksheet.InsertRow(currentRow, 2);
+                currentRow += 2;
+                currentPage += 2;
+
             }
 
             using (var cells = worksheet.Cells[1, 1, worksheet.Dimension.End.Row, 11])
@@ -110,7 +194,7 @@ namespace grace
                 cells.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
             }
 
-            vivian.DisplayLogMessage("PEnd Processing, you can write the report now");
+            vivian.DisplayLogMessage("End Processing, you can write the report now");
         }
         public void WriteReport(string fileName)
         {

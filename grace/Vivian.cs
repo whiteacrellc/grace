@@ -18,11 +18,16 @@ namespace grace
             // according to the Polyform Noncommercial license:
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             er = new ExcelReader(this);
+            EnableReportButton(false);
+
         }
 
         private void openFileButtonClick(object sender, EventArgs e)
         {
             openFileDialog.FilterIndex = 1;  // Index of the filter that is selected by default
+            EnableReportButton(false);
+
+
             try
             {
                 using (var openFileDialog = new OpenFileDialog())
@@ -47,6 +52,8 @@ namespace grace
             }
 
             generateReport();
+            EnableReportButton(true);
+
 
         }
 
@@ -58,13 +65,24 @@ namespace grace
                 var items = er.Items;
                 report = new Report(collections, items, this);
                 report.GenerateReport();
-                report.GenerateReport();
             }
             catch (Exception ex)
             {
                 // Display an alert dialog with the exception message
                 MessageBox.Show($"There was a problem generating the report :\n\n{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        public void EnableReportButton(bool enable)
+        {
+            if (enable)
+            {
+                saveButton.Enabled = true;
+            } else
+            {
+                saveButton.Enabled=false;
+            }
+
         }
 
         public void DisplayLogMessage(string? message)
