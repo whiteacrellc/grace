@@ -57,15 +57,19 @@ namespace grace
                     i++;
                 }
                 worksheet.Cells[currentRow, 10].Value = row.PreviousTotal;
-               // worksheet.Cells[currentRow, 10].Style.Border.BorderAround(ExcelBorderStyle.Medium);
+                worksheet.Cells[currentRow, 10].Style.Border.BorderAround(ExcelBorderStyle.Thin);
                 worksheet.Cells[currentRow, 11].Value = row.Total;
                 if (row.PreviousTotal != row.Total)
                 {
                     worksheet.Cells[currentRow, 11].Style.Fill.PatternType = ExcelFillStyle.Solid;
                     worksheet.Cells[currentRow, 11].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
                 }
-                var borderCellRange = "A" + (currentRow - 1) + ":K" + currentRow;
-                worksheet.Cells[borderCellRange].Style.Border.BorderAround(ExcelBorderStyle.Medium);
+
+                // Put border around cells 
+                for (int columnIndex = 1; columnIndex <= 11; columnIndex++)
+                {
+                    worksheet.Cells[currentRow, columnIndex].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                }
                 currentRow++;
                 currentPage++;
                 rowsWritten++;
@@ -93,7 +97,7 @@ namespace grace
         private void WriteHeader(ExcelWorksheet worksheet, int row)
         {
             // Set the height of the inserted row to 20
-            worksheet.Row(row).Height = 30;
+            worksheet.Row(row).Height = 40;
 
             // Add some data to the inserted row (modify as needed)
             worksheet.Cells[row, 1].Value = "Inserted Row Data";
@@ -107,7 +111,7 @@ namespace grace
             worksheet.Cells["K" + row].Value = "Total Count";
 
             // Set the font size to 14 and make the text bold for the inserted row
-            worksheet.Cells[row, 1, row, 11].Style.Font.Size = 14;
+            worksheet.Cells[row, 1, row, 11].Style.Font.Size = 16;
             worksheet.Cells[row, 1, row, 11].Style.Font.Bold = true;
             currentRow++;
             currentPage++;
@@ -135,7 +139,7 @@ namespace grace
             worksheet.Cells.Style.Font.Size = 14;
 
             // Set the row height to 10 for all rows
-            worksheet.DefaultRowHeight = 20;
+            worksheet.DefaultRowHeight = 35;
 
             currentRow = 1;
             currentPage = 1;
@@ -159,7 +163,7 @@ namespace grace
                 worksheet.Column(columnIndex).Width = 20;
 
             }
-            worksheet.Column(3).Width = 40;
+            worksheet.Column(3).Width = 50;
             worksheet.Column(10).Width = 15;
             worksheet.Column(11).Width = 15;
 
@@ -175,7 +179,7 @@ namespace grace
                 if (currentPage > 35)
                 {
                     worksheet.InsertRow(endLastBlock, 1);
-                    currentRow++;
+                    //currentRow++;
                     worksheet.Row(endLastBlock).PageBreak = true;
                     currentPage = rowsWritten;
                     InsertHeader(worksheet, endLastBlock + 1);
@@ -191,7 +195,7 @@ namespace grace
 
             using (var cells = worksheet.Cells[1, 1, worksheet.Dimension.End.Row, 11])
             {
-                cells.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                cells.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
             }
 
             vivian.DisplayLogMessage("End Processing, you can write the report now");
@@ -208,7 +212,8 @@ namespace grace
             catch (Exception ex)
             {
                 // Display an alert dialog with the exception message
-                MessageBox.Show($"There was a problem writing the file:\n\n{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"There was a problem writing the file:\n\n{ex.Message}",
+                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
