@@ -21,6 +21,7 @@ namespace grace
         {
             // Load the current setting into the form control
             textBoxRowsPerPage.Text = Properties.Settings.Default.rowsperpage.ToString();
+            rowHeighrTextBox.Text = Properties.Settings.Default.rowheight.ToString();
         }
 
         private void CancelButton_Click(object sender, EventArgs e)
@@ -30,26 +31,62 @@ namespace grace
             Close();
         }
 
+        private int parseeTextBox(TextBox textBox)
+
+        {
+            int result = -1;
+            if (int.TryParse(textBox.Text, out int boxValue))
+            {
+                // Update the setting value
+                result = boxValue;
+            }
+            return result;
+        }
         private void SaveButton_Click(object sender, EventArgs e)
         {
             // Parse the user input and update the setting
-            if (int.TryParse(textBoxRowsPerPage.Text, out int rowsPerPage))
+            int rowHeight = parseeTextBox(textBoxRowsPerPage);
+            if (rowHeight > 0)
             {
-                // Update the setting value
-                Properties.Settings.Default.rowsperpage = rowsPerPage;
-
+                Properties.Settings.Default.rowsperpage = rowHeight;
                 // Save the settings
                 Properties.Settings.Default.Save();
-
-                // Close the dialog with DialogResult.OK
-                DialogResult = DialogResult.OK;
-                Close();
             }
-            else
+            int rowsPerPage = parseeTextBox(rowHeighrTextBox);
+            if (rowHeight > 0)
             {
-                // Display an error message if the input is not a valid integer
+                Properties.Settings.Default.rowheight = rowHeight;
+                // Save the settings
+                Properties.Settings.Default.Save();
+            }
+
+            // Close the dialog with DialogResult.OK
+            DialogResult = DialogResult.OK;
+            Close();
+        }
+
+        private void rowHeighrTextBox_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBoxRowsPerPage_Validating(object sender, CancelEventArgs e)
+        {
+            if (!int.TryParse(textBoxRowsPerPage.Text, out _))
+            {
                 MessageBox.Show("Invalid input. Please enter a valid integer.",
                     "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                e.Cancel = true; // Prevent the control from losing focus
+            }
+        }
+
+        private void rowHeighrTextBox_Validating(object sender, CancelEventArgs e)
+        {
+            if (!int.TryParse(textBoxRowsPerPage.Text, out _))
+            {
+                MessageBox.Show("Invalid input. Please enter a valid integer.",
+                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                e.Cancel = true; // Prevent the control from losing focus
             }
         }
     }

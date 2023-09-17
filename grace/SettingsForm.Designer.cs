@@ -28,21 +28,26 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SettingsForm));
             textBoxRowsPerPage = new TextBox();
             CancelButton = new Button();
             SaveButton = new Button();
+            label1 = new Label();
+            label2 = new Label();
+            rowHeighrTextBox = new TextBox();
             SuspendLayout();
             // 
             // textBoxRowsPerPage
             // 
-            textBoxRowsPerPage.Location = new Point(558, 49);
+            textBoxRowsPerPage.Location = new Point(224, 42);
             textBoxRowsPerPage.Name = "textBoxRowsPerPage";
-            textBoxRowsPerPage.Size = new Size(185, 39);
+            textBoxRowsPerPage.Size = new Size(113, 39);
             textBoxRowsPerPage.TabIndex = 0;
+            textBoxRowsPerPage.Validating += textBoxRowsPerPage_Validating;
             // 
             // CancelButton
             // 
-            CancelButton.Location = new Point(591, 264);
+            CancelButton.Location = new Point(205, 362);
             CancelButton.Name = "CancelButton";
             CancelButton.Size = new Size(155, 61);
             CancelButton.TabIndex = 1;
@@ -52,7 +57,7 @@
             // 
             // SaveButton
             // 
-            SaveButton.Location = new Point(589, 357);
+            SaveButton.Location = new Point(25, 362);
             SaveButton.Name = "SaveButton";
             SaveButton.Size = new Size(153, 60);
             SaveButton.TabIndex = 2;
@@ -60,14 +65,45 @@
             SaveButton.UseVisualStyleBackColor = true;
             SaveButton.Click += SaveButton_Click;
             // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new Point(12, 42);
+            label1.Name = "label1";
+            label1.Size = new Size(166, 32);
+            label1.TabIndex = 3;
+            label1.Text = "Rows Per Page";
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Location = new Point(12, 111);
+            label2.Name = "label2";
+            label2.Size = new Size(147, 32);
+            label2.TabIndex = 4;
+            label2.Text = "Rows Height";
+            // 
+            // rowHeighrTextBox
+            // 
+            rowHeighrTextBox.Location = new Point(224, 111);
+            rowHeighrTextBox.Name = "rowHeighrTextBox";
+            rowHeighrTextBox.Size = new Size(113, 39);
+            rowHeighrTextBox.TabIndex = 5;
+            rowHeighrTextBox.TextChanged += rowHeighrTextBox_TextChanged;
+            rowHeighrTextBox.Validating += rowHeighrTextBox_Validating;
+            // 
             // SettingsForm
             // 
             AutoScaleDimensions = new SizeF(13F, 32F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(rowHeighrTextBox);
+            Controls.Add(label2);
+            Controls.Add(label1);
             Controls.Add(SaveButton);
             Controls.Add(CancelButton);
             Controls.Add(textBoxRowsPerPage);
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "SettingsForm";
             ShowIcon = false;
             Text = "Settings Form";
@@ -81,5 +117,8 @@
         private TextBox textBoxRowsPerPage;
         private Button CancelButton;
         private Button SaveButton;
+        private Label label1;
+        private Label label2;
+        private TextBox rowHeighrTextBox;
     }
 }

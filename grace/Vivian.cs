@@ -121,9 +121,20 @@ namespace grace
                 if (settingsForm.ShowDialog() == DialogResult.OK)
                 {
                     // Settings were modified, update the MainForm
-                   // UpdateFormWithSettings();
+                    // UpdateFormWithSettings();
                 }
             }
+        }
+
+        private void Vivian_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // Close the application
+            Application.Exit();
         }
     }
 }
