@@ -16,6 +16,7 @@ namespace grace
             Brand = null;
             Description = null;
             Total = 0;
+            BarCode = 0;
 
         }
 
@@ -23,8 +24,10 @@ namespace grace
         public string? Sku { get; set; }
         public string? Brand { get; set; }
         public string? Description { get; set; }
+        public string Availabilty { get; set; }
         public int PreviousTotal { get; set; }
         public int Total { get; set; }
+        public UInt64 BarCode { get; set; }
     }
 
     public class ExcelReader
@@ -34,6 +37,9 @@ namespace grace
 
         public Dictionary<string, List<Row>> Collections { get; }
         public Dictionary<string, List<string>> Items { get; }
+        public string PreviousColumnHeader { get; set; }
+        public string CurrentColumnHeader { get; set; }
+
         private Vivian vivian;
 
         public ExcelReader(Vivian vivian)
@@ -41,6 +47,8 @@ namespace grace
             this.vivian = vivian;
             Collections = collections;
             Items = items;
+            PreviousColumnHeader = "Previous Count";
+            CurrentColumnHeader = "Total Count";
         }
         private void addCollection(string key, Row r)
         {
@@ -134,6 +142,9 @@ namespace grace
                 int rowCount = worksheet.Dimension.Rows;
                 int colCount = worksheet.Dimension.Columns;
 
+                PreviousColumnHeader = (string)worksheet.Cells["L1"].Value;
+                CurrentColumnHeader = (string)worksheet.Cells["M1"].Value;
+
                 for (int row = 2; row <= rowCount; row++)
                 {
                     var rowobj = worksheet.Cells[row, 1, row, worksheet.Dimension.Columns];
@@ -144,35 +155,41 @@ namespace grace
 
                     if (cellCount > 0)
                     {
-
-                        //vivian.DisplayLogMessage(entireRow.ToString());
                         Row r = new Row();
 
 
                         r.Brand = (string)worksheet.Cells[row, 1].Value;
-                        r.Sku = checkString(worksheet.Cells[row, 2].Value);
-                        var sku = r.Sku;
+                        var barcode = worksheet.Cells[row, 2].Value;
+                        if (barcode != null)
+                        {
+                            r.BarCode = Convert.ToUInt64(barcode);
+                        }
+                        r.Sku = checkString(worksheet.Cells[row, 3].Value);
+                        r.Description = (string)worksheet.Cells[row, 4].Value;
+                        var availabilty = (worksheet.Cells[row, 11].Value);
+                        if (availabilty != null)
+                        {
+                            r.Availabilty = (string)availabilty;
+                        }
+                        r.PreviousTotal = Convert.ToInt32(worksheet.Cells[row, 12].Value);
+                        r.Total = Convert.ToInt32(worksheet.Cells[row, 13].Value);
 
-                        r.Description = (string)worksheet.Cells[row, 3].Value;
-                        r.PreviousTotal = Convert.ToInt32(worksheet.Cells[row, 10].Value);
-                        r.Total = Convert.ToInt32(worksheet.Cells[row, 11].Value);
-
-                        var col1 = (string)worksheet.Cells[row, 4].Value;
+                        var col1 = (string)worksheet.Cells[row, 5].Value;
                         addCollection(col1, r);
                         addItem(r.Sku, col1);
-                        var col2 = (string)worksheet.Cells[row, 5].Value;
+                        var col2 = (string)worksheet.Cells[row, 6].Value;
                         addCollection(col2, r);
                         addItem(r.Sku, col2);
-                        var col3 = (string)worksheet.Cells[row, 6].Value;
+                        var col3 = (string)worksheet.Cells[row, 7].Value;
                         addCollection(col3, r);
                         addItem(r.Sku, col3);
-                        var col4 = (string)worksheet.Cells[row, 7].Value;
+                        var col4 = (string)worksheet.Cells[row, 8].Value;
                         addCollection(col4, r);
                         addItem(r.Sku, col4);
-                        var col5 = (string)worksheet.Cells[row, 8].Value;
+                        var col5 = (string)worksheet.Cells[row, 9].Value;
                         addCollection(col5, r);
                         addItem(r.Sku, col5);
-                        var col6 = (string)worksheet.Cells[row, 9].Value;
+                        var col6 = (string)worksheet.Cells[row, 10].Value;
                         addCollection(col6, r);
                         addItem(r.Sku, col6);
                     }

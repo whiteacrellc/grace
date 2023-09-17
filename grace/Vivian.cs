@@ -6,12 +6,13 @@ namespace grace
 {
     public partial class Vivian : Form
     {
-        private ExcelReader er;
+        public ExcelReader er { get; }
         Report? report;
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+        public Globals globals { get; }
 
 
-    public Vivian()
+        public Vivian()
         {
             InitializeComponent();
             // If you use EPPlus in a noncommercial context
@@ -19,7 +20,7 @@ namespace grace
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             er = new ExcelReader(this);
             EnableReportButton(false);
-
+            globals = new Globals();
         }
 
         private void openFileButtonClick(object sender, EventArgs e)
@@ -48,7 +49,8 @@ namespace grace
             catch (Exception ex)
             {
                 // Display an alert dialog with the exception message
-                MessageBox.Show($"There was a problem reading the file:\n\n{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"There was a problem reading the file:\n\n{ex.Message}",
+                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             generateReport();
@@ -69,7 +71,8 @@ namespace grace
             catch (Exception ex)
             {
                 // Display an alert dialog with the exception message
-                MessageBox.Show($"There was a problem generating the report :\n\n{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"There was a problem generating the report :\n\n{ex.Message}",
+                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -78,9 +81,10 @@ namespace grace
             if (enable)
             {
                 saveButton.Enabled = true;
-            } else
+            }
+            else
             {
-                saveButton.Enabled=false;
+                saveButton.Enabled = false;
             }
 
         }
@@ -110,5 +114,16 @@ namespace grace
 
         }
 
+        private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (var settingsForm = new SettingsForm())
+            {
+                if (settingsForm.ShowDialog() == DialogResult.OK)
+                {
+                    // Settings were modified, update the MainForm
+                   // UpdateFormWithSettings();
+                }
+            }
+        }
     }
 }
