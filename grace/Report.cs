@@ -56,17 +56,17 @@ namespace grace
                     worksheet.Cells[currentRow, 5 + i].Value = itemcol;
                     i++;
                 }
-                worksheet.Cells[currentRow, 10].Value = row.PreviousTotal;
-                worksheet.Cells[currentRow, 10].Style.Border.BorderAround(ExcelBorderStyle.Thin);
-                worksheet.Cells[currentRow, 11].Value = row.Total;
+                worksheet.Cells[currentRow, 10].Value = row.Availabilty;
+                worksheet.Cells[currentRow, 11].Value = row.PreviousTotal;
+                worksheet.Cells[currentRow, 12].Value = row.Total;
                 if (row.PreviousTotal != row.Total)
                 {
-                    worksheet.Cells[currentRow, 11].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                    worksheet.Cells[currentRow, 11].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
+                    worksheet.Cells[currentRow, 12].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    worksheet.Cells[currentRow, 12].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
                 }
 
                 // Put border around cells 
-                for (int columnIndex = 1; columnIndex <= 11; columnIndex++)
+                for (int columnIndex = 1; columnIndex <= 12; columnIndex++)
                 {
                     worksheet.Cells[currentRow, columnIndex].Style.Border.BorderAround(ExcelBorderStyle.Thin);
                 }
@@ -97,7 +97,7 @@ namespace grace
         private void WriteHeader(ExcelWorksheet worksheet, int row)
         {
             // Set the height of the inserted row to 20
-            worksheet.Row(row).Height = 40;
+            worksheet.Row(row).Height = 60;
 
             // Add some data to the inserted row (modify as needed)
             worksheet.Cells[row, 1].Value = "Inserted Row Data";
@@ -107,12 +107,19 @@ namespace grace
             string spanIndex = "D" + row + ":I" + row;
             worksheet.Cells[spanIndex].Merge = true;
             worksheet.Cells[spanIndex].Value = "Collections";
-            worksheet.Cells["J" + row].Value = "Previous Count";
-            worksheet.Cells["K" + row].Value = "Total Count";
+            worksheet.Cells["J" + row].Value = "Availability";
+            worksheet.Cells["K" + row].Value = vivian.er.PreviousColumnHeader;
+            worksheet.Cells["L" + row].Value = vivian.er.CurrentColumnHeader;
 
             // Set the font size to 14 and make the text bold for the inserted row
-            worksheet.Cells[row, 1, row, 11].Style.Font.Size = 16;
-            worksheet.Cells[row, 1, row, 11].Style.Font.Bold = true;
+            worksheet.Cells[row, 1, row, 10].Style.Font.Size = 16;
+            worksheet.Cells[row, 11, row, 12].Style.Font.Size = 14;
+            worksheet.Cells[row, 1, row, 12].Style.Font.Bold = true;
+            worksheet.Cells[row, 11].Style.HorizontalAlignment.Equals(HorizontalAlignment.Center);
+            worksheet.Cells[row, 11].Style.WrapText = true;
+            worksheet.Cells[row, 12].Style.HorizontalAlignment.Equals(HorizontalAlignment.Center);
+            worksheet.Cells[row, 12].Style.WrapText = true;
+
             currentRow++;
             currentPage++;
 
@@ -158,7 +165,7 @@ namespace grace
 
             // worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
 
-            for (int columnIndex = 1; columnIndex <= 11; columnIndex++)
+            for (int columnIndex = 1; columnIndex <= 12; columnIndex++)
             {
                 worksheet.Column(columnIndex).Width = 20;
 
@@ -166,6 +173,7 @@ namespace grace
             worksheet.Column(3).Width = 50;
             worksheet.Column(10).Width = 15;
             worksheet.Column(11).Width = 15;
+            worksheet.Column(12).Width = 15;
 
             WritePrintHeader(worksheet);
 
@@ -176,6 +184,7 @@ namespace grace
                 List<Row> rows = collections[key];
                 int rowsWritten = writeCollectoion(key, rows, worksheet);
 
+                var rowsPerPage = Properties.Settings.Default.rowsperpage;
                 if (currentPage > 35)
                 {
                     worksheet.InsertRow(endLastBlock, 1);
