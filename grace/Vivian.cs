@@ -1,6 +1,7 @@
 using OfficeOpenXml;
 using System.Windows.Forms;
 using NLog;
+using System.IO.Packaging;
 
 namespace grace
 {
@@ -135,6 +136,18 @@ namespace grace
         {
             // Close the application
             Application.Exit();
+        }
+
+        private void printReportButton_Click(object sender, EventArgs e)
+        {
+            PrintExcel printExcel = new PrintExcel();
+            string tempFileName = Path.ChangeExtension(Path.GetTempFileName(), ".xlsx");
+            if (report != null)
+            {
+                report.WriteReport(tempFileName);
+                printExcel.Print(tempFileName);
+
+            }
         }
     }
 }

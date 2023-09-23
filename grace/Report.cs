@@ -17,7 +17,7 @@ namespace grace
         private Dictionary<string, List<string>> items;
         Dictionary<string, List<Row>> collections;
         private int currentRow = 0;
-        private ExcelPackage package;
+        public ExcelPackage package {  get; }
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         Vivian vivian;
         private int endLastBlock = 0;

@@ -38,6 +38,7 @@
             editToolStripMenuItem = new ToolStripMenuItem();
             settingsToolStripMenuItem = new ToolStripMenuItem();
             exitToolStripMenuItem = new ToolStripMenuItem();
+            printReportButton = new Button();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             menuStrip1.SuspendLayout();
             SuspendLayout();
@@ -70,7 +71,7 @@
             // 
             // saveButton
             // 
-            saveButton.Location = new Point(42, 299);
+            saveButton.Location = new Point(42, 308);
             saveButton.Name = "saveButton";
             saveButton.Size = new Size(246, 69);
             saveButton.TabIndex = 2;
@@ -92,7 +93,7 @@
             menuStrip1.Items.AddRange(new ToolStripItem[] { editToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
-            menuStrip1.Size = new Size(1444, 42);
+            menuStrip1.Size = new Size(1444, 40);
             menuStrip1.TabIndex = 4;
             menuStrip1.Text = "menuStrip1";
             // 
@@ -100,28 +101,39 @@
             // 
             editToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { settingsToolStripMenuItem, exitToolStripMenuItem });
             editToolStripMenuItem.Name = "editToolStripMenuItem";
-            editToolStripMenuItem.Size = new Size(74, 38);
+            editToolStripMenuItem.Size = new Size(74, 36);
             editToolStripMenuItem.Text = "Edit";
             // 
             // settingsToolStripMenuItem
             // 
             settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
-            settingsToolStripMenuItem.Size = new Size(359, 44);
+            settingsToolStripMenuItem.Size = new Size(233, 44);
             settingsToolStripMenuItem.Text = "Settings";
             settingsToolStripMenuItem.Click += settingsToolStripMenuItem_Click;
             // 
             // exitToolStripMenuItem
             // 
             exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            exitToolStripMenuItem.Size = new Size(359, 44);
+            exitToolStripMenuItem.Size = new Size(233, 44);
             exitToolStripMenuItem.Text = "Exit";
             exitToolStripMenuItem.Click += exitToolStripMenuItem_Click;
+            // 
+            // printReportButton
+            // 
+            printReportButton.Location = new Point(42, 392);
+            printReportButton.Name = "printReportButton";
+            printReportButton.Size = new Size(246, 69);
+            printReportButton.TabIndex = 5;
+            printReportButton.Text = "Print Report";
+            printReportButton.UseVisualStyleBackColor = true;
+            printReportButton.Click += printReportButton_Click;
             // 
             // Vivian
             // 
             AutoScaleDimensions = new SizeF(13F, 32F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1444, 830);
+            Controls.Add(printReportButton);
             Controls.Add(debugTextBox);
             Controls.Add(saveButton);
             Controls.Add(pictureBox1);
@@ -150,5 +162,6 @@
         private ToolStripMenuItem editToolStripMenuItem;
         private ToolStripMenuItem settingsToolStripMenuItem;
         private ToolStripMenuItem exitToolStripMenuItem;
+        private Button printReportButton;
     }
 }
