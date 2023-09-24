@@ -30,7 +30,7 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SettingsForm));
             textBoxRowsPerPage = new TextBox();
-            CancelButton = new Button();
+            SettingsCancelButton = new Button();
             SaveButton = new Button();
             label1 = new Label();
             label2 = new Label();
@@ -45,15 +45,15 @@
             textBoxRowsPerPage.TabIndex = 0;
             textBoxRowsPerPage.Validating += textBoxRowsPerPage_Validating;
             // 
-            // CancelButton
+            // SettingsCancelButton
             // 
-            CancelButton.Location = new Point(205, 362);
-            CancelButton.Name = "CancelButton";
-            CancelButton.Size = new Size(155, 61);
-            CancelButton.TabIndex = 1;
-            CancelButton.Text = "Cancel";
-            CancelButton.UseVisualStyleBackColor = true;
-            CancelButton.Click += CancelButton_Click;
+            SettingsCancelButton.Location = new Point(205, 362);
+            SettingsCancelButton.Name = "SettingsCancelButton";
+            SettingsCancelButton.Size = new Size(155, 61);
+            SettingsCancelButton.TabIndex = 1;
+            SettingsCancelButton.Text = "Cancel";
+            SettingsCancelButton.UseVisualStyleBackColor = true;
+            SettingsCancelButton.Click += CancelButton_Click;
             // 
             // SaveButton
             // 
@@ -101,7 +101,7 @@
             Controls.Add(label2);
             Controls.Add(label1);
             Controls.Add(SaveButton);
-            Controls.Add(CancelButton);
+            Controls.Add(SettingsCancelButton);
             Controls.Add(textBoxRowsPerPage);
             Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "SettingsForm";
@@ -115,7 +115,7 @@
         #endregion
 
         private TextBox textBoxRowsPerPage;
-        private Button CancelButton;
+        private Button SettingsCancelButton;
         private Button SaveButton;
         private Label label1;
         private Label label2;

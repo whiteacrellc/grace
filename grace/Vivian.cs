@@ -12,6 +12,7 @@ namespace grace
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         public Globals globals { get; }
 
+        public string User { get; set; }
 
         public Vivian()
         {
@@ -22,9 +23,72 @@ namespace grace
             er = new ExcelReader(this);
             EnableReportButton(false);
             globals = new Globals();
+            User = "";
         }
 
-        private void openFileButtonClick(object sender, EventArgs e)
+        private void generateReport()
+        {
+            try
+            {
+                var collections = er.Collections;
+                var items = er.Items;
+                report = new Report(collections, items, this);
+                report.GenerateReport();
+            }
+            catch (Exception ex)
+            {
+                // Display an alert dialog with the exception message
+                MessageBox.Show($"There was a problem generating the report :\n\n{ex.Message}",
+                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        public void EnableReportButton(bool enable)
+        {
+            if (enable)
+            {
+                saveReportToolStripMenuItem.Enabled = true;
+                printReportToolStripMenuItem.Enabled = true;
+            }
+            else
+            {
+                saveReportToolStripMenuItem.Enabled = false;
+                printReportToolStripMenuItem.Enabled = false;
+            }
+
+        }
+
+        public void DisplayLogMessage(string? message)
+        {
+            if (message == null) return;
+            // also log to file
+            logger.Info(message);
+        }
+
+        private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (var settingsForm = new SettingsForm())
+            {
+                if (settingsForm.ShowDialog() == DialogResult.OK)
+                {
+                    // Settings were modified, update the MainForm
+                    // UpdateFormWithSettings();
+                }
+            }
+        }
+
+        private void Vivian_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // Close the application
+            Application.Exit();
+        }
+
+        private void importInventoryToolStripMenuItem_Click(object sender, EventArgs e)
         {
             openFileDialog.FilterIndex = 1;  // Index of the filter that is selected by default
             EnableReportButton(false);
@@ -56,50 +120,9 @@ namespace grace
 
             generateReport();
             EnableReportButton(true);
-
-
         }
 
-        private void generateReport()
-        {
-            try
-            {
-                var collections = er.Collections;
-                var items = er.Items;
-                report = new Report(collections, items, this);
-                report.GenerateReport();
-            }
-            catch (Exception ex)
-            {
-                // Display an alert dialog with the exception message
-                MessageBox.Show($"There was a problem generating the report :\n\n{ex.Message}",
-                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        public void EnableReportButton(bool enable)
-        {
-            if (enable)
-            {
-                saveButton.Enabled = true;
-            }
-            else
-            {
-                saveButton.Enabled = false;
-            }
-
-        }
-
-        public void DisplayLogMessage(string? message)
-        {
-            if (message == null) return;
-            // Append the message to a TextBox named "logTextBox" or another control
-            debugTextBox.AppendText(message + Environment.NewLine);
-            // also log to file
-            logger.Info(message);
-        }
-
-        private void generateAndSaveReport(object sender, EventArgs e)
+        private void saveReportToolStripMenuItem_Click(object sender, EventArgs e)
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog
             {
@@ -112,42 +135,37 @@ namespace grace
                 string filePath = saveFileDialog.FileName;
                 if (report != null) report.WriteReport(filePath);
             }
-
         }
 
-        private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            using (var settingsForm = new SettingsForm())
-            {
-                if (settingsForm.ShowDialog() == DialogResult.OK)
-                {
-                    // Settings were modified, update the MainForm
-                    // UpdateFormWithSettings();
-                }
-            }
-        }
-
-        private void Vivian_Load(object sender, EventArgs e)
-        {
-
-        }
-
-        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            // Close the application
-            Application.Exit();
-        }
-
-        private void printReportButton_Click(object sender, EventArgs e)
+        private void printReportToolStripMenuItem_Click(object sender, EventArgs e)
         {
             PrintExcel printExcel = new PrintExcel();
-            string tempFileName = Path.ChangeExtension(Path.GetTempFileName(), ".xlsx");
+            string dir = Path.GetTempPath();
+            string tempFileName = dir + "//foo.xlxs";
             if (report != null)
             {
                 report.WriteReport(tempFileName);
                 printExcel.Print(tempFileName);
 
             }
+        }
+
+        private void radioButton_CheckedChanged(object sender, EventArgs e)
+        {
+            foreach (RadioButton radioButton in groupBox1.Controls.OfType<RadioButton>())
+            {
+                if (radioButton.Checked)
+                {
+                    // Display the selected user's name in a label
+                    User = radioButton.Text;
+                    break;
+                }
+            }
+        }
+
+        private void chooseUserButton_Click(object sender, EventArgs e)
+        {
+            tabControl1.SelectedTab = dataPage;
         }
     }
 }

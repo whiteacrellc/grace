@@ -17,6 +17,7 @@ namespace grace
             Description = null;
             Total = 0;
             BarCode = 0;
+            Availabilty = "";
 
         }
 

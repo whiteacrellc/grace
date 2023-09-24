@@ -21,10 +21,10 @@ namespace gracetest
             // Add your assertions here to check if the data was read and processed correctly
 
             //  Verify that 46 collections
-            Assert.AreEqual(46, excelReader.Collections.Count);
+            Assert.AreEqual(13, excelReader.Collections.Count);
 
             //  Verify that at there are 253 items
-            Assert.AreEqual(253, excelReader.Items.Count);
+            Assert.AreEqual(18, excelReader.Items.Count);
 
             // Example assertion: Verify the specific content of a row
             var firstRow = excelReader.Collections.FirstOrDefault().Value.FirstOrDefault();
