@@ -1,3 +1,15 @@
+/*
+ * Copyright (c) 2023 White Acre Software LLC
+ * All rights reserved.
+ *
+ * This software is the confidential and proprietary information
+ * of White Acre Software LLC. You shall not disclose such
+ * Confidential Information and shall use it only in accordance
+ * with the terms of the license agreement you entered into with
+ * White Acre Software LLC.
+ *
+ * Year: 2023
+ */
 using OfficeOpenXml;
 using System.Windows.Forms;
 using NLog;
@@ -109,6 +121,9 @@ namespace grace
 
                     string filePath = openFileDialog.FileName;
                     er.ReadExcelFile(filePath);
+
+                    DataBase data = new DataBase();
+                    data.LoadFromExcel(filePath);
                 }
             }
             catch (Exception ex)
@@ -119,6 +134,7 @@ namespace grace
             }
 
             generateReport();
+
             EnableReportButton(true);
         }
 
@@ -166,6 +182,11 @@ namespace grace
         private void chooseUserButton_Click(object sender, EventArgs e)
         {
             tabControl1.SelectedTab = dataPage;
+        }
+
+        private void bindingSource1_BindingComplete(object sender, BindingCompleteEventArgs e)
+        {
+
         }
     }
 }

@@ -49,7 +49,6 @@
             radioButtonPatti = new RadioButton();
             dataPage = new TabPage();
             dataGridView1 = new DataGridView();
-            bindingSource1 = new BindingSource(components);
             Brand = new DataGridViewTextBoxColumn();
             Barcode = new DataGridViewTextBoxColumn();
             sku = new DataGridViewTextBoxColumn();
@@ -63,6 +62,7 @@
             availabilty = new DataGridViewTextBoxColumn();
             previousTotal = new DataGridViewTextBoxColumn();
             currentTotal = new DataGridViewTextBoxColumn();
+            bindingSource1 = new BindingSource(components);
             menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             tabControl1.SuspendLayout();
@@ -243,7 +243,7 @@
             // 
             dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridView1.Columns.AddRange(new DataGridViewColumn[] { Brand, Barcode, sku, description, col1, col2, col3, col4, col5, col6, availabilty, previousTotal, currentTotal });
-            dataGridView1.Location = new Point(3, 26);
+            dataGridView1.Location = new Point(-8, -17);
             dataGridView1.Name = "dataGridView1";
             dataGridView1.RowHeadersWidth = 82;
             dataGridView1.RowTemplate.Height = 41;
@@ -341,6 +341,10 @@
             currentTotal.MinimumWidth = 10;
             currentTotal.Name = "currentTotal";
             currentTotal.Width = 200;
+            // 
+            // bindingSource1
+            // 
+            bindingSource1.BindingComplete += bindingSource1_BindingComplete;
             // 
             // Vivian
             // 
