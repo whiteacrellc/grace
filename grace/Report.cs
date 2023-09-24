@@ -125,7 +125,6 @@ namespace grace
 
         }
 
-
         private void InsertHeader(ExcelWorksheet worksheet, int rowIndexToInsert)
         {
             worksheet.InsertRow(rowIndexToInsert, 1);

@@ -50,6 +50,19 @@
             dataPage = new TabPage();
             dataGridView1 = new DataGridView();
             bindingSource1 = new BindingSource(components);
+            Brand = new DataGridViewTextBoxColumn();
+            Barcode = new DataGridViewTextBoxColumn();
+            sku = new DataGridViewTextBoxColumn();
+            description = new DataGridViewTextBoxColumn();
+            col1 = new DataGridViewTextBoxColumn();
+            col2 = new DataGridViewTextBoxColumn();
+            col3 = new DataGridViewTextBoxColumn();
+            col4 = new DataGridViewTextBoxColumn();
+            col5 = new DataGridViewTextBoxColumn();
+            col6 = new DataGridViewTextBoxColumn();
+            availabilty = new DataGridViewTextBoxColumn();
+            previousTotal = new DataGridViewTextBoxColumn();
+            currentTotal = new DataGridViewTextBoxColumn();
             menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             tabControl1.SuspendLayout();
@@ -229,12 +242,105 @@
             // dataGridView1
             // 
             dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView1.Location = new Point(565, 73);
+            dataGridView1.Columns.AddRange(new DataGridViewColumn[] { Brand, Barcode, sku, description, col1, col2, col3, col4, col5, col6, availabilty, previousTotal, currentTotal });
+            dataGridView1.Location = new Point(3, 26);
             dataGridView1.Name = "dataGridView1";
             dataGridView1.RowHeadersWidth = 82;
             dataGridView1.RowTemplate.Height = 41;
-            dataGridView1.Size = new Size(1020, 474);
+            dataGridView1.Size = new Size(1739, 644);
             dataGridView1.TabIndex = 0;
+            // 
+            // Brand
+            // 
+            Brand.HeaderText = "Brand";
+            Brand.MinimumWidth = 10;
+            Brand.Name = "Brand";
+            Brand.Width = 200;
+            // 
+            // Barcode
+            // 
+            Barcode.HeaderText = "Barcode";
+            Barcode.MinimumWidth = 10;
+            Barcode.Name = "Barcode";
+            Barcode.Visible = false;
+            Barcode.Width = 200;
+            // 
+            // sku
+            // 
+            sku.HeaderText = "Item Number";
+            sku.MinimumWidth = 10;
+            sku.Name = "sku";
+            sku.Width = 200;
+            // 
+            // description
+            // 
+            description.HeaderText = "Description";
+            description.MinimumWidth = 10;
+            description.Name = "description";
+            description.Width = 200;
+            // 
+            // col1
+            // 
+            col1.HeaderText = "Collection1";
+            col1.MinimumWidth = 10;
+            col1.Name = "col1";
+            col1.Width = 200;
+            // 
+            // col2
+            // 
+            col2.HeaderText = "Collection 2";
+            col2.MinimumWidth = 10;
+            col2.Name = "col2";
+            col2.Width = 200;
+            // 
+            // col3
+            // 
+            col3.HeaderText = "Collection 3";
+            col3.MinimumWidth = 10;
+            col3.Name = "col3";
+            col3.Width = 200;
+            // 
+            // col4
+            // 
+            col4.HeaderText = "Collection 4";
+            col4.MinimumWidth = 10;
+            col4.Name = "col4";
+            col4.Width = 200;
+            // 
+            // col5
+            // 
+            col5.HeaderText = "Collection 5";
+            col5.MinimumWidth = 10;
+            col5.Name = "col5";
+            col5.Width = 200;
+            // 
+            // col6
+            // 
+            col6.HeaderText = "Collection 6";
+            col6.MinimumWidth = 10;
+            col6.Name = "col6";
+            col6.Width = 200;
+            // 
+            // availabilty
+            // 
+            availabilty.HeaderText = "Availability";
+            availabilty.MinimumWidth = 10;
+            availabilty.Name = "availabilty";
+            availabilty.Width = 200;
+            // 
+            // previousTotal
+            // 
+            previousTotal.HeaderText = "Previous Total";
+            previousTotal.MinimumWidth = 10;
+            previousTotal.Name = "previousTotal";
+            previousTotal.Width = 200;
+            // 
+            // currentTotal
+            // 
+            currentTotal.HeaderText = "Current Total";
+            currentTotal.MinimumWidth = 10;
+            currentTotal.Name = "currentTotal";
+            currentTotal.Width = 200;
             // 
             // Vivian
             // 
@@ -283,5 +389,18 @@
         private TabPage dataPage;
         private DataGridView dataGridView1;
         private BindingSource bindingSource1;
+        private DataGridViewTextBoxColumn Brand;
+        private DataGridViewTextBoxColumn Barcode;
+        private DataGridViewTextBoxColumn sku;
+        private DataGridViewTextBoxColumn description;
+        private DataGridViewTextBoxColumn col1;
+        private DataGridViewTextBoxColumn col2;
+        private DataGridViewTextBoxColumn col3;
+        private DataGridViewTextBoxColumn col4;
+        private DataGridViewTextBoxColumn col5;
+        private DataGridViewTextBoxColumn col6;
+        private DataGridViewTextBoxColumn availabilty;
+        private DataGridViewTextBoxColumn previousTotal;
+        private DataGridViewTextBoxColumn currentTotal;
     }
 }

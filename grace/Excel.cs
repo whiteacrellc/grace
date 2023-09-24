@@ -1,4 +1,6 @@
-﻿using OfficeOpenXml;
+﻿using NLog;
+using OfficeOpenXml;
+using OfficeOpenXml.Drawing.Slicer.Style;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,6 +37,7 @@ namespace grace
     {
         private Dictionary<string, List<string>> items = new Dictionary<string, List<string>>();
         private Dictionary<string, List<Row>> collections = new Dictionary<string, List<Row>>();
+        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
         public Dictionary<string, List<Row>> Collections { get; }
         public Dictionary<string, List<string>> Items { get; }
@@ -118,17 +121,21 @@ namespace grace
         private string checkString(object n)
         {
             string ret = "";
-            try
+            if (n is string)
             {
                 ret = Convert.ToString((string)n);
-                return ret.Trim();
             }
-            catch (Exception e)
+            else if (n is double)
             {
-                Console.WriteLine(e);
                 ret = ((double)n).ToString();
-                return ret.Trim();
             }
+            else if (n is int)
+            {
+                ret = ((int)n).ToString();
+            } else {
+                logger.Error("cannot convert " + n);
+            }
+            return ret.Trim();
         }
 
         public void ReadExcelFile(string filePath)

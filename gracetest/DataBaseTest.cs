@@ -1,62 +1,70 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Common;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Moq;
-using NUnit.Framework;
-using grace;
-using System.Data;
+﻿using grace;
 using System.Data.SQLite;
 
 // Don't like warnings in my IDE for silly stuff
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-
+/*-----------------------------------------------------------------------------*/
 namespace gracetest
 {
-    [TestFixture]
+
+    [TestClass]
     public class DataBaseTest
     {
+        private string testDbFile = "testgrace.db";
+        private string connectionString = string.Empty;
 
-        private Mock<SQLiteConnection> mockConnection;
-        private Mock<SQLiteCommand> mockCommand;
-        private DataBase database;
-
-        [SetUp]
-        public void Setup()
+        [TestMethod]
+        public void TestMethod_LoadFromExcel()
         {
+            string testConnectString = "Data Source=C:\\Users\\tom\\source\\" + 
+                "repos\\grace\\gracetest\\bin\\Debug\\net6.0-windows\\" + 
+                "testgrace.db;Version=3;";
+
             // Create a mock SQLite connection and command
-            mockConnection = new Mock<SQLiteConnection>();
-            mockCommand = new Mock<SQLiteCommand>();
+            DataBase database = new DataBase(testDbFile);
+            connectionString = database.ConnectionString;
+            Assert.IsNotNull(connectionString);
 
-            // Setup the mock command to return a scalar value
-            mockCommand.Setup(cmd => cmd.ExecuteScalar()).Returns(1);
+            Assert.AreEqual(connectionString, testConnectString);
 
-            // Setup the mock connection to return the mock command
-            mockConnection.Setup(conn => conn.CreateCommand()).Returns(mockCommand.Object);
-
-            // Create an instance of the DataBase class with the mock connection
-            database = new DataBase(mockConnection.Object);
-        }
-
-        [Test]
-        public void LoadFromExcel_WhenCalled_LoadsData()
-        {
-            // Arrange
-            string filename = "C:\\Users\\tom\\source\\repos\\grace\\gracetest\\test_file.xlsx"; // Update with your test Excel file path
-
-
-            // Act
+            string filename = "C:\\Users\\tom\\source\\repos\\grace\\gracetest\\" 
+                + "test_file.xlsx";
             database.LoadFromExcel(filename);
 
-            // Assert
-            // Verify that the InsertRow, AddTotal, and AddCollection methods are called with the expected parameters
-            mockCommand.Verify(cmd => cmd.ExecuteNonQuery(), Times.Exactly(1)); // Ensure the SQL command is executed
-
-            // Verify that the InsertRow method is called 5 times
-            mockConnection.Verify(conn => conn.CreateCommand(), Times.Exactly(5));
-
+            var fileName = database.DbFileName;
+            Cleanup(fileName);
         }
+
+        private void Cleanup(string databaseName)
+        {
+            var sqliteConnection = new SQLiteConnection(connectionString);
+            sqliteConnection.Open();
+
+            string dropSql = "DROP TABLE IF EXISTS Grace;DROP TABLE IF EXISTS" 
+                + " Collections;DROP TABLE IF EXISTS Totals;";
+            using (SQLiteCommand command = new SQLiteCommand(dropSql, sqliteConnection))
+            {
+                command.ExecuteNonQuery();
+            }
+            sqliteConnection.Dispose();
+          
+            try
+            {
+                if (File.Exists(databaseName))
+                {
+                    File.Delete(databaseName);
+                }
+                else
+                {
+                    Console.WriteLine("Database does not exist.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+        }
+
+
     }
 }
