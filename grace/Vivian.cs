@@ -10,10 +10,8 @@
  *
  * Year: 2023
  */
-using OfficeOpenXml;
-using System.Windows.Forms;
 using NLog;
-using System.IO.Packaging;
+using OfficeOpenXml;
 
 namespace grace
 {
@@ -92,6 +90,11 @@ namespace grace
         private void Vivian_Load(object sender, EventArgs e)
         {
 
+        }
+
+        public DataGridView GetDataGridView()
+        {
+            return dataGridView;
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
