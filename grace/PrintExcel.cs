@@ -42,6 +42,8 @@ namespace grace
             // Release COM objects (important to prevent memory leaks)
             System.Runtime.InteropServices.Marshal.ReleaseComObject(workbook);
             System.Runtime.InteropServices.Marshal.ReleaseComObject(excelApp);
+            // Sleep for 1 second (1000 milliseconds)
+            Thread.Sleep(1000);
 
         }
     }

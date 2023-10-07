@@ -63,7 +63,7 @@
             pictureBox1.AccessibleName = "Logo";
             pictureBox1.BackColor = SystemColors.ControlLight;
             pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
-            pictureBox1.Location = new Point(0, 75);
+            pictureBox1.Location = new Point(42, 84);
             pictureBox1.Name = "pictureBox1";
             pictureBox1.Size = new Size(354, 134);
             pictureBox1.TabIndex = 1;
@@ -81,11 +81,12 @@
             // 
             // debugTextBox
             // 
-            debugTextBox.Location = new Point(444, 86);
+            debugTextBox.Location = new Point(430, 12);
             debugTextBox.Multiline = true;
             debugTextBox.Name = "debugTextBox";
             debugTextBox.Size = new Size(926, 732);
             debugTextBox.TabIndex = 3;
+            debugTextBox.TextChanged += debugTextBox_TextChanged;
             // 
             // menuStrip1
             // 
@@ -101,7 +102,7 @@
             // 
             editToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { settingsToolStripMenuItem, exitToolStripMenuItem });
             editToolStripMenuItem.Name = "editToolStripMenuItem";
-            editToolStripMenuItem.Size = new Size(74, 36);
+            editToolStripMenuItem.Size = new Size(74, 38);
             editToolStripMenuItem.Text = "Edit";
             // 
             // settingsToolStripMenuItem
@@ -132,13 +133,15 @@
             // 
             AutoScaleDimensions = new SizeF(13F, 32F);
             AutoScaleMode = AutoScaleMode.Font;
+            AutoSize = true;
             ClientSize = new Size(1444, 830);
-            Controls.Add(printReportButton);
             Controls.Add(debugTextBox);
+            Controls.Add(printReportButton);
             Controls.Add(saveButton);
             Controls.Add(pictureBox1);
             Controls.Add(openFileButton);
             Controls.Add(menuStrip1);
+            HelpButton = true;
             Icon = (Icon)resources.GetObject("$this.Icon");
             MainMenuStrip = menuStrip1;
             Name = "Vivian";

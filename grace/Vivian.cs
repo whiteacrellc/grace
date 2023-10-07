@@ -140,14 +140,38 @@ namespace grace
 
         private void printReportButton_Click(object sender, EventArgs e)
         {
-            PrintExcel printExcel = new PrintExcel();
-            string tempFileName = Path.ChangeExtension(Path.GetTempFileName(), ".xlsx");
-            if (report != null)
+            if (report == null)
             {
+                MessageBox.Show($"There is no report to print!",
+                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else
+            {
+                PrintExcel printExcel = new PrintExcel();
+                // Get the user's Documents directory
+                string documentsDirectory =
+                    Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+
+                // Generate a unique temporary file name
+                string tempFileName = Path.Combine(documentsDirectory,
+                    "TempFile_" + Guid.NewGuid().ToString() + ".xlsx");
+
                 report.WriteReport(tempFileName);
+                // Sleep for 1 second (1000 milliseconds)
+                Thread.Sleep(1000);
                 printExcel.Print(tempFileName);
 
+                // Delete the temporary file
+                File.Delete(tempFileName);
             }
+
+
+        }
+
+        private void debugTextBox_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }
+
