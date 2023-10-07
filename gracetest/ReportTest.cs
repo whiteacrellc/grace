@@ -1,19 +1,35 @@
-﻿using grace;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿/*
+ * Copyright (c) 2023 White Acre Software LLC
+ * All rights reserved.
+ *
+ * This software is the confidential and proprietary information
+ * of White Acre Software LLC. You shall not disclose such
+ * Confidential Information and shall use it only in accordance
+ * with the terms of the license agreement you entered into with
+ * White Acre Software LLC.
+ *
+ * Year: 2023
+ */
+using grace;
+using Microsoft.Office.Interop.Excel;
+using OfficeOpenXml;
 using System.Collections.Generic;
 using System.IO;
 
-namespace Grace.Tests
+namespace gracetest
 {
     [TestClass]
     public class ReportTests
     {
-        [TestMethod]
-        public void WriteReport_SavesExcelFile()
+        Dictionary<string, List<Row>> collections = new Dictionary<string, List<Row>>();
+        Dictionary<string, List<string>> items = new Dictionary<string, List<string>>();
+
+        [TestInitialize]
+        public void Setup()
         {
             // Arrange
-            var collections = new Dictionary<string, List<Row>>();
-            var items = new Dictionary<string, List<string>>();
+            collections = new Dictionary<string, List<Row>>();
+            items = new Dictionary<string, List<string>>();
             Row row = new Row();
             row.Sku = "SKU";
             row.Collection = "Collection1";
@@ -38,28 +54,23 @@ namespace Grace.Tests
             list.Add("Collections1");
             items.Add("SKU2", list);
             collections.Add("Collections2", rows);
+        }
 
-
+        [TestMethod]
+        public void WriteReport_GenerateReport()
+        {
             var report = new Report(collections, items, new Vivian());
+            report.GenerateReport();
 
-            // Use a temporary file for testing
-            var tempFileName = Path.GetTempFileName();
+            ExcelPackage package = report.package;
+            Assert.IsNotNull(package);
+            var worksheet = package.Workbook.Worksheets[0];
+            Assert.AreEqual(worksheet.Name, "Report");
+            int rowCount = worksheet.Dimension.Rows;
+            Assert.AreEqual(rowCount, 5);
+            int colCount = worksheet.Dimension.Columns;
+            Assert.AreEqual(colCount, 12);
 
-            try
-            {
-                // Act
-                report.WriteReport(tempFileName);
-
-                // Assert
-                // Add your assertions here to verify that the file was saved successfully.
-                // For example, you can check if the file exists.
-                Assert.IsTrue(File.Exists(tempFileName));
-            }
-            finally
-            {
-                // Clean up: Delete the temporary file
-                File.Delete(tempFileName);
-            }
         }
     }
 }

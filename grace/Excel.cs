@@ -1,8 +1,10 @@
-﻿using OfficeOpenXml;
+﻿using NLog;
+using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace grace
@@ -24,7 +26,7 @@ namespace grace
         public string? Sku { get; set; }
         public string? Brand { get; set; }
         public string? Description { get; set; }
-        public string Availabilty { get; set; }
+        public string? Availabilty { get; set; }
         public int PreviousTotal { get; set; }
         public int Total { get; set; }
         public UInt64 BarCode { get; set; }
@@ -32,6 +34,7 @@ namespace grace
 
     public class ExcelReader
     {
+        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         private Dictionary<string, List<string>> items = new Dictionary<string, List<string>>();
         private Dictionary<string, List<Row>> collections = new Dictionary<string, List<Row>>();
 
@@ -117,17 +120,46 @@ namespace grace
         private string checkString(object n)
         {
             string ret = "";
-            try
+            if (n is string)
             {
                 ret = Convert.ToString((string)n);
-                return ret.Trim();
             }
-            catch (Exception e)
+            else if (n is double)
             {
-                Console.WriteLine(e);
                 ret = ((double)n).ToString();
-                return ret.Trim();
             }
+            else if (n is int)
+            {
+                ret = ((int)n).ToString();
+            }
+            else
+            {
+                logger.Error("cannot convert " + n);
+            }
+            return ret.Trim();
+        }
+
+        private string parseColumnHeader(string header, int daysBack)
+        {
+            DateTime twoWeeksAgo = DateTime.Now.AddDays(daysBack);
+
+            // Format the date as "MMM dd, yyyy"
+            string formattedDate = twoWeeksAgo.ToString("MMM dd, yyyy");
+
+            string pattern = @"\b(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sept|Oct|Nov|Dec)\s\d{1,2},\s\d{4}\b";
+
+            // Create a regular expression object
+            Regex regex = new Regex(pattern);
+
+            // Match the regular expression pattern in the input string
+            MatchCollection matches = regex.Matches(header);
+
+            // Extract and print the matched dates
+            foreach (Match match in matches)
+            {
+                 formattedDate = match.Value;
+            }
+            return $"Total {formattedDate}";
         }
 
         public void ReadExcelFile(string filePath)
@@ -142,18 +174,15 @@ namespace grace
                 int rowCount = worksheet.Dimension.Rows;
                 int colCount = worksheet.Dimension.Columns;
 
-                PreviousColumnHeader = (string)worksheet.Cells["L1"].Value;
-                CurrentColumnHeader = (string)worksheet.Cells["M1"].Value;
+                PreviousColumnHeader = parseColumnHeader((string)worksheet.Cells["L1"].Value, -14);
+                CurrentColumnHeader = parseColumnHeader((string)worksheet.Cells["M1"].Value, 0);
 
                 for (int row = 2; row <= rowCount; row++)
                 {
-                    var rowobj = worksheet.Cells[row, 1, row, worksheet.Dimension.Columns];
-
-                    // Count non-empty cells in the row
-                    int cellCount = rowobj.Count(c => !string.IsNullOrWhiteSpace(c.Text));
-
-
-                    if (cellCount > 0)
+                    // if the first column is not null we assume we have a
+                    // valid row
+                    var firstCol = worksheet.Cells[row, 1].Value;
+                    if (firstCol != null)
                     {
                         Row r = new Row();
 
@@ -192,6 +221,9 @@ namespace grace
                         var col6 = (string)worksheet.Cells[row, 10].Value;
                         addCollection(col6, r);
                         addItem(r.Sku, col6);
+                    } else
+                    {
+                        logger.Warn("Empty row " + row);
                     }
 
                 }

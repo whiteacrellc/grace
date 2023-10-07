@@ -140,14 +140,20 @@ namespace grace
 
         private void printReportButton_Click(object sender, EventArgs e)
         {
-            PrintExcel printExcel = new PrintExcel();
-            string tempFileName = Path.ChangeExtension(Path.GetTempFileName(), ".xlsx");
-            if (report != null)
-            {
-                report.WriteReport(tempFileName);
-                printExcel.Print(tempFileName);
+            // Close the application
+            Application.Exit();
+        }
 
-            }
+        private void debugTextBox_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Vivian_HelpButtonClicked(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            MessageBox.Show("If you need help call Tom!",
+                  "Help", MessageBoxButtons.OK, MessageBoxIcon.Question);
         }
     }
 }
+

@@ -9,7 +9,7 @@
       <Value Profile="(Default)">40</Value>
     </Setting>
     <Setting Name="rowsperpage" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">45</Value>
+      <Value Profile="(Default)">60</Value>
     </Setting>
   </Settings>
 </SettingsFile>
