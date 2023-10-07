@@ -1,16 +1,4 @@
-﻿/*
- * Copyright (c) 2023 White Acre Software LLC
- * All rights reserved.
- *
- * This software is the confidential and proprietary information
- * of White Acre Software LLC. You shall not disclose such
- * Confidential Information and shall use it only in accordance
- * with the terms of the license agreement you entered into with
- * White Acre Software LLC.
- *
- * Year: 2023
- */
-using OfficeOpenXml;
+﻿using OfficeOpenXml;
 using OfficeOpenXml.Style;
 using System;
 using System.Collections.Generic;
@@ -29,7 +17,7 @@ namespace grace
         private Dictionary<string, List<string>> items;
         Dictionary<string, List<Row>> collections;
         private int currentRow = 0;
-        public ExcelPackage package {  get; }
+        public ExcelPackage package { get; }
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         Vivian vivian;
         private int endLastBlock = 0;
@@ -50,7 +38,8 @@ namespace grace
             int startRow = currentRow;
             endLastBlock = currentRow;
             int rowsWritten = 0;
-            foreach (Row row in rows)
+            var sortedRows = rows.OrderBy(row => row.Brand).ToArray();
+            foreach (Row row in sortedRows)
             {
                 if (row == null || row.Sku == null) continue;
                 var collist = items[row.Sku];
@@ -87,7 +76,9 @@ namespace grace
                 rowsWritten++;
 
             }
-
+            currentRow++;
+            currentPage++;
+            rowsWritten++;
 
             return rowsWritten;
         }
@@ -102,7 +93,8 @@ namespace grace
             // Set the header text in the worksheet
             worksheet.HeaderFooter.OddHeader.CenteredText = headerText;
             worksheet.HeaderFooter.OddHeader.RightAlignedText = currentDate;
-            // Make the RightAlignedText red
+            // Put the page number in the botton right
+            worksheet.HeaderFooter.OddFooter.RightAlignedText = "&P"; // "&P" is a placeholder for the page number
 
         }
 
@@ -121,7 +113,8 @@ namespace grace
             worksheet.Cells[spanIndex].Value = "Collections";
             worksheet.Cells["J" + row].Value = "Availability";
             worksheet.Cells["K" + row].Value = vivian.er.PreviousColumnHeader;
-            worksheet.Cells["L" + row].Value = vivian.er.CurrentColumnHeader;
+            string currentDate = DateTime.Now.ToString("MMMM dd, yyyy");
+            worksheet.Cells["L" + row].Value = $"Total for {currentDate}";
 
             // Set the font size to 14 and make the text bold for the inserted row
             worksheet.Cells[row, 1, row, 10].Style.Font.Size = 16;
@@ -136,6 +129,7 @@ namespace grace
             currentPage++;
 
         }
+
 
         private void InsertHeader(ExcelWorksheet worksheet, int rowIndexToInsert)
         {
@@ -181,6 +175,7 @@ namespace grace
                 worksheet.Column(columnIndex).Width = 20;
 
             }
+            worksheet.Column(1).Width = 25;
             worksheet.Column(3).Width = 50;
             worksheet.Column(10).Width = 15;
             worksheet.Column(11).Width = 15;
@@ -196,7 +191,7 @@ namespace grace
                 int rowsWritten = writeCollectoion(key, rows, worksheet);
 
                 var rowsPerPage = Properties.Settings.Default.rowsperpage;
-                if (currentPage > 35)
+                if (currentPage > 30)
                 {
                     worksheet.InsertRow(endLastBlock, 1);
                     //currentRow++;
@@ -227,7 +222,28 @@ namespace grace
             try
             {
                 var fileInfo = new FileInfo(fileName);
-                if (package != null) package.SaveAs(fileInfo);
+
+                if (package != null)
+                {
+                    var worksheet = package.Workbook.Worksheets[0];
+
+
+                    // Set the worksheet to portrait orientation
+                    worksheet.PrinterSettings.Orientation = eOrientation.Landscape;
+
+                    // Set the worksheet to legal paper size
+                    worksheet.PrinterSettings.PaperSize = ePaperSize.Legal;
+
+                    // Fit all columns to the page
+                    worksheet.PrinterSettings.FitToPage = true;
+                    worksheet.PrinterSettings.FitToWidth = 1; // 1 page wide
+                    worksheet.PrinterSettings.FitToHeight = 0; // Auto height
+                    worksheet.PrinterSettings.HorizontalCentered = true;
+                    worksheet.PrinterSettings.LeftMargin = 0;
+                    worksheet.PrinterSettings.RightMargin = 0;
+
+                    package.SaveAs(fileInfo);
+                }
             }
             catch (Exception ex)
             {

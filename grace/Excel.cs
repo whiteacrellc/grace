@@ -1,23 +1,10 @@
-﻿/*
- * Copyright (c) 2023 White Acre Software LLC
- * All rights reserved.
- *
- * This software is the confidential and proprietary information
- * of White Acre Software LLC. You shall not disclose such
- * Confidential Information and shall use it only in accordance
- * with the terms of the license agreement you entered into with
- * White Acre Software LLC.
- *
- * Year: 2023
- */
-
-using NLog;
+﻿using NLog;
 using OfficeOpenXml;
-using OfficeOpenXml.Drawing.Slicer.Style;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace grace
@@ -32,7 +19,6 @@ namespace grace
             Description = null;
             Total = 0;
             BarCode = 0;
-            Availabilty = "";
 
         }
 
@@ -40,7 +26,7 @@ namespace grace
         public string? Sku { get; set; }
         public string? Brand { get; set; }
         public string? Description { get; set; }
-        public string Availabilty { get; set; }
+        public string? Availabilty { get; set; }
         public int PreviousTotal { get; set; }
         public int Total { get; set; }
         public UInt64 BarCode { get; set; }
@@ -48,9 +34,9 @@ namespace grace
 
     public class ExcelReader
     {
+        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         private Dictionary<string, List<string>> items = new Dictionary<string, List<string>>();
         private Dictionary<string, List<Row>> collections = new Dictionary<string, List<Row>>();
-        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
         public Dictionary<string, List<Row>> Collections { get; }
         public Dictionary<string, List<string>> Items { get; }
@@ -145,10 +131,35 @@ namespace grace
             else if (n is int)
             {
                 ret = ((int)n).ToString();
-            } else {
+            }
+            else
+            {
                 logger.Error("cannot convert " + n);
             }
             return ret.Trim();
+        }
+
+        private string parseColumnHeader(string header, int daysBack)
+        {
+            DateTime twoWeeksAgo = DateTime.Now.AddDays(daysBack);
+
+            // Format the date as "MMM dd, yyyy"
+            string formattedDate = twoWeeksAgo.ToString("MMM dd, yyyy");
+
+            string pattern = @"\b(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sept|Oct|Nov|Dec)\s\d{1,2},\s\d{4}\b";
+
+            // Create a regular expression object
+            Regex regex = new Regex(pattern);
+
+            // Match the regular expression pattern in the input string
+            MatchCollection matches = regex.Matches(header);
+
+            // Extract and print the matched dates
+            foreach (Match match in matches)
+            {
+                formattedDate = match.Value;
+            }
+            return $"Total {formattedDate}";
         }
 
         public void ReadExcelFile(string filePath)
@@ -163,18 +174,15 @@ namespace grace
                 int rowCount = worksheet.Dimension.Rows;
                 int colCount = worksheet.Dimension.Columns;
 
-                PreviousColumnHeader = (string)worksheet.Cells["L1"].Value;
-                CurrentColumnHeader = (string)worksheet.Cells["M1"].Value;
+                PreviousColumnHeader = parseColumnHeader((string)worksheet.Cells["L1"].Value, -14);
+                CurrentColumnHeader = parseColumnHeader((string)worksheet.Cells["M1"].Value, 0);
 
                 for (int row = 2; row <= rowCount; row++)
                 {
-                    var rowobj = worksheet.Cells[row, 1, row, worksheet.Dimension.Columns];
-
-                    // Count non-empty cells in the row
-                    int cellCount = rowobj.Count(c => !string.IsNullOrWhiteSpace(c.Text));
-
-
-                    if (cellCount > 0)
+                    // if the first column is not null we assume we have a
+                    // valid row
+                    var firstCol = worksheet.Cells[row, 1].Value;
+                    if (firstCol != null)
                     {
                         Row r = new Row();
 
@@ -213,6 +221,10 @@ namespace grace
                         var col6 = (string)worksheet.Cells[row, 10].Value;
                         addCollection(col6, r);
                         addItem(r.Sku, col6);
+                    }
+                    else
+                    {
+                        logger.Warn("Empty row " + row);
                     }
 
                 }
