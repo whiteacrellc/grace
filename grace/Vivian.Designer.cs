@@ -63,6 +63,7 @@
             previousTotal = new DataGridViewTextBoxColumn();
             currentTotal = new DataGridViewTextBoxColumn();
             bindingSource1 = new BindingSource(components);
+            checkoutPage = new TabPage();
             menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             tabControl1.SuspendLayout();
@@ -113,8 +114,6 @@
             // 
             printReportToolStripMenuItem.Name = "printReportToolStripMenuItem";
             printReportToolStripMenuItem.Size = new Size(163, 22);
-            printReportToolStripMenuItem.Text = "Print Report";
-            printReportToolStripMenuItem.Click += printReportToolStripMenuItem_Click;
             // 
             // saveReportToolStripMenuItem
             // 
@@ -149,6 +148,7 @@
             tabControl1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             tabControl1.Controls.Add(loginPage);
             tabControl1.Controls.Add(dataPage);
+            tabControl1.Controls.Add(checkoutPage);
             tabControl1.Location = new Point(0, 20);
             tabControl1.Margin = new Padding(2, 1, 2, 1);
             tabControl1.Name = "tabControl1";
@@ -167,6 +167,7 @@
             loginPage.Padding = new Padding(2, 1, 2, 1);
             loginPage.Size = new Size(1292, 626);
             loginPage.TabIndex = 0;
+            loginPage.Text = "Home";
             loginPage.UseVisualStyleBackColor = true;
             // 
             // chooseUserButton
@@ -250,6 +251,7 @@
             dataPage.Name = "dataPage";
             dataPage.Size = new Size(1292, 626);
             dataPage.TabIndex = 1;
+            dataPage.Text = "Inventory";
             dataPage.UseVisualStyleBackColor = true;
             // 
             // dataGridView
@@ -357,6 +359,15 @@
             // 
             bindingSource1.BindingComplete += bindingSource1_BindingComplete;
             // 
+            // checkoutPage
+            // 
+            checkoutPage.Location = new Point(4, 24);
+            checkoutPage.Name = "checkoutPage";
+            checkoutPage.Size = new Size(1292, 626);
+            checkoutPage.TabIndex = 2;
+            checkoutPage.Text = "Checkout";
+            checkoutPage.UseVisualStyleBackColor = true;
+            // 
             // Vivian
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -419,5 +430,6 @@
         private DataGridViewTextBoxColumn availabilty;
         private DataGridViewTextBoxColumn previousTotal;
         private DataGridViewTextBoxColumn currentTotal;
+        private TabPage checkoutPage;
     }
 }

@@ -156,19 +156,6 @@ namespace grace
             }
         }
 
-        private void printReportToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            PrintExcel printExcel = new PrintExcel();
-            string dir = Path.GetTempPath();
-            string tempFileName = dir + "//foo.xlxs";
-            if (report != null)
-            {
-                report.WriteReport(tempFileName);
-                printExcel.Print(tempFileName);
-
-            }
-        }
-
         private void radioButton_CheckedChanged(object sender, EventArgs e)
         {
             foreach (RadioButton radioButton in groupBox1.Controls.OfType<RadioButton>())
