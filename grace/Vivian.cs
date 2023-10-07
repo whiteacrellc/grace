@@ -140,37 +140,19 @@ namespace grace
 
         private void printReportButton_Click(object sender, EventArgs e)
         {
-            if (report == null)
-            {
-                MessageBox.Show($"There is no report to print!",
-                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            else
-            {
-                PrintExcel printExcel = new PrintExcel();
-                // Get the user's Documents directory
-                string documentsDirectory =
-                    Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-
-                // Generate a unique temporary file name
-                string tempFileName = Path.Combine(documentsDirectory,
-                    "TempFile_" + Guid.NewGuid().ToString() + ".xlsx");
-
-                report.WriteReport(tempFileName);
-                // Sleep for 1 second (1000 milliseconds)
-                Thread.Sleep(1000);
-                printExcel.Print(tempFileName);
-
-                // Delete the temporary file
-                File.Delete(tempFileName);
-            }
-
-
+            // Close the application
+            Application.Exit();
         }
 
         private void debugTextBox_TextChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void Vivian_HelpButtonClicked(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            MessageBox.Show("If you need help call Tom!",
+                  "Help", MessageBoxButtons.OK, MessageBoxIcon.Question);
         }
     }
 }

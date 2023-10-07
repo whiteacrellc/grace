@@ -175,6 +175,7 @@ namespace grace
                 worksheet.Column(columnIndex).Width = 20;
 
             }
+            worksheet.Column(1).Width = 25;
             worksheet.Column(3).Width = 50;
             worksheet.Column(10).Width = 15;
             worksheet.Column(11).Width = 15;
@@ -221,8 +222,28 @@ namespace grace
             try
             {
                 var fileInfo = new FileInfo(fileName);
-                if (package != null) package.SaveAs(fileInfo);
-                
+
+                if (package != null)
+                {
+                    var worksheet = package.Workbook.Worksheets[0];
+
+
+                    // Set the worksheet to portrait orientation
+                    worksheet.PrinterSettings.Orientation = eOrientation.Landscape;
+
+                    // Set the worksheet to legal paper size
+                    worksheet.PrinterSettings.PaperSize = ePaperSize.Legal;
+
+                    // Fit all columns to the page
+                    worksheet.PrinterSettings.FitToPage = true;
+                    worksheet.PrinterSettings.FitToWidth = 1; // 1 page wide
+                    worksheet.PrinterSettings.FitToHeight = 0; // Auto height
+                    worksheet.PrinterSettings.HorizontalCentered = true;
+                    worksheet.PrinterSettings.LeftMargin = 0;
+                    worksheet.PrinterSettings.RightMargin = 0;
+
+                   package.SaveAs(fileInfo);
+                }
             }
             catch (Exception ex)
             {
