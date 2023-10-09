@@ -62,8 +62,11 @@
             availabilty = new DataGridViewTextBoxColumn();
             previousTotal = new DataGridViewTextBoxColumn();
             currentTotal = new DataGridViewTextBoxColumn();
-            bindingSource1 = new BindingSource(components);
             checkoutPage = new TabPage();
+            dataGridView1 = new DataGridView();
+            barcodeLabel = new Label();
+            textBoxBarcode = new TextBox();
+            bindingSource1 = new BindingSource(components);
             menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             tabControl1.SuspendLayout();
@@ -71,6 +74,8 @@
             groupBox1.SuspendLayout();
             dataPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridView).BeginInit();
+            checkoutPage.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)bindingSource1).BeginInit();
             SuspendLayout();
             // 
@@ -355,18 +360,48 @@
             currentTotal.MinimumWidth = 10;
             currentTotal.Name = "currentTotal";
             // 
-            // bindingSource1
-            // 
-            bindingSource1.BindingComplete += bindingSource1_BindingComplete;
-            // 
             // checkoutPage
             // 
+            checkoutPage.Controls.Add(dataGridView1);
+            checkoutPage.Controls.Add(barcodeLabel);
+            checkoutPage.Controls.Add(textBoxBarcode);
             checkoutPage.Location = new Point(4, 24);
             checkoutPage.Name = "checkoutPage";
             checkoutPage.Size = new Size(1292, 626);
             checkoutPage.TabIndex = 2;
             checkoutPage.Text = "Checkout";
             checkoutPage.UseVisualStyleBackColor = true;
+            // 
+            // dataGridView1
+            // 
+            dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridView1.Location = new Point(0, 0);
+            dataGridView1.Name = "dataGridView1";
+            dataGridView1.RowTemplate.Height = 25;
+            dataGridView1.Size = new Size(240, 150);
+            dataGridView1.TabIndex = 2;
+            // 
+            // barcodeLabel
+            // 
+            barcodeLabel.AutoSize = true;
+            barcodeLabel.Location = new Point(906, 42);
+            barcodeLabel.Name = "barcodeLabel";
+            barcodeLabel.Size = new Size(78, 15);
+            barcodeLabel.TabIndex = 1;
+            barcodeLabel.Text = "Scan Barcode";
+            // 
+            // textBoxBarcode
+            // 
+            textBoxBarcode.Location = new Point(1000, 39);
+            textBoxBarcode.Name = "textBoxBarcode";
+            textBoxBarcode.Size = new Size(205, 23);
+            textBoxBarcode.TabIndex = 0;
+            textBoxBarcode.TextChanged += textBoxBarcode_TextChanged;
+            textBoxBarcode.KeyDown += textBoxBarcode_KeyDown;
+            // 
+            // bindingSource1
+            // 
+            bindingSource1.BindingComplete += bindingSource1_BindingComplete;
             // 
             // Vivian
             // 
@@ -391,6 +426,9 @@
             groupBox1.PerformLayout();
             dataPage.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)dataGridView).EndInit();
+            checkoutPage.ResumeLayout(false);
+            checkoutPage.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             ((System.ComponentModel.ISupportInitialize)bindingSource1).EndInit();
             ResumeLayout(false);
             PerformLayout();
@@ -431,5 +469,8 @@
         private DataGridViewTextBoxColumn previousTotal;
         private DataGridViewTextBoxColumn currentTotal;
         private TabPage checkoutPage;
+        private TextBox textBoxBarcode;
+        private Label barcodeLabel;
+        private DataGridView dataGridView1;
     }
 }

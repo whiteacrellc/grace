@@ -12,6 +12,7 @@
  */
 using NLog;
 using OfficeOpenXml;
+using System.Text;
 
 namespace grace
 {
@@ -20,10 +21,11 @@ namespace grace
         public ExcelReader er { get; }
         Report? report;
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
-        public Globals globals { get; }
 
         public string User { get; set; }
-
+        private string barcode = "";
+        private StringBuilder sb = new StringBuilder();
+        private bool readyForNewCode = true;
         public Vivian()
         {
             InitializeComponent();
@@ -32,7 +34,6 @@ namespace grace
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             er = new ExcelReader(this);
             EnableReportButton(false);
-            globals = new Globals();
             User = "";
         }
 
@@ -89,6 +90,11 @@ namespace grace
 
         private void Vivian_Load(object sender, EventArgs e)
         {
+            // Loads the preferences into the globals singleton
+            Globals globals = Globals.GetInstance();
+            DataBase data = new DataBase();
+            Globals.GetInstance().ConnectionString = data.ConnectionString;
+            DataGridLoader dataGridLoader = new DataGridLoader(this);
 
         }
 
@@ -177,6 +183,37 @@ namespace grace
         private void bindingSource1_BindingComplete(object sender, BindingCompleteEventArgs e)
         {
 
+        }
+
+        private void textBoxBarcode_KeyDown(object sender, KeyEventArgs e)
+        {
+          
+            if (e.KeyData == e.KeyCode)
+            {
+                if (readyForNewCode)
+                {
+                    textBoxBarcode.Clear();
+                    readyForNewCode = false;
+                    sb.Clear();
+                }
+                TextBox box = (TextBox)sender;
+                sb.Append(box.Text);
+                //textBoxBarcode.Text = sb.ToString();
+            }
+            else
+            if (e.KeyCode == Keys.Enter)
+            {
+               textBoxBarcode.Text = sb.ToString();
+               readyForNewCode = true;
+                // Process the scanned data as needed (e.g., send it to a database, perform actions)
+                // Example: ProcessScannedData(scannedData);
+            }
+        }
+
+        private void textBoxBarcode_TextChanged(object sender, EventArgs e)
+        {
+           //TextBox box = (TextBox)sender;
+            //textBoxBarcode.Text += box.Text;
         }
     }
 }

@@ -1,11 +1,20 @@
-﻿using NLog;
+﻿using grace.Properties;
+using Microsoft.Office.Interop.Excel;
+using Microsoft.VisualBasic.ApplicationServices;
+using NLog;
 using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
+using System.Security.Policy;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using static NLog.LayoutRenderers.Wrappers.ReplaceLayoutRendererWrapper;
+using System.Windows.Forms;
+using LicenseContext = OfficeOpenXml.LicenseContext;
 
 namespace grace
 {
@@ -18,7 +27,7 @@ namespace grace
             Brand = null;
             Description = null;
             Total = 0;
-            BarCode = 0;
+            BarCode = null;
 
         }
 
@@ -29,7 +38,7 @@ namespace grace
         public string? Availabilty { get; set; }
         public int PreviousTotal { get; set; }
         public int Total { get; set; }
-        public UInt64 BarCode { get; set; }
+        public string? BarCode { get; set; }
     }
 
     public class ExcelReader
@@ -44,6 +53,7 @@ namespace grace
         public string CurrentColumnHeader { get; set; }
 
         private Vivian vivian;
+
 
         public ExcelReader(Vivian vivian)
         {
@@ -139,12 +149,13 @@ namespace grace
             return ret.Trim();
         }
 
-        private string parseColumnHeader(string header, int daysBack)
+        private string parseColumnHeader(string header, int daysBack, out DateTime dateTime)
         {
-            DateTime twoWeeksAgo = DateTime.Now.AddDays(daysBack);
+            dateTime = DateTime.Now.AddDays(daysBack);
 
             // Format the date as "MMM dd, yyyy"
-            string formattedDate = twoWeeksAgo.ToString("MMM dd, yyyy");
+            string format = "MMM dd, yyyy";
+            string formattedDate = dateTime.ToString(format);
 
             string pattern = @"\b(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sept|Oct|Nov|Dec)\s\d{1,2},\s\d{4}\b";
 
@@ -158,6 +169,15 @@ namespace grace
             foreach (Match match in matches)
             {
                 formattedDate = match.Value;
+                if (DateTime.TryParseExact(formattedDate, format, CultureInfo.InvariantCulture,
+                    DateTimeStyles.None, out dateTime))
+                {
+                    logger.Info("Parsed date: " + formattedDate);
+                }
+                else
+                {
+                    logger.Info("Failed to parse the date string.");
+                }
             }
             return $"Total {formattedDate}";
         }
@@ -174,8 +194,11 @@ namespace grace
                 int rowCount = worksheet.Dimension.Rows;
                 int colCount = worksheet.Dimension.Columns;
 
-                PreviousColumnHeader = parseColumnHeader((string)worksheet.Cells["L1"].Value, -14);
-                CurrentColumnHeader = parseColumnHeader((string)worksheet.Cells["M1"].Value, 0);
+                DateTime dateTime = DateTime.Now;
+                PreviousColumnHeader = parseColumnHeader((string)worksheet.Cells["L1"].Value, -14, out dateTime);
+                Globals.GetInstance().previousHeaderDate = dateTime;
+                CurrentColumnHeader = parseColumnHeader((string)worksheet.Cells["M1"].Value, 0, out dateTime);
+                Globals.GetInstance().currentHeaderDate = dateTime;
 
                 for (int row = 2; row <= rowCount; row++)
                 {
@@ -188,11 +211,7 @@ namespace grace
 
 
                         r.Brand = (string)worksheet.Cells[row, 1].Value;
-                        var barcode = worksheet.Cells[row, 2].Value;
-                        if (barcode != null)
-                        {
-                            r.BarCode = Convert.ToUInt64(barcode);
-                        }
+                        r.BarCode = checkString(worksheet.Cells[row, 2].Value);
                         r.Sku = checkString(worksheet.Cells[row, 3].Value);
                         r.Description = (string)worksheet.Cells[row, 4].Value;
                         var availabilty = (worksheet.Cells[row, 11].Value);

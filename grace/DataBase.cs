@@ -10,6 +10,7 @@
  *
  * Year: 2023
  */
+using grace.data;
 using NLog;
 using OfficeOpenXml;
 using System;
@@ -96,81 +97,51 @@ namespace grace
                 int rowCount = worksheet.Dimension.Rows;
                 int colCount = worksheet.Dimension.Columns;
 
-                var sqliteConnection = OpenConnection();
-                sqliteConnection.Open();
-
                 for (int row = 2; row <= rowCount; row++)
                 {
                     var rowobj = worksheet.Cells[row, 1, row, worksheet.Dimension.Columns];
 
-                    // Count non-empty cells in the row
-                    int cellCount = rowobj.Count(c => !string.IsNullOrWhiteSpace(c.Text));
-
-
-                    if (cellCount > 0)
+                    // if the first column is not null we assume we have a
+                    // valid row
+                    var firstCol = worksheet.Cells[row, 1].Value;
+                    if (firstCol != null)
                     {
                         string brand = (string)worksheet.Cells[row, 1].Value;
-                        var bar_code = worksheet.Cells[row, 2].Value;
-                        long barcode = 0;
-                        if (bar_code != null)
-                        {
-                            barcode = Convert.ToInt64(bar_code);
-                        }
+                        string barcode = checkString(worksheet.Cells[row, 2].Value);
                         string sku = checkString(worksheet.Cells[row, 3].Value);
                         string description = (string)worksheet.Cells[row, 4].Value;
                         var a = (worksheet.Cells[row, 11].Value);
-                        string availabilty = "";
-                        if (a != null)
-                        {
-                            availabilty = (string)a;
-                        }
+                        string availabilty = checkString(worksheet.Cells[row, 11].Value);
                         int previousTotal = Convert.ToInt32(worksheet.Cells[row, 12].Value);
                         int total = Convert.ToInt32(worksheet.Cells[row, 13].Value);
 
 
 
-                        long insertId = InsertRow(sqliteConnection, sku, description, brand,
+                        int insertId = InsertRow(sku, description, brand,
                              availabilty, barcode);
-                        AddTotal(sqliteConnection, total, insertId);
+                        AddTotal(previousTotal, total, insertId);
                         var col1 = (string)worksheet.Cells[row, 5].Value;
-                        AddCollection(sqliteConnection, col1, insertId);
+                        AddCollection(col1, insertId);
 
                         var col2 = (string)worksheet.Cells[row, 6].Value;
-                        AddCollection(sqliteConnection, col2, insertId);
+                        AddCollection(col2, insertId);
 
                         var col3 = (string)worksheet.Cells[row, 7].Value;
-                        AddCollection(sqliteConnection, col3, insertId);
+                        AddCollection(col3, insertId);
 
                         var col4 = (string)worksheet.Cells[row, 8].Value;
-                        AddCollection(sqliteConnection, col4, insertId);
+                        AddCollection(col4, insertId);
 
                         var col5 = (string)worksheet.Cells[row, 9].Value;
-                        AddCollection(sqliteConnection, col5, insertId);
+                        AddCollection(col5, insertId);
 
                         var col6 = (string)worksheet.Cells[row, 10].Value;
-                        AddCollection(sqliteConnection, col6, insertId);
-
-
+                        AddCollection(col6, insertId);
                     }
                 }
-                // Close the connection
-                sqliteConnection.Close();
             }
         }
 
-        private void CreateDataSet()
-        {
-            string col1 = string.Empty;
-            string col2 = string.Empty;
-            string col3 = string.Empty;
-            string col4 = string.Empty;
-            string col5 = string.Empty;
-            string col6 = string.Empty;
-            int previousTotal = 0;
-            int total = 0;
-
-
-        }
         public void InitializeDatabase()
         {
             try
@@ -197,7 +168,7 @@ namespace grace
                 + " description TEXT,"
                 + " brand TEXT,"
                 + " availability TEXT,"
-                + " barcode INTEGER"
+                + " barcode TEXT"
                 + ");";
             logger.Info(createTableSQL);
             using (SQLiteCommand command = new SQLiteCommand(createTableSQL, sqliteConnection))
@@ -237,90 +208,95 @@ namespace grace
 
         }
 
-        long InsertRow(SQLiteConnection sqliteConnection, string sku, string description, string brand,
-           string availability, long barcode)
+         int InsertRow(string sku, string description, string brand,
+           string availability, string barcode)
         {
-            long insertId = 0;
+            int insertId = 0;
 
-
-            using (SQLiteCommand command = sqliteConnection.CreateCommand())
+            using (var dbContext = new GraceDbContext())
             {
-                // Use parameterized query to insert data
-                command.CommandText = "INSERT INTO Grace (sku, description, brand, availability, barcode) " +
-                                      "VALUES (@sku, @description, @brand, @availability, @barcode)";
-
-                // Add parameters with sanitized values
-                command.Parameters.AddWithValue("@sku", sku);
-                command.Parameters.AddWithValue("@description", description);
-                command.Parameters.AddWithValue("@brand", brand);
-                command.Parameters.AddWithValue("@availability", availability);
-                command.Parameters.AddWithValue("@barcode", barcode);
-                object result = command.ExecuteNonQuery();
-                if (result == null)
+                // Create a new Grace object to insert
+                var newGrace = new Grace
                 {
-                    logger.Error("Unable to insert row.");
-                }
+                    Sku = sku,
+                    Description = description,
+                    Brand = brand,
+                    Availability = availability,
+                    Barcode = barcode
+                };
+
+                // Add the new Grace object to the DbContext
+                dbContext.Graces.Add(newGrace);
+
+                // Save the changes to the database
+                dbContext.SaveChanges();
+
+                insertId = newGrace.ID;
             }
-
-            String idSql = "SELECT last_insert_rowid();";
-            using (SQLiteCommand command = new SQLiteCommand(idSql, sqliteConnection))
-            {
-                var result = command.ExecuteScalar();
-
-                if (result != null)
-                {
-                    insertId = Convert.ToInt64(result);
-                }
-                else
-                {
-                    logger.Error("Failed to get the ID of the inserted row.");
-                }
-            }
-            logger.Info($"Insert row {insertId}");
             return insertId;
 
         }
-        void AddCollection(SQLiteConnection sqliteConnection, string collection, long grace_id)
+        internal void AddCollection( string collection, int grace_id)
         {
             if (collection == null) return;
-            string insertSql = "INSERT INTO Collections (name, grace_id)"
-                 + "VALUES ('"
-                 + collection.Trim() + "',"
-                 + grace_id + ");";
-            logger.Info(insertSql);
-            using (SQLiteCommand insertCommand = new SQLiteCommand(insertSql, sqliteConnection))
+
+            using (var dbContext = new CollectionDbContext())
             {
-                insertCommand.ExecuteNonQuery();
+                var newCollection = new Collection
+                {
+                    Name = collection,
+                    GraceID = grace_id
+                };
+
+                dbContext.Collections.Add(newCollection);
+                dbContext.SaveChanges();
             }
         }
 
-        void AddTotal(SQLiteConnection sqliteConnection, int total, long grace_id)
+        void AddTotal(int previous_total, int total,  int grace_id)
         {
+            using (var dbContext = new TotalDbContext())
+            {
+                var newTotal = new Total
+                {
+                    date_field = Globals.GetInstance().currentHeaderDate,
+                    total = total,
+                    GraceID = grace_id
+                };
+                dbContext.Totals.Add(newTotal);
 
-            DateTime currentDate = DateTime.Now;
-            string formattedDate = currentDate.ToString("yyyy-MM-dd");
-            string insertSql = "INSERT INTO Totals (date_field, total, grace_id)"
-                 + "VALUES ('"
-                 + formattedDate + "',"
-                 + total + ","
-                 + grace_id + ");";
-            executeNonQuery(sqliteConnection, insertSql);
+                newTotal = new Total
+                {
+                    date_field = Globals.GetInstance().previousHeaderDate,
+                    total = previous_total,
+                    GraceID = grace_id
+                };
+                dbContext.Totals.Add(newTotal);
+                dbContext.SaveChanges();
+            }
+
         }
 
-        string checkString(object n)
+        private string checkString(object n)
         {
             string ret = "";
-            try
+            if (n is string)
             {
                 ret = Convert.ToString((string)n);
-                return ret.Trim();
             }
-            catch (Exception e)
+            else if (n is double)
             {
-                Console.WriteLine(e);
                 ret = ((double)n).ToString();
-                return ret.Trim();
             }
+            else if (n is int)
+            {
+                ret = ((int)n).ToString();
+            }
+            else
+            {
+                logger.Error("cannot convert " + n);
+            }
+            return ret.Trim();
         }
 
         private void executeNonQuery(SQLiteConnection sqliteConnection, string sql)

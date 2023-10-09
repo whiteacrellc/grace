@@ -151,24 +151,11 @@ namespace grace
             worksheet.Cells.Style.Font.Size = 14;
 
             // Set the row height to 10 for all rows
-            worksheet.DefaultRowHeight = 35;
+            worksheet.DefaultRowHeight = Globals.GetInstance().RowHeight;
 
             currentRow = 1;
             currentPage = 1;
             WriteHeader(worksheet, 1);
-
-            /*
-            worksheet.Cells["A1"].Value = "Brand";
-            worksheet.Cells["B1"].Value = "Item Number";
-            worksheet.Cells["C1"].Value = "Description";
-            worksheet.Cells["D1:I1"].Merge = true;
-            worksheet.Cells["D1:I1"].Value = "Collections";
-            worksheet.Cells["J1"].Value = "Previous Count";
-            worksheet.Cells["K1"].Value = "Total Count";
-            */
-
-
-            // worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
 
             for (int columnIndex = 1; columnIndex <= 12; columnIndex++)
             {
@@ -190,8 +177,8 @@ namespace grace
                 List<Row> rows = collections[key];
                 int rowsWritten = writeCollectoion(key, rows, worksheet);
 
-                var rowsPerPage = Properties.Settings.Default.rowsperpage;
-                if (currentPage > 30)
+                var rowsPerPage = Globals.GetInstance().RowsPerPage;
+                if (currentPage > rowsPerPage)
                 {
                     worksheet.InsertRow(endLastBlock, 1);
                     //currentRow++;
