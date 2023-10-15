@@ -10,9 +10,14 @@
  *
  * Year: 2023
  */
+using grace.data;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using NLog;
 using OfficeOpenXml;
+using System.Data;
+using System.Linq.Expressions;
 using System.Text;
+using System.Windows.Forms;
 
 namespace grace
 {
@@ -28,7 +33,9 @@ namespace grace
         private DataGridLoader dataGridLoader;
         private BindingSource bindingSource1;
 
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         public Vivian()
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
             InitializeComponent();
             // If you use EPPlus in a noncommercial context
@@ -106,14 +113,29 @@ namespace grace
 
             if (data.HaveData() == false)
             {
-                tabControl.TabPages[1].Hide();
+                dataPage.Hide();
             }
             else
             {
-                dataGridLoader = new DataGridLoader(this);
-                dataGridLoader.LoadBindingTable();
-                bindingSource1.DataSource = dataGridLoader.getData();
+                try
+                {
+                    dataGridLoader = new DataGridLoader(this);
+                    bindingSource1.DataSource = dataGridLoader.getData();
+                    formatTotals();
+                }
+                catch (Exception ex)
+                {
+                    data.InitializeDatabase();
+                }
             }
+
+            tabControl.Height = this.Height;
+            tabControl.Width = this.Width;
+            dataGridView.Height = tabControl.Height;
+            dataGridView.Width = tabControl.Width;
+            dataPage.Height = dataGridView.Height;
+            dataPage.Width = tabControl.Width;
+
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -126,6 +148,7 @@ namespace grace
         {
             openFileDialog.FilterIndex = 1;  // Index of the filter that is selected by default
             EnableReportButton(false);
+
 
             try
             {
@@ -157,7 +180,8 @@ namespace grace
             generateReport();
 
             EnableReportButton(true);
-            // dataGridLoader.LoadBindingTable();
+            dataGridLoader.LoadBindingTable();
+            dataGridView.DataSource = dataGridLoader.graceDb.GraceRows.ToList();
         }
 
         private void saveReportToolStripMenuItem_Click(object sender, EventArgs e)
@@ -224,34 +248,25 @@ namespace grace
             //textBoxBarcode.Text += box.Text;
         }
 
-        private void tabControl1_Enter(object sender, EventArgs e)
+        private void formatTotals()
         {
 
-        }
-
-        private void tabControl1_Selected(object sender, TabControlEventArgs e)
-        {
-            DataGridLoader dataGridLoader = new DataGridLoader(this);
-            bindingSource1.DataSource = dataGridLoader.getData();
-
-        }
-
-        private void dataGridView_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
-        {
-
-            if (e.RowIndex >= 0 && e.ColumnIndex == 11) // Assuming you want to compare Column1 and Column2
+            int numRows = dataGridView.Rows.Count;
+            for (int i = 0; i < numRows; i++)
             {
-                DataGridViewRow row = dataGridView.Rows[e.RowIndex];
+                DataGridViewRow row = dataGridView.Rows[i];
+
+                if (row == null || row.Cells[13].Value == null) { continue; }
 
                 // Compare the values of the two columns
-                //    string value1 = row.Cells["Total"].Value.ToString();
-                //    string value2 = row.Cells["Previous Total"].Value.ToString();
+                int value1 = (int)row.Cells[13].Value;
+                int value2 = (int)row.Cells[12].Value;
 
-                //     if (value1 != value2)
-                //     {
-                // Set the background color to yellow if values are not equal
-                //         e.CellStyle.BackColor = Color.Yellow;
-                //    }
+                if (value1 != value2)
+                {
+                    // Set the background color to yellow if values are not equal
+                    row.Cells[13].Style.BackColor = Color.Yellow;
+                }
             }
 
         }
@@ -259,6 +274,123 @@ namespace grace
         private void dataGridView_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
         {
 
+        }
+
+        private void Vivian_Resize(object sender, EventArgs e)
+        {
+
+            tabControl.Height = this.Height;
+            tabControl.Width = this.Width;
+            dataGridView.Height = tabControl.Height;
+            dataGridView.Width = tabControl.Width;
+            dataPage.Height = dataGridView.Height;
+            dataPage.Width = tabControl.Width;
+        }
+
+        private void dataGridView_Resize(object sender, EventArgs e)
+        {
+
+
+        }
+
+        private void checkoutPage_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            string searchTerm = textBox1.Text;
+
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                // Query the DbContext to filter products based on the "Sku" column
+                var filteredProducts = dataGridLoader.graceDb.GraceRows
+                    .Where(p => p.Sku.Contains(searchTerm))
+                    .ToList();
+
+                // Bind the filtered products to the DataGridView
+                bindingSource1.DataSource = filteredProducts;
+                // dataGridView.DataSource = filteredProducts;
+            }
+            else
+            {
+                // If the search box is empty, show all products
+                bindingSource1.DataSource = dataGridLoader.getData();
+                // dataGridView.DataSource = dataGridLoader.graceDb.GraceRows.ToList();
+            }
+        }
+
+        private void dataGridView_Paint(object sender, PaintEventArgs e)
+        {
+            formatTotals();
+        }
+
+        private void dataGridView_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        {
+            // Get the modified cell value and the corresponding product
+            int rowIndex = e.RowIndex;
+            int columnIndex = e.ColumnIndex;
+            object cellValue = dataGridView.Rows[rowIndex].Cells[columnIndex].Value;
+
+            try
+            {
+                int newTotal = Convert.ToInt32(cellValue);
+
+                if (columnIndex == 13) // Assuming the second column is the "Name" column
+                {
+                    // Update the corresponding product in the DbContext
+                    int id = Convert.ToInt32(dataGridView.Rows[rowIndex].Cells[0].Value); // Assuming the first column is the "Id" column
+                    var graceRow = dataGridLoader.graceDb.GraceRows.Find(id);
+                    //var graceRow = dataGridLoader.graceDb.GraceRows.Where(t => t.GraceId == grace.ID);
+                    var grace = dataGridLoader.graceDb.Graces.First(t => t.ID == graceRow.GraceId);
+
+                    if (grace != null)
+                    {
+                        var total = new Total
+                        {
+                            date_field = DateTime.Now,
+                            total = newTotal,
+                            GraceId = id
+                        };
+                        grace.Totals.Add(total);
+                        graceRow.PreviousTotal = graceRow.Total;
+                        graceRow.Total = newTotal;
+                        dataGridLoader.graceDb.SaveChanges(); // Save changes to the database
+                        logger.Info($"{total.date_field} {User} changed {grace.Sku} total to {newTotal}");
+                    }
+                }
+            }
+            catch
+            {
+                int id = (int)dataGridView1.Rows[rowIndex].Cells[0].Value;
+                var graceRow = dataGridLoader.graceDb.GraceRows.Find(id);
+                if (columnIndex == 13) // Assuming the second column is the "Name" column
+                {
+                    dataGridView1.Rows[rowIndex].Cells[13].Value = graceRow.Total;
+                }
+            }
+
+        }
+
+        private void dataGridView_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            int rowIndex = e.RowIndex;
+            int columnIndex = e.ColumnIndex;
+            using (EditRowForm editRowForm = new EditRowForm(rowIndex))
+            {
+                editRowForm.ShowDialog();
+            }
+        }
+
+        private void dataGridView_CellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
+        {
+            int columnIndex = e.ColumnIndex;
+            if (columnIndex < 13)
+            {
+                e.Cancel = true; // Cancel the edit for the first 12 columns
+            }
         }
     }
 }

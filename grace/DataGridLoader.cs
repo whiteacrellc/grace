@@ -1,4 +1,6 @@
 ﻿using grace.data;
+using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
 using NLog;
 using System.ComponentModel.Design;
 using System.Data;
@@ -15,12 +17,13 @@ namespace grace
         private DataTable dataTable = new DataTable();
         private Dictionary<long, GraceRow> graceRows = new Dictionary<long, GraceRow>();
 
-        private GraceDbContext graceDb;
+        public GraceDbContext graceDb { get; private set; }
 
         public DataGridLoader(Vivian vivian)
         {
             this.vivian = vivian;
             graceDb = new GraceDbContext();
+      
         }
 
         public List<GraceRow> getData()
@@ -31,13 +34,16 @@ namespace grace
         internal void LoadBindingTable()
         {
 
-          //  if (graceDb.GraceRows.ToList().Count == 0) { return; }
+            if (graceDb.GraceRows.ToList().Count > 0) {
+                return;
+            }
 
             List<GraceRow> rows = new List<GraceRow>();
             var result = graceDb.Graces.ToList();
             foreach (var item in result)
             {
                 GraceRow row = new GraceRow();
+                row.GraceId = item.ID;
                 row.Sku = item.Sku;
                 row.BarCode = item.Barcode;
                 row.Brand = item.Brand;
@@ -104,4 +110,6 @@ namespace grace
             graceDb.SaveChanges();
         }
     }
+
+
 }

@@ -43,7 +43,7 @@ namespace grace
 
         private string dbName = "grace.db";
 
-        private GraceDbContext graceDb;
+        public GraceDbContext graceDb { get; private set; }
 
         public DataBase()
 
@@ -62,6 +62,11 @@ namespace grace
             graceDb = new GraceDbContext();
             graceDb.Database.EnsureCreated();
 
+        }
+
+        ~DataBase()
+        {
+            graceDb.Dispose();
         }
 
         public string CreateDatabaseFile()

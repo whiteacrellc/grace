@@ -23,6 +23,11 @@ namespace grace.data
                 .HasOne(t => t.Grace)    
                 .WithMany(g => g.Collections)  
                 .HasForeignKey(t => t.GraceId);
+
+            modelBuilder.Entity<GraceRow>()
+                .HasOne(t => t.Grace)
+                .WithMany(g => g.GraceRows)
+                .HasForeignKey(t => t.GraceId);
         }
 
 
@@ -52,6 +57,8 @@ namespace grace.data
         public List<Total> Totals { get; set; }
 
         public List<Collection> Collections { get; set; }
+
+        public List<GraceRow> GraceRows { get; set; }
 
     }
 
@@ -106,6 +113,10 @@ namespace grace.data
         public string? Col6 { get; set; }
         public int PreviousTotal { get; set; } = 0;
         public int Total { get; set; } = 0;
+
+        public int GraceId { get; set; }
+        [ForeignKey("GraceId")]
+        public Grace Grace { get; set; }
     }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 }
