@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Vivian));
             openFileDialog = new OpenFileDialog();
             menuStrip1 = new MenuStrip();
@@ -39,7 +38,7 @@
             saveReportToolStripMenuItem = new ToolStripMenuItem();
             exitToolStripMenuItem = new ToolStripMenuItem();
             pictureBox1 = new PictureBox();
-            tabControl1 = new TabControl();
+            tabControl = new TabControl();
             loginPage = new TabPage();
             chooseUserButton = new Button();
             groupBox1 = new GroupBox();
@@ -49,34 +48,19 @@
             radioButtonPatti = new RadioButton();
             dataPage = new TabPage();
             dataGridView = new DataGridView();
-            Brand = new DataGridViewTextBoxColumn();
-            Barcode = new DataGridViewTextBoxColumn();
-            sku = new DataGridViewTextBoxColumn();
-            description = new DataGridViewTextBoxColumn();
-            col1 = new DataGridViewTextBoxColumn();
-            col2 = new DataGridViewTextBoxColumn();
-            col3 = new DataGridViewTextBoxColumn();
-            col4 = new DataGridViewTextBoxColumn();
-            col5 = new DataGridViewTextBoxColumn();
-            col6 = new DataGridViewTextBoxColumn();
-            availabilty = new DataGridViewTextBoxColumn();
-            previousTotal = new DataGridViewTextBoxColumn();
-            currentTotal = new DataGridViewTextBoxColumn();
             checkoutPage = new TabPage();
             dataGridView1 = new DataGridView();
             barcodeLabel = new Label();
             textBoxBarcode = new TextBox();
-            bindingSource1 = new BindingSource(components);
             menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
-            tabControl1.SuspendLayout();
+            tabControl.SuspendLayout();
             loginPage.SuspendLayout();
             groupBox1.SuspendLayout();
             dataPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridView).BeginInit();
             checkoutPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)bindingSource1).BeginInit();
             SuspendLayout();
             // 
             // openFileDialog
@@ -148,18 +132,19 @@
             pictureBox1.TabIndex = 1;
             pictureBox1.TabStop = false;
             // 
-            // tabControl1
+            // tabControl
             // 
-            tabControl1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            tabControl1.Controls.Add(loginPage);
-            tabControl1.Controls.Add(dataPage);
-            tabControl1.Controls.Add(checkoutPage);
-            tabControl1.Location = new Point(0, 20);
-            tabControl1.Margin = new Padding(2, 1, 2, 1);
-            tabControl1.Name = "tabControl1";
-            tabControl1.SelectedIndex = 0;
-            tabControl1.Size = new Size(1300, 654);
-            tabControl1.TabIndex = 9;
+            tabControl.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            tabControl.Controls.Add(loginPage);
+            tabControl.Controls.Add(dataPage);
+            tabControl.Controls.Add(checkoutPage);
+            tabControl.Location = new Point(0, 20);
+            tabControl.Margin = new Padding(2, 1, 2, 1);
+            tabControl.Name = "tabControl";
+            tabControl.SelectedIndex = 0;
+            tabControl.Size = new Size(1300, 654);
+            tabControl.TabIndex = 9;
+            tabControl.Selected += tabControl1_Selected;
             // 
             // loginPage
             // 
@@ -262,8 +247,9 @@
             // dataGridView
             // 
             dataGridView.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            dataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+            dataGridView.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
             dataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView.Columns.AddRange(new DataGridViewColumn[] { Brand, Barcode, sku, description, col1, col2, col3, col4, col5, col6, availabilty, previousTotal, currentTotal });
             dataGridView.Location = new Point(0, 5);
             dataGridView.Margin = new Padding(2, 1, 2, 1);
             dataGridView.Name = "dataGridView";
@@ -271,94 +257,8 @@
             dataGridView.RowTemplate.Height = 41;
             dataGridView.Size = new Size(1300, 625);
             dataGridView.TabIndex = 1;
-            // 
-            // Brand
-            // 
-            Brand.HeaderText = "Brand";
-            Brand.MinimumWidth = 10;
-            Brand.Name = "Brand";
-            // 
-            // Barcode
-            // 
-            Barcode.HeaderText = "Barcode";
-            Barcode.MinimumWidth = 10;
-            Barcode.Name = "Barcode";
-            Barcode.Visible = false;
-            Barcode.Width = 200;
-            // 
-            // sku
-            // 
-            sku.HeaderText = "Item Number";
-            sku.MinimumWidth = 10;
-            sku.Name = "sku";
-            // 
-            // description
-            // 
-            description.HeaderText = "Description";
-            description.MinimumWidth = 10;
-            description.Name = "description";
-            description.Width = 200;
-            // 
-            // col1
-            // 
-            col1.HeaderText = "Collection1";
-            col1.MinimumWidth = 10;
-            col1.Name = "col1";
-            col1.Width = 75;
-            // 
-            // col2
-            // 
-            col2.HeaderText = "Collection 2";
-            col2.MinimumWidth = 10;
-            col2.Name = "col2";
-            col2.Width = 75;
-            // 
-            // col3
-            // 
-            col3.HeaderText = "Collection 3";
-            col3.MinimumWidth = 10;
-            col3.Name = "col3";
-            col3.Width = 75;
-            // 
-            // col4
-            // 
-            col4.HeaderText = "Collection 4";
-            col4.MinimumWidth = 10;
-            col4.Name = "col4";
-            col4.Width = 75;
-            // 
-            // col5
-            // 
-            col5.HeaderText = "Collection 5";
-            col5.MinimumWidth = 10;
-            col5.Name = "col5";
-            col5.Width = 75;
-            // 
-            // col6
-            // 
-            col6.HeaderText = "Collection 6";
-            col6.MinimumWidth = 10;
-            col6.Name = "col6";
-            col6.Width = 75;
-            // 
-            // availabilty
-            // 
-            availabilty.HeaderText = "Availability";
-            availabilty.MinimumWidth = 10;
-            availabilty.Name = "availabilty";
-            availabilty.Width = 75;
-            // 
-            // previousTotal
-            // 
-            previousTotal.HeaderText = "Previous Total";
-            previousTotal.MinimumWidth = 10;
-            previousTotal.Name = "previousTotal";
-            // 
-            // currentTotal
-            // 
-            currentTotal.HeaderText = "Current Total";
-            currentTotal.MinimumWidth = 10;
-            currentTotal.Name = "currentTotal";
+            dataGridView.CellFormatting += dataGridView_CellFormatting;
+            dataGridView.DataBindingComplete += dataGridView_DataBindingComplete;
             // 
             // checkoutPage
             // 
@@ -399,16 +299,12 @@
             textBoxBarcode.TextChanged += textBoxBarcode_TextChanged;
             textBoxBarcode.KeyDown += textBoxBarcode_KeyDown;
             // 
-            // bindingSource1
-            // 
-            bindingSource1.BindingComplete += bindingSource1_BindingComplete;
-            // 
             // Vivian
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1300, 672);
-            Controls.Add(tabControl1);
+            Controls.Add(tabControl);
             Controls.Add(menuStrip1);
             Icon = (Icon)resources.GetObject("$this.Icon");
             MainMenuStrip = menuStrip1;
@@ -419,7 +315,7 @@
             menuStrip1.ResumeLayout(false);
             menuStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
-            tabControl1.ResumeLayout(false);
+            tabControl.ResumeLayout(false);
             loginPage.ResumeLayout(false);
             loginPage.PerformLayout();
             groupBox1.ResumeLayout(false);
@@ -429,7 +325,6 @@
             checkoutPage.ResumeLayout(false);
             checkoutPage.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
-            ((System.ComponentModel.ISupportInitialize)bindingSource1).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -444,7 +339,7 @@
         private ToolStripMenuItem saveReportToolStripMenuItem;
         private ToolStripMenuItem printReportToolStripMenuItem;
         private PictureBox pictureBox1;
-        private TabControl tabControl1;
+        private TabControl tabControl;
         private TabPage loginPage;
         private Button chooseUserButton;
         private GroupBox groupBox1;
@@ -452,22 +347,9 @@
         private RadioButton radioButtonBetty;
         private RadioButton radioButtonSue;
         private RadioButton radioButtonPatti;
-        private BindingSource bindingSource1;
+        private BindingSource bindingSource;
         private TabPage dataPage;
         private DataGridView dataGridView;
-        private DataGridViewTextBoxColumn Brand;
-        private DataGridViewTextBoxColumn Barcode;
-        private DataGridViewTextBoxColumn sku;
-        private DataGridViewTextBoxColumn description;
-        private DataGridViewTextBoxColumn col1;
-        private DataGridViewTextBoxColumn col2;
-        private DataGridViewTextBoxColumn col3;
-        private DataGridViewTextBoxColumn col4;
-        private DataGridViewTextBoxColumn col5;
-        private DataGridViewTextBoxColumn col6;
-        private DataGridViewTextBoxColumn availabilty;
-        private DataGridViewTextBoxColumn previousTotal;
-        private DataGridViewTextBoxColumn currentTotal;
         private TabPage checkoutPage;
         private TextBox textBoxBarcode;
         private Label barcodeLabel;

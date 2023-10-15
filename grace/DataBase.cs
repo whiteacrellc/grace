@@ -11,9 +11,12 @@
  * Year: 2023
  */
 using grace.data;
+using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
 using NLog;
 using OfficeOpenXml;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
@@ -40,11 +43,15 @@ namespace grace
 
         private string dbName = "grace.db";
 
+        private GraceDbContext graceDb;
+
         public DataBase()
 
         {
             DbFileName = string.Empty;
             ConnectionString = CreateDatabaseFile();
+            graceDb = new GraceDbContext();
+            graceDb.Database.EnsureCreated();
         }
 
         public DataBase(string fileName)
@@ -52,6 +59,9 @@ namespace grace
             dbName = fileName;
             DbFileName = string.Empty;
             ConnectionString = CreateDatabaseFile();
+            graceDb = new GraceDbContext();
+            graceDb.Database.EnsureCreated();
+
         }
 
         public string CreateDatabaseFile()
@@ -62,24 +72,24 @@ namespace grace
             // Specify the database file path in the program's directory
             DbFileName = Path.Combine(programDirectory, dbName);
 
-            // Check if the database file exists; if not, create it
-            if (!File.Exists(DbFileName))
+            var baseConnectionString = "Data Source=" + DbFileName + ";Cache=Shared";
+            var connectionString = new SqliteConnectionStringBuilder(baseConnectionString)
             {
-                SQLiteConnection.CreateFile(DbFileName);
-            }
+                Mode = SqliteOpenMode.ReadWriteCreate,
+            }.ToString();
 
-            var connectionString = "Data Source=" + DbFileName
-                + ";Version=3;";
+
 
             logger.Info(connectionString);
+            Globals.GetInstance().ConnectionString = connectionString;
 
             return connectionString;
         }
 
-        public SQLiteConnection OpenConnection()
+        public bool HaveData()
         {
-            var db = new SQLiteConnection(ConnectionString);
-            return db;
+            int numrows = graceDb.Graces.ToList().Count;
+            return (numrows > 0) ? true : false;
         }
 
         public void LoadFromExcel(string filename)
@@ -146,13 +156,8 @@ namespace grace
         {
             try
             {
-                var sqliteConnection = OpenConnection();
-                sqliteConnection.Open();
-                dropTables(sqliteConnection);
-                CreateMainTable(sqliteConnection);
-                CreateTotalTable(sqliteConnection);
-                CreateCollectionTable(sqliteConnection);
-                sqliteConnection.Close();
+                graceDb.Database.EnsureDeleted();
+                graceDb.Database.EnsureCreated();
             }
             catch (Exception ex)
             {
@@ -160,120 +165,67 @@ namespace grace
             }
         }
 
-        void CreateMainTable(SQLiteConnection sqliteConnection)
-        {
-            string createTableSQL = "CREATE TABLE IF NOT EXISTS Grace "
-                + "(ID INTEGER PRIMARY KEY AUTOINCREMENT,"
-                + " sku TEXT,"
-                + " description TEXT,"
-                + " brand TEXT,"
-                + " availability TEXT,"
-                + " barcode TEXT"
-                + ");";
-            logger.Info(createTableSQL);
-            using (SQLiteCommand command = new SQLiteCommand(createTableSQL, sqliteConnection))
-            {
-                command.ExecuteNonQuery();
-            }
-        }
-
-        void CreateTotalTable(SQLiteConnection sqliteConnection)
-        {
-            string createTableSQL = "CREATE TABLE IF NOT EXISTS Totals ("
-               + "id INTEGER PRIMARY KEY AUTOINCREMENT,"
-               + "date_field DATE,"
-               + "total INTEGER,"
-               + "grace_id INTEGER,"
-               + "FOREIGN KEY(grace_id) REFERENCES grace(id));";
-            logger.Info(createTableSQL);
-            using (SQLiteCommand command = new SQLiteCommand(createTableSQL, sqliteConnection))
-            {
-                command.ExecuteNonQuery();
-            }
-
-        }
-
-        void CreateCollectionTable(SQLiteConnection sqliteConnection)
-        {
-            string createTableSQL = "CREATE TABLE IF NOT EXISTS Collections ("
-               + "id INTEGER PRIMARY KEY AUTOINCREMENT,"
-               + "name TEXT,"
-               + "grace_id INTEGER,"
-               + "FOREIGN KEY(grace_id) REFERENCES grace(id));";
-            logger.Info(createTableSQL);
-            using (SQLiteCommand command = new SQLiteCommand(createTableSQL, sqliteConnection))
-            {
-                command.ExecuteNonQuery();
-            }
-
-        }
-
-         int InsertRow(string sku, string description, string brand,
-           string availability, string barcode)
+        int InsertRow(string sku, string description, string brand,
+          string availability, string barcode)
         {
             int insertId = 0;
 
-            using (var dbContext = new GraceDbContext())
+
+            // Create a new Grace object to insert
+            var newGrace = new Grace
             {
-                // Create a new Grace object to insert
-                var newGrace = new Grace
-                {
-                    Sku = sku,
-                    Description = description,
-                    Brand = brand,
-                    Availability = availability,
-                    Barcode = barcode
-                };
+                Sku = sku,
+                Description = description,
+                Brand = brand,
+                Availability = availability,
+                Barcode = barcode
+            };
 
-                // Add the new Grace object to the DbContext
-                dbContext.Graces.Add(newGrace);
+            // Add the new Grace object to the DbContext
+            graceDb.Graces.Add(newGrace);
 
-                // Save the changes to the database
-                dbContext.SaveChanges();
+            // Save the changes to the database
+            graceDb.SaveChanges();
 
-                insertId = newGrace.ID;
-            }
+            insertId = newGrace.ID;
+
             return insertId;
 
         }
-        internal void AddCollection( string collection, int grace_id)
+        internal void AddCollection(string collection, int grace_id)
         {
             if (collection == null) return;
 
-            using (var dbContext = new CollectionDbContext())
-            {
-                var newCollection = new Collection
-                {
-                    Name = collection,
-                    GraceID = grace_id
-                };
 
-                dbContext.Collections.Add(newCollection);
-                dbContext.SaveChanges();
-            }
+            var newCollection = new Collection
+            {
+                Name = collection,
+                GraceId = grace_id
+            };
+
+            graceDb.Collections.Add(newCollection);
+            graceDb.SaveChanges();
+
         }
 
-        void AddTotal(int previous_total, int total,  int grace_id)
+        void AddTotal(int previous_total, int total, int grace_id)
         {
-            using (var dbContext = new TotalDbContext())
+            var newTotal = new Total
             {
-                var newTotal = new Total
-                {
-                    date_field = Globals.GetInstance().currentHeaderDate,
-                    total = total,
-                    GraceID = grace_id
-                };
-                dbContext.Totals.Add(newTotal);
+                date_field = Globals.GetInstance().currentHeaderDate,
+                total = total,
+                GraceId = grace_id
+            };
+            graceDb.Totals.Add(newTotal);
 
-                newTotal = new Total
-                {
-                    date_field = Globals.GetInstance().previousHeaderDate,
-                    total = previous_total,
-                    GraceID = grace_id
-                };
-                dbContext.Totals.Add(newTotal);
-                dbContext.SaveChanges();
-            }
+            newTotal = new Total
+            {
+                date_field = Globals.GetInstance().previousHeaderDate,
+                total = previous_total,
+                GraceId = grace_id
+            };
+            graceDb.Totals.Add(newTotal);
+            graceDb.SaveChanges();
 
         }
 
@@ -298,25 +250,9 @@ namespace grace
             }
             return ret.Trim();
         }
-
-        private void executeNonQuery(SQLiteConnection sqliteConnection, string sql)
+        public void CleanUp()
         {
-            logger.Info(sql);
-            using (SQLiteCommand insertCommand = new SQLiteCommand(sql, sqliteConnection))
-            {
-                insertCommand.ExecuteNonQuery();
-            }
-        }
-        private void dropTables(SQLiteConnection conn)
-        {
-
-            var sql = "DROP TABLE IF EXISTS Collections";
-            executeNonQuery(conn, sql);
-            sql = "DROP TABLE IF EXISTS Totals";
-            executeNonQuery(conn, sql);
-            sql = "DROP TABLE IF EXISTS Grace";
-            executeNonQuery(conn, sql);
-
+            graceDb.Database.EnsureDeleted();
         }
     }
 

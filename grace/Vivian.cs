@@ -23,9 +23,11 @@ namespace grace
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
         public string User { get; set; }
-        private string barcode = "";
         private StringBuilder sb = new StringBuilder();
         private bool readyForNewCode = true;
+        private DataGridLoader dataGridLoader;
+        private BindingSource bindingSource1;
+
         public Vivian()
         {
             InitializeComponent();
@@ -35,6 +37,13 @@ namespace grace
             er = new ExcelReader(this);
             EnableReportButton(false);
             User = "";
+
+
+            dataGridView.AutoGenerateColumns = true;
+            bindingSource1 = new BindingSource();
+            dataGridView.DataSource = bindingSource1;
+
+
         }
 
         private void generateReport()
@@ -94,13 +103,17 @@ namespace grace
             Globals globals = Globals.GetInstance();
             DataBase data = new DataBase();
             Globals.GetInstance().ConnectionString = data.ConnectionString;
-            DataGridLoader dataGridLoader = new DataGridLoader(this);
 
-        }
-
-        public DataGridView GetDataGridView()
-        {
-            return dataGridView;
+            if (data.HaveData() == false)
+            {
+                tabControl.TabPages[1].Hide();
+            }
+            else
+            {
+                dataGridLoader = new DataGridLoader(this);
+                dataGridLoader.LoadBindingTable();
+                bindingSource1.DataSource = dataGridLoader.getData();
+            }
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -113,7 +126,6 @@ namespace grace
         {
             openFileDialog.FilterIndex = 1;  // Index of the filter that is selected by default
             EnableReportButton(false);
-
 
             try
             {
@@ -145,6 +157,7 @@ namespace grace
             generateReport();
 
             EnableReportButton(true);
+            // dataGridLoader.LoadBindingTable();
         }
 
         private void saveReportToolStripMenuItem_Click(object sender, EventArgs e)
@@ -177,17 +190,12 @@ namespace grace
 
         private void chooseUserButton_Click(object sender, EventArgs e)
         {
-            tabControl1.SelectedTab = dataPage;
-        }
-
-        private void bindingSource1_BindingComplete(object sender, BindingCompleteEventArgs e)
-        {
-
+            tabControl.SelectedTab = dataPage;
         }
 
         private void textBoxBarcode_KeyDown(object sender, KeyEventArgs e)
         {
-          
+
             if (e.KeyData == e.KeyCode)
             {
                 if (readyForNewCode)
@@ -203,8 +211,8 @@ namespace grace
             else
             if (e.KeyCode == Keys.Enter)
             {
-               textBoxBarcode.Text = sb.ToString();
-               readyForNewCode = true;
+                textBoxBarcode.Text = sb.ToString();
+                readyForNewCode = true;
                 // Process the scanned data as needed (e.g., send it to a database, perform actions)
                 // Example: ProcessScannedData(scannedData);
             }
@@ -212,8 +220,45 @@ namespace grace
 
         private void textBoxBarcode_TextChanged(object sender, EventArgs e)
         {
-           //TextBox box = (TextBox)sender;
+            //TextBox box = (TextBox)sender;
             //textBoxBarcode.Text += box.Text;
+        }
+
+        private void tabControl1_Enter(object sender, EventArgs e)
+        {
+
+        }
+
+        private void tabControl1_Selected(object sender, TabControlEventArgs e)
+        {
+            DataGridLoader dataGridLoader = new DataGridLoader(this);
+            bindingSource1.DataSource = dataGridLoader.getData();
+
+        }
+
+        private void dataGridView_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+
+            if (e.RowIndex >= 0 && e.ColumnIndex == 11) // Assuming you want to compare Column1 and Column2
+            {
+                DataGridViewRow row = dataGridView.Rows[e.RowIndex];
+
+                // Compare the values of the two columns
+                //    string value1 = row.Cells["Total"].Value.ToString();
+                //    string value2 = row.Cells["Previous Total"].Value.ToString();
+
+                //     if (value1 != value2)
+                //     {
+                // Set the background color to yellow if values are not equal
+                //         e.CellStyle.BackColor = Color.Yellow;
+                //    }
+            }
+
+        }
+
+        private void dataGridView_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
+        {
+
         }
     }
 }

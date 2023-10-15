@@ -22,7 +22,7 @@ namespace grace
     {
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         private static Globals instance;
-#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+
         private int rowHeight = 0;
         private int rowsPerPage = 0;
         private Globals()
@@ -67,5 +67,6 @@ namespace grace
         public DateTime previousHeaderDate { get; set; } = DateTime.Now.AddDays(-14);
 
         public string ConnectionString { get; set; }
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
     }
 }

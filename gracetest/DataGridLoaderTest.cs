@@ -41,20 +41,13 @@ namespace gracetests
         public void Test_CreateLoadTable()
         {
 
-            var connectoion = dataBase.OpenConnection();
             try
             {
-                loader.CreateLoadTable(connectoion);
-                loader.MakeBindingTable(connectoion);
-                loader.LoadBindingTable(connectoion);
+                loader.LoadBindingTable();
             }
             catch (Exception ex)
             {
                 Assert.Fail(ex.Message);
-            }
-            finally
-            {
-                connectoion.Close();
             }
 
         }
