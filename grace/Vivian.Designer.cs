@@ -40,29 +40,27 @@
             pictureBox1 = new PictureBox();
             tabControl = new TabControl();
             loginPage = new TabPage();
+            radioButtonBetty = new RadioButton();
+            radioButtonKaren = new RadioButton();
             chooseUserButton = new Button();
             groupBox1 = new GroupBox();
-            radioButtonKaren = new RadioButton();
-            radioButtonBetty = new RadioButton();
-            radioButtonSue = new RadioButton();
             radioButtonPatti = new RadioButton();
+            radioButtonSue = new RadioButton();
             dataPage = new TabPage();
             label1 = new Label();
             textBox1 = new TextBox();
             dataGridView = new DataGridView();
             checkoutPage = new TabPage();
-            dataGridView1 = new DataGridView();
             barcodeLabel = new Label();
             textBoxBarcode = new TextBox();
+            adminPage = new TabPage();
             menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             tabControl.SuspendLayout();
             loginPage.SuspendLayout();
-            groupBox1.SuspendLayout();
             dataPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridView).BeginInit();
             checkoutPage.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             SuspendLayout();
             // 
             // openFileDialog
@@ -71,51 +69,54 @@
             // 
             // menuStrip1
             // 
+            menuStrip1.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point);
             menuStrip1.ImageScalingSize = new Size(32, 32);
             menuStrip1.Items.AddRange(new ToolStripItem[] { editToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
-            menuStrip1.Size = new Size(2874, 40);
+            menuStrip1.Padding = new Padding(7, 2, 0, 2);
+            menuStrip1.Size = new Size(1584, 28);
             menuStrip1.TabIndex = 4;
             menuStrip1.Text = "menuStrip1";
             // 
             // editToolStripMenuItem
             // 
             editToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { settingsToolStripMenuItem, importInventoryToolStripMenuItem, printReportToolStripMenuItem, saveReportToolStripMenuItem, exitToolStripMenuItem });
+            editToolStripMenuItem.Font = new Font("Segoe UI", 10.875F, FontStyle.Bold, GraphicsUnit.Point);
             editToolStripMenuItem.Name = "editToolStripMenuItem";
-            editToolStripMenuItem.Size = new Size(71, 36);
+            editToolStripMenuItem.Size = new Size(45, 24);
             editToolStripMenuItem.Text = "File";
             // 
             // settingsToolStripMenuItem
             // 
             settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
-            settingsToolStripMenuItem.Size = new Size(326, 44);
+            settingsToolStripMenuItem.Size = new Size(200, 24);
             settingsToolStripMenuItem.Text = "Settings";
             settingsToolStripMenuItem.Click += settingsToolStripMenuItem_Click;
             // 
             // importInventoryToolStripMenuItem
             // 
             importInventoryToolStripMenuItem.Name = "importInventoryToolStripMenuItem";
-            importInventoryToolStripMenuItem.Size = new Size(326, 44);
+            importInventoryToolStripMenuItem.Size = new Size(200, 24);
             importInventoryToolStripMenuItem.Text = "Import Inventory";
             importInventoryToolStripMenuItem.Click += importInventoryToolStripMenuItem_Click;
             // 
             // printReportToolStripMenuItem
             // 
             printReportToolStripMenuItem.Name = "printReportToolStripMenuItem";
-            printReportToolStripMenuItem.Size = new Size(326, 44);
+            printReportToolStripMenuItem.Size = new Size(200, 24);
             // 
             // saveReportToolStripMenuItem
             // 
             saveReportToolStripMenuItem.Name = "saveReportToolStripMenuItem";
-            saveReportToolStripMenuItem.Size = new Size(326, 44);
+            saveReportToolStripMenuItem.Size = new Size(200, 24);
             saveReportToolStripMenuItem.Text = "Save Report";
             saveReportToolStripMenuItem.Click += saveReportToolStripMenuItem_Click;
             // 
             // exitToolStripMenuItem
             // 
             exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            exitToolStripMenuItem.Size = new Size(326, 44);
+            exitToolStripMenuItem.Size = new Size(200, 24);
             exitToolStripMenuItem.Text = "Exit";
             exitToolStripMenuItem.Click += exitToolStripMenuItem_Click;
             // 
@@ -125,48 +126,79 @@
             pictureBox1.AccessibleName = "Logo";
             pictureBox1.BackColor = SystemColors.ControlLight;
             pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
-            pictureBox1.Location = new Point(108, 85);
-            pictureBox1.Margin = new Padding(4, 2, 4, 2);
+            pictureBox1.Location = new Point(36, 32);
+            pictureBox1.Margin = new Padding(5, 2, 5, 2);
             pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(334, 129);
+            pictureBox1.Size = new Size(342, 126);
             pictureBox1.TabIndex = 1;
             pictureBox1.TabStop = false;
             // 
             // tabControl
             // 
             tabControl.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            tabControl.Appearance = TabAppearance.Buttons;
             tabControl.Controls.Add(loginPage);
             tabControl.Controls.Add(dataPage);
             tabControl.Controls.Add(checkoutPage);
-            tabControl.Location = new Point(0, 43);
-            tabControl.Margin = new Padding(4, 2, 4, 2);
-            tabControl.MinimumSize = new Size(2900, 1490);
+            tabControl.Controls.Add(adminPage);
+            tabControl.Font = new Font("Segoe UI", 10.875F, FontStyle.Bold, GraphicsUnit.Point);
+            tabControl.ItemSize = new Size(150, 48);
+            tabControl.Location = new Point(0, 30);
+            tabControl.Margin = new Padding(5, 2, 5, 2);
             tabControl.Name = "tabControl";
+            tabControl.Padding = new Point(30, 5);
             tabControl.SelectedIndex = 0;
-            tabControl.Size = new Size(2900, 1490);
+            tabControl.Size = new Size(1584, 632);
             tabControl.TabIndex = 9;
             // 
             // loginPage
             // 
+            loginPage.Controls.Add(radioButtonBetty);
+            loginPage.Controls.Add(radioButtonKaren);
             loginPage.Controls.Add(chooseUserButton);
             loginPage.Controls.Add(groupBox1);
+            loginPage.Controls.Add(radioButtonPatti);
+            loginPage.Controls.Add(radioButtonSue);
             loginPage.Controls.Add(pictureBox1);
-            loginPage.Location = new Point(8, 46);
-            loginPage.Margin = new Padding(4, 2, 4, 2);
+            loginPage.Location = new Point(4, 52);
+            loginPage.Margin = new Padding(5, 2, 5, 2);
             loginPage.Name = "loginPage";
-            loginPage.Padding = new Padding(4, 2, 4, 2);
-            loginPage.Size = new Size(2884, 1436);
+            loginPage.Padding = new Padding(5, 2, 5, 2);
+            loginPage.Size = new Size(1576, 576);
             loginPage.TabIndex = 0;
             loginPage.Text = "Home";
+            loginPage.ToolTipText = "Login Page";
             loginPage.UseVisualStyleBackColor = true;
+            // 
+            // radioButtonBetty
+            // 
+            radioButtonBetty.AutoSize = true;
+            radioButtonBetty.Location = new Point(773, 252);
+            radioButtonBetty.Margin = new Padding(5, 2, 5, 2);
+            radioButtonBetty.Name = "radioButtonBetty";
+            radioButtonBetty.Size = new Size(65, 24);
+            radioButtonBetty.TabIndex = 7;
+            radioButtonBetty.Text = "Betty";
+            radioButtonBetty.UseVisualStyleBackColor = true;
+            // 
+            // radioButtonKaren
+            // 
+            radioButtonKaren.AutoSize = true;
+            radioButtonKaren.Location = new Point(778, 224);
+            radioButtonKaren.Margin = new Padding(5, 2, 5, 2);
+            radioButtonKaren.Name = "radioButtonKaren";
+            radioButtonKaren.Size = new Size(68, 24);
+            radioButtonKaren.TabIndex = 8;
+            radioButtonKaren.Text = "Karen";
+            radioButtonKaren.UseVisualStyleBackColor = true;
             // 
             // chooseUserButton
             // 
             chooseUserButton.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            chooseUserButton.Location = new Point(790, 625);
-            chooseUserButton.Margin = new Padding(4, 2, 4, 2);
+            chooseUserButton.Location = new Point(778, 335);
+            chooseUserButton.Margin = new Padding(5, 2, 5, 2);
             chooseUserButton.Name = "chooseUserButton";
-            chooseUserButton.Size = new Size(281, 77);
+            chooseUserButton.Size = new Size(141, 44);
             chooseUserButton.TabIndex = 8;
             chooseUserButton.Text = "Choose User";
             chooseUserButton.UseVisualStyleBackColor = true;
@@ -175,94 +207,69 @@
             // groupBox1
             // 
             groupBox1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
-            groupBox1.Controls.Add(radioButtonKaren);
-            groupBox1.Controls.Add(radioButtonBetty);
-            groupBox1.Controls.Add(radioButtonSue);
-            groupBox1.Controls.Add(radioButtonPatti);
-            groupBox1.Location = new Point(790, 189);
-            groupBox1.Margin = new Padding(4, 2, 4, 2);
+            groupBox1.Location = new Point(542, 59);
+            groupBox1.Margin = new Padding(5, 2, 5, 2);
             groupBox1.Name = "groupBox1";
-            groupBox1.Padding = new Padding(4, 2, 4, 2);
-            groupBox1.Size = new Size(277, 402);
+            groupBox1.Padding = new Padding(5, 2, 5, 2);
+            groupBox1.Size = new Size(320, 0);
             groupBox1.TabIndex = 7;
             groupBox1.TabStop = false;
             // 
-            // radioButtonKaren
+            // radioButtonPatti
             // 
-            radioButtonKaren.AutoSize = true;
-            radioButtonKaren.Location = new Point(28, 239);
-            radioButtonKaren.Margin = new Padding(4, 2, 4, 2);
-            radioButtonKaren.Name = "radioButtonKaren";
-            radioButtonKaren.Size = new Size(106, 36);
-            radioButtonKaren.TabIndex = 8;
-            radioButtonKaren.TabStop = true;
-            radioButtonKaren.Text = "Karen";
-            radioButtonKaren.UseVisualStyleBackColor = true;
-            // 
-            // radioButtonBetty
-            // 
-            radioButtonBetty.AutoSize = true;
-            radioButtonBetty.Location = new Point(28, 173);
-            radioButtonBetty.Margin = new Padding(4, 2, 4, 2);
-            radioButtonBetty.Name = "radioButtonBetty";
-            radioButtonBetty.Size = new Size(100, 36);
-            radioButtonBetty.TabIndex = 7;
-            radioButtonBetty.TabStop = true;
-            radioButtonBetty.Text = "Betty";
-            radioButtonBetty.UseVisualStyleBackColor = true;
+            radioButtonPatti.AutoSize = true;
+            radioButtonPatti.Checked = true;
+            radioButtonPatti.Location = new Point(778, 168);
+            radioButtonPatti.Margin = new Padding(5, 2, 5, 2);
+            radioButtonPatti.Name = "radioButtonPatti";
+            radioButtonPatti.Size = new Size(60, 24);
+            radioButtonPatti.TabIndex = 5;
+            radioButtonPatti.TabStop = true;
+            radioButtonPatti.Text = "Patti";
+            radioButtonPatti.UseVisualStyleBackColor = true;
             // 
             // radioButtonSue
             // 
             radioButtonSue.AutoSize = true;
             radioButtonSue.ImageAlign = ContentAlignment.MiddleLeft;
-            radioButtonSue.Location = new Point(28, 109);
-            radioButtonSue.Margin = new Padding(4, 2, 4, 2);
+            radioButtonSue.Location = new Point(778, 196);
+            radioButtonSue.Margin = new Padding(5, 2, 5, 2);
             radioButtonSue.Name = "radioButtonSue";
-            radioButtonSue.Size = new Size(85, 36);
+            radioButtonSue.Size = new Size(52, 24);
             radioButtonSue.TabIndex = 6;
-            radioButtonSue.TabStop = true;
             radioButtonSue.Text = "Sue";
             radioButtonSue.UseVisualStyleBackColor = true;
-            // 
-            // radioButtonPatti
-            // 
-            radioButtonPatti.AutoSize = true;
-            radioButtonPatti.Location = new Point(28, 51);
-            radioButtonPatti.Margin = new Padding(4, 2, 4, 2);
-            radioButtonPatti.Name = "radioButtonPatti";
-            radioButtonPatti.Size = new Size(91, 36);
-            radioButtonPatti.TabIndex = 5;
-            radioButtonPatti.TabStop = true;
-            radioButtonPatti.Text = "Patti";
-            radioButtonPatti.UseVisualStyleBackColor = true;
             // 
             // dataPage
             // 
             dataPage.Controls.Add(label1);
             dataPage.Controls.Add(textBox1);
             dataPage.Controls.Add(dataGridView);
-            dataPage.Location = new Point(8, 46);
-            dataPage.Margin = new Padding(6);
+            dataPage.Location = new Point(4, 52);
             dataPage.Name = "dataPage";
-            dataPage.Size = new Size(2884, 1436);
+            dataPage.Padding = new Padding(11, 12, 11, 12);
+            dataPage.Size = new Size(1576, 576);
             dataPage.TabIndex = 1;
             dataPage.Text = "Inventory";
+            dataPage.ToolTipText = "Inventory for Patti";
             dataPage.UseVisualStyleBackColor = true;
             // 
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(323, 22);
+            label1.Location = new Point(337, 18);
+            label1.Margin = new Padding(4, 0, 4, 0);
             label1.Name = "label1";
-            label1.Size = new Size(117, 32);
+            label1.Size = new Size(78, 20);
             label1.TabIndex = 3;
             label1.Text = "Filter SKU";
             // 
             // textBox1
             // 
-            textBox1.Location = new Point(16, 22);
+            textBox1.Location = new Point(15, 15);
+            textBox1.Margin = new Padding(4, 3, 4, 3);
             textBox1.Name = "textBox1";
-            textBox1.Size = new Size(273, 39);
+            textBox1.Size = new Size(314, 27);
             textBox1.TabIndex = 2;
             textBox1.TextChanged += textBox1_TextChanged;
             // 
@@ -272,12 +279,12 @@
             dataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
             dataGridView.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.DisplayedCells;
             dataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView.Location = new Point(0, 84);
-            dataGridView.Margin = new Padding(4, 2, 4, 2);
+            dataGridView.Location = new Point(0, 47);
+            dataGridView.Margin = new Padding(5, 2, 5, 2);
             dataGridView.Name = "dataGridView";
             dataGridView.RowHeadersWidth = 82;
             dataGridView.RowTemplate.Height = 41;
-            dataGridView.Size = new Size(2795, 1327);
+            dataGridView.Size = new Size(0, 0);
             dataGridView.TabIndex = 1;
             dataGridView.CellBeginEdit += dataGridView_CellBeginEdit;
             dataGridView.CellEndEdit += dataGridView_CellEndEdit;
@@ -288,61 +295,68 @@
             // 
             // checkoutPage
             // 
-            checkoutPage.Controls.Add(dataGridView1);
             checkoutPage.Controls.Add(barcodeLabel);
             checkoutPage.Controls.Add(textBoxBarcode);
-            checkoutPage.Location = new Point(8, 46);
-            checkoutPage.Margin = new Padding(6);
+            checkoutPage.Location = new Point(4, 52);
+            checkoutPage.Margin = new Padding(7);
             checkoutPage.Name = "checkoutPage";
-            checkoutPage.Size = new Size(2884, 1436);
+            checkoutPage.Size = new Size(1576, 576);
             checkoutPage.TabIndex = 2;
             checkoutPage.Text = "Checkout";
+            checkoutPage.ToolTipText = "Checkout Items";
             checkoutPage.UseVisualStyleBackColor = true;
             checkoutPage.Click += checkoutPage_Click;
-            // 
-            // dataGridView1
-            // 
-            dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView1.Location = new Point(0, 0);
-            dataGridView1.Margin = new Padding(6);
-            dataGridView1.Name = "dataGridView1";
-            dataGridView1.RowHeadersWidth = 82;
-            dataGridView1.RowTemplate.Height = 25;
-            dataGridView1.Size = new Size(446, 320);
-            dataGridView1.TabIndex = 2;
             // 
             // barcodeLabel
             // 
             barcodeLabel.AutoSize = true;
-            barcodeLabel.Location = new Point(1683, 90);
-            barcodeLabel.Margin = new Padding(6, 0, 6, 0);
+            barcodeLabel.Location = new Point(889, 45);
+            barcodeLabel.Margin = new Padding(7, 0, 7, 0);
             barcodeLabel.Name = "barcodeLabel";
-            barcodeLabel.Size = new Size(157, 32);
+            barcodeLabel.Size = new Size(102, 20);
             barcodeLabel.TabIndex = 1;
             barcodeLabel.Text = "Scan Barcode";
             // 
             // textBoxBarcode
             // 
-            textBoxBarcode.Location = new Point(1857, 83);
-            textBoxBarcode.Margin = new Padding(6);
+            textBoxBarcode.Location = new Point(1005, 38);
+            textBoxBarcode.Margin = new Padding(7);
             textBoxBarcode.Name = "textBoxBarcode";
-            textBoxBarcode.Size = new Size(377, 39);
+            textBoxBarcode.Size = new Size(434, 27);
             textBoxBarcode.TabIndex = 0;
             textBoxBarcode.TextChanged += textBoxBarcode_TextChanged;
             textBoxBarcode.KeyDown += textBoxBarcode_KeyDown;
             // 
+            // adminPage
+            // 
+            adminPage.BackColor = SystemColors.Control;
+            adminPage.BorderStyle = BorderStyle.Fixed3D;
+            adminPage.Location = new Point(4, 52);
+            adminPage.Name = "adminPage";
+            adminPage.Size = new Size(1576, 576);
+            adminPage.TabIndex = 3;
+            adminPage.Text = "Admin";
+            adminPage.ToolTipText = "Admin Settings";
+            adminPage.Layout += adminPage_Layout;
+            // 
             // Vivian
             // 
-            AutoScaleDimensions = new SizeF(13F, 32F);
+            AutoScaleDimensions = new SizeF(7F, 17F);
             AutoScaleMode = AutoScaleMode.Font;
-            AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            ClientSize = new Size(2874, 1429);
+            AutoSize = true;
+            ClientSize = new Size(1584, 661);
             Controls.Add(tabControl);
             Controls.Add(menuStrip1);
+            Font = new Font("Segoe UI", 10.125F, FontStyle.Regular, GraphicsUnit.Point);
+            FormBorderStyle = FormBorderStyle.SizableToolWindow;
             Icon = (Icon)resources.GetObject("$this.Icon");
             MainMenuStrip = menuStrip1;
-            Margin = new Padding(4, 2, 4, 2);
+            Margin = new Padding(5, 2, 5, 2);
+            MaximizeBox = false;
+            MdiChildrenMinimizedAnchorBottom = false;
+            MinimizeBox = false;
             Name = "Vivian";
+            SizeGripStyle = SizeGripStyle.Show;
             Text = "VivianGrace";
             Load += Vivian_Load;
             Resize += Vivian_Resize;
@@ -351,14 +365,12 @@
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             tabControl.ResumeLayout(false);
             loginPage.ResumeLayout(false);
-            groupBox1.ResumeLayout(false);
-            groupBox1.PerformLayout();
+            loginPage.PerformLayout();
             dataPage.ResumeLayout(false);
             dataPage.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridView).EndInit();
             checkoutPage.ResumeLayout(false);
             checkoutPage.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -387,8 +399,8 @@
         private TabPage checkoutPage;
         private TextBox textBoxBarcode;
         private Label barcodeLabel;
-        private DataGridView dataGridView1;
         private Label label1;
         private TextBox textBox1;
+        private TabPage adminPage;
     }
 }

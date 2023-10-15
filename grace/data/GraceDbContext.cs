@@ -11,23 +11,35 @@ namespace grace.data
         public DbSet<Collection> Collections { get; set; }
         public DbSet<Total> Totals { get; set; }
         public DbSet<GraceRow> GraceRows { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<Pulled> PulledDb { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Total>()
-                .HasOne(t => t.Grace)     
-                .WithMany(g => g.Totals) 
+                .HasOne(t => t.Grace)
+                .WithMany(g => g.Totals)
                 .HasForeignKey(t => t.GraceId);
 
             modelBuilder.Entity<Collection>()
-                .HasOne(t => t.Grace)    
-                .WithMany(g => g.Collections)  
+                .HasOne(t => t.Grace)
+                .WithMany(g => g.Collections)
                 .HasForeignKey(t => t.GraceId);
 
             modelBuilder.Entity<GraceRow>()
                 .HasOne(t => t.Grace)
                 .WithMany(g => g.GraceRows)
                 .HasForeignKey(t => t.GraceId);
+
+            modelBuilder.Entity<Pulled>()
+                .HasOne(t => t.Grace)
+                .WithMany(g => g.PulledDb)
+                .HasForeignKey(t => t.GraceId);
+
+            modelBuilder.Entity<Pulled>()
+                .HasOne(p => p.User)
+                .WithMany(g => g.PulledDb)
+                .HasForeignKey(p => p.UserId);
         }
 
 
@@ -60,6 +72,7 @@ namespace grace.data
 
         public List<GraceRow> GraceRows { get; set; }
 
+        public List<Pulled> PulledDb { get; set; }
     }
 
 
@@ -116,6 +129,49 @@ namespace grace.data
 
         public int GraceId { get; set; }
         [ForeignKey("GraceId")]
+        public Grace Grace { get; set; }
+    }
+
+    public class User
+    {
+        [Key]
+        public int ID { get; set; }
+        [Required]
+
+        public string Username { get; set; }
+
+        [Required]
+        public string Password { get; set; }
+
+        [Required]
+        public bool Admin { get; set; } = false;
+
+        public List<Pulled> PulledDb { get; set; }
+
+    }
+
+    public class Pulled
+    {
+        [Key]
+        public int ID { get; set; }
+        [Required]
+
+        public string Comment { get; set; }
+
+        [Required]
+        public DateTime lastUpdated { get; set; }
+
+        [Required]
+        public int amount { get; set; }
+
+        public int UserId { get; set; }
+        [ForeignKey("UserId")]
+
+        public User User { get; set; }
+
+        public int GraceId { get; set; }
+        [ForeignKey("GraceId")]
+
         public Grace Grace { get; set; }
     }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.

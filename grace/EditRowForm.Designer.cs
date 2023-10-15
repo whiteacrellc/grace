@@ -30,34 +30,61 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EditRowForm));
             cancelButton = new Button();
+            panel1 = new Panel();
+            label1 = new Label();
+            panel1.SuspendLayout();
             SuspendLayout();
             // 
             // cancelButton
             // 
-            cancelButton.Location = new Point(698, 447);
+            cancelButton.Location = new Point(461, 261);
+            cancelButton.Margin = new Padding(2, 1, 2, 1);
             cancelButton.Name = "cancelButton";
-            cancelButton.Size = new Size(209, 70);
+            cancelButton.Size = new Size(113, 33);
             cancelButton.TabIndex = 0;
             cancelButton.Text = "Cancel";
             cancelButton.UseVisualStyleBackColor = true;
             // 
+            // panel1
+            // 
+            panel1.Controls.Add(label1);
+            panel1.Location = new Point(12, 12);
+            panel1.Name = "panel1";
+            panel1.Size = new Size(562, 245);
+            panel1.TabIndex = 1;
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new Point(27, 18);
+            label1.Name = "label1";
+            label1.Size = new Size(38, 15);
+            label1.TabIndex = 0;
+            label1.Text = "label1";
+            // 
             // EditRowForm
             // 
-            AutoScaleDimensions = new SizeF(13F, 32F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             CancelButton = cancelButton;
-            ClientSize = new Size(995, 562);
+            ClientSize = new Size(594, 316);
+            Controls.Add(panel1);
             Controls.Add(cancelButton);
             Icon = (Icon)resources.GetObject("$this.Icon");
+            Margin = new Padding(2, 1, 2, 1);
             Name = "EditRowForm";
             ShowInTaskbar = false;
             Text = "Edit Row";
             Load += EditRowForm_Load;
+            panel1.ResumeLayout(false);
+            panel1.PerformLayout();
             ResumeLayout(false);
         }
 
         #endregion
 
         private Button cancelButton;
+        private Panel panel1;
+        private Label label1;
     }
 }

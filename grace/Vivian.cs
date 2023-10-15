@@ -110,6 +110,7 @@ namespace grace
             Globals globals = Globals.GetInstance();
             DataBase data = new DataBase();
             Globals.GetInstance().ConnectionString = data.ConnectionString;
+            adminPage.Hide();
 
             if (data.HaveData() == false)
             {
@@ -125,6 +126,7 @@ namespace grace
                 }
                 catch (Exception ex)
                 {
+                    logger.Error(ex);
                     data.InitializeDatabase();
                 }
             }
@@ -180,6 +182,10 @@ namespace grace
             generateReport();
 
             EnableReportButton(true);
+            if (dataGridLoader == null)
+            {
+                dataGridLoader = new DataGridLoader(this);
+            }
             dataGridLoader.LoadBindingTable();
             dataGridView.DataSource = dataGridLoader.graceDb.GraceRows.ToList();
         }
@@ -343,32 +349,38 @@ namespace grace
                     // Update the corresponding product in the DbContext
                     int id = Convert.ToInt32(dataGridView.Rows[rowIndex].Cells[0].Value); // Assuming the first column is the "Id" column
                     var graceRow = dataGridLoader.graceDb.GraceRows.Find(id);
-                    //var graceRow = dataGridLoader.graceDb.GraceRows.Where(t => t.GraceId == grace.ID);
-                    var grace = dataGridLoader.graceDb.Graces.First(t => t.ID == graceRow.GraceId);
-
-                    if (grace != null)
+                    if (graceRow != null)
                     {
-                        var total = new Total
+                        //var graceRow = dataGridLoader.graceDb.GraceRows.Where(t => t.GraceId == grace.ID);
+                        var grace = dataGridLoader.graceDb.Graces.First(t => t.ID == graceRow.GraceId);
+
+                        if (grace != null)
                         {
-                            date_field = DateTime.Now,
-                            total = newTotal,
-                            GraceId = id
-                        };
-                        grace.Totals.Add(total);
-                        graceRow.PreviousTotal = graceRow.Total;
-                        graceRow.Total = newTotal;
-                        dataGridLoader.graceDb.SaveChanges(); // Save changes to the database
-                        logger.Info($"{total.date_field} {User} changed {grace.Sku} total to {newTotal}");
+                            var total = new Total
+                            {
+                                date_field = DateTime.Now,
+                                total = newTotal,
+                                GraceId = id
+                            };
+                            grace.Totals.Add(total);
+                            graceRow.PreviousTotal = graceRow.Total;
+                            graceRow.Total = newTotal;
+                            dataGridLoader.graceDb.SaveChanges(); // Save changes to the database
+                            logger.Info($"{total.date_field} {User} changed {grace.Sku} total to {newTotal}");
+                        }
                     }
                 }
             }
             catch
             {
-                int id = (int)dataGridView1.Rows[rowIndex].Cells[0].Value;
+                int id = (int)dataGridView.Rows[rowIndex].Cells[0].Value;
                 var graceRow = dataGridLoader.graceDb.GraceRows.Find(id);
-                if (columnIndex == 13) // Assuming the second column is the "Name" column
+                if (graceRow != null)
                 {
-                    dataGridView1.Rows[rowIndex].Cells[13].Value = graceRow.Total;
+                    if (columnIndex == 13) // Assuming the second column is the "Name" column
+                    {
+                        dataGridView.Rows[rowIndex].Cells[13].Value = graceRow.Total;
+                    }
                 }
             }
 
@@ -391,6 +403,13 @@ namespace grace
             {
                 e.Cancel = true; // Cancel the edit for the first 12 columns
             }
+        }
+
+        private void adminPage_Layout(object sender, LayoutEventArgs e)
+        {
+            var userDb = dataGridLoader.graceDb.Users;
+            var users = userDb.ToList();
+
         }
     }
 }
