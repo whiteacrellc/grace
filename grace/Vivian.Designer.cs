@@ -47,6 +47,7 @@
             radioButtonPatti = new RadioButton();
             radioButtonSue = new RadioButton();
             dataPage = new TabPage();
+            addRowButton = new Button();
             label1 = new Label();
             textBox1 = new TextBox();
             dataGridView = new DataGridView();
@@ -75,7 +76,7 @@
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
             menuStrip1.Padding = new Padding(7, 2, 0, 2);
-            menuStrip1.Size = new Size(1584, 28);
+            menuStrip1.Size = new Size(1624, 28);
             menuStrip1.TabIndex = 4;
             menuStrip1.Text = "menuStrip1";
             // 
@@ -148,7 +149,7 @@
             tabControl.Name = "tabControl";
             tabControl.Padding = new Point(30, 5);
             tabControl.SelectedIndex = 0;
-            tabControl.Size = new Size(1584, 632);
+            tabControl.Size = new Size(1804, 632);
             tabControl.TabIndex = 9;
             // 
             // loginPage
@@ -164,7 +165,7 @@
             loginPage.Margin = new Padding(5, 2, 5, 2);
             loginPage.Name = "loginPage";
             loginPage.Padding = new Padding(5, 2, 5, 2);
-            loginPage.Size = new Size(1576, 576);
+            loginPage.Size = new Size(1796, 576);
             loginPage.TabIndex = 0;
             loginPage.Text = "Home";
             loginPage.ToolTipText = "Login Page";
@@ -198,7 +199,7 @@
             chooseUserButton.Location = new Point(778, 335);
             chooseUserButton.Margin = new Padding(5, 2, 5, 2);
             chooseUserButton.Name = "chooseUserButton";
-            chooseUserButton.Size = new Size(141, 44);
+            chooseUserButton.Size = new Size(0, 0);
             chooseUserButton.TabIndex = 8;
             chooseUserButton.Text = "Choose User";
             chooseUserButton.UseVisualStyleBackColor = true;
@@ -242,17 +243,28 @@
             // 
             // dataPage
             // 
+            dataPage.Controls.Add(addRowButton);
             dataPage.Controls.Add(label1);
             dataPage.Controls.Add(textBox1);
             dataPage.Controls.Add(dataGridView);
             dataPage.Location = new Point(4, 52);
             dataPage.Name = "dataPage";
             dataPage.Padding = new Padding(11, 12, 11, 12);
-            dataPage.Size = new Size(1576, 576);
+            dataPage.Size = new Size(1796, 576);
             dataPage.TabIndex = 1;
             dataPage.Text = "Inventory";
             dataPage.ToolTipText = "Inventory for Patti";
             dataPage.UseVisualStyleBackColor = true;
+            // 
+            // addRowButton
+            // 
+            addRowButton.Location = new Point(480, 4);
+            addRowButton.Name = "addRowButton";
+            addRowButton.Size = new Size(103, 38);
+            addRowButton.TabIndex = 4;
+            addRowButton.Text = "Add Row";
+            addRowButton.UseVisualStyleBackColor = true;
+            addRowButton.Click += addRowButton_Click;
             // 
             // label1
             // 
@@ -279,12 +291,12 @@
             dataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
             dataGridView.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.DisplayedCells;
             dataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView.Location = new Point(0, 47);
+            dataGridView.Location = new Point(-4, 47);
             dataGridView.Margin = new Padding(5, 2, 5, 2);
             dataGridView.Name = "dataGridView";
             dataGridView.RowHeadersWidth = 82;
             dataGridView.RowTemplate.Height = 41;
-            dataGridView.Size = new Size(0, 0);
+            dataGridView.Size = new Size(1127, 459);
             dataGridView.TabIndex = 1;
             dataGridView.CellBeginEdit += dataGridView_CellBeginEdit;
             dataGridView.CellEndEdit += dataGridView_CellEndEdit;
@@ -300,7 +312,7 @@
             checkoutPage.Location = new Point(4, 52);
             checkoutPage.Margin = new Padding(7);
             checkoutPage.Name = "checkoutPage";
-            checkoutPage.Size = new Size(1576, 576);
+            checkoutPage.Size = new Size(1796, 576);
             checkoutPage.TabIndex = 2;
             checkoutPage.Text = "Checkout";
             checkoutPage.ToolTipText = "Checkout Items";
@@ -333,7 +345,7 @@
             adminPage.BorderStyle = BorderStyle.Fixed3D;
             adminPage.Location = new Point(4, 52);
             adminPage.Name = "adminPage";
-            adminPage.Size = new Size(1576, 576);
+            adminPage.Size = new Size(1796, 576);
             adminPage.TabIndex = 3;
             adminPage.Text = "Admin";
             adminPage.ToolTipText = "Admin Settings";
@@ -344,7 +356,7 @@
             AutoScaleDimensions = new SizeF(7F, 17F);
             AutoScaleMode = AutoScaleMode.Font;
             AutoSize = true;
-            ClientSize = new Size(1584, 661);
+            ClientSize = new Size(1624, 661);
             Controls.Add(tabControl);
             Controls.Add(menuStrip1);
             Font = new Font("Segoe UI", 10.125F, FontStyle.Regular, GraphicsUnit.Point);
@@ -393,7 +405,6 @@
         private RadioButton radioButtonBetty;
         private RadioButton radioButtonSue;
         private RadioButton radioButtonPatti;
-        private BindingSource bindingSource;
         private TabPage dataPage;
         private DataGridView dataGridView;
         private TabPage checkoutPage;
@@ -402,5 +413,6 @@
         private Label label1;
         private TextBox textBox1;
         private TabPage adminPage;
+        private Button addRowButton;
     }
 }

@@ -27,7 +27,7 @@ namespace gracetests
             dataBase.LoadFromExcel(filename);
             connectionString = dataBase.ConnectionString;
             Globals.GetInstance().ConnectionString = connectionString;
-            loader = new DataGridLoader(new Vivian());
+            loader = new DataGridLoader();
         }
 
         [TestCleanup]

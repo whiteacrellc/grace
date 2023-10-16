@@ -15,6 +15,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using NLog;
 using OfficeOpenXml;
 using System.Data;
+using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
 using System.Linq.Expressions;
 using System.Text;
 using System.Windows.Forms;
@@ -120,9 +121,10 @@ namespace grace
             {
                 try
                 {
-                    dataGridLoader = new DataGridLoader(this);
+                    dataGridLoader = new DataGridLoader();
                     bindingSource1.DataSource = dataGridLoader.getData();
-                    formatTotals();
+                    RemoveColumnsByName("ID", "Grace", "GraceId");
+
                 }
                 catch (Exception ex)
                 {
@@ -184,10 +186,12 @@ namespace grace
             EnableReportButton(true);
             if (dataGridLoader == null)
             {
-                dataGridLoader = new DataGridLoader(this);
+                dataGridLoader = new DataGridLoader();
+                dataGridView.DataSource = bindingSource1;
             }
             dataGridLoader.LoadBindingTable();
-            dataGridView.DataSource = dataGridLoader.graceDb.GraceRows.ToList();
+            bindingSource1.DataSource = dataGridLoader.graceDb.GraceRows.ToList();
+            RemoveColumnsByName("ID", "Grace", "GraceId");
         }
 
         private void saveReportToolStripMenuItem_Click(object sender, EventArgs e)
@@ -258,20 +262,25 @@ namespace grace
         {
 
             int numRows = dataGridView.Rows.Count;
+            int numCols = dataGridView.Columns.Count;
+            if (numCols > 14)
+            {
+                return;
+            }
             for (int i = 0; i < numRows; i++)
             {
                 DataGridViewRow row = dataGridView.Rows[i];
 
-                if (row == null || row.Cells[13].Value == null) { continue; }
+                if (row == null || row.Cells[12].Value == null) { continue; }
 
                 // Compare the values of the two columns
-                int value1 = (int)row.Cells[13].Value;
-                int value2 = (int)row.Cells[12].Value;
+                int value1 = (int)row.Cells[12].Value;
+                int value2 = (int)row.Cells[11].Value;
 
                 if (value1 != value2)
                 {
                     // Set the background color to yellow if values are not equal
-                    row.Cells[13].Style.BackColor = Color.Yellow;
+                    row.Cells[12].Style.BackColor = Color.Yellow;
                 }
             }
 
@@ -279,7 +288,7 @@ namespace grace
 
         private void dataGridView_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
         {
-
+            RemoveColumnsByName("ID", "Grace", "GraceId");
         }
 
         private void Vivian_Resize(object sender, EventArgs e)
@@ -326,6 +335,18 @@ namespace grace
                 bindingSource1.DataSource = dataGridLoader.getData();
                 // dataGridView.DataSource = dataGridLoader.graceDb.GraceRows.ToList();
             }
+            RemoveColumnsByName("ID", "Grace", "GraceId");
+        }
+
+        private void RemoveColumnsByName(params string[] columnNames)
+        {
+            foreach (string columnName in columnNames)
+            {
+                if (dataGridView.Columns.Contains(columnName))
+                {
+                    dataGridView.Columns.Remove(columnName);
+                }
+            }
         }
 
         private void dataGridView_Paint(object sender, PaintEventArgs e)
@@ -344,7 +365,7 @@ namespace grace
             {
                 int newTotal = Convert.ToInt32(cellValue);
 
-                if (columnIndex == 13) // Assuming the second column is the "Name" column
+                if (columnIndex == 12) // Assuming the second column is the "Totals" column
                 {
                     // Update the corresponding product in the DbContext
                     int id = Convert.ToInt32(dataGridView.Rows[rowIndex].Cells[0].Value); // Assuming the first column is the "Id" column
@@ -377,7 +398,7 @@ namespace grace
                 var graceRow = dataGridLoader.graceDb.GraceRows.Find(id);
                 if (graceRow != null)
                 {
-                    if (columnIndex == 13) // Assuming the second column is the "Name" column
+                    if (columnIndex == 12) // Assuming the second column is the "Name" column
                     {
                         dataGridView.Rows[rowIndex].Cells[13].Value = graceRow.Total;
                     }
@@ -389,10 +410,16 @@ namespace grace
         private void dataGridView_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             int rowIndex = e.RowIndex;
-            int columnIndex = e.ColumnIndex;
-            using (EditRowForm editRowForm = new EditRowForm(rowIndex))
+            DataGridViewRow row = dataGridView.Rows[rowIndex];
+            using (EditRowForm editRowForm = new EditRowForm(row))
             {
-                editRowForm.ShowDialog();
+                DialogResult result = editRowForm.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    // we need to reload the grid.
+                    bindingSource1.DataSource = dataGridLoader.getData();
+                    RemoveColumnsByName("ID", "Grace", "GraceId");
+                }
             }
         }
 
@@ -407,9 +434,20 @@ namespace grace
 
         private void adminPage_Layout(object sender, LayoutEventArgs e)
         {
-            var userDb = dataGridLoader.graceDb.Users;
-            var users = userDb.ToList();
 
+        }
+
+        private void addRowButton_Click(object sender, EventArgs e)
+        {
+            using (EditRowForm editRowForm = new EditRowForm(null))
+            {
+                DialogResult dialogResult = editRowForm.ShowDialog();
+                if (dialogResult == DialogResult.OK)
+                {
+                    bindingSource1.DataSource = dataGridLoader.getData();
+                    RemoveColumnsByName("ID", "Grace", "GraceId");
+                }
+            }
         }
     }
 }

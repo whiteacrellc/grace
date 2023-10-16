@@ -13,15 +13,13 @@ namespace grace
     internal class DataGridLoader
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
-        private Vivian vivian;
         private DataTable dataTable = new DataTable();
         private Dictionary<long, GraceRow> graceRows = new Dictionary<long, GraceRow>();
 
         public GraceDbContext graceDb { get; private set; }
 
-        public DataGridLoader(Vivian vivian)
+        public DataGridLoader()
         {
-            this.vivian = vivian;
             graceDb = new GraceDbContext();
       
         }

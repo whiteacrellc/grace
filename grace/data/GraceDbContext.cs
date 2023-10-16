@@ -14,6 +14,8 @@ namespace grace.data
         public DbSet<User> Users { get; set; }
         public DbSet<Pulled> PulledDb { get; set; }
 
+
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Total>()
@@ -46,7 +48,7 @@ namespace grace.data
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             var connectionString = Globals.GetInstance().ConnectionString;
-            optionsBuilder.UseSqlite(connectionString); // Replace with your SQLite database file path
+            optionsBuilder.UseSqlite(connectionString).EnableSensitiveDataLogging(); 
         }
     }
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
