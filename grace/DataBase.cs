@@ -77,13 +77,12 @@ namespace grace
             // Specify the database file path in the program's directory
             DbFileName = Path.Combine(programDirectory, dbName);
 
-            var baseConnectionString = "Data Source=" + DbFileName + ";Cache=Shared";
-            var connectionString = new SqliteConnectionStringBuilder(baseConnectionString)
+            var connectionString = new SqliteConnectionStringBuilder()
             {
+                DataSource = DbFileName,
                 Mode = SqliteOpenMode.ReadWriteCreate,
+                Cache = SqliteCacheMode.Private
             }.ToString();
-
-
 
             logger.Info(connectionString);
             Globals.GetInstance().ConnectionString = connectionString;
@@ -159,15 +158,9 @@ namespace grace
 
         public void InitializeDatabase()
         {
-            try
-            {
-                graceDb.Database.EnsureDeleted();
-                graceDb.Database.EnsureCreated();
-            }
-            catch (Exception ex)
-            {
-                logger.Error(ex);
-            }
+            graceDb.Database.EnsureDeleted();
+            graceDb.Database.EnsureCreated();
+
         }
 
         int InsertRow(string sku, string description, string brand,

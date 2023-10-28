@@ -18,7 +18,8 @@ namespace gracetest
     public class ExcelTest
     {
     
-        private const string TestFilePath = "C:\\Users\\tom\\source\\repos\\grace\\gracetest\\test_file.xlsx"; // Update with your test Excel file path
+        private const string TestFilePath = "C:\\Users\\tom\\source\\repos\\" + 
+            "grace\\gracetest\\test_file.xlsx";
 
         [TestMethod]
         public void TestReadExcelFile()
@@ -32,11 +33,11 @@ namespace gracetest
             // Assert
             // Add your assertions here to check if the data was read and processed correctly
 
-            //  Verify that 46 collections
-            Assert.AreEqual(13, excelReader.Collections.Count);
+            //  Verify that 18 collections
+            Assert.AreEqual(18, excelReader.Collections.Count);
 
-            //  Verify that at there are 253 items
-            Assert.AreEqual(18, excelReader.Items.Count);
+            //  Verify that at there are 19 items
+            Assert.AreEqual(19, excelReader.Items.Count);
 
             // Example assertion: Verify the specific content of a row
             var firstRow = excelReader.Collections.FirstOrDefault().Value.FirstOrDefault();

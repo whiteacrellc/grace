@@ -14,44 +14,50 @@ namespace grace.data
         public DbSet<User> Users { get; set; }
         public DbSet<Pulled> PulledDb { get; set; }
 
-
+        public GraceDbContext()
+        {
+          
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
+            modelBuilder.Entity<Grace>();
+
             modelBuilder.Entity<Total>()
                 .HasOne(t => t.Grace)
                 .WithMany(g => g.Totals)
-                .HasForeignKey(t => t.GraceId);
+                .HasForeignKey(t => t.GraceId).IsRequired(true);
 
             modelBuilder.Entity<Collection>()
                 .HasOne(t => t.Grace)
                 .WithMany(g => g.Collections)
-                .HasForeignKey(t => t.GraceId);
+                .HasForeignKey(t => t.GraceId).IsRequired(true);
 
             modelBuilder.Entity<GraceRow>()
                 .HasOne(t => t.Grace)
                 .WithMany(g => g.GraceRows)
-                .HasForeignKey(t => t.GraceId);
+                .HasForeignKey(t => t.GraceId).IsRequired(true);
 
             modelBuilder.Entity<Pulled>()
                 .HasOne(t => t.Grace)
                 .WithMany(g => g.PulledDb)
-                .HasForeignKey(t => t.GraceId);
+                .HasForeignKey(t => t.GraceId).IsRequired(true);
 
             modelBuilder.Entity<Pulled>()
                 .HasOne(p => p.User)
                 .WithMany(g => g.PulledDb)
-                .HasForeignKey(p => p.UserId);
+                .HasForeignKey(p => p.UserId).IsRequired(true);
         }
-
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             var connectionString = Globals.GetInstance().ConnectionString;
-            optionsBuilder.UseSqlite(connectionString).EnableSensitiveDataLogging(); 
+            optionsBuilder.UseSqlite(connectionString).EnableSensitiveDataLogging();
         }
     }
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+    [Table("Graces")]
     public class Grace
     {
         [Key]
@@ -77,7 +83,7 @@ namespace grace.data
         public List<Pulled> PulledDb { get; set; }
     }
 
-
+    [Table("Totals")]
     public class Total
     {
         [Key]
@@ -93,6 +99,7 @@ namespace grace.data
 
     }
 
+    [Table("Collections")]
     public class Collection
     {
         [Key]
@@ -106,6 +113,7 @@ namespace grace.data
 
     }
 
+    [Table("GraceRows")]
     public class GraceRow
     {
         [Key]
@@ -134,6 +142,7 @@ namespace grace.data
         public Grace Grace { get; set; }
     }
 
+    [Table("Users")]
     public class User
     {
         [Key]
@@ -152,6 +161,7 @@ namespace grace.data
 
     }
 
+    [Table("PulledDb")]
     public class Pulled
     {
         [Key]

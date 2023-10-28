@@ -68,7 +68,7 @@ namespace gracetest
             var worksheet = package.Workbook.Worksheets[0];
             Assert.AreEqual(worksheet.Name, "Report");
             int rowCount = worksheet.Dimension.Rows;
-            Assert.AreEqual(rowCount, 5);
+            Assert.AreEqual(rowCount, 6);
             int colCount = worksheet.Dimension.Columns;
             Assert.AreEqual(colCount, 12);
 

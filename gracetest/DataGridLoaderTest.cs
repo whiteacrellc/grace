@@ -22,11 +22,18 @@ namespace gracetests
         {
             // Create a mock SQLite connection and command
             dataBase = new DataBase(testDbFile);
-            string filename = "C:\\Users\\tom\\source\\repos\\grace\\gracetest\\"
-                + "test_file.xlsx";
-            dataBase.LoadFromExcel(filename);
             connectionString = dataBase.ConnectionString;
             Globals.GetInstance().ConnectionString = connectionString;
+
+            string filename = "C:\\Users\\tom\\source\\repos\\grace\\gracetest\\"
+                + "test_file.xlsx";
+            try
+            {
+                dataBase.LoadFromExcel(filename);
+            } catch (Exception ex)
+            {
+                Assert.Fail(ex.Message);
+            }
             loader = new DataGridLoader();
         }
 

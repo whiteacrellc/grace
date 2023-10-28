@@ -11,6 +11,8 @@
  * Year: 2023
  */
 using grace;
+using grace.data;
+using Microsoft.EntityFrameworkCore;
 using System.Data.Entity;
 using System.Data.SQLite;
 
@@ -27,13 +29,16 @@ namespace gracetest
         private string testDbFile = "testgrace.db";
         private string connectionString = string.Empty;
         private DataBase dataBase;
+        public GraceDbContext graceDb;
 
-        [TestInitialize]
+      [TestInitialize]
         public void Setup()
         {
             // Create a mock SQLite connection and command
             dataBase = new DataBase(testDbFile);
             connectionString = dataBase.ConnectionString;
+            Globals.GetInstance().ConnectionString = connectionString;
+            graceDb = new GraceDbContext();
         }
 
         [TestCleanup]
@@ -46,9 +51,9 @@ namespace gracetest
         [TestMethod]
         public void Test_DataBase()
         {
-            string testConnectString = "Data Source=C:\\Users\\tom\\source\\" +
-                "repos\\grace\\gracetest\\bin\\Debug\\net6.0-windows\\" +
-                "testgrace.db;Version=3;";
+            string testConnectString = "Data Source=C:\\Users\\tom\\source\\" + 
+                "repos\\grace\\gracetest\\bin\\Debug\\net6.0-windows\\" + 
+                "testgrace.db;Mode=ReadWriteCreate;Cache=Private";
 
             Assert.IsNotNull(connectionString);
             Assert.AreEqual(connectionString, testConnectString);
@@ -61,28 +66,18 @@ namespace gracetest
                 + "test_file.xlsx";
             dataBase.LoadFromExcel(filename);
 
-            string sql = "SELECT sku, description, brand, availability, barcode FROM Grace";
-            using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+
+            Assert.AreEqual(graceDb.Graces.ToList().Count, 19);
+            Assert.IsTrue(graceDb.Collections.ToList().Count > 0);
+            Assert.IsTrue(graceDb.Totals.ToList().Count > 0);
+
+            var result = graceDb.Graces.ToList();
+            foreach (var item in result)
             {
-                connection.Open();
-
-                using (SQLiteCommand command = new SQLiteCommand(sql, connection))
-                {
-                    using (SQLiteDataReader reader = command.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            string sku = reader["sku"].ToString();
-                            string brand = reader["brand"].ToString();
-                            long barcode = Convert.ToInt64(reader["barcode"]);
-
-                            Assert.AreEqual(barcode, 33849104226);
-                            Assert.AreEqual(sku, "FBA445-CR/GR");
-                            Assert.AreEqual(brand, "Allstate");
-                            break;
-                        }
-                    }
-                }
+                Assert.AreEqual(item.Barcode, "33849104226");
+                Assert.AreEqual(item.Sku, "FBA445-CR/GR");
+                Assert.AreEqual(item.Brand, "Allstate");
+                break;
             }
 
         }
@@ -90,17 +85,10 @@ namespace gracetest
 
         private void Cleanup(string databaseName)
         {
-            var sqliteConnection = new SQLiteConnection(connectionString);
-            sqliteConnection.Open();
 
-            string dropSql = "DROP TABLE IF EXISTS Grace;DROP TABLE IF EXISTS" 
-                + " Collections;DROP TABLE IF EXISTS Totals;";
-            using (SQLiteCommand command = new SQLiteCommand(dropSql, sqliteConnection))
-            {
-                command.ExecuteNonQuery();
-            }
-            sqliteConnection.Dispose();
-          
+            graceDb.Database.EnsureDeleted();
+            graceDb.Database.CloseConnection();
+
             try
             {
                 if (File.Exists(databaseName))

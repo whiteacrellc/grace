@@ -191,18 +191,19 @@ namespace grace
                 graceDb.Totals.Add(totalrow);
             }
 
-            for (int i = 0; i < checkedListBox.Items.Count; i++)
+
+            var selectedList = checkedListBox.SelectedItems;
+            foreach (var item in selectedList)
             {
-                if (checkedListBox.GetItemChecked(i))
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
+                string val = item.ToString();
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
+                var collection = new Collection
                 {
-                    string val = checkedListBox.GetItemText(i);
-                    var collection = new Collection
-                    {
-                        Name = val,
-                        GraceId = insertId
-                    };
-                     graceDb.Collections.Add(collection);
-                }
+                    Name = val,
+                    GraceId = insertId
+                };
+                graceDb.Collections.Add(collection);
             }
             // Save the changes to the database
             graceDb.SaveChanges();
@@ -260,7 +261,9 @@ namespace grace
                 var obj = row.Cells[0].Value;
                 if (obj != null)
                 {
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
                     string sku = obj.ToString();
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
                     var grace = graceDb.Graces.First(t => t.Sku.Equals(sku));
                     graceDb.Graces.Remove(grace);
                     graceDb.SaveChanges();
