@@ -28,24 +28,28 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Vivian));
             openFileDialog = new OpenFileDialog();
             menuStrip1 = new MenuStrip();
             editToolStripMenuItem = new ToolStripMenuItem();
             settingsToolStripMenuItem = new ToolStripMenuItem();
             importInventoryToolStripMenuItem = new ToolStripMenuItem();
-            printReportToolStripMenuItem = new ToolStripMenuItem();
             saveReportToolStripMenuItem = new ToolStripMenuItem();
             exitToolStripMenuItem = new ToolStripMenuItem();
             pictureBox1 = new PictureBox();
             tabControl = new TabControl();
             loginPage = new TabPage();
-            radioButtonBetty = new RadioButton();
-            radioButtonKaren = new RadioButton();
+            loginButton = new Button();
+            passwordTextBox = new TextBox();
+            comboBoxUsers = new ComboBox();
+            label4 = new Label();
+            changePasswordButton = new Button();
+            forgotPasswordButton = new Button();
+            label3 = new Label();
+            label2 = new Label();
             chooseUserButton = new Button();
             groupBox1 = new GroupBox();
-            radioButtonPatti = new RadioButton();
-            radioButtonSue = new RadioButton();
             dataPage = new TabPage();
             addRowButton = new Button();
             label1 = new Label();
@@ -55,6 +59,7 @@
             barcodeLabel = new Label();
             textBoxBarcode = new TextBox();
             adminPage = new TabPage();
+            errorProvider1 = new ErrorProvider(components);
             menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             tabControl.SuspendLayout();
@@ -62,6 +67,7 @@
             dataPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridView).BeginInit();
             checkoutPage.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)errorProvider1).BeginInit();
             SuspendLayout();
             // 
             // openFileDialog
@@ -82,7 +88,7 @@
             // 
             // editToolStripMenuItem
             // 
-            editToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { settingsToolStripMenuItem, importInventoryToolStripMenuItem, printReportToolStripMenuItem, saveReportToolStripMenuItem, exitToolStripMenuItem });
+            editToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { settingsToolStripMenuItem, importInventoryToolStripMenuItem, saveReportToolStripMenuItem, exitToolStripMenuItem });
             editToolStripMenuItem.Font = new Font("Segoe UI", 10.875F, FontStyle.Bold, GraphicsUnit.Point);
             editToolStripMenuItem.Name = "editToolStripMenuItem";
             editToolStripMenuItem.Size = new Size(45, 24);
@@ -101,11 +107,6 @@
             importInventoryToolStripMenuItem.Size = new Size(200, 24);
             importInventoryToolStripMenuItem.Text = "Import Inventory";
             importInventoryToolStripMenuItem.Click += importInventoryToolStripMenuItem_Click;
-            // 
-            // printReportToolStripMenuItem
-            // 
-            printReportToolStripMenuItem.Name = "printReportToolStripMenuItem";
-            printReportToolStripMenuItem.Size = new Size(200, 24);
             // 
             // saveReportToolStripMenuItem
             // 
@@ -151,15 +152,20 @@
             tabControl.SelectedIndex = 0;
             tabControl.Size = new Size(1804, 632);
             tabControl.TabIndex = 9;
+            tabControl.TabStop = false;
             // 
             // loginPage
             // 
-            loginPage.Controls.Add(radioButtonBetty);
-            loginPage.Controls.Add(radioButtonKaren);
+            loginPage.Controls.Add(loginButton);
+            loginPage.Controls.Add(passwordTextBox);
+            loginPage.Controls.Add(comboBoxUsers);
+            loginPage.Controls.Add(label4);
+            loginPage.Controls.Add(changePasswordButton);
+            loginPage.Controls.Add(forgotPasswordButton);
+            loginPage.Controls.Add(label3);
+            loginPage.Controls.Add(label2);
             loginPage.Controls.Add(chooseUserButton);
             loginPage.Controls.Add(groupBox1);
-            loginPage.Controls.Add(radioButtonPatti);
-            loginPage.Controls.Add(radioButtonSue);
             loginPage.Controls.Add(pictureBox1);
             loginPage.Location = new Point(4, 52);
             loginPage.Margin = new Padding(5, 2, 5, 2);
@@ -171,27 +177,79 @@
             loginPage.ToolTipText = "Login Page";
             loginPage.UseVisualStyleBackColor = true;
             // 
-            // radioButtonBetty
+            // loginButton
             // 
-            radioButtonBetty.AutoSize = true;
-            radioButtonBetty.Location = new Point(773, 252);
-            radioButtonBetty.Margin = new Padding(5, 2, 5, 2);
-            radioButtonBetty.Name = "radioButtonBetty";
-            radioButtonBetty.Size = new Size(65, 24);
-            radioButtonBetty.TabIndex = 7;
-            radioButtonBetty.Text = "Betty";
-            radioButtonBetty.UseVisualStyleBackColor = true;
+            loginButton.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
+            loginButton.Location = new Point(621, 213);
+            loginButton.Name = "loginButton";
+            loginButton.Size = new Size(88, 23);
+            loginButton.TabIndex = 11;
+            loginButton.Text = "Login";
+            loginButton.UseVisualStyleBackColor = true;
             // 
-            // radioButtonKaren
+            // passwordTextBox
             // 
-            radioButtonKaren.AutoSize = true;
-            radioButtonKaren.Location = new Point(778, 224);
-            radioButtonKaren.Margin = new Padding(5, 2, 5, 2);
-            radioButtonKaren.Name = "radioButtonKaren";
-            radioButtonKaren.Size = new Size(68, 24);
-            radioButtonKaren.TabIndex = 8;
-            radioButtonKaren.Text = "Karen";
-            radioButtonKaren.UseVisualStyleBackColor = true;
+            passwordTextBox.Location = new Point(606, 180);
+            passwordTextBox.Name = "passwordTextBox";
+            passwordTextBox.PasswordChar = '*';
+            passwordTextBox.Size = new Size(121, 27);
+            passwordTextBox.TabIndex = 10;
+            // 
+            // comboBoxUsers
+            // 
+            comboBoxUsers.FormattingEnabled = true;
+            comboBoxUsers.Location = new Point(606, 140);
+            comboBoxUsers.Name = "comboBoxUsers";
+            comboBoxUsers.Size = new Size(121, 27);
+            comboBoxUsers.TabIndex = 9;
+            comboBoxUsers.SelectedIndexChanged += comboBoxUsers_SelectedIndexChanged;
+            // 
+            // label4
+            // 
+            label4.AutoSize = true;
+            label4.Location = new Point(505, 180);
+            label4.Name = "label4";
+            label4.Size = new Size(76, 20);
+            label4.TabIndex = 15;
+            label4.Text = "Password";
+            // 
+            // changePasswordButton
+            // 
+            changePasswordButton.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
+            changePasswordButton.Location = new Point(632, 254);
+            changePasswordButton.Name = "changePasswordButton";
+            changePasswordButton.Size = new Size(129, 23);
+            changePasswordButton.TabIndex = 13;
+            changePasswordButton.Text = "Change Password";
+            changePasswordButton.UseVisualStyleBackColor = true;
+            // 
+            // forgotPasswordButton
+            // 
+            forgotPasswordButton.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
+            forgotPasswordButton.Location = new Point(482, 254);
+            forgotPasswordButton.Name = "forgotPasswordButton";
+            forgotPasswordButton.Size = new Size(129, 23);
+            forgotPasswordButton.TabIndex = 12;
+            forgotPasswordButton.Text = "Forgot Password";
+            forgotPasswordButton.UseVisualStyleBackColor = true;
+            // 
+            // label3
+            // 
+            label3.AutoSize = true;
+            label3.Location = new Point(505, 176);
+            label3.Name = "label3";
+            label3.Size = new Size(76, 20);
+            label3.TabIndex = 12;
+            label3.Text = "Password";
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Location = new Point(505, 143);
+            label2.Name = "label2";
+            label2.Size = new Size(73, 20);
+            label2.TabIndex = 0;
+            label2.Text = "Pick User";
             // 
             // chooseUserButton
             // 
@@ -215,31 +273,6 @@
             groupBox1.Size = new Size(320, 0);
             groupBox1.TabIndex = 7;
             groupBox1.TabStop = false;
-            // 
-            // radioButtonPatti
-            // 
-            radioButtonPatti.AutoSize = true;
-            radioButtonPatti.Checked = true;
-            radioButtonPatti.Location = new Point(778, 168);
-            radioButtonPatti.Margin = new Padding(5, 2, 5, 2);
-            radioButtonPatti.Name = "radioButtonPatti";
-            radioButtonPatti.Size = new Size(60, 24);
-            radioButtonPatti.TabIndex = 5;
-            radioButtonPatti.TabStop = true;
-            radioButtonPatti.Text = "Patti";
-            radioButtonPatti.UseVisualStyleBackColor = true;
-            // 
-            // radioButtonSue
-            // 
-            radioButtonSue.AutoSize = true;
-            radioButtonSue.ImageAlign = ContentAlignment.MiddleLeft;
-            radioButtonSue.Location = new Point(778, 196);
-            radioButtonSue.Margin = new Padding(5, 2, 5, 2);
-            radioButtonSue.Name = "radioButtonSue";
-            radioButtonSue.Size = new Size(52, 24);
-            radioButtonSue.TabIndex = 6;
-            radioButtonSue.Text = "Sue";
-            radioButtonSue.UseVisualStyleBackColor = true;
             // 
             // dataPage
             // 
@@ -351,6 +384,10 @@
             adminPage.ToolTipText = "Admin Settings";
             adminPage.Layout += adminPage_Layout;
             // 
+            // errorProvider1
+            // 
+            errorProvider1.ContainerControl = this;
+            // 
             // Vivian
             // 
             AutoScaleDimensions = new SizeF(7F, 17F);
@@ -383,6 +420,7 @@
             ((System.ComponentModel.ISupportInitialize)dataGridView).EndInit();
             checkoutPage.ResumeLayout(false);
             checkoutPage.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)errorProvider1).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -395,16 +433,11 @@
         private ToolStripMenuItem exitToolStripMenuItem;
         private ToolStripMenuItem importInventoryToolStripMenuItem;
         private ToolStripMenuItem saveReportToolStripMenuItem;
-        private ToolStripMenuItem printReportToolStripMenuItem;
         private PictureBox pictureBox1;
         private TabControl tabControl;
         private TabPage loginPage;
         private Button chooseUserButton;
         private GroupBox groupBox1;
-        private RadioButton radioButtonKaren;
-        private RadioButton radioButtonBetty;
-        private RadioButton radioButtonSue;
-        private RadioButton radioButtonPatti;
         private TabPage dataPage;
         private DataGridView dataGridView;
         private TabPage checkoutPage;
@@ -414,5 +447,14 @@
         private TextBox textBox1;
         private TabPage adminPage;
         private Button addRowButton;
+        private ComboBox comboBoxUsers;
+        private Label label3;
+        private Label label2;
+        private Button changePasswordButton;
+        private Button forgotPasswordButton;
+        private Label label4;
+        private ErrorProvider errorProvider1;
+        private TextBox passwordTextBox;
+        private Button loginButton;
     }
 }

@@ -12,6 +12,7 @@
  */
 using grace.data;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.VisualBasic.ApplicationServices;
 using NLog;
 using OfficeOpenXml;
 using System.Data;
@@ -19,6 +20,7 @@ using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
 using System.Linq.Expressions;
 using System.Text;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace grace
 {
@@ -51,6 +53,14 @@ namespace grace
             bindingSource1 = new BindingSource();
             dataGridView.DataSource = bindingSource1;
 
+            // Init the globals
+            Globals.GetInstance();
+
+            InitializeComboBox();
+
+            dataPage.Hide();
+            adminPage.Hide();
+            checkoutPage.Hide();
 
         }
 
@@ -76,12 +86,10 @@ namespace grace
             if (enable)
             {
                 saveReportToolStripMenuItem.Enabled = true;
-                printReportToolStripMenuItem.Enabled = true;
             }
             else
             {
                 saveReportToolStripMenuItem.Enabled = false;
-                printReportToolStripMenuItem.Enabled = false;
             }
 
         }
@@ -140,6 +148,25 @@ namespace grace
             dataPage.Height = dataGridView.Height;
             dataPage.Width = tabControl.Width;
 
+        }
+
+        private void InitializeComboBox()
+        {
+            // Clear existing items in the ComboBox
+            comboBoxUsers.Items.Clear();
+            AdminStuff adminStuff = new AdminStuff();
+            // Add items from the 'users' list to the ComboBox
+            List<string> users = adminStuff.getUserNames();
+            foreach (var user in users)
+            {
+                comboBoxUsers.Items.Add(user);
+            }
+
+            // Optionally, set the default selected item (first item in the list)
+            if (comboBoxUsers.Items.Count > 0)
+            {
+                comboBoxUsers.SelectedIndex = 0;
+            }
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -238,7 +265,7 @@ namespace grace
                     readyForNewCode = false;
                     sb.Clear();
                 }
-                TextBox box = (TextBox)sender;
+                System.Windows.Forms.TextBox box = (System.Windows.Forms.TextBox)sender;
                 sb.Append(box.Text);
                 //textBoxBarcode.Text = sb.ToString();
             }
@@ -448,6 +475,19 @@ namespace grace
                     RemoveColumnsByName("ID", "Grace", "GraceId");
                 }
             }
+        }
+
+        private void comboBoxUsers_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+            // Method 1: Get selected text using the Text property
+            string selectedText = comboBoxUsers.Text;
+#pragma warning disable CS8600
+            // Method 2: Get selected text using the SelectedItem property
+            string selectedTextItem = comboBoxUsers.SelectedItem.ToString();
+#pragma warning restore CS8600
+
+            passwordTextBox.Focus();
         }
     }
 }

@@ -1,4 +1,16 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿/*
+ * Copyright (c) 2023 White Acre Software LLC
+ * All rights reserved.
+ *
+ * This software is the confidential and proprietary information
+ * of White Acre Software LLC. You shall not disclose such
+ * Confidential Information and shall use it only in accordance
+ * with the terms of the license agreement you entered into with
+ * White Acre Software LLC.
+ *
+ * Year: 2023
+ */
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -155,7 +167,15 @@ namespace grace.data
         public string Password { get; set; }
 
         [Required]
+        public string ResetAnswer { get; set; }
+
+        [Required]
+        public int ResetAnswerIndex { get; set; }
+
+        [Required]
         public bool Admin { get; set; } = false;
+        [Required]
+        public bool ResetPassword { get; set; } = false;
 
         public List<Pulled> PulledDb { get; set; }
 

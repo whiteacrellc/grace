@@ -23,39 +23,38 @@ namespace grace.Properties {
             }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("35")]
-        public int rowheight {
-            get {
-                return ((int)(this["rowheight"]));
-            }
-            set {
-                this["rowheight"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("40")]
         public int headerheight {
             get {
                 return ((int)(this["headerheight"]));
             }
-            set {
-                this["headerheight"] = value;
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.Collections.Specialized.StringCollection users {
+            get {
+                return ((global::System.Collections.Specialized.StringCollection)(this["users"]));
             }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("45")]
+        [global::System.Configuration.DefaultSettingValueAttribute("35")]
+        public int rowheight {
+            get {
+                return ((int)(this["rowheight"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("40")]
         public int rowsperpage {
             get {
                 return ((int)(this["rowsperpage"]));
-            }
-            set {
-                this["rowsperpage"] = value;
             }
         }
     }

@@ -24,6 +24,7 @@ namespace grace
 {
     public partial class SettingsForm : Form
     {
+        private Globals globals = Globals.GetInstance();
         public SettingsForm()
         {
             InitializeComponent();
@@ -32,8 +33,8 @@ namespace grace
         private void SettingsForm_Load(object sender, EventArgs e)
         {
             // Load the current setting into the form control
-            textBoxRowsPerPage.Text = Properties.Settings.Default.rowsperpage.ToString();
-            rowHeighrTextBox.Text = Properties.Settings.Default.rowheight.ToString();
+            textBoxRowsPerPage.Text = globals.RowsPerPage.ToString();
+            rowHeighrTextBox.Text = globals.RowHeight.ToString();
         }
 
         private void CancelButton_Click(object sender, EventArgs e)
@@ -60,14 +61,12 @@ namespace grace
             int rowHeight = parseeTextBox(textBoxRowsPerPage);
             if (rowHeight > 0)
             {
-                Properties.Settings.Default.rowsperpage = rowHeight;
-                // Save the settings
-                Properties.Settings.Default.Save();
+                globals.RowsPerPage = rowHeight;
             }
             int rowsPerPage = parseeTextBox(rowHeighrTextBox);
             if (rowHeight > 0)
             {
-                Properties.Settings.Default.rowheight = rowHeight;
+                globals.RowHeight = rowHeight;
                 // Save the settings
                 Properties.Settings.Default.Save();
             }
