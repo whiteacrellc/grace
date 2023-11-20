@@ -25,16 +25,29 @@ namespace grace.data
         public DbSet<GraceRow> GraceRows { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Pulled> PulledDb { get; set; }
+        public DbSet<Prefs> PrefsDb { get; set; }
 
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+        private static string connectionString;
+
+        public GraceDbContext(string connectionString)
+        {
+            GraceDbContext.connectionString = connectionString;
+        }
         public GraceDbContext()
         {
-          
+           if (GraceDbContext.connectionString == null)
+            {
+                GraceDbContext.connectionString = DataBase.ConnectionString;
+            }
         }
-
+#pragma warning restore CS8618 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
             modelBuilder.Entity<Grace>();
+
+            modelBuilder.Entity<Prefs>();
 
             modelBuilder.Entity<Total>()
                 .HasOne(t => t.Grace)
@@ -64,7 +77,6 @@ namespace grace.data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            var connectionString = Globals.GetInstance().ConnectionString;
             optionsBuilder.UseSqlite(connectionString).EnableSensitiveDataLogging();
         }
     }
@@ -159,23 +171,18 @@ namespace grace.data
     {
         [Key]
         public int ID { get; set; }
-        [Required]
 
         public string Username { get; set; }
 
-        [Required]
         public string Password { get; set; }
 
-        [Required]
-        public string ResetAnswer { get; set; }
+        public string ResetAnswer { get; set; } = string.Empty;
 
-        [Required]
         public int ResetAnswerIndex { get; set; }
 
-        [Required]
         public bool Admin { get; set; } = false;
-        [Required]
-        public bool ResetPassword { get; set; } = false;
+ 
+        public bool ResetPassword { get; set; } = true;
 
         public List<Pulled> PulledDb { get; set; }
 
@@ -188,10 +195,10 @@ namespace grace.data
         public int ID { get; set; }
         [Required]
 
-        public string Comment { get; set; }
+        public string Comment { get; set; } = String.Empty;
 
         [Required]
-        public DateTime lastUpdated { get; set; }
+        public DateTime lastUpdated { get; set; } = DateTime.Now;
 
         [Required]
         public int amount { get; set; }
@@ -205,6 +212,20 @@ namespace grace.data
         [ForeignKey("GraceId")]
 
         public Grace Grace { get; set; }
+    }
+
+    [Table("Prefs")]
+    public class Prefs
+    {
+        [Key]
+        public int ID { get; set; }
+        [Required]
+
+        public string Name { get; set; }
+
+        [Required]
+        public string Value { get; set; }
+
     }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 }

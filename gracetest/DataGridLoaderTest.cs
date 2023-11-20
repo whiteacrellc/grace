@@ -34,8 +34,6 @@ namespace gracetest
         {
             // Create a mock SQLite connection and command
             dataBase = new DataBase(testDbFile);
-            connectionString = dataBase.ConnectionString;
-            Globals.GetInstance().ConnectionString = connectionString;
 
             string filename = "C:\\Users\\tom\\source\\repos\\grace\\gracetest\\"
                 + "test_file.xlsx";

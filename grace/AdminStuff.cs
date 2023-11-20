@@ -11,6 +11,7 @@
  * Year: 2023
  */
 using grace.data;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +22,7 @@ namespace grace
 {
     internal class AdminStuff
     {
+        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         private static string[] resetPasswordQuestions = {
             "What is your mother's maiden name?",
             "In which city were you born?",
@@ -46,14 +48,15 @@ namespace grace
 
         public void InitUserDB()
         {
-            graceDb.Database.EnsureCreated();
-            List<User> users = graceDb.Users.ToList();
 
-            if (users.Count == 0)
+            bool empty = !graceDb.Users.Any();
+
+            if (empty)
             {
-
-                var prefusers = Properties.Settings.Default.users;
-                foreach (var user in prefusers)
+                string[] defaultUsers = { "patti", "susan", "morgan",
+                    "christa", "mandy", "whitney" };
+        
+                foreach (var user in defaultUsers)
                 {
                     if (user != null)
                     {
@@ -65,7 +68,7 @@ namespace grace
                             u.Admin = true;
                         }
                         u.ResetPassword = true;
-                        users.Add(u);
+                        graceDb.Users.Add(u);
                     }
                 }
                 graceDb.SaveChanges();
@@ -75,10 +78,16 @@ namespace grace
         public List<string>getUserNames()
         {
             List<string> usernames = new List<string>();
-            List<User> users = graceDb.Users.ToList();
-            foreach (var user in users)
+            try
             {
-                usernames.Add(user.Username);
+                List<User> users = graceDb.Users.ToList();
+                foreach (var user in users)
+                {
+                    usernames.Add(user.Username);
+                }
+            } catch (Exception ex) 
+            {
+                logger.Warn(ex);
             }
             return usernames;
         }

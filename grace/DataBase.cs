@@ -39,7 +39,12 @@ namespace grace
 
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         public string DbFileName { get; set; }
-        public string ConnectionString { get; set; }
+
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+#pragma warning disable CA2211 // Non-constant fields should not be visible
+        public static string ConnectionString;
+#pragma warning restore CA2211 // Non-constant fields should not be visible
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
         private string dbName = "grace.db";
 
@@ -50,7 +55,7 @@ namespace grace
         {
             DbFileName = string.Empty;
             ConnectionString = CreateDatabaseFile();
-            graceDb = new GraceDbContext();
+            graceDb = new GraceDbContext(ConnectionString);
             graceDb.Database.EnsureCreated();
         }
 
@@ -85,8 +90,6 @@ namespace grace
             }.ToString();
 
             logger.Info(connectionString);
-            Globals.GetInstance().ConnectionString = connectionString;
-
             return connectionString;
         }
 
@@ -158,8 +161,23 @@ namespace grace
 
         public void InitializeDatabase()
         {
-            graceDb.Database.EnsureDeleted();
             graceDb.Database.EnsureCreated();
+            graceDb.Database.ExecuteSqlRaw("DELETE FROM Graces");
+            InitPrefs();
+            AdminStuff adminStuff = new AdminStuff();
+            adminStuff.InitUserDB();
+        }
+
+        private void InitPrefs()
+        {
+            bool created = graceDb.PrefsDb.Any();
+            if (created == false)
+            {
+                Preferences prefs = new Preferences();
+                prefs.AddOrUpdateIntPreference("rowheight", 35);
+                prefs.AddOrUpdateIntPreference("rowsperpage", 45);
+                prefs.AddOrUpdateIntPreference("headerheight", 40);
+            }
 
         }
 

@@ -83,7 +83,7 @@ namespace grace
 
         private void textBoxRowsPerPage_Validating(object sender, CancelEventArgs e)
         {
-            if (!int.TryParse(textBoxRowsPerPage.Text, out _))
+            if (int.TryParse(textBoxRowsPerPage.Text, out _))
             {
                 MessageBox.Show("Invalid input. Please enter a valid integer.",
                     "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);

@@ -54,13 +54,7 @@ namespace grace
             dataGridView.DataSource = bindingSource1;
 
             // Init the globals
-            Globals.GetInstance();
 
-            InitializeComboBox();
-
-            dataPage.Hide();
-            adminPage.Hide();
-            checkoutPage.Hide();
 
         }
 
@@ -116,10 +110,14 @@ namespace grace
         private void Vivian_Load(object sender, EventArgs e)
         {
             // Loads the preferences into the globals singleton
-            Globals globals = Globals.GetInstance();
             DataBase data = new DataBase();
-            Globals.GetInstance().ConnectionString = data.ConnectionString;
+
+            InitializeComboBox();
+
             adminPage.Hide();
+            dataPage.Hide();
+            adminPage.Hide();
+            checkoutPage.Hide();
 
             if (data.HaveData() == false)
             {
@@ -155,7 +153,8 @@ namespace grace
             // Clear existing items in the ComboBox
             comboBoxUsers.Items.Clear();
             AdminStuff adminStuff = new AdminStuff();
-            // Add items from the 'users' list to the ComboBox
+            adminStuff.InitUserDB();
+
             List<string> users = adminStuff.getUserNames();
             foreach (var user in users)
             {
@@ -488,6 +487,14 @@ namespace grace
 #pragma warning restore CS8600
 
             passwordTextBox.Focus();
+        }
+
+        private void passwordTextBox_TextChanged(object sender, EventArgs e)
+        {
+            string password = passwordTextBox.Text;
+            if (password.Equals("changeme"))
+            { 
+            }
         }
     }
 }

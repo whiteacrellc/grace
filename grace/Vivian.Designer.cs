@@ -194,6 +194,7 @@
             passwordTextBox.PasswordChar = '*';
             passwordTextBox.Size = new Size(121, 27);
             passwordTextBox.TabIndex = 10;
+            passwordTextBox.TextChanged += passwordTextBox_TextChanged;
             // 
             // comboBoxUsers
             // 

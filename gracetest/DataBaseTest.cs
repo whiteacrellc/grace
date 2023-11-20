@@ -36,8 +36,6 @@ namespace gracetest
         {
             // Create a mock SQLite connection and command
             dataBase = new DataBase(testDbFile);
-            connectionString = dataBase.ConnectionString;
-            Globals.GetInstance().ConnectionString = connectionString;
             graceDb = new GraceDbContext();
         }
 

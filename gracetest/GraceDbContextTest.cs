@@ -37,8 +37,6 @@ namespace gracetest
         {
 
             dataBase = new DataBase(testDbName);
-            var connectionString = dataBase.ConnectionString;
-            Globals.GetInstance().ConnectionString = connectionString;
             context = new GraceDbContext();
             context.Database.EnsureCreated();
         }

@@ -10,6 +10,7 @@
  *
  * Year: 2023
  */
+using grace.data;
 using NLog;
 using System;
 using System.Collections.Generic;
@@ -24,16 +25,13 @@ namespace grace
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         private static Globals instance;
 
-        private int rowHeight = 35;
-        private int rowsPerPage = 40;
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+
+        private Preferences prefs;
 
         private Globals()
         {
-            rowHeight = Properties.Settings.Default.rowheight;
-            rowsPerPage = Properties.Settings.Default.rowsperpage;
-
-            initializeUsers();
+            prefs = new Preferences();
         }
         public static Globals GetInstance()
         {
@@ -48,73 +46,41 @@ namespace grace
 
         public int RowHeight
         {
-            get { return rowHeight; }
+            get {
+                return prefs.GetIntValue("rowheight");
+            }
             set
             {
-                rowHeight = value;
-                //   Properties.Settings.Default.rowheight = value;
-                //  Properties.Settings.Default.Save();
+                prefs.AddOrUpdateIntPreference("rowheight", value);
             }
         }
 
         public int RowsPerPage
         {
-            get { return rowsPerPage; }
+            get
+            {
+                return prefs.GetIntValue("rowsperpage");
+            }
             set
             {
-                rowHeight = value;
-                //Properties.Settings.Default.rowsperpage = value;
-                //Properties.Settings.Default.Save();
+                prefs.AddOrUpdateIntPreference("rowsperpage", value);
             }
         }
 
-        private string[] defaultUsers = { "patti", "susan", "morgan",
-            "christa", "mandy", "whitney" };
-
-        private void initializeUsers()
+        public int HeaderHeight
         {
-            bool initPref = false;
-            try
+            get
             {
-                var users = Properties.Settings.Default.users;
-                if (users == null || users.Count == 0)
-                {
-                    initPref = true;
-                }
+                return prefs.GetIntValue("headerheight");
             }
-            catch (Exception ex)
+            set
             {
-                initPref = true;
-                logger.Warn(ex);
-
+                prefs.AddOrUpdateIntPreference("headerheight", value);
             }
-            if (initPref)
-            {
-                System.Collections.Specialized.StringCollection myCollection
-                    = new System.Collections.Specialized.StringCollection();
-
-                foreach (var user in defaultUsers)
-                {
-                    myCollection.Add(user);
-                }
-                Properties.Settings.Default.users = myCollection;
-                Properties.Settings.Default.Save();
-
-            }
-            AdminStuff adminStuff = new AdminStuff();
-            adminStuff.InitUserDB();
         }
-
-
-
-
-
-
 
         public DateTime currentHeaderDate { get; set; } = DateTime.Now;
         public DateTime previousHeaderDate { get; set; } = DateTime.Now.AddDays(-14);
-
-        public string ConnectionString { get; set; }
 
     }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
