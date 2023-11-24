@@ -23,19 +23,7 @@ namespace grace
     internal class AdminStuff
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
-        private static string[] resetPasswordQuestions = {
-            "What is your mother's maiden name?",
-            "In which city were you born?",
-            "What is the name of your first pet?",
-            "What is your favorite movie?",
-            "What is your favorite book?",
-            "What is the name of your elementary school?",
-            "What is the model of your first car?",
-            "What is your favorite food?",
-            "What is the name of your favorite teacher?",
-            "What is the make of your first bike?",
-            "What is your favorite swear word?",
-        };
+
 
         private GraceDbContext graceDb;
 

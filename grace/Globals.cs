@@ -29,6 +29,8 @@ namespace grace
 
         private Preferences prefs;
 
+        public string CurrentUser { get; set; }
+
         private Globals()
         {
             prefs = new Preferences();

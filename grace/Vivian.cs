@@ -11,6 +11,7 @@
  * Year: 2023
  */
 using grace.data;
+using grace.utils;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.VisualBasic.ApplicationServices;
 using NLog;
@@ -21,6 +22,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 namespace grace
 {
@@ -41,6 +43,7 @@ namespace grace
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
             InitializeComponent();
+
             // If you use EPPlus in a noncommercial context
             // according to the Polyform Noncommercial license:
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
@@ -146,6 +149,8 @@ namespace grace
             dataPage.Height = dataGridView.Height;
             dataPage.Width = tabControl.Width;
 
+            loggedInBox.Hide();
+
         }
 
         private void InitializeComboBox()
@@ -232,19 +237,6 @@ namespace grace
             {
                 string filePath = saveFileDialog.FileName;
                 if (report != null) report.WriteReport(filePath);
-            }
-        }
-
-        private void radioButton_CheckedChanged(object sender, EventArgs e)
-        {
-            foreach (RadioButton radioButton in groupBox1.Controls.OfType<RadioButton>())
-            {
-                if (radioButton.Checked)
-                {
-                    // Display the selected user's name in a label
-                    User = radioButton.Text;
-                    break;
-                }
             }
         }
 
@@ -486,14 +478,107 @@ namespace grace
             string selectedTextItem = comboBoxUsers.SelectedItem.ToString();
 #pragma warning restore CS8600
 
+            loggedInLabel.Text = selectedText;
+
             passwordTextBox.Focus();
         }
 
-        private void passwordTextBox_TextChanged(object sender, EventArgs e)
+        private void loginButton_Click(object sender, EventArgs e)
         {
             string password = passwordTextBox.Text;
-            if (password.Equals("changeme"))
-            { 
+            string? username = comboBoxUsers.SelectedItem.ToString();
+
+
+            if (string.IsNullOrEmpty(username))
+            {
+                MessageBox.Show("Null username.", "Error",
+                     MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            bool reset = PasswordChecker.ResetPassword(username);
+
+            if (string.IsNullOrEmpty(password))
+            {
+                if (reset)
+                {
+                    using (PasswordChange passwordChange = new PasswordChange(username))
+                    {
+                        DialogResult dialogResult = passwordChange.ShowDialog();
+                        if (dialogResult == DialogResult.OK)
+                        {
+                            MessageBox.Show("Password updated succefully.", "Yay",
+                                MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
+                    }
+                } else
+                {
+                    MessageBox.Show("Password is empty.", "Error",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+            }
+            else if (PasswordChecker.ResetPassword(username))
+            {
+                using (PasswordChange passwordChange = new PasswordChange(username))
+                {
+                    DialogResult dialogResult = passwordChange.ShowDialog();
+                    if (dialogResult == DialogResult.OK)
+                    {
+                        MessageBox.Show("Password updated succefully.", "Yay",
+                            MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                }
+            }
+            else if (PasswordChecker.CheckPassword(username, password) == false)
+            {
+                MessageBox.Show("Incorrect password, please try again.",
+                    "Incorrect Password",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else
+            {
+                LoginUser(username);
+            }
+        }
+
+        private void LoginUser(string username)
+        {
+            Globals.GetInstance().CurrentUser = username;
+
+            if (PasswordChecker.IsUserAdmin(username))
+            {
+                tabControl.SelectedTab = dataPage;
+            }
+            else
+            {
+                tabControl.SelectedTab = checkoutPage;
+                dataPage.Hide();
+                adminPage.Hide();
+            }
+
+            passwordGroupBox.Hide();
+
+        }
+
+
+        private void changePasswordButton_Click(object sender, EventArgs e)
+        {
+            string? username = comboBoxUsers.SelectedItem.ToString();
+
+            if (string.IsNullOrEmpty(username))
+            {
+                return;
+            }
+
+            using (PasswordChange passwordChange = new PasswordChange(username))
+            {
+                DialogResult dialogResult = passwordChange.ShowDialog();
+                if (dialogResult == DialogResult.OK)
+                {
+                    MessageBox.Show("Password updated succefully.", "Yay",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
             }
         }
     }

@@ -40,12 +40,15 @@
             pictureBox1 = new PictureBox();
             tabControl = new TabControl();
             loginPage = new TabPage();
+            loggedInBox = new GroupBox();
+            logoutButton = new Button();
+            loggedInLabel = new Label();
+            passwordGroupBox = new GroupBox();
             loginButton = new Button();
             passwordTextBox = new TextBox();
             comboBoxUsers = new ComboBox();
             label4 = new Label();
             changePasswordButton = new Button();
-            forgotPasswordButton = new Button();
             label3 = new Label();
             label2 = new Label();
             chooseUserButton = new Button();
@@ -64,6 +67,8 @@
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             tabControl.SuspendLayout();
             loginPage.SuspendLayout();
+            loggedInBox.SuspendLayout();
+            passwordGroupBox.SuspendLayout();
             dataPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridView).BeginInit();
             checkoutPage.SuspendLayout();
@@ -138,12 +143,12 @@
             // tabControl
             // 
             tabControl.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            tabControl.Appearance = TabAppearance.Buttons;
+            tabControl.Appearance = TabAppearance.FlatButtons;
             tabControl.Controls.Add(loginPage);
             tabControl.Controls.Add(dataPage);
             tabControl.Controls.Add(checkoutPage);
             tabControl.Controls.Add(adminPage);
-            tabControl.Font = new Font("Segoe UI", 10.875F, FontStyle.Bold, GraphicsUnit.Point);
+            tabControl.Font = new Font("Verdana", 11.25F, FontStyle.Bold, GraphicsUnit.Point);
             tabControl.ItemSize = new Size(150, 48);
             tabControl.Location = new Point(0, 30);
             tabControl.Margin = new Padding(5, 2, 5, 2);
@@ -156,14 +161,8 @@
             // 
             // loginPage
             // 
-            loginPage.Controls.Add(loginButton);
-            loginPage.Controls.Add(passwordTextBox);
-            loginPage.Controls.Add(comboBoxUsers);
-            loginPage.Controls.Add(label4);
-            loginPage.Controls.Add(changePasswordButton);
-            loginPage.Controls.Add(forgotPasswordButton);
-            loginPage.Controls.Add(label3);
-            loginPage.Controls.Add(label2);
+            loginPage.Controls.Add(loggedInBox);
+            loginPage.Controls.Add(passwordGroupBox);
             loginPage.Controls.Add(chooseUserButton);
             loginPage.Controls.Add(groupBox1);
             loginPage.Controls.Add(pictureBox1);
@@ -177,79 +176,112 @@
             loginPage.ToolTipText = "Login Page";
             loginPage.UseVisualStyleBackColor = true;
             // 
+            // loggedInBox
+            // 
+            loggedInBox.Controls.Add(logoutButton);
+            loggedInBox.Controls.Add(loggedInLabel);
+            loggedInBox.Location = new Point(434, 304);
+            loggedInBox.Name = "loggedInBox";
+            loggedInBox.Size = new Size(386, 181);
+            loggedInBox.TabIndex = 24;
+            loggedInBox.TabStop = false;
+            // 
+            // logoutButton
+            // 
+            logoutButton.Location = new Point(153, 113);
+            logoutButton.Name = "logoutButton";
+            logoutButton.Size = new Size(75, 23);
+            logoutButton.TabIndex = 1;
+            logoutButton.Text = "Logout";
+            logoutButton.UseVisualStyleBackColor = true;
+            // 
+            // loggedInLabel
+            // 
+            loggedInLabel.AutoSize = true;
+            loggedInLabel.Location = new Point(54, 39);
+            loggedInLabel.Name = "loggedInLabel";
+            loggedInLabel.Size = new Size(57, 18);
+            loggedInLabel.TabIndex = 0;
+            loggedInLabel.Text = "label5";
+            // 
+            // passwordGroupBox
+            // 
+            passwordGroupBox.Controls.Add(loginButton);
+            passwordGroupBox.Controls.Add(passwordTextBox);
+            passwordGroupBox.Controls.Add(comboBoxUsers);
+            passwordGroupBox.Controls.Add(label4);
+            passwordGroupBox.Controls.Add(changePasswordButton);
+            passwordGroupBox.Controls.Add(label3);
+            passwordGroupBox.Controls.Add(label2);
+            passwordGroupBox.Location = new Point(434, 59);
+            passwordGroupBox.Name = "passwordGroupBox";
+            passwordGroupBox.Size = new Size(386, 239);
+            passwordGroupBox.TabIndex = 16;
+            passwordGroupBox.TabStop = false;
+            // 
             // loginButton
             // 
             loginButton.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
-            loginButton.Location = new Point(621, 213);
+            loginButton.Location = new Point(193, 124);
             loginButton.Name = "loginButton";
             loginButton.Size = new Size(88, 23);
-            loginButton.TabIndex = 11;
+            loginButton.TabIndex = 19;
             loginButton.Text = "Login";
             loginButton.UseVisualStyleBackColor = true;
+            loginButton.Click += loginButton_Click;
             // 
             // passwordTextBox
             // 
-            passwordTextBox.Location = new Point(606, 180);
+            passwordTextBox.Location = new Point(178, 91);
             passwordTextBox.Name = "passwordTextBox";
             passwordTextBox.PasswordChar = '*';
-            passwordTextBox.Size = new Size(121, 27);
-            passwordTextBox.TabIndex = 10;
-            passwordTextBox.TextChanged += passwordTextBox_TextChanged;
+            passwordTextBox.Size = new Size(121, 26);
+            passwordTextBox.TabIndex = 18;
             // 
             // comboBoxUsers
             // 
             comboBoxUsers.FormattingEnabled = true;
-            comboBoxUsers.Location = new Point(606, 140);
+            comboBoxUsers.Location = new Point(178, 51);
             comboBoxUsers.Name = "comboBoxUsers";
-            comboBoxUsers.Size = new Size(121, 27);
-            comboBoxUsers.TabIndex = 9;
-            comboBoxUsers.SelectedIndexChanged += comboBoxUsers_SelectedIndexChanged;
+            comboBoxUsers.Size = new Size(121, 26);
+            comboBoxUsers.TabIndex = 17;
             // 
             // label4
             // 
             label4.AutoSize = true;
-            label4.Location = new Point(505, 180);
+            label4.Location = new Point(77, 91);
             label4.Name = "label4";
-            label4.Size = new Size(76, 20);
-            label4.TabIndex = 15;
+            label4.Size = new Size(88, 18);
+            label4.TabIndex = 23;
             label4.Text = "Password";
             // 
             // changePasswordButton
             // 
             changePasswordButton.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
-            changePasswordButton.Location = new Point(632, 254);
+            changePasswordButton.Location = new Point(36, 161);
             changePasswordButton.Name = "changePasswordButton";
             changePasswordButton.Size = new Size(129, 23);
-            changePasswordButton.TabIndex = 13;
+            changePasswordButton.TabIndex = 22;
             changePasswordButton.Text = "Change Password";
             changePasswordButton.UseVisualStyleBackColor = true;
-            // 
-            // forgotPasswordButton
-            // 
-            forgotPasswordButton.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
-            forgotPasswordButton.Location = new Point(482, 254);
-            forgotPasswordButton.Name = "forgotPasswordButton";
-            forgotPasswordButton.Size = new Size(129, 23);
-            forgotPasswordButton.TabIndex = 12;
-            forgotPasswordButton.Text = "Forgot Password";
-            forgotPasswordButton.UseVisualStyleBackColor = true;
             // 
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(505, 176);
+            label3.Location = new Point(77, 87);
             label3.Name = "label3";
-            label3.Size = new Size(76, 20);
-            label3.TabIndex = 12;
+            label3.Size = new Size(88, 18);
+            label3.TabIndex = 21;
             label3.Text = "Password";
             // 
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(505, 143);
+            label2.BackColor = SystemColors.Control;
+            label2.Location = new Point(77, 54);
             label2.Name = "label2";
-            label2.Size = new Size(73, 20);
-            label2.TabIndex = 0;
+            label2.Size = new Size(84, 18);
+            label2.TabIndex = 16;
             label2.Text = "Pick User";
             // 
             // chooseUserButton
@@ -306,7 +338,7 @@
             label1.Location = new Point(337, 18);
             label1.Margin = new Padding(4, 0, 4, 0);
             label1.Name = "label1";
-            label1.Size = new Size(78, 20);
+            label1.Size = new Size(90, 18);
             label1.TabIndex = 3;
             label1.Text = "Filter SKU";
             // 
@@ -315,7 +347,7 @@
             textBox1.Location = new Point(15, 15);
             textBox1.Margin = new Padding(4, 3, 4, 3);
             textBox1.Name = "textBox1";
-            textBox1.Size = new Size(314, 27);
+            textBox1.Size = new Size(314, 26);
             textBox1.TabIndex = 2;
             textBox1.TextChanged += textBox1_TextChanged;
             // 
@@ -359,7 +391,7 @@
             barcodeLabel.Location = new Point(889, 45);
             barcodeLabel.Margin = new Padding(7, 0, 7, 0);
             barcodeLabel.Name = "barcodeLabel";
-            barcodeLabel.Size = new Size(102, 20);
+            barcodeLabel.Size = new Size(118, 18);
             barcodeLabel.TabIndex = 1;
             barcodeLabel.Text = "Scan Barcode";
             // 
@@ -368,7 +400,7 @@
             textBoxBarcode.Location = new Point(1005, 38);
             textBoxBarcode.Margin = new Padding(7);
             textBoxBarcode.Name = "textBoxBarcode";
-            textBoxBarcode.Size = new Size(434, 27);
+            textBoxBarcode.Size = new Size(434, 26);
             textBoxBarcode.TabIndex = 0;
             textBoxBarcode.TextChanged += textBoxBarcode_TextChanged;
             textBoxBarcode.KeyDown += textBoxBarcode_KeyDown;
@@ -394,11 +426,12 @@
             AutoScaleDimensions = new SizeF(7F, 17F);
             AutoScaleMode = AutoScaleMode.Font;
             AutoSize = true;
+            BackColor = Color.White;
             ClientSize = new Size(1624, 661);
             Controls.Add(tabControl);
             Controls.Add(menuStrip1);
             Font = new Font("Segoe UI", 10.125F, FontStyle.Regular, GraphicsUnit.Point);
-            FormBorderStyle = FormBorderStyle.SizableToolWindow;
+            FormBorderStyle = FormBorderStyle.Fixed3D;
             Icon = (Icon)resources.GetObject("$this.Icon");
             MainMenuStrip = menuStrip1;
             Margin = new Padding(5, 2, 5, 2);
@@ -415,7 +448,10 @@
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             tabControl.ResumeLayout(false);
             loginPage.ResumeLayout(false);
-            loginPage.PerformLayout();
+            loggedInBox.ResumeLayout(false);
+            loggedInBox.PerformLayout();
+            passwordGroupBox.ResumeLayout(false);
+            passwordGroupBox.PerformLayout();
             dataPage.ResumeLayout(false);
             dataPage.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridView).EndInit();
@@ -448,14 +484,17 @@
         private TextBox textBox1;
         private TabPage adminPage;
         private Button addRowButton;
+        private ErrorProvider errorProvider1;
+        private GroupBox passwordGroupBox;
+        private Button loginButton;
+        private TextBox passwordTextBox;
         private ComboBox comboBoxUsers;
+        private Label label4;
+        private Button changePasswordButton;
         private Label label3;
         private Label label2;
-        private Button changePasswordButton;
-        private Button forgotPasswordButton;
-        private Label label4;
-        private ErrorProvider errorProvider1;
-        private TextBox passwordTextBox;
-        private Button loginButton;
+        private GroupBox loggedInBox;
+        private Button logoutButton;
+        private Label loggedInLabel;
     }
 }
