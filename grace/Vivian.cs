@@ -11,6 +11,7 @@
  * Year: 2023
  */
 using grace.data;
+using grace.tabs;
 using grace.utils;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.VisualBasic.ApplicationServices;
@@ -28,15 +29,19 @@ namespace grace
 {
     public partial class Vivian : Form
     {
+
         public ExcelReader er { get; }
         Report? report;
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
-        public string User { get; set; }
         private StringBuilder sb = new StringBuilder();
         private bool readyForNewCode = true;
         private DataGridLoader dataGridLoader;
         private BindingSource bindingSource1;
+        private HomeTab homeTab;
+        private AdminTab adminTab;
+
+
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         public Vivian()
@@ -49,15 +54,15 @@ namespace grace
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             er = new ExcelReader(this);
             EnableReportButton(false);
-            User = "";
 
 
             dataGridView.AutoGenerateColumns = true;
             bindingSource1 = new BindingSource();
             dataGridView.DataSource = bindingSource1;
 
-            // Init the globals
-
+            // Init the tab page classes
+            homeTab = new HomeTab(this);
+            adminTab = new AdminTab(this);
 
         }
 
@@ -112,15 +117,14 @@ namespace grace
 
         private void Vivian_Load(object sender, EventArgs e)
         {
+
+
+
             // Loads the preferences into the globals singleton
             DataBase data = new DataBase();
 
-            InitializeComboBox();
-
-            adminPage.Hide();
-            dataPage.Hide();
-            adminPage.Hide();
-            checkoutPage.Hide();
+            homeTab.InitializeComboBox();
+            adminTab.InitializeComboBox();
 
             if (data.HaveData() == false)
             {
@@ -150,28 +154,8 @@ namespace grace
             dataPage.Width = tabControl.Width;
 
             loggedInBox.Hide();
-
         }
 
-        private void InitializeComboBox()
-        {
-            // Clear existing items in the ComboBox
-            comboBoxUsers.Items.Clear();
-            AdminStuff adminStuff = new AdminStuff();
-            adminStuff.InitUserDB();
-
-            List<string> users = adminStuff.getUserNames();
-            foreach (var user in users)
-            {
-                comboBoxUsers.Items.Add(user);
-            }
-
-            // Optionally, set the default selected item (first item in the list)
-            if (comboBoxUsers.Items.Count > 0)
-            {
-                comboBoxUsers.SelectedIndex = 0;
-            }
-        }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -238,11 +222,6 @@ namespace grace
                 string filePath = saveFileDialog.FileName;
                 if (report != null) report.WriteReport(filePath);
             }
-        }
-
-        private void chooseUserButton_Click(object sender, EventArgs e)
-        {
-            tabControl.SelectedTab = dataPage;
         }
 
         private void textBoxBarcode_KeyDown(object sender, KeyEventArgs e)
@@ -320,17 +299,6 @@ namespace grace
             dataPage.Width = tabControl.Width;
         }
 
-        private void dataGridView_Resize(object sender, EventArgs e)
-        {
-
-
-        }
-
-        private void checkoutPage_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
             string searchTerm = textBox1.Text;
@@ -374,6 +342,8 @@ namespace grace
 
         private void dataGridView_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
+            string User = Globals.GetInstance().CurrentUser;
+
             // Get the modified cell value and the corresponding product
             int rowIndex = e.RowIndex;
             int columnIndex = e.ColumnIndex;
@@ -450,11 +420,6 @@ namespace grace
             }
         }
 
-        private void adminPage_Layout(object sender, LayoutEventArgs e)
-        {
-
-        }
-
         private void addRowButton_Click(object sender, EventArgs e)
         {
             using (EditRowForm editRowForm = new EditRowForm(null))
@@ -468,117 +433,21 @@ namespace grace
             }
         }
 
-        private void comboBoxUsers_SelectedIndexChanged(object sender, EventArgs e)
+
+        private void tabControl_Selecting(object sender, TabControlCancelEventArgs e)
         {
-
-            // Method 1: Get selected text using the Text property
-            string selectedText = comboBoxUsers.Text;
-#pragma warning disable CS8600
-            // Method 2: Get selected text using the SelectedItem property
-            string selectedTextItem = comboBoxUsers.SelectedItem.ToString();
-#pragma warning restore CS8600
-
-            loggedInLabel.Text = selectedText;
-
-            passwordTextBox.Focus();
-        }
-
-        private void loginButton_Click(object sender, EventArgs e)
-        {
-            string password = passwordTextBox.Text;
-            string? username = comboBoxUsers.SelectedItem.ToString();
-
-
-            if (string.IsNullOrEmpty(username))
+            string username = Globals.GetInstance().CurrentUser;
+            bool isadmin = PasswordChecker.IsUserAdmin(username);
+            if (!isadmin)
             {
-                MessageBox.Show("Null username.", "Error",
-                     MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            bool reset = PasswordChecker.ResetPassword(username);
-
-            if (string.IsNullOrEmpty(password))
-            {
-                if (reset)
+                int tabIndex = e.TabPageIndex;
+                if (tabIndex == 1 || tabIndex == 4)
                 {
-                    using (PasswordChange passwordChange = new PasswordChange(username))
-                    {
-                        DialogResult dialogResult = passwordChange.ShowDialog();
-                        if (dialogResult == DialogResult.OK)
-                        {
-                            MessageBox.Show("Password updated succefully.", "Yay",
-                                MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        }
-                    }
-                } else
-                {
-                    MessageBox.Show("Password is empty.", "Error",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-            }
-            else if (PasswordChecker.ResetPassword(username))
-            {
-                using (PasswordChange passwordChange = new PasswordChange(username))
-                {
-                    DialogResult dialogResult = passwordChange.ShowDialog();
-                    if (dialogResult == DialogResult.OK)
-                    {
-                        MessageBox.Show("Password updated succefully.", "Yay",
-                            MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    }
-                }
-            }
-            else if (PasswordChecker.CheckPassword(username, password) == false)
-            {
-                MessageBox.Show("Incorrect password, please try again.",
-                    "Incorrect Password",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            else
-            {
-                LoginUser(username);
-            }
-        }
-
-        private void LoginUser(string username)
-        {
-            Globals.GetInstance().CurrentUser = username;
-
-            if (PasswordChecker.IsUserAdmin(username))
-            {
-                tabControl.SelectedTab = dataPage;
-            }
-            else
-            {
-                tabControl.SelectedTab = checkoutPage;
-                dataPage.Hide();
-                adminPage.Hide();
-            }
-
-            passwordGroupBox.Hide();
-
-        }
-
-
-        private void changePasswordButton_Click(object sender, EventArgs e)
-        {
-            string? username = comboBoxUsers.SelectedItem.ToString();
-
-            if (string.IsNullOrEmpty(username))
-            {
-                return;
-            }
-
-            using (PasswordChange passwordChange = new PasswordChange(username))
-            {
-                DialogResult dialogResult = passwordChange.ShowDialog();
-                if (dialogResult == DialogResult.OK)
-                {
-                    MessageBox.Show("Password updated succefully.", "Yay",
+                    e.Cancel = true;
+                    MessageBox.Show("You can't select this tab.", "Information",
                         MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
+
             }
         }
     }

@@ -139,14 +139,10 @@ namespace grace
         {
             changePasswordLabel.Text = "Change Password for " + username;
 
-            string resetanswer = PasswordChecker.ResetAnswer(username);
-            int resetindex = PasswordChecker.ResetIndex(username);
-
             reset = PasswordChecker.ResetPassword(username);
             if (reset)
             {
                 currentPasswordShow(false);
-
             }
             else
             {

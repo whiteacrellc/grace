@@ -11,6 +11,7 @@
  * Year: 2023
  */
 using grace.data;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -110,7 +111,7 @@ namespace grace.utils
             }
         }
 
-        public static string ResetAnswer(string username)
+        public static bool SetResetFlag(string username)
         {
             using (var dbContext = new GraceDbContext())
             {
@@ -120,10 +121,12 @@ namespace grace.utils
 
                 if (user == null)
                 {
-                    return string.Empty;
+                    return false;
                 }
 
-                return user.ResetAnswer;
+                user.ResetPassword = true;
+                dbContext.SaveChanges();
+                return true;
             }
 
         }

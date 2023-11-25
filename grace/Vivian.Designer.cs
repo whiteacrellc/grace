@@ -61,7 +61,11 @@
             checkoutPage = new TabPage();
             barcodeLabel = new Label();
             textBoxBarcode = new TextBox();
+            checkinPage = new TabPage();
             adminPage = new TabPage();
+            resetPasswordButton = new Button();
+            resetComboBox = new ComboBox();
+            label5 = new Label();
             errorProvider1 = new ErrorProvider(components);
             menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
@@ -72,6 +76,7 @@
             dataPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridView).BeginInit();
             checkoutPage.SuspendLayout();
+            adminPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)errorProvider1).BeginInit();
             SuspendLayout();
             // 
@@ -147,6 +152,7 @@
             tabControl.Controls.Add(loginPage);
             tabControl.Controls.Add(dataPage);
             tabControl.Controls.Add(checkoutPage);
+            tabControl.Controls.Add(checkinPage);
             tabControl.Controls.Add(adminPage);
             tabControl.Font = new Font("Verdana", 11.25F, FontStyle.Bold, GraphicsUnit.Point);
             tabControl.ItemSize = new Size(150, 48);
@@ -158,6 +164,7 @@
             tabControl.Size = new Size(1804, 632);
             tabControl.TabIndex = 9;
             tabControl.TabStop = false;
+            tabControl.Selecting += tabControl_Selecting;
             // 
             // loginPage
             // 
@@ -190,7 +197,7 @@
             // 
             logoutButton.Location = new Point(153, 113);
             logoutButton.Name = "logoutButton";
-            logoutButton.Size = new Size(75, 23);
+            logoutButton.Size = new Size(75, 28);
             logoutButton.TabIndex = 1;
             logoutButton.Text = "Logout";
             logoutButton.UseVisualStyleBackColor = true;
@@ -228,7 +235,6 @@
             loginButton.TabIndex = 19;
             loginButton.Text = "Login";
             loginButton.UseVisualStyleBackColor = true;
-            loginButton.Click += loginButton_Click;
             // 
             // passwordTextBox
             // 
@@ -245,6 +251,7 @@
             comboBoxUsers.Name = "comboBoxUsers";
             comboBoxUsers.Size = new Size(121, 26);
             comboBoxUsers.TabIndex = 17;
+            comboBoxUsers.SelectedIndexChanged += grace.tabs.HomeTab.comboBoxUsers_SelectedIndexChanged;
             // 
             // label4
             // 
@@ -294,7 +301,6 @@
             chooseUserButton.TabIndex = 8;
             chooseUserButton.Text = "Choose User";
             chooseUserButton.UseVisualStyleBackColor = true;
-            chooseUserButton.Click += chooseUserButton_Click;
             // 
             // groupBox1
             // 
@@ -362,14 +368,13 @@
             dataGridView.Name = "dataGridView";
             dataGridView.RowHeadersWidth = 82;
             dataGridView.RowTemplate.Height = 41;
-            dataGridView.Size = new Size(1127, 459);
+            dataGridView.Size = new Size(1624, 527);
             dataGridView.TabIndex = 1;
             dataGridView.CellBeginEdit += dataGridView_CellBeginEdit;
             dataGridView.CellEndEdit += dataGridView_CellEndEdit;
             dataGridView.CellMouseDoubleClick += dataGridView_CellMouseDoubleClick;
             dataGridView.DataBindingComplete += dataGridView_DataBindingComplete;
             dataGridView.Paint += dataGridView_Paint;
-            dataGridView.Resize += dataGridView_Resize;
             // 
             // checkoutPage
             // 
@@ -380,10 +385,9 @@
             checkoutPage.Name = "checkoutPage";
             checkoutPage.Size = new Size(1796, 576);
             checkoutPage.TabIndex = 2;
-            checkoutPage.Text = "Checkout";
+            checkoutPage.Text = "Check Out";
             checkoutPage.ToolTipText = "Checkout Items";
             checkoutPage.UseVisualStyleBackColor = true;
-            checkoutPage.Click += checkoutPage_Click;
             // 
             // barcodeLabel
             // 
@@ -405,17 +409,54 @@
             textBoxBarcode.TextChanged += textBoxBarcode_TextChanged;
             textBoxBarcode.KeyDown += textBoxBarcode_KeyDown;
             // 
+            // checkinPage
+            // 
+            checkinPage.Location = new Point(4, 52);
+            checkinPage.Name = "checkinPage";
+            checkinPage.Size = new Size(1796, 576);
+            checkinPage.TabIndex = 4;
+            checkinPage.Text = "Check In";
+            checkinPage.UseVisualStyleBackColor = true;
+            // 
             // adminPage
             // 
             adminPage.BackColor = SystemColors.Control;
             adminPage.BorderStyle = BorderStyle.Fixed3D;
+            adminPage.Controls.Add(resetPasswordButton);
+            adminPage.Controls.Add(resetComboBox);
+            adminPage.Controls.Add(label5);
             adminPage.Location = new Point(4, 52);
             adminPage.Name = "adminPage";
             adminPage.Size = new Size(1796, 576);
             adminPage.TabIndex = 3;
             adminPage.Text = "Admin";
             adminPage.ToolTipText = "Admin Settings";
-            adminPage.Layout += adminPage_Layout;
+            // 
+            // resetPasswordButton
+            // 
+            resetPasswordButton.Location = new Point(192, 84);
+            resetPasswordButton.Name = "resetPasswordButton";
+            resetPasswordButton.Size = new Size(194, 29);
+            resetPasswordButton.TabIndex = 2;
+            resetPasswordButton.Text = "Reset Password";
+            resetPasswordButton.UseVisualStyleBackColor = true;
+            // 
+            // resetComboBox
+            // 
+            resetComboBox.FormattingEnabled = true;
+            resetComboBox.Location = new Point(243, 43);
+            resetComboBox.Name = "resetComboBox";
+            resetComboBox.Size = new Size(143, 26);
+            resetComboBox.TabIndex = 1;
+            // 
+            // label5
+            // 
+            label5.AutoSize = true;
+            label5.Location = new Point(72, 43);
+            label5.Name = "label5";
+            label5.Size = new Size(141, 18);
+            label5.TabIndex = 0;
+            label5.Text = "Reset Password";
             // 
             // errorProvider1
             // 
@@ -457,6 +498,8 @@
             ((System.ComponentModel.ISupportInitialize)dataGridView).EndInit();
             checkoutPage.ResumeLayout(false);
             checkoutPage.PerformLayout();
+            adminPage.ResumeLayout(false);
+            adminPage.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)errorProvider1).EndInit();
             ResumeLayout(false);
             PerformLayout();
@@ -471,7 +514,6 @@
         private ToolStripMenuItem importInventoryToolStripMenuItem;
         private ToolStripMenuItem saveReportToolStripMenuItem;
         private PictureBox pictureBox1;
-        private TabControl tabControl;
         private TabPage loginPage;
         private Button chooseUserButton;
         private GroupBox groupBox1;
@@ -485,16 +527,21 @@
         private TabPage adminPage;
         private Button addRowButton;
         private ErrorProvider errorProvider1;
-        private GroupBox passwordGroupBox;
-        private Button loginButton;
-        private TextBox passwordTextBox;
-        private ComboBox comboBoxUsers;
         private Label label4;
         private Button changePasswordButton;
         private Label label3;
         private Label label2;
-        private GroupBox loggedInBox;
-        private Button logoutButton;
-        private Label loggedInLabel;
+        private Label label5;
+        private TabPage checkinPage;
+        public Button logoutButton;
+        public Label loggedInLabel;
+        public ComboBox resetComboBox;
+        public Button resetPasswordButton;
+        public TabControl tabControl;
+        public GroupBox passwordGroupBox;
+        public Button loginButton;
+        public TextBox passwordTextBox;
+        public ComboBox comboBoxUsers;
+        public GroupBox loggedInBox;
     }
 }
