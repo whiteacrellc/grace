@@ -33,18 +33,26 @@ namespace grace.tabs
 #pragma warning disable CS8601
 #pragma warning disable CS8602
 #pragma warning disable CS8600
-        private static TabPage adminTabPage;
-        private static Vivian vivian;
+        private TabPage adminTabPage;
+        private Vivian vivian;
+        private Button resetPasswordButton;
 
         public AdminTab(Vivian v) {
             vivian = v;
             // Possible null reference assignment.
             adminTabPage = vivian.tabControl.TabPages[4];
+            this.resetPasswordButton = vivian.resetPasswordButton;
 
         }
 
+        public void Load()
+        {
+
+            resetPasswordButton.Click += resetButton_Click;
+            InitializeComboBox();
+        }
         
-        public void InitializeComboBox()
+        private void InitializeComboBox()
         {
             ComboBox resetComboBox = vivian.resetComboBox;
 
@@ -68,7 +76,7 @@ namespace grace.tabs
         }
 
 
-        public static void resetButton_Click(object sender, EventArgs e)
+        public void resetButton_Click(object? sender, EventArgs e)
         {
             ComboBox resetComboBox = vivian.resetComboBox;
             string? username = resetComboBox.SelectedItem.ToString();

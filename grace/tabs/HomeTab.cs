@@ -22,6 +22,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ScrollBar;
 
 namespace grace.tabs
 {
@@ -33,14 +34,17 @@ namespace grace.tabs
 #pragma warning disable CS8601
 #pragma warning disable CS8602
 #pragma warning disable CS8600
-        private static Vivian vivian;
-        private static TabPage homeTabPage;
-        private static ComboBox comboBoxUsers;
-        private static TextBox passwordTextBox;
-        private static GroupBox passwordGroupBox;
-        private static GroupBox loggedInBox;
-        private static Label loggedInLabel;
-        private static TabControl tabControl;
+        private Vivian vivian;
+        private TabPage homeTabPage;
+        private ComboBox comboBoxUsers;
+        private TextBox passwordTextBox;
+        private GroupBox passwordGroupBox;
+        private GroupBox loggedInBox;
+        private Label loggedInLabel;
+        private TabControl tabControl;
+        private Button loginButton;
+        private Button changePasswordButton;
+        private Button logoutButton;
 
         public HomeTab(Vivian v) {
             vivian = v;
@@ -53,15 +57,32 @@ namespace grace.tabs
             loggedInBox = vivian.loggedInBox;
             loggedInLabel = vivian.loggedInLabel;
             tabControl = vivian.tabControl;
+            loginButton = vivian.loginButton;
+            changePasswordButton = vivian.changePasswordButton;
+            logoutButton = vivian.logoutButton;
         }
+
+        internal void Load()
+        {
+            // setup callbacks. 
+            loginButton.Click += loginButton_Click;
+            changePasswordButton.Click += changePasswordButton_Click;
+            passwordTextBox.KeyPress += passwordTextBox_KeyPress;
+            logoutButton.Click += logoutButton_Click;
+            comboBoxUsers.SelectedIndexChanged += comboBoxUsers_SelectedIndexChanged;
+
+            InitializeComboBox();
+            loggedInBox.Hide();
+        }
+
         // Callback for Login button in HomePage table. 
-        public static void loginButton_Click(object sender, EventArgs e)
+        public void loginButton_Click(object? sender, EventArgs e)
         {
             processLogin();
         }
 
         // Callback for change password button
-        public static void changePasswordButton_Click(object sender, EventArgs e)
+        public void changePasswordButton_Click(object? sender, EventArgs e)
         {
             string? username = comboBoxUsers.SelectedItem.ToString();
 
@@ -83,7 +104,7 @@ namespace grace.tabs
 
         // Callback the will log someone in if they hit return in the password
         // textbox 
-        public static void passwordTextBox_KeyPress(object sender, KeyPressEventArgs e)
+        public void passwordTextBox_KeyPress(object? sender, KeyPressEventArgs e)
         {
             if (e.KeyChar == (char)Keys.Return)
             {
@@ -95,7 +116,7 @@ namespace grace.tabs
             }
         }
 
-        public static void logoutButton_Click(object sender, EventArgs e)
+        public void logoutButton_Click(object? sender, EventArgs e)
         {
             Globals.GetInstance().CurrentUser = "";
             passwordGroupBox.Show();
@@ -105,7 +126,7 @@ namespace grace.tabs
 
 
 
-        public void InitializeComboBox()
+        private void InitializeComboBox()
         {
 
             // Clear existing items in the ComboBox
@@ -126,7 +147,7 @@ namespace grace.tabs
             }
         }
 
-        private static void processLogin()
+        private void processLogin()
         {
             string password = passwordTextBox.Text;
             string? username = comboBoxUsers.SelectedItem.ToString();
@@ -186,7 +207,7 @@ namespace grace.tabs
             }
         }
 
-        private static void LoginUser(string username)
+        private void LoginUser(string username)
         {
             Globals.GetInstance().CurrentUser = username;
             passwordGroupBox.Hide();
@@ -204,7 +225,7 @@ namespace grace.tabs
 
         // Move the focus to the password box when a person selects a user
         // in the combo box. 
-        public static void comboBoxUsers_SelectedIndexChanged(object sender, EventArgs e)
+        public void comboBoxUsers_SelectedIndexChanged(object? sender, EventArgs e)
         {
             passwordTextBox.Focus();
         }

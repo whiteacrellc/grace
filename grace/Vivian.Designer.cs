@@ -56,9 +56,10 @@
             dataPage = new TabPage();
             addRowButton = new Button();
             label1 = new Label();
-            textBox1 = new TextBox();
+            filterSkuTextBox = new TextBox();
             dataGridView = new DataGridView();
             checkoutPage = new TabPage();
+            checkOutDataGrid = new DataGridView();
             barcodeLabel = new Label();
             textBoxBarcode = new TextBox();
             checkinPage = new TabPage();
@@ -67,6 +68,7 @@
             resetComboBox = new ComboBox();
             label5 = new Label();
             errorProvider1 = new ErrorProvider(components);
+            checkoutBindingSource = new BindingSource(components);
             menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             tabControl.SuspendLayout();
@@ -76,8 +78,10 @@
             dataPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridView).BeginInit();
             checkoutPage.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)checkOutDataGrid).BeginInit();
             adminPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)errorProvider1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)checkoutBindingSource).BeginInit();
             SuspendLayout();
             // 
             // openFileDialog
@@ -251,7 +255,6 @@
             comboBoxUsers.Name = "comboBoxUsers";
             comboBoxUsers.Size = new Size(121, 26);
             comboBoxUsers.TabIndex = 17;
-            comboBoxUsers.SelectedIndexChanged += grace.tabs.HomeTab.comboBoxUsers_SelectedIndexChanged;
             // 
             // label4
             // 
@@ -317,7 +320,7 @@
             // 
             dataPage.Controls.Add(addRowButton);
             dataPage.Controls.Add(label1);
-            dataPage.Controls.Add(textBox1);
+            dataPage.Controls.Add(filterSkuTextBox);
             dataPage.Controls.Add(dataGridView);
             dataPage.Location = new Point(4, 52);
             dataPage.Name = "dataPage";
@@ -336,7 +339,6 @@
             addRowButton.TabIndex = 4;
             addRowButton.Text = "Add Row";
             addRowButton.UseVisualStyleBackColor = true;
-            addRowButton.Click += addRowButton_Click;
             // 
             // label1
             // 
@@ -348,14 +350,13 @@
             label1.TabIndex = 3;
             label1.Text = "Filter SKU";
             // 
-            // textBox1
+            // filterSkuTextBox
             // 
-            textBox1.Location = new Point(15, 15);
-            textBox1.Margin = new Padding(4, 3, 4, 3);
-            textBox1.Name = "textBox1";
-            textBox1.Size = new Size(314, 26);
-            textBox1.TabIndex = 2;
-            textBox1.TextChanged += textBox1_TextChanged;
+            filterSkuTextBox.Location = new Point(15, 15);
+            filterSkuTextBox.Margin = new Padding(4, 3, 4, 3);
+            filterSkuTextBox.Name = "filterSkuTextBox";
+            filterSkuTextBox.Size = new Size(314, 26);
+            filterSkuTextBox.TabIndex = 2;
             // 
             // dataGridView
             // 
@@ -372,12 +373,11 @@
             dataGridView.TabIndex = 1;
             dataGridView.CellBeginEdit += dataGridView_CellBeginEdit;
             dataGridView.CellEndEdit += dataGridView_CellEndEdit;
-            dataGridView.CellMouseDoubleClick += dataGridView_CellMouseDoubleClick;
-            dataGridView.DataBindingComplete += dataGridView_DataBindingComplete;
             dataGridView.Paint += dataGridView_Paint;
             // 
             // checkoutPage
             // 
+            checkoutPage.Controls.Add(checkOutDataGrid);
             checkoutPage.Controls.Add(barcodeLabel);
             checkoutPage.Controls.Add(textBoxBarcode);
             checkoutPage.Location = new Point(4, 52);
@@ -389,25 +389,37 @@
             checkoutPage.ToolTipText = "Checkout Items";
             checkoutPage.UseVisualStyleBackColor = true;
             // 
+            // checkOutDataGrid
+            // 
+            checkOutDataGrid.AllowUserToAddRows = false;
+            checkOutDataGrid.AllowUserToDeleteRows = false;
+            checkOutDataGrid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+            checkOutDataGrid.BorderStyle = BorderStyle.Fixed3D;
+            checkOutDataGrid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            checkOutDataGrid.Location = new Point(27, 50);
+            checkOutDataGrid.Name = "checkOutDataGrid";
+            checkOutDataGrid.RowTemplate.Height = 25;
+            checkOutDataGrid.Size = new Size(883, 500);
+            checkOutDataGrid.TabIndex = 4;
+            checkOutDataGrid.CellContentClick += checkOutDataGrid_CellContentClick;
+            // 
             // barcodeLabel
             // 
             barcodeLabel.AutoSize = true;
-            barcodeLabel.Location = new Point(889, 45);
+            barcodeLabel.Location = new Point(983, 34);
             barcodeLabel.Margin = new Padding(7, 0, 7, 0);
             barcodeLabel.Name = "barcodeLabel";
             barcodeLabel.Size = new Size(118, 18);
-            barcodeLabel.TabIndex = 1;
+            barcodeLabel.TabIndex = 3;
             barcodeLabel.Text = "Scan Barcode";
             // 
             // textBoxBarcode
             // 
-            textBoxBarcode.Location = new Point(1005, 38);
+            textBoxBarcode.Location = new Point(1127, 26);
             textBoxBarcode.Margin = new Padding(7);
             textBoxBarcode.Name = "textBoxBarcode";
             textBoxBarcode.Size = new Size(434, 26);
-            textBoxBarcode.TabIndex = 0;
-            textBoxBarcode.TextChanged += textBoxBarcode_TextChanged;
-            textBoxBarcode.KeyDown += textBoxBarcode_KeyDown;
+            textBoxBarcode.TabIndex = 2;
             // 
             // checkinPage
             // 
@@ -483,7 +495,6 @@
             SizeGripStyle = SizeGripStyle.Show;
             Text = "VivianGrace";
             Load += Vivian_Load;
-            Resize += Vivian_Resize;
             menuStrip1.ResumeLayout(false);
             menuStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
@@ -498,9 +509,11 @@
             ((System.ComponentModel.ISupportInitialize)dataGridView).EndInit();
             checkoutPage.ResumeLayout(false);
             checkoutPage.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)checkOutDataGrid).EndInit();
             adminPage.ResumeLayout(false);
             adminPage.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)errorProvider1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)checkoutBindingSource).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -518,22 +531,15 @@
         private Button chooseUserButton;
         private GroupBox groupBox1;
         private TabPage dataPage;
-        private DataGridView dataGridView;
         private TabPage checkoutPage;
-        private TextBox textBoxBarcode;
-        private Label barcodeLabel;
         private Label label1;
-        private TextBox textBox1;
         private TabPage adminPage;
-        private Button addRowButton;
         private ErrorProvider errorProvider1;
         private Label label4;
-        private Button changePasswordButton;
         private Label label3;
         private Label label2;
         private Label label5;
         private TabPage checkinPage;
-        public Button logoutButton;
         public Label loggedInLabel;
         public ComboBox resetComboBox;
         public Button resetPasswordButton;
@@ -543,5 +549,14 @@
         public TextBox passwordTextBox;
         public ComboBox comboBoxUsers;
         public GroupBox loggedInBox;
+        internal TextBox filterSkuTextBox;
+        internal Button addRowButton;
+        internal DataGridView dataGridView;
+        internal Button changePasswordButton;
+        internal Button logoutButton;
+        private Label barcodeLabel;
+        private TextBox textBoxBarcode;
+        internal DataGridView checkOutDataGrid;
+        internal BindingSource checkoutBindingSource;
     }
 }
