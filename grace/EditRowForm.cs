@@ -88,8 +88,8 @@ namespace grace
                 checkItem(row.Cells[9].Value);
                 checkItem(row.Cells[10].Value);
 
-                prevTotTextBox.Text = row.Cells[11].Value.ToString();
-                totalTextBox.Text = row.Cells[12].Value.ToString();
+                prevTotTextBox.Text = row.Cells["PreviousTotal"].Value.ToString();
+                totalTextBox.Text = row.Cells["Total"].Value.ToString();
             }
 
             if (!update)

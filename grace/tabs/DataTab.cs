@@ -15,6 +15,8 @@
  *  in a separate class is by making it static. 
  *  
  */
+using grace.data;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,19 +28,20 @@ namespace grace.tabs
 {
     public class DataTab
     {
+        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 #pragma warning disable CS8618
 #pragma warning disable CS8601
 #pragma warning disable CS8602
 #pragma warning disable CS8600
-        private static TabPage dataTabPage;
-        private static Vivian vivian;
+        private TabPage dataTabPage;
+        private Vivian vivian;
 
         // Data table controls
-        private static TextBox filterSkuTextBox;
-        private static Button addRowButton;
-        private static DataGridView dataGridView;
-        private static DataGridLoader dataGridLoader;
-        private static BindingSource bindingSource;
+        private TextBox filterSkuTextBox;
+        private Button addRowButton;
+        private DataGridView dataGridView;
+        private DataGridLoader dataGridLoader;
+        private BindingSource bindingSource;
 
         public DataTab(Vivian v)
         {
@@ -60,12 +63,42 @@ namespace grace.tabs
             dataGridView.CellMouseDoubleClick += dataGridView_CellMouseDoubleClick;
             dataGridView.DataBindingComplete += dataGridView_DataBindingComplete;
             addRowButton.Click += addRowButton_Click;
+            filterSkuTextBox.TextChanged += filterSkuTextBox_TextChanged;
+            dataGridView.CellBeginEdit += dataGridView_CellBeginEdit;
+            dataGridView.CellEndEdit += dataGridView_CellEndEdit;
+            dataGridView.Paint += dataGridView_Paint;
 
             dataGridLoader = new DataGridLoader();
             bindingSource.DataSource = dataGridLoader.getData();
             RemoveColumnsByName("ID", "Grace", "GraceId");
-        }
 
+            // Change column names in the DataGridView
+            ChangeColumnNames();
+
+        }
+        private void ChangeColumnNames()
+        {
+            // Dictionary to map DbContext column names to desired DataGridView column names
+            Dictionary<string, string> columnMappings = new Dictionary<string, string>
+        {
+            {"Total", "Current Inventory"},
+            {"PreviousTotal", "Previous Inventory"},
+            {"Col1", "Collection 1"},
+            {"Col2", "Collection 2"},
+            // Add more mappings as needed
+        };
+
+            // Iterate through the columns in the DataGridView
+            foreach (DataGridViewColumn dataGridViewColumn in dataGridView.Columns)
+            {
+                // Check if there is a mapping for the current column name
+                if (columnMappings.ContainsKey(dataGridViewColumn.DataPropertyName))
+                {
+                    // Set the HeaderText to the desired name
+                    dataGridViewColumn.HeaderText = columnMappings[dataGridViewColumn.DataPropertyName];
+                }
+            }
+        }
         internal void BindDataSource()
         {
             if (dataGridLoader == null)
@@ -112,7 +145,7 @@ namespace grace.tabs
             }
         }
 
-        internal static void filterSkuTextBox_TextChanged(object sender, EventArgs e)
+        internal void filterSkuTextBox_TextChanged(object? sender, EventArgs e)
         {
             string searchTerm = filterSkuTextBox.Text;
 
@@ -137,7 +170,7 @@ namespace grace.tabs
             RemoveColumnsByName("ID", "Grace", "GraceId");
         }
 
-        private static void RemoveColumnsByName(params string[] columnNames)
+        private void RemoveColumnsByName(params string[] columnNames)
         {
             foreach (string columnName in columnNames)
             {
@@ -146,6 +179,103 @@ namespace grace.tabs
                     dataGridView.Columns.Remove(columnName);
                 }
             }
+        }
+
+        private void dataGridView_Paint(object? sender, PaintEventArgs e)
+        {
+            formatTotals();
+        }
+
+        private void dataGridView_CellEndEdit(object? sender, DataGridViewCellEventArgs e)
+        {
+            string User = Globals.GetInstance().CurrentUser;
+
+            // Get the modified cell value and the corresponding product
+            int rowIndex = e.RowIndex;
+            int columnIndex = e.ColumnIndex;
+            object cellValue = dataGridView.Rows[rowIndex].Cells[columnIndex].Value;
+
+            try
+            {
+                int newTotal = Convert.ToInt32(cellValue);
+
+                if (columnIndex == 12) // Assuming the second column is the "Totals" column
+                {
+                    // Update the corresponding product in the DbContext
+                    int id = Convert.ToInt32(dataGridView.Rows[rowIndex].Cells[0].Value); // Assuming the first column is the "Id" column
+                    var graceRow = dataGridLoader.graceDb.GraceRows.Find(id);
+                    if (graceRow != null)
+                    {
+                        //var graceRow = dataGridLoader.graceDb.GraceRows.Where(t => t.GraceId == grace.ID);
+                        var grace = dataGridLoader.graceDb.Graces.First(t => t.ID == graceRow.GraceId);
+
+                        if (grace != null)
+                        {
+                            var total = new Total
+                            {
+                                date_field = DateTime.Now,
+                                total = newTotal,
+                                GraceId = id
+                            };
+                            grace.Totals.Add(total);
+                            graceRow.PreviousTotal = graceRow.Total;
+                            graceRow.Total = newTotal;
+                            dataGridLoader.graceDb.SaveChanges(); // Save changes to the database
+                            logger.Info($"{total.date_field} {User} changed {grace.Sku} total to {newTotal}");
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                int id = (int)dataGridView.Rows[rowIndex].Cells[0].Value;
+                var graceRow = dataGridLoader.graceDb.GraceRows.Find(id);
+                if (graceRow != null)
+                {
+                    if (columnIndex == 12) // Assuming the second column is the "Name" column
+                    {
+                        dataGridView.Rows[rowIndex].Cells[13].Value = graceRow.Total;
+                    }
+                }
+            }
+
+        }
+
+        private void dataGridView_CellBeginEdit(object? sender, DataGridViewCellCancelEventArgs e)
+        {
+            int columnIndex = e.ColumnIndex;
+            if (columnIndex < 13)
+            {
+                e.Cancel = true; // Cancel the edit for the first 12 columns
+            }
+        }
+
+        private void formatTotals()
+        {
+
+            int numRows = dataGridView.Rows.Count;
+            int numCols = dataGridView.Columns.Count;
+            if (numCols > 14)
+            {
+                return;
+            }
+            for (int i = 0; i < numRows; i++)
+            {
+                DataGridViewRow row = dataGridView.Rows[i];
+
+                if (row == null || row.Cells["PreviousTotal"].Value == null) { continue; }
+
+                // Compare the values of the two columns
+                int value1 = (int)row.Cells["Total"].Value;
+                int value2 = (int)row.Cells["PreviousTotal"].Value;
+
+                if (value1 != value2)
+                {
+                    // Set the background color to yellow if values are not equal
+                    row.Cells["Total"].Style.BackColor = Color.Yellow;
+                }
+            }
+
         }
 
 #pragma warning restore CS8601 // Possible null reference assignment.

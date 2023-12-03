@@ -240,120 +240,6 @@ namespace grace
             }
         }
 
-        private void textBoxBarcode_TextChanged(object sender, EventArgs e)
-        {
-            //TextBox box = (TextBox)sender;
-            //textBoxBarcode.Text += box.Text;
-        }
-
-        private void formatTotals()
-        {
-
-            int numRows = dataGridView.Rows.Count;
-            int numCols = dataGridView.Columns.Count;
-            if (numCols > 14)
-            {
-                return;
-            }
-            for (int i = 0; i < numRows; i++)
-            {
-                DataGridViewRow row = dataGridView.Rows[i];
-
-                if (row == null || row.Cells[12].Value == null) { continue; }
-
-                // Compare the values of the two columns
-                int value1 = (int)row.Cells[12].Value;
-                int value2 = (int)row.Cells[11].Value;
-
-                if (value1 != value2)
-                {
-                    // Set the background color to yellow if values are not equal
-                    row.Cells[12].Style.BackColor = Color.Yellow;
-                }
-            }
-
-        }
-
-
-
-
-
-
-
-
-
-        private void dataGridView_Paint(object sender, PaintEventArgs e)
-        {
-            formatTotals();
-        }
-
-        private void dataGridView_CellEndEdit(object sender, DataGridViewCellEventArgs e)
-        {
-            string User = Globals.GetInstance().CurrentUser;
-
-            // Get the modified cell value and the corresponding product
-            int rowIndex = e.RowIndex;
-            int columnIndex = e.ColumnIndex;
-            object cellValue = dataGridView.Rows[rowIndex].Cells[columnIndex].Value;
-
-            try
-            {
-                int newTotal = Convert.ToInt32(cellValue);
-
-                if (columnIndex == 12) // Assuming the second column is the "Totals" column
-                {
-                    // Update the corresponding product in the DbContext
-                    int id = Convert.ToInt32(dataGridView.Rows[rowIndex].Cells[0].Value); // Assuming the first column is the "Id" column
-                    var graceRow = dataGridLoader.graceDb.GraceRows.Find(id);
-                    if (graceRow != null)
-                    {
-                        //var graceRow = dataGridLoader.graceDb.GraceRows.Where(t => t.GraceId == grace.ID);
-                        var grace = dataGridLoader.graceDb.Graces.First(t => t.ID == graceRow.GraceId);
-
-                        if (grace != null)
-                        {
-                            var total = new Total
-                            {
-                                date_field = DateTime.Now,
-                                total = newTotal,
-                                GraceId = id
-                            };
-                            grace.Totals.Add(total);
-                            graceRow.PreviousTotal = graceRow.Total;
-                            graceRow.Total = newTotal;
-                            dataGridLoader.graceDb.SaveChanges(); // Save changes to the database
-                            logger.Info($"{total.date_field} {User} changed {grace.Sku} total to {newTotal}");
-                        }
-                    }
-                }
-            }
-            catch
-            {
-                int id = (int)dataGridView.Rows[rowIndex].Cells[0].Value;
-                var graceRow = dataGridLoader.graceDb.GraceRows.Find(id);
-                if (graceRow != null)
-                {
-                    if (columnIndex == 12) // Assuming the second column is the "Name" column
-                    {
-                        dataGridView.Rows[rowIndex].Cells[13].Value = graceRow.Total;
-                    }
-                }
-            }
-
-        }
-
-        private void dataGridView_CellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
-        {
-            int columnIndex = e.ColumnIndex;
-            if (columnIndex < 13)
-            {
-                e.Cancel = true; // Cancel the edit for the first 12 columns
-            }
-        }
-
-
-
-
         private void tabControl_Selecting(object sender, TabControlCancelEventArgs e)
         {
             string username = Globals.GetInstance().CurrentUser;
@@ -375,5 +261,6 @@ namespace grace
         {
 
         }
+
     }
 }

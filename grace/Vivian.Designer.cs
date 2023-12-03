@@ -59,6 +59,8 @@
             filterSkuTextBox = new TextBox();
             dataGridView = new DataGridView();
             checkoutPage = new TabPage();
+            checkOutSearchTextBox = new TextBox();
+            label6 = new Label();
             checkOutDataGrid = new DataGridView();
             barcodeLabel = new Label();
             textBoxBarcode = new TextBox();
@@ -96,7 +98,7 @@
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
             menuStrip1.Padding = new Padding(7, 2, 0, 2);
-            menuStrip1.Size = new Size(1624, 28);
+            menuStrip1.Size = new Size(2236, 28);
             menuStrip1.TabIndex = 4;
             menuStrip1.Text = "menuStrip1";
             // 
@@ -165,7 +167,7 @@
             tabControl.Name = "tabControl";
             tabControl.Padding = new Point(30, 5);
             tabControl.SelectedIndex = 0;
-            tabControl.Size = new Size(1804, 632);
+            tabControl.Size = new Size(2416, 632);
             tabControl.TabIndex = 9;
             tabControl.TabStop = false;
             tabControl.Selecting += tabControl_Selecting;
@@ -181,7 +183,7 @@
             loginPage.Margin = new Padding(5, 2, 5, 2);
             loginPage.Name = "loginPage";
             loginPage.Padding = new Padding(5, 2, 5, 2);
-            loginPage.Size = new Size(1796, 576);
+            loginPage.Size = new Size(2408, 576);
             loginPage.TabIndex = 0;
             loginPage.Text = "Home";
             loginPage.ToolTipText = "Login Page";
@@ -325,7 +327,7 @@
             dataPage.Location = new Point(4, 52);
             dataPage.Name = "dataPage";
             dataPage.Padding = new Padding(11, 12, 11, 12);
-            dataPage.Size = new Size(1796, 576);
+            dataPage.Size = new Size(2408, 576);
             dataPage.TabIndex = 1;
             dataPage.Text = "Inventory";
             dataPage.ToolTipText = "Inventory for Patti";
@@ -364,30 +366,46 @@
             dataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
             dataGridView.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.DisplayedCells;
             dataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView.Location = new Point(-4, 47);
+            dataGridView.Location = new Point(0, 49);
             dataGridView.Margin = new Padding(5, 2, 5, 2);
             dataGridView.Name = "dataGridView";
             dataGridView.RowHeadersWidth = 82;
             dataGridView.RowTemplate.Height = 41;
-            dataGridView.Size = new Size(1624, 527);
+            dataGridView.Size = new Size(2232, 527);
             dataGridView.TabIndex = 1;
-            dataGridView.CellBeginEdit += dataGridView_CellBeginEdit;
-            dataGridView.CellEndEdit += dataGridView_CellEndEdit;
-            dataGridView.Paint += dataGridView_Paint;
             // 
             // checkoutPage
             // 
+            checkoutPage.Controls.Add(checkOutSearchTextBox);
+            checkoutPage.Controls.Add(label6);
             checkoutPage.Controls.Add(checkOutDataGrid);
             checkoutPage.Controls.Add(barcodeLabel);
             checkoutPage.Controls.Add(textBoxBarcode);
             checkoutPage.Location = new Point(4, 52);
             checkoutPage.Margin = new Padding(7);
             checkoutPage.Name = "checkoutPage";
-            checkoutPage.Size = new Size(1796, 576);
+            checkoutPage.Size = new Size(2408, 576);
             checkoutPage.TabIndex = 2;
             checkoutPage.Text = "Check Out";
             checkoutPage.ToolTipText = "Checkout Items";
             checkoutPage.UseVisualStyleBackColor = true;
+            // 
+            // checkOutSearchTextBox
+            // 
+            checkOutSearchTextBox.Location = new Point(1237, 109);
+            checkOutSearchTextBox.Name = "checkOutSearchTextBox";
+            checkOutSearchTextBox.Size = new Size(265, 26);
+            checkOutSearchTextBox.TabIndex = 6;
+            // 
+            // label6
+            // 
+            label6.AutoSize = true;
+            label6.Location = new Point(1067, 117);
+            label6.Margin = new Padding(7, 0, 7, 0);
+            label6.Name = "label6";
+            label6.Size = new Size(160, 18);
+            label6.TabIndex = 5;
+            label6.Text = "Search Description";
             // 
             // checkOutDataGrid
             // 
@@ -397,16 +415,17 @@
             checkOutDataGrid.BorderStyle = BorderStyle.Fixed3D;
             checkOutDataGrid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             checkOutDataGrid.Location = new Point(27, 50);
+            checkOutDataGrid.MultiSelect = false;
             checkOutDataGrid.Name = "checkOutDataGrid";
             checkOutDataGrid.RowTemplate.Height = 25;
-            checkOutDataGrid.Size = new Size(883, 500);
+            checkOutDataGrid.Size = new Size(1018, 500);
             checkOutDataGrid.TabIndex = 4;
             checkOutDataGrid.CellContentClick += checkOutDataGrid_CellContentClick;
             // 
             // barcodeLabel
             // 
             barcodeLabel.AutoSize = true;
-            barcodeLabel.Location = new Point(983, 34);
+            barcodeLabel.Location = new Point(1067, 58);
             barcodeLabel.Margin = new Padding(7, 0, 7, 0);
             barcodeLabel.Name = "barcodeLabel";
             barcodeLabel.Size = new Size(118, 18);
@@ -415,17 +434,17 @@
             // 
             // textBoxBarcode
             // 
-            textBoxBarcode.Location = new Point(1127, 26);
+            textBoxBarcode.Location = new Point(1237, 50);
             textBoxBarcode.Margin = new Padding(7);
             textBoxBarcode.Name = "textBoxBarcode";
-            textBoxBarcode.Size = new Size(434, 26);
+            textBoxBarcode.Size = new Size(265, 26);
             textBoxBarcode.TabIndex = 2;
             // 
             // checkinPage
             // 
             checkinPage.Location = new Point(4, 52);
             checkinPage.Name = "checkinPage";
-            checkinPage.Size = new Size(1796, 576);
+            checkinPage.Size = new Size(2408, 576);
             checkinPage.TabIndex = 4;
             checkinPage.Text = "Check In";
             checkinPage.UseVisualStyleBackColor = true;
@@ -439,7 +458,7 @@
             adminPage.Controls.Add(label5);
             adminPage.Location = new Point(4, 52);
             adminPage.Name = "adminPage";
-            adminPage.Size = new Size(1796, 576);
+            adminPage.Size = new Size(2408, 576);
             adminPage.TabIndex = 3;
             adminPage.Text = "Admin";
             adminPage.ToolTipText = "Admin Settings";
@@ -480,7 +499,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             AutoSize = true;
             BackColor = Color.White;
-            ClientSize = new Size(1624, 661);
+            ClientSize = new Size(2236, 661);
             Controls.Add(tabControl);
             Controls.Add(menuStrip1);
             Font = new Font("Segoe UI", 10.125F, FontStyle.Regular, GraphicsUnit.Point);
@@ -555,8 +574,10 @@
         internal Button changePasswordButton;
         internal Button logoutButton;
         private Label barcodeLabel;
-        private TextBox textBoxBarcode;
         internal DataGridView checkOutDataGrid;
         internal BindingSource checkoutBindingSource;
+        private Label label6;
+        internal TextBox checkOutSearchTextBox;
+        internal TextBox textBoxBarcode;
     }
 }

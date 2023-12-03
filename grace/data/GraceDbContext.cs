@@ -45,34 +45,113 @@ namespace grace.data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
-            modelBuilder.Entity<Grace>();
+            modelBuilder.Entity<Grace>(entity =>
+            {
+                entity.ToTable("Graces");
+                // Primary key
+                entity.HasKey(e => e.ID);
 
-            modelBuilder.Entity<Prefs>();
+                // Properties
+                entity.Property(e => e.Sku)
+                    .IsRequired();
 
-            modelBuilder.Entity<Total>()
-                .HasOne(t => t.Grace)
-                .WithMany(g => g.Totals)
-                .HasForeignKey(t => t.GraceId).IsRequired(true);
+                entity.Property(e => e.Brand)
+                    .IsRequired();
 
-            modelBuilder.Entity<Collection>()
-                .HasOne(t => t.Grace)
-                .WithMany(g => g.Collections)
-                .HasForeignKey(t => t.GraceId).IsRequired(true);
+                entity.Property(e => e.Description)
+                    .IsRequired();
+            });
 
-            modelBuilder.Entity<GraceRow>()
-                .HasOne(t => t.Grace)
-                .WithMany(g => g.GraceRows)
-                .HasForeignKey(t => t.GraceId).IsRequired(true);
+            modelBuilder.Entity<User>(entity =>
+            {
+                entity.ToTable("Users");
+                // Primary key
+                entity.HasKey(e => e.ID);
 
-            modelBuilder.Entity<Pulled>()
-                .HasOne(t => t.Grace)
-                .WithMany(g => g.PulledDb)
-                .HasForeignKey(t => t.GraceId).IsRequired(true);
+            });
 
-            modelBuilder.Entity<Pulled>()
-                .HasOne(p => p.User)
-                .WithMany(g => g.PulledDb)
-                .HasForeignKey(p => p.UserId).IsRequired(true);
+            modelBuilder.Entity<Prefs>(entity =>
+            {
+                entity.ToTable("Prefs");
+                // Primary key
+                entity.HasKey(e => e.ID);
+
+                // Properties
+                entity.Property(e => e.Name)
+                    .IsRequired();
+
+                entity.Property(e => e.Value)
+                    .IsRequired();
+
+            });
+
+            modelBuilder.Entity<Total>(entity =>
+            {
+                entity.ToTable("Totals");
+                // Primary key
+                entity.HasKey(e => e.ID);
+
+                entity.HasOne(e => e.Grace)
+                  .WithMany()
+                  .HasForeignKey(e => e.GraceId)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            });
+
+
+            modelBuilder.Entity<Collection>(entity =>
+            {
+                entity.ToTable("Collections");
+                // Primary key
+                entity.HasKey(e => e.ID);
+
+                entity.HasOne(e => e.Grace)
+                  .WithMany()
+                  .HasForeignKey(e => e.GraceId)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            });
+
+            modelBuilder.Entity<GraceRow>(entity =>
+            {
+                entity.ToTable("GraceRows");
+                // Primary key
+                entity.HasKey(e => e.ID);
+
+                entity.HasOne(e => e.Grace)
+                  .WithMany()
+                  .HasForeignKey(e => e.GraceId)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            });
+
+            modelBuilder.Entity<Pulled>(entity =>
+            {
+                // Table mapping
+                entity.ToTable("PulledDb");
+
+                // Primary key
+                entity.HasKey(e => e.ID);
+
+                // Relationships
+                entity.HasOne(e => e.User)
+                    .WithMany()
+                    .HasForeignKey(e => e.UserId)
+                    .OnDelete(DeleteBehavior.Cascade); // Choose the appropriate delete behavior
+
+                entity.HasOne(e => e.Grace)
+                    .WithMany()
+                    .HasForeignKey(e => e.GraceId)
+                    .OnDelete(DeleteBehavior.Cascade); // Choose the appropriate delete behavior
+
+                entity.HasOne(e => e.Collection)
+                    .WithMany()
+                    .HasForeignKey(e => e.CollectionId)
+                    .OnDelete(DeleteBehavior.Restrict); // Choose the appropriate delete behavior
+            });
+
+            base.OnModelCreating(modelBuilder);
+
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -96,7 +175,6 @@ namespace grace.data
 
         public string? Availability { get; set; }
         public string? Barcode { get; set; }
-
 
         public List<Total> Totals { get; set; }
 
@@ -200,8 +278,9 @@ namespace grace.data
         [Required]
         public DateTime lastUpdated { get; set; } = DateTime.Now;
 
-        [Required]
-        public int amount { get; set; }
+        public int amount { get; set; } = 0;
+
+        public int currentTotal { get; set; } = 0;
 
         public int UserId { get; set; }
         [ForeignKey("UserId")]
@@ -212,6 +291,10 @@ namespace grace.data
         [ForeignKey("GraceId")]
 
         public Grace Grace { get; set; }
+
+        public int CollectionId { get; set; }
+        [ForeignKey("CollectionId")]
+        public Collection Collection { get; set; }
     }
 
     [Table("Prefs")]
@@ -219,8 +302,8 @@ namespace grace.data
     {
         [Key]
         public int ID { get; set; }
-        [Required]
 
+        [Required]
         public string Name { get; set; }
 
         [Required]
