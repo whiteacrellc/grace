@@ -126,6 +126,7 @@ namespace grace
                 saveButton.Text = "Add Row";
                 deleteButton.Enabled = false;
                 deleteButton.Hide();
+                graceRow = new GraceRow();
             }
             else
             {
@@ -160,25 +161,43 @@ namespace grace
 
         private void saveFormToDb()
         {
-            var Sku = skuTextBox.Text;
-            var Brand = brandTextBox.Text;
-            var Description = descTextBox.Text;
-            string? Availability = null;
-            string? BarCode = null;
-            int deltaTotal;
-
-            if (availabilityTextBox.Text.Length > 0)
+            Grace? grace = new Grace();
+            if (update && row is not null)
             {
-                Availability = availabilityTextBox.Text;
+                var sku = row.Cells["Sku"].ToString();
+                grace = dataBase.GetGraceFromSku(sku);
             }
-            if (barCodeTextBox.Text.Length > 0)
+            if (grace is not null && graceRow is not null)
             {
-                BarCode = barCodeTextBox.Text;
-            }
 
+                if (update is false) { 
+                    graceRow.Sku = skuTextBox.Text;
+                    grace.Sku = graceRow.Sku;
+                    graceRow.Brand = brandTextBox.Text;
+                    grace.Brand = graceRow.Brand;
+                    graceRow.Description = descTextBox.Text;
+                    if (availabilityTextBox.Text.Length > 0)
+                    {
+                        graceRow.Availability = availabilityTextBox.Text;
+                    }
+                    if (barCodeTextBox.Text.Length > 0)
+                    {
+                        graceRow.BarCode = barCodeTextBox.Text;
+                    }
+                }
+                if (grace.Sku != skuTextBox.Text)
+                {
+                    grace.Sku = skuTextBox.Text;
+                }
+                if (grace.Sku != skuTextBox.Text)
+                {
+                    grace.Sku = skuTextBox.Text;
+                }
+
+            }
             try
             {
-                deltaTotal = Int32.Parse(deltalTextBox.Text);
+                int deltaTotal = Int32.Parse(deltalTextBox.Text);
             }
             catch (Exception ex)
             {
@@ -278,8 +297,6 @@ namespace grace
             }
             return ret;
         }
-
-   
 
         private void checkedListBox_SelectedValueChanged(object sender, EventArgs e)
         {

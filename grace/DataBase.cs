@@ -281,6 +281,17 @@ namespace grace
             return null;
         }
 
+        public Grace? GetGraceFromSku(string sku)
+        {
+            var graceData =
+                        graceDb.Graces.FirstOrDefault(item => item.Sku == sku);
+            if (graceData != null)
+            {
+                return graceData;
+            }
+            return null;
+        }
+
         public List<string?> CollectionNames
         {
             get
@@ -291,17 +302,6 @@ namespace grace
                     .ToList();
                 return distinctCollectionNames ?? new List<string?>();
             }
-        }
-
-        public Grace? GetGraceFromSku(string sku)
-        {
-            var graceRowsData =
-                        graceDb.Graces.FirstOrDefault(item => item.Sku == sku);
-            if (graceRowsData != null)
-            {
-                return graceRowsData;
-            }
-            return null;
         }
 
         public void UpdateGraceRowRow(GraceRow graceRow)
@@ -436,8 +436,6 @@ namespace grace
                 graceRow.Col5 = null;
                 graceRow.Col6 = null;
 
-
-
                 var collectionRows = graceDb.Collections.
                     Where(row => row.GraceId == GraceId)
                     .ToList();
@@ -469,6 +467,8 @@ namespace grace
                             break;
                     }
                 }
+                // save changes to the changed row
+                graceDb.SaveChanges();
             }
         }
 

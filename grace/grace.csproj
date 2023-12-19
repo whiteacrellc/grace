@@ -13,6 +13,8 @@
     <Company>White Acre Software LLC</Company>
     <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
     <AnalysisLevel>preview-recommended</AnalysisLevel>
+    <ApplicationHighDpiMode>SystemAware</ApplicationHighDpiMode>
+    <ForceDesignerDpiUnaware>true</ForceDesignerDpiUnaware>
   </PropertyGroup>
 
   <ItemGroup>
@@ -59,22 +61,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="C:\Users\tom\source\repos\grace\grace\.editorconfig" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Update="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <None Update="Settings1.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings1.Designer.cs</LastGenOutput>
-    </None>
   </ItemGroup>
   
   <ItemGroup>
-    <GlobalAnalyzerConfigFiles Include=".globalconfig" />
+    <GlobalAnalyzerConfigFiles Include="C:\Users\tom\source\repos\grace\grace\.globalconfig" />
   </ItemGroup>
   
 </Project>

@@ -256,10 +256,9 @@ namespace grace
             }
         }
 
-        private void checkOutDataGrid_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        private void passwordGroupBox_Enter(object sender, EventArgs e)
         {
 
         }
-
     }
 }
