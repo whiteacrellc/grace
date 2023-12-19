@@ -131,10 +131,9 @@ namespace grace.tabs
 
             // Clear existing items in the ComboBox
             comboBoxUsers.Items.Clear();
-            AdminStuff adminStuff = new AdminStuff();
-            adminStuff.InitUserDB();
+            AdminStuff.InitUserDB();
 
-            List<string> users = adminStuff.getUserNames();
+            List<string> users = AdminStuff.getUserNames();
             foreach (var user in users)
             {
                 comboBoxUsers.Items.Add(user);

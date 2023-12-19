@@ -71,6 +71,7 @@
             label5 = new Label();
             errorProvider1 = new ErrorProvider(components);
             checkoutBindingSource = new BindingSource(components);
+            coResetButton = new Button();
             menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             tabControl.SuspendLayout();
@@ -376,6 +377,7 @@
             // 
             // checkoutPage
             // 
+            checkoutPage.Controls.Add(coResetButton);
             checkoutPage.Controls.Add(checkOutSearchTextBox);
             checkoutPage.Controls.Add(label6);
             checkoutPage.Controls.Add(checkOutDataGrid);
@@ -493,6 +495,15 @@
             // 
             errorProvider1.ContainerControl = this;
             // 
+            // coResetButton
+            // 
+            coResetButton.Location = new Point(1404, 189);
+            coResetButton.Name = "coResetButton";
+            coResetButton.Size = new Size(98, 31);
+            coResetButton.TabIndex = 7;
+            coResetButton.Text = "Reset";
+            coResetButton.UseVisualStyleBackColor = true;
+            // 
             // Vivian
             // 
             AutoScaleDimensions = new SizeF(7F, 17F);
@@ -579,5 +590,6 @@
         private Label label6;
         internal TextBox checkOutSearchTextBox;
         internal TextBox textBoxBarcode;
+        internal Button coResetButton;
     }
 }

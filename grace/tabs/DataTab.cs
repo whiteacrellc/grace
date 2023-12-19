@@ -26,7 +26,7 @@ using System.Windows.Forms;
 
 namespace grace.tabs
 {
-    public class DataTab
+    public class DataTab : IDisposable
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 #pragma warning disable CS8618
@@ -42,6 +42,7 @@ namespace grace.tabs
         private DataGridView dataGridView;
         private DataGridLoader dataGridLoader;
         private BindingSource bindingSource;
+        private bool disposedValue;
 
         public DataTab(Vivian v)
         {
@@ -53,8 +54,6 @@ namespace grace.tabs
             filterSkuTextBox = vivian.filterSkuTextBox;
             addRowButton = vivian.addRowButton;
             dataGridView = vivian.dataGridView;
-            dataGridLoader = vivian.dataGridLoader;
-            bindingSource = vivian.bindingSource;
 
         }
 
@@ -64,10 +63,8 @@ namespace grace.tabs
             dataGridView.DataBindingComplete += dataGridView_DataBindingComplete;
             addRowButton.Click += addRowButton_Click;
             filterSkuTextBox.TextChanged += filterSkuTextBox_TextChanged;
-            dataGridView.CellBeginEdit += dataGridView_CellBeginEdit;
-            dataGridView.CellEndEdit += dataGridView_CellEndEdit;
-            dataGridView.Paint += dataGridView_Paint;
-
+            bindingSource = new BindingSource();
+            dataGridView.DataSource = bindingSource;
             dataGridLoader = new DataGridLoader();
             bindingSource.DataSource = dataGridLoader.getData();
             RemoveColumnsByName("ID", "Grace", "GraceId");
@@ -83,8 +80,8 @@ namespace grace.tabs
         {
             {"Total", "Current Inventory"},
             {"PreviousTotal", "Previous Inventory"},
-            {"Col1", "Collection 1"},
-            {"Col2", "Collection 2"},
+            {"Col1", "CollectionName 1"},
+            {"Col2", "CollectionName 2"},
             // Add more mappings as needed
         };
 
@@ -92,10 +89,10 @@ namespace grace.tabs
             foreach (DataGridViewColumn dataGridViewColumn in dataGridView.Columns)
             {
                 // Check if there is a mapping for the current column name
-                if (columnMappings.ContainsKey(dataGridViewColumn.DataPropertyName))
+                if (columnMappings.TryGetValue(dataGridViewColumn.DataPropertyName, out string? value))
                 {
                     // Set the HeaderText to the desired name
-                    dataGridViewColumn.HeaderText = columnMappings[dataGridViewColumn.DataPropertyName];
+                    dataGridViewColumn.HeaderText = value;
                 }
             }
         }
@@ -181,103 +178,32 @@ namespace grace.tabs
             }
         }
 
-        private void dataGridView_Paint(object? sender, PaintEventArgs e)
+        protected virtual void Dispose(bool disposing)
         {
-            formatTotals();
-        }
-
-        private void dataGridView_CellEndEdit(object? sender, DataGridViewCellEventArgs e)
-        {
-            string User = Globals.GetInstance().CurrentUser;
-
-            // Get the modified cell value and the corresponding product
-            int rowIndex = e.RowIndex;
-            int columnIndex = e.ColumnIndex;
-            object cellValue = dataGridView.Rows[rowIndex].Cells[columnIndex].Value;
-
-            try
+            if (!disposedValue)
             {
-                int newTotal = Convert.ToInt32(cellValue);
-
-                if (columnIndex == 12) // Assuming the second column is the "Totals" column
+                if (disposing)
                 {
-                    // Update the corresponding product in the DbContext
-                    int id = Convert.ToInt32(dataGridView.Rows[rowIndex].Cells[0].Value); // Assuming the first column is the "Id" column
-                    var graceRow = dataGridLoader.graceDb.GraceRows.Find(id);
-                    if (graceRow != null)
-                    {
-                        //var graceRow = dataGridLoader.graceDb.GraceRows.Where(t => t.GraceId == grace.ID);
-                        var grace = dataGridLoader.graceDb.Graces.First(t => t.ID == graceRow.GraceId);
-
-                        if (grace != null)
-                        {
-                            var total = new Total
-                            {
-                                date_field = DateTime.Now,
-                                total = newTotal,
-                                GraceId = id
-                            };
-                            grace.Totals.Add(total);
-                            graceRow.PreviousTotal = graceRow.Total;
-                            graceRow.Total = newTotal;
-                            dataGridLoader.graceDb.SaveChanges(); // Save changes to the database
-                            logger.Info($"{total.date_field} {User} changed {grace.Sku} total to {newTotal}");
-                        }
-                    }
+                    dataGridLoader.Dispose();
                 }
-            }
-            catch
-            {
-                int id = (int)dataGridView.Rows[rowIndex].Cells[0].Value;
-                var graceRow = dataGridLoader.graceDb.GraceRows.Find(id);
-                if (graceRow != null)
-                {
-                    if (columnIndex == 12) // Assuming the second column is the "Name" column
-                    {
-                        dataGridView.Rows[rowIndex].Cells[13].Value = graceRow.Total;
-                    }
-                }
-            }
 
+                // TODO: free unmanaged resources (unmanaged objects) and override finalizer
+                // TODO: set large fields to null
+                disposedValue = true;
+            }
         }
 
-        private void dataGridView_CellBeginEdit(object? sender, DataGridViewCellCancelEventArgs e)
+        ~DataTab()
         {
-            int columnIndex = e.ColumnIndex;
-            if (columnIndex < 13)
-            {
-                e.Cancel = true; // Cancel the edit for the first 12 columns
-            }
+             Dispose(disposing: false);
         }
 
-        private void formatTotals()
+        public void Dispose()
         {
-
-            int numRows = dataGridView.Rows.Count;
-            int numCols = dataGridView.Columns.Count;
-            if (numCols > 14)
-            {
-                return;
-            }
-            for (int i = 0; i < numRows; i++)
-            {
-                DataGridViewRow row = dataGridView.Rows[i];
-
-                if (row == null || row.Cells["PreviousTotal"].Value == null) { continue; }
-
-                // Compare the values of the two columns
-                int value1 = (int)row.Cells["Total"].Value;
-                int value2 = (int)row.Cells["PreviousTotal"].Value;
-
-                if (value1 != value2)
-                {
-                    // Set the background color to yellow if values are not equal
-                    row.Cells["Total"].Style.BackColor = Color.Yellow;
-                }
-            }
-
+            // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
-
 #pragma warning restore CS8601 // Possible null reference assignment.
 #pragma warning restore CS8602
 #pragma warning restore CS8618

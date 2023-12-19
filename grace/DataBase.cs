@@ -22,6 +22,7 @@ using System.Data;
 using System.Data.Common;
 using System.Data.SQLite;
 using System.Drawing.Text;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography.Xml;
@@ -34,19 +35,23 @@ using System.Windows.Forms;
 namespace grace
 {
 
-    public class DataBase
+    public class DataBase : IDisposable
     {
+        public static Logger Logger => logger;
 
+        public static string ConnectionString { get => connectionString; set => connectionString = value; }
+        public string DbName { get => dbName; set => dbName = value; }
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         public string DbFileName { get; set; }
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 #pragma warning disable CA2211 // Non-constant fields should not be visible
-        public static string ConnectionString;
+        private static string connectionString;
 #pragma warning restore CA2211 // Non-constant fields should not be visible
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
         private string dbName = "grace.db";
+        private bool disposedValue;
 
         public GraceDbContext graceDb { get; private set; }
 
@@ -61,17 +66,12 @@ namespace grace
 
         public DataBase(string fileName)
         {
-            dbName = fileName;
+            DbName = fileName;
             DbFileName = string.Empty;
             ConnectionString = CreateDatabaseFile();
             graceDb = new GraceDbContext();
             graceDb.Database.EnsureCreated();
 
-        }
-
-        ~DataBase()
-        {
-            graceDb.Dispose();
         }
 
         public string CreateDatabaseFile()
@@ -80,7 +80,7 @@ namespace grace
             string programDirectory = AppDomain.CurrentDomain.BaseDirectory;
 
             // Specify the database file path in the program's directory
-            DbFileName = Path.Combine(programDirectory, dbName);
+            DbFileName = Path.Combine(programDirectory, DbName);
 
             var connectionString = new SqliteConnectionStringBuilder()
             {
@@ -89,7 +89,7 @@ namespace grace
                 Cache = SqliteCacheMode.Private
             }.ToString();
 
-            logger.Info(connectionString);
+            Logger.Info(connectionString);
             return connectionString;
         }
 
@@ -164,8 +164,7 @@ namespace grace
             graceDb.Database.EnsureCreated();
             graceDb.Database.ExecuteSqlRaw("DELETE FROM Graces");
             InitPrefs();
-            AdminStuff adminStuff = new AdminStuff();
-            adminStuff.InitUserDB();
+            AdminStuff.InitUserDB();
         }
 
         private void InitPrefs()
@@ -213,7 +212,7 @@ namespace grace
             if (collection == null) return;
 
 
-            var newCollection = new Collection
+            var newCollection = new CollectionName
             {
                 Name = collection,
                 GraceId = grace_id
@@ -245,12 +244,12 @@ namespace grace
 
         }
 
-        private string checkString(object n)
+        private static string checkString(object n)
         {
             string ret = "";
             if (n is string)
             {
-                ret = Convert.ToString((string)n);
+                ret = Convert.ToString(n);
             }
             else if (n is double)
             {
@@ -262,7 +261,7 @@ namespace grace
             }
             else
             {
-                logger.Error("cannot convert " + n);
+                Logger.Error("cannot convert " + n);
             }
             return ret.Trim();
         }
@@ -270,9 +269,236 @@ namespace grace
         {
             graceDb.Database.EnsureDeleted();
         }
+
+        public GraceRow? GetGraceRowFromSku(string sku)
+        {
+            var graceRowsData =
+                        graceDb.GraceRows.FirstOrDefault(item => item.Sku == sku);
+            if (graceRowsData != null)
+            {
+               return graceRowsData;
+            }
+            return null;
+        }
+
+        public List<string?> CollectionNames
+        {
+            get
+            {
+                var distinctCollectionNames = graceDb.Collections
+                    .Select(e => e.Name)
+                    .Distinct()
+                    .ToList();
+                return distinctCollectionNames ?? new List<string?>();
+            }
+        }
+
+        public Grace? GetGraceFromSku(string sku)
+        {
+            var graceRowsData =
+                        graceDb.Graces.FirstOrDefault(item => item.Sku == sku);
+            if (graceRowsData != null)
+            {
+                return graceRowsData;
+            }
+            return null;
+        }
+
+        public void UpdateGraceRowRow(GraceRow graceRow)
+        {
+            var gracesRow =
+                 graceDb.Graces.FirstOrDefault(item => item.ID == graceRow.GraceId);
+
+            var totals = graceDb.Totals
+                .Where(c => c.GraceId == graceRow.GraceId)
+                .OrderByDescending(c => c.date_field) // Assuming you have a DateTime property in your CollectionName entity
+                .Take(2)
+                .ToList();
+
+            var collections = graceDb.Collections
+                .Where(c => c.GraceId == graceRow.GraceId)
+                .ToList();
+
+            var graceRowToUpdate = graceDb.GraceRows
+               .SingleOrDefault(row => row.ID == graceRow.ID);
+
+            var graceToUpdate = graceDb.Graces.SingleOrDefault(row => row.ID == graceRow.GraceId);
+
+            if (graceToUpdate == null)
+            {
+                logger.Fatal("can't find graces row from gracerow in UpdateGraceRow_Row");
+                return;
+            }
+
+            if (graceRowToUpdate != null)
+            {
+                // Update field from Graces table
+                if (graceRowToUpdate.Description != graceRow.Description)
+                {
+                    graceRowToUpdate.Description = graceRow.Description;
+                    graceToUpdate.Description = graceRow.Description;
+                }
+                if (graceRowToUpdate.Sku != graceRow.Sku)
+                {
+                    graceRowToUpdate.Sku = graceRow.Sku;
+                    graceToUpdate.Sku = graceRow.Sku;
+                }
+                if (graceRowToUpdate.Brand != graceRow.Brand)
+                {
+                    graceRowToUpdate.Brand = graceRow.Brand;
+                    graceToUpdate.Brand = graceRow.Brand;
+                }
+                if (graceRowToUpdate.Availability != graceRow.Availability)
+                {
+                    graceRowToUpdate.Availability = graceRow.Availability;
+                    graceToUpdate.Availability = graceRow.Availability;
+                }
+                if (graceRowToUpdate.BarCode != graceRow.BarCode)
+                {
+                    graceRowToUpdate.BarCode = graceRow.BarCode;
+                    graceToUpdate.Barcode = graceRow.BarCode;
+                }
+
+                var lastTotal = totals.First();
+                if (lastTotal != null)
+                {
+                    if (lastTotal.total != graceRowToUpdate.Total)
+                    {
+                        var newTotal = new Total
+                        {
+                            date_field = DateTime.Now,
+                            total = graceRowToUpdate.Total
+                        };
+
+                        // Add the new Total object to the context
+                        graceDb.Totals.Add(newTotal);
+
+                    }
+                }
+
+            }
+
+
+        }
+
+        public void DeleteCollectionRow (int GraceId, string name)
+        {
+            // Find the row to check if it exists
+            var rowToDelete = graceDb.Collections
+                .SingleOrDefault(c => c.GraceId == GraceId && c.Name == name);
+
+            if (rowToDelete != null)
+            {
+                // Row exists, so delete it
+                graceDb.Collections.Remove(rowToDelete);
+                graceDb.SaveChanges();
+            }
+        }
+    
+
+        public void AddCollectionRow(int GraceId, string name)
+        {
+            bool rowExists = graceDb.Collections
+                .Any(c => c.GraceId == GraceId && c.Name == name);
+            if (rowExists)
+            {
+                return;
+            }
+
+            // Row does not exist, so insert a new row
+            var newRow = new CollectionName
+            {
+                GraceId = GraceId,
+                Name = name
+                // Set other properties as needed
+            };
+
+            graceDb.Collections.Add(newRow);
+            graceDb.SaveChanges();
+        }
+
+        public void UpadeGraceRowCollection(int GraceId)
+        {
+            // First null out the columns
+
+            // Find the GraceRow entities with the specified GraceId
+            var graceRow = graceDb.GraceRows
+                .Where(row => row.GraceId == GraceId)
+                .SingleOrDefault();
+
+            if (graceRow is not null)
+            {
+                // Set Col1 to Col6 to null
+                graceRow.Col1 = null;
+                graceRow.Col2 = null;
+                graceRow.Col3 = null;
+                graceRow.Col4 = null;
+                graceRow.Col5 = null;
+                graceRow.Col6 = null;
+
+
+
+                var collectionRows = graceDb.Collections.
+                    Where(row => row.GraceId == GraceId)
+                    .ToList();
+                for (int i = 0; i < collectionRows.Count; i++)
+                {
+                    var collectionRow = collectionRows[i];
+                    switch (i)
+                    {
+                        case 0:
+                            graceRow.Col1 = collectionRow.Name;
+                            break;
+                        case 1:
+                            graceRow.Col2 = collectionRow.Name;
+                            break;
+                        case 2:
+                            graceRow.Col3 = collectionRow.Name;
+                            break;
+                        case 3:
+                            graceRow.Col4 = collectionRow.Name;
+                            break;
+                        case 4:
+                            graceRow.Col5 = collectionRow.Name;
+                            break;
+                        case 5:
+                            graceRow.Col6 = collectionRow.Name;
+                            break;
+                        default:
+                            logger.Error($"Too many collections for graceId {GraceId}");
+                            break;
+                    }
+                }
+            }
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    graceDb.Dispose();
+                }
+
+                // TODO: free unmanaged resources (unmanaged objects) and override finalizer
+                // TODO: set large fields to null
+                disposedValue = true;
+            }
+        }
+
+        ~DataBase()
+        {
+             Dispose(disposing: false);
+        }
+
+        public void Dispose()
+        {
+            // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
+        }
     }
-
-
 
 }
 

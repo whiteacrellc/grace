@@ -1,6 +1,8 @@
 ﻿using grace.data;
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,8 +18,10 @@ namespace grace.tabs
         private BindingSource checkoutBindingSource;
         private TextBox checkOutSearchTextBox;
         private TextBox textBoxBarCode;
+        private Button coResetButton;
 
         private string scannedBarcode = string.Empty;
+        private int user_id = 0;
 
         internal CheckOutTab(Vivian v)
         {
@@ -26,15 +30,26 @@ namespace grace.tabs
             checkoutBindingSource = vivian.checkoutBindingSource;
             checkOutSearchTextBox = vivian.checkOutSearchTextBox;
             textBoxBarCode = vivian.textBoxBarcode;
-
+            coResetButton = vivian.coResetButton;
         }
 
         public void Load()
         {
-           InitializeDataGridView();
+            InitializeDataGridView();
             // Add callbacks
             checkOutSearchTextBox.TextChanged += checkOutSearchTextBox_TextChanged;
             textBoxBarCode.KeyPress += textBoxBarcode_KeyPress;
+            coResetButton.Click += coResetButton_Click;
+
+            using (var context = new GraceDbContext())
+            {
+                var username = Globals.GetInstance().CurrentUser;
+                var user = context.Users.FirstOrDefault(item => item.Username == username);
+                if (user != null)
+                {
+                    user_id = user.ID;
+                }
+            }
         }
 
         private void InitializeDataGridView()
@@ -45,19 +60,35 @@ namespace grace.tabs
             using (var context = new GraceDbContext())
             {
 
-                // Fetch data from the DbContext
-                var graceRowsData = context.GraceRows.Select(row => new
-                {
-                    Sku = row.Sku,
-                    Brand = row.Brand,
-                    Description = row.Description,
-                    BarCode = row.BarCode,
-                    Total = row.Total
-                }).ToList();
+                var graceRowsData = (
+                    from graceRow in context.GraceRows
+                    join pulledItem in context.PulledDb on graceRow.ID equals pulledItem.GraceId into pulledItemsGroup
+                    from pulledItem in pulledItemsGroup.DefaultIfEmpty() // Left outer join
+                    where pulledItem == null || pulledItem.UserId == user_id
+                    orderby pulledItem != null ? pulledItem.CurrentTotal : 0 descending
+                    select new
+                    {
+                        Sku = graceRow.Sku,
+                        Brand = graceRow.Brand,
+                        Description = graceRow.Description,
+                        BarCode = graceRow.BarCode,
+                        Total = graceRow.Total,
+                        UserTotal = pulledItem != null ? pulledItem.CurrentTotal : 0
+                    }
+                ).ToList();
 
                 // Bind data to the DataGridView
                 checkoutBindingSource.DataSource = graceRowsData;
             }
+
+        }
+
+        internal void coResetButton_Click(object? sender, EventArgs e)
+        {
+
+            InitializeDataGridView();
+            textBoxBarCode.Text = string.Empty;
+            checkOutSearchTextBox.Text = string.Empty;
 
         }
 
@@ -69,16 +100,23 @@ namespace grace.tabs
             {
                 if (!string.IsNullOrWhiteSpace(searchTerm))
                 {
-                    // Query the DbContext to filter products based on the "Sku" column
-                    var filteredProducts = context.GraceRows.Select(row => new
-                    {
-                        Sku = row.Sku,
-                        Brand = row.Brand,
-                        Description = row.Description,
-                        BarCode = row.BarCode,
-                        Total = row.Total
-                    }).Where(p => p.Description.Contains(searchTerm))
-                    .ToList();
+                    var filteredProducts = (
+                         from graceRow in context.GraceRows
+                         join pulledItem in context.PulledDb on graceRow.ID equals pulledItem.GraceId into pulledItemsGroup
+                         from pulledItem in pulledItemsGroup.DefaultIfEmpty() // Left outer join
+                         where (pulledItem == null || pulledItem.UserId == user_id) &&
+                               (searchTerm == null || graceRow.Description.Contains(searchTerm))
+                         orderby pulledItem != null ? pulledItem.CurrentTotal : 0 descending
+                         select new
+                         {
+                             Sku = graceRow.Sku,
+                             Brand = graceRow.Brand,
+                             Description = graceRow.Description,
+                             BarCode = graceRow.BarCode,
+                             Total = graceRow.Total,
+                             UserTotal = pulledItem != null ? pulledItem.CurrentTotal : 0
+                         }
+                     ).ToList();
 
                     // Bind the filtered products to the DataGridView
                     checkoutBindingSource.DataSource = filteredProducts;
@@ -118,18 +156,24 @@ namespace grace.tabs
                 {
                     using (var context = new GraceDbContext())
                     {
-               
 
-                        // Query the DbContext to filter products based on the "Sku" column
-                        var filteredProducts = context.GraceRows.Select(row => new
-                        {
-                            Sku = row.Sku,
-                            Brand = row.Brand,
-                            Description = row.Description,
-                            BarCode = row.BarCode,
-                            Total = row.Total
-                        }).FirstOrDefault(item => item.BarCode == scannedBarcode);
-                        //    .ToList();
+                        var filteredProducts = (
+                            from graceRow in context.GraceRows
+                            join pulledItem in context.PulledDb on graceRow.ID equals pulledItem.GraceId into pulledItemsGroup
+                            from pulledItem in pulledItemsGroup.DefaultIfEmpty() // Left outer join
+                            where (pulledItem == null || pulledItem.UserId == user_id) &&
+                                  (graceRow.BarCode != null && graceRow.BarCode.Equals(scannedBarcode))
+                            orderby pulledItem != null ? pulledItem.CurrentTotal : 0 descending
+                            select new
+                            {
+                                Sku = graceRow.Sku,
+                                Brand = graceRow.Brand,
+                                Description = graceRow.Description,
+                                BarCode = graceRow.BarCode,
+                                Total = graceRow.Total,
+                                UserTotal = pulledItem != null ? pulledItem.CurrentTotal : 0
+                            }
+                        ).ToList();
 
                         // Bind the filtered products to the DataGridView
                         checkoutBindingSource.DataSource = filteredProducts;

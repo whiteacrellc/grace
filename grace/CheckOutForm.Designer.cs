@@ -130,7 +130,7 @@
             label6.Name = "label6";
             label6.Size = new Size(61, 15);
             label6.TabIndex = 9;
-            label6.Text = "Collection";
+            label6.Text = "CollectionName";
             // 
             // numCheckOutTextBox
             // 

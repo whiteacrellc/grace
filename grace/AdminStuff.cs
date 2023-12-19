@@ -24,58 +24,56 @@ namespace grace
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
+        public static Logger Logger => logger;
 
-        private GraceDbContext graceDb;
-
-        public AdminStuff()
+        public static void InitUserDB()
         {
-
-            graceDb = new GraceDbContext();
-
-        }
-
-        public void InitUserDB()
-        {
-
-            bool empty = !graceDb.Users.Any();
-
-            if (empty)
+            using (var graceDb = new GraceDbContext())
             {
-                string[] defaultUsers = { "patti", "susan", "morgan",
-                    "christa", "mandy", "whitney" };
-        
-                foreach (var user in defaultUsers)
+                bool empty = !graceDb.Users.Any();
+
+                if (empty)
                 {
-                    if (user != null)
+                    string[] defaultUsers = { "patti", "susan", "morgan",
+                    "christa", "mandy", "whitney" };
+
+                    foreach (var user in defaultUsers)
                     {
-                        User u = new User();
-                        u.Username = user;
-                        u.Password = "changeme";
-                        if (user.Equals("patti") || user.Equals("susan"))
+                        if (user != null)
                         {
-                            u.Admin = true;
+                            User u = new User();
+                            u.Username = user;
+                            u.Password = "changeme";
+                            if (user.Equals("patti", StringComparison.Ordinal) || user.Equals("susan", StringComparison.Ordinal))
+                            {
+                                u.Admin = true;
+                            }
+                            u.ResetPassword = true;
+                            graceDb.Users.Add(u);
                         }
-                        u.ResetPassword = true;
-                        graceDb.Users.Add(u);
                     }
+                    graceDb.SaveChanges();
                 }
-                graceDb.SaveChanges();
             }
         }
 
-        public List<string>getUserNames()
+        public static List<string>getUserNames()
         {
             List<string> usernames = new List<string>();
-            try
+            using (var graceDb = new GraceDbContext())
             {
-                List<User> users = graceDb.Users.ToList();
-                foreach (var user in users)
+                try
                 {
-                    usernames.Add(user.Username);
+                    List<User> users = graceDb.Users.ToList();
+                    foreach (var user in users)
+                    {
+                        usernames.Add(user.Username);
+                    }
                 }
-            } catch (Exception ex) 
-            {
-                logger.Warn(ex);
+                catch (Exception ex)
+                {
+                    Logger.Warn(ex);
+                }
             }
             return usernames;
         }

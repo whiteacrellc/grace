@@ -48,7 +48,7 @@ namespace grace.tabs
         public void Load()
         {
 
-            resetPasswordButton.Click += resetButton_Click;
+            resetPasswordButton.Click += ResetButton_Click;
             InitializeComboBox();
         }
         
@@ -59,10 +59,9 @@ namespace grace.tabs
 
             // Clear existing items in the ComboBox
             resetComboBox.Items.Clear();
-            AdminStuff adminStuff = new AdminStuff();
-            adminStuff.InitUserDB();
+            AdminStuff.InitUserDB();
 
-            List<string> users = adminStuff.getUserNames();
+            List<string> users = AdminStuff.getUserNames();
             foreach (var user in users)
             {
                 resetComboBox.Items.Add(user);
@@ -76,7 +75,7 @@ namespace grace.tabs
         }
 
 
-        public void resetButton_Click(object? sender, EventArgs e)
+        public void ResetButton_Click(object? sender, EventArgs e)
         {
             ComboBox resetComboBox = vivian.resetComboBox;
             string? username = resetComboBox.SelectedItem.ToString();

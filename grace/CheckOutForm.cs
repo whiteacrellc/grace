@@ -13,11 +13,12 @@ namespace grace
 {
     public partial class CheckOutForm : Form
     {
-        private string Sku;
+        private string sku;
+
         public CheckOutForm(string sku)
         {
             InitializeComponent();
-            this.Sku = sku;
+            this.sku = sku;
         }
 
         private void CheckoutForm_Load(object sender, EventArgs e)
@@ -28,7 +29,7 @@ namespace grace
                 int fk_key = 0;
                 // Fetch data from the DbContext
                 var graceRowsData =
-                    context.GraceRows.FirstOrDefault(item => item.Sku == this.Sku);
+                    context.GraceRows.FirstOrDefault(item => item.Sku == sku);
                 if (graceRowsData != null)
                 {
                     skuLabel.Text = graceRowsData.Sku;

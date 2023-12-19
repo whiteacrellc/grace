@@ -36,8 +36,8 @@ namespace grace
 
         private StringBuilder sb = new StringBuilder();
         private bool readyForNewCode = true;
-        internal DataGridLoader dataGridLoader;
-        internal BindingSource bindingSource;
+
+
 
         // To keep this file a reasonable size put all tab code and callbacks
         // in their own class
@@ -62,8 +62,7 @@ namespace grace
 
 
             dataGridView.AutoGenerateColumns = true;
-            bindingSource = new BindingSource();
-            dataGridView.DataSource = bindingSource;
+
 
             // Init the tab page classes
             homeTab = new HomeTab(this);

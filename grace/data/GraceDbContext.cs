@@ -20,25 +20,26 @@ namespace grace.data
     public class GraceDbContext : DbContext
     {
         public DbSet<Grace> Graces { get; set; }
-        public DbSet<Collection> Collections { get; set; }
+        public DbSet<CollectionName> Collections { get; set; }
         public DbSet<Total> Totals { get; set; }
         public DbSet<GraceRow> GraceRows { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Pulled> PulledDb { get; set; }
         public DbSet<Prefs> PrefsDb { get; set; }
+        public static string ConnectionString { get => connectionString; set => connectionString = value; }
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         private static string connectionString;
 
         public GraceDbContext(string connectionString)
         {
-            GraceDbContext.connectionString = connectionString;
+            GraceDbContext.ConnectionString = connectionString;
         }
         public GraceDbContext()
         {
-           if (GraceDbContext.connectionString == null)
+           if (GraceDbContext.ConnectionString == null)
             {
-                GraceDbContext.connectionString = DataBase.ConnectionString;
+                GraceDbContext.ConnectionString = DataBase.ConnectionString;
             }
         }
 #pragma warning restore CS8618 
@@ -91,6 +92,9 @@ namespace grace.data
                 // Primary key
                 entity.HasKey(e => e.ID);
 
+                entity.Property(e => e.date_field)
+                   .IsRequired();
+
                 entity.HasOne(e => e.Grace)
                   .WithMany()
                   .HasForeignKey(e => e.GraceId)
@@ -99,7 +103,7 @@ namespace grace.data
             });
 
 
-            modelBuilder.Entity<Collection>(entity =>
+            modelBuilder.Entity<CollectionName>(entity =>
             {
                 entity.ToTable("Collections");
                 // Primary key
@@ -133,6 +137,9 @@ namespace grace.data
                 // Primary key
                 entity.HasKey(e => e.ID);
 
+                entity.Property(e => e.CurrentTotal)
+                  .IsRequired();
+
                 // Relationships
                 entity.HasOne(e => e.User)
                     .WithMany()
@@ -156,7 +163,7 @@ namespace grace.data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite(connectionString).EnableSensitiveDataLogging();
+            optionsBuilder.UseSqlite(ConnectionString).EnableSensitiveDataLogging();
         }
     }
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
@@ -178,7 +185,7 @@ namespace grace.data
 
         public List<Total> Totals { get; set; }
 
-        public List<Collection> Collections { get; set; }
+        public List<CollectionName> Collections { get; set; }
 
         public List<GraceRow> GraceRows { get; set; }
 
@@ -190,6 +197,7 @@ namespace grace.data
     {
         [Key]
         public int ID { get; set; }
+        [Required]
         public DateTime date_field { get; set; }
         public int total { get; set; }
 
@@ -202,7 +210,7 @@ namespace grace.data
     }
 
     [Table("Collections")]
-    public class Collection
+    public class CollectionName
     {
         [Key]
         public int ID { get; set; }
@@ -236,8 +244,7 @@ namespace grace.data
         public string? Col4 { get; set; }
         public string? Col5 { get; set; }
         public string? Col6 { get; set; }
-        public int PreviousTotal { get; set; } = 0;
-        public int Total { get; set; } = 0;
+        public int Total { get; set; }
 
         public int GraceId { get; set; }
         [ForeignKey("GraceId")]
@@ -271,16 +278,14 @@ namespace grace.data
     {
         [Key]
         public int ID { get; set; }
-        [Required]
-
         public string Comment { get; set; } = String.Empty;
 
+        public DateTime LastUpdated { get; set; } = DateTime.Now;
+
+        public int Amount { get; set; } = 0;
+
         [Required]
-        public DateTime lastUpdated { get; set; } = DateTime.Now;
-
-        public int amount { get; set; } = 0;
-
-        public int currentTotal { get; set; } = 0;
+        public int CurrentTotal { get; set; } = 0;
 
         public int UserId { get; set; }
         [ForeignKey("UserId")]
@@ -294,7 +299,7 @@ namespace grace.data
 
         public int CollectionId { get; set; }
         [ForeignKey("CollectionId")]
-        public Collection Collection { get; set; }
+        public CollectionName Collection { get; set; }
     }
 
     [Table("Prefs")]

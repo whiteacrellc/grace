@@ -31,9 +31,9 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EditRowForm));
             cancelButton = new Button();
             panel1 = new Panel();
-            totalTextBox = new TextBox();
+            deltalTextBox = new TextBox();
             label7 = new Label();
-            prevTotTextBox = new TextBox();
+            currentTextBox = new TextBox();
             label6 = new Label();
             barCodeTextBox = new TextBox();
             availabilityTextBox = new TextBox();
@@ -53,19 +53,19 @@
             // 
             // cancelButton
             // 
-            cancelButton.Location = new Point(838, 691);
-            cancelButton.Margin = new Padding(4, 2, 4, 2);
+            cancelButton.Location = new Point(451, 324);
+            cancelButton.Margin = new Padding(2, 1, 2, 1);
             cancelButton.Name = "cancelButton";
-            cancelButton.Size = new Size(210, 70);
+            cancelButton.Size = new Size(113, 33);
             cancelButton.TabIndex = 0;
             cancelButton.Text = "Cancel";
             cancelButton.UseVisualStyleBackColor = true;
             // 
             // panel1
             // 
-            panel1.Controls.Add(totalTextBox);
+            panel1.Controls.Add(deltalTextBox);
             panel1.Controls.Add(label7);
-            panel1.Controls.Add(prevTotTextBox);
+            panel1.Controls.Add(currentTextBox);
             panel1.Controls.Add(label6);
             panel1.Controls.Add(barCodeTextBox);
             panel1.Controls.Add(availabilityTextBox);
@@ -78,154 +78,142 @@
             panel1.Controls.Add(skuTextBox);
             panel1.Controls.Add(label2);
             panel1.Controls.Add(label1);
-            panel1.Location = new Point(22, 26);
-            panel1.Margin = new Padding(6, 6, 6, 6);
+            panel1.Location = new Point(12, 12);
             panel1.Name = "panel1";
-            panel1.Size = new Size(1044, 657);
+            panel1.Size = new Size(562, 308);
             panel1.TabIndex = 1;
             // 
-            // totalTextBox
+            // deltalTextBox
             // 
-            totalTextBox.Location = new Point(214, 482);
-            totalTextBox.Margin = new Padding(6, 6, 6, 6);
-            totalTextBox.Name = "totalTextBox";
-            totalTextBox.Size = new Size(275, 39);
-            totalTextBox.TabIndex = 17;
+            deltalTextBox.Location = new Point(133, 226);
+            deltalTextBox.Name = "deltalTextBox";
+            deltalTextBox.Size = new Size(150, 23);
+            deltalTextBox.TabIndex = 17;
+            deltalTextBox.TextChanged += deltalTextBox_TextChanged;
             // 
             // label7
             // 
             label7.AutoSize = true;
-            label7.Location = new Point(50, 489);
-            label7.Margin = new Padding(6, 0, 6, 0);
+            label7.Location = new Point(27, 229);
             label7.Name = "label7";
-            label7.Size = new Size(65, 32);
+            label7.Size = new Size(94, 15);
             label7.TabIndex = 16;
-            label7.Text = "Total";
+            label7.Text = "Adjust Inventory";
             // 
-            // prevTotTextBox
+            // currentTextBox
             // 
-            prevTotTextBox.Location = new Point(214, 397);
-            prevTotTextBox.Margin = new Padding(6, 6, 6, 6);
-            prevTotTextBox.Name = "prevTotTextBox";
-            prevTotTextBox.Size = new Size(275, 39);
-            prevTotTextBox.TabIndex = 15;
+            currentTextBox.Location = new Point(133, 186);
+            currentTextBox.Name = "currentTextBox";
+            currentTextBox.ReadOnly = true;
+            currentTextBox.Size = new Size(150, 23);
+            currentTextBox.TabIndex = 15;
             // 
             // label6
             // 
             label6.AutoSize = true;
-            label6.Location = new Point(50, 403);
-            label6.Margin = new Padding(6, 0, 6, 0);
+            label6.Location = new Point(27, 189);
             label6.Name = "label6";
-            label6.Size = new Size(162, 32);
+            label6.Size = new Size(100, 15);
             label6.TabIndex = 14;
-            label6.Text = "Previous Total";
+            label6.Text = "Current Inventory";
             // 
             // barCodeTextBox
             // 
-            barCodeTextBox.Location = new Point(214, 311);
-            barCodeTextBox.Margin = new Padding(6, 6, 6, 6);
+            barCodeTextBox.Location = new Point(133, 146);
             barCodeTextBox.Name = "barCodeTextBox";
-            barCodeTextBox.Size = new Size(275, 39);
+            barCodeTextBox.Size = new Size(150, 23);
             barCodeTextBox.TabIndex = 13;
             barCodeTextBox.KeyDown += barCodeTextBox_KeyDown;
             // 
             // availabilityTextBox
             // 
-            availabilityTextBox.Location = new Point(214, 230);
-            availabilityTextBox.Margin = new Padding(6, 6, 6, 6);
+            availabilityTextBox.Location = new Point(133, 108);
             availabilityTextBox.Name = "availabilityTextBox";
-            availabilityTextBox.Size = new Size(275, 39);
+            availabilityTextBox.Size = new Size(150, 23);
             availabilityTextBox.TabIndex = 9;
             // 
             // label5
             // 
             label5.AutoSize = true;
-            label5.Location = new Point(50, 318);
-            label5.Margin = new Padding(6, 0, 6, 0);
+            label5.Location = new Point(27, 149);
             label5.Name = "label5";
-            label5.Size = new Size(111, 32);
+            label5.Size = new Size(55, 15);
             label5.TabIndex = 12;
             label5.Text = "Bar Code";
             // 
             // label4
             // 
             label4.AutoSize = true;
-            label4.Location = new Point(50, 237);
-            label4.Margin = new Padding(6, 0, 6, 0);
+            label4.Location = new Point(27, 111);
             label4.Name = "label4";
-            label4.Size = new Size(129, 32);
+            label4.Size = new Size(65, 15);
             label4.TabIndex = 8;
             label4.Text = "Availability";
             // 
             // descTextBox
             // 
-            descTextBox.Location = new Point(217, 160);
-            descTextBox.Margin = new Padding(6, 6, 6, 6);
+            descTextBox.Location = new Point(135, 75);
             descTextBox.Name = "descTextBox";
-            descTextBox.Size = new Size(557, 39);
+            descTextBox.Size = new Size(269, 23);
             descTextBox.TabIndex = 7;
             // 
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(50, 171);
-            label3.Margin = new Padding(6, 0, 6, 0);
+            label3.Location = new Point(27, 80);
             label3.Name = "label3";
-            label3.Size = new Size(135, 32);
+            label3.Size = new Size(67, 15);
             label3.TabIndex = 6;
             label3.Text = "Description";
             // 
             // checkedListBox
             // 
             checkedListBox.FormattingEnabled = true;
-            checkedListBox.Location = new Point(795, 32);
-            checkedListBox.Margin = new Padding(6, 6, 6, 6);
+            checkedListBox.Location = new Point(428, 15);
             checkedListBox.Name = "checkedListBox";
-            checkedListBox.Size = new Size(219, 580);
+            checkedListBox.Size = new Size(120, 274);
             checkedListBox.TabIndex = 5;
+            checkedListBox.ItemCheck += checkedListBox_ItemCheck;
+            checkedListBox.SelectedValueChanged += checkedListBox_SelectedValueChanged;
             // 
             // brandTextBox
             // 
-            brandTextBox.Location = new Point(214, 94);
-            brandTextBox.Margin = new Padding(6, 6, 6, 6);
+            brandTextBox.Location = new Point(133, 44);
             brandTextBox.Name = "brandTextBox";
-            brandTextBox.Size = new Size(275, 39);
+            brandTextBox.Size = new Size(150, 23);
             brandTextBox.TabIndex = 4;
             // 
             // skuTextBox
             // 
-            skuTextBox.Location = new Point(214, 32);
-            skuTextBox.Margin = new Padding(6, 6, 6, 6);
+            skuTextBox.Location = new Point(133, 15);
             skuTextBox.Name = "skuTextBox";
-            skuTextBox.Size = new Size(182, 39);
+            skuTextBox.Size = new Size(100, 23);
             skuTextBox.TabIndex = 3;
             // 
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(50, 100);
-            label2.Margin = new Padding(6, 0, 6, 0);
+            label2.Location = new Point(27, 47);
             label2.Name = "label2";
-            label2.Size = new Size(76, 32);
+            label2.Size = new Size(38, 15);
             label2.TabIndex = 2;
             label2.Text = "Brand";
             // 
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(50, 38);
-            label1.Margin = new Padding(6, 0, 6, 0);
+            label1.Location = new Point(27, 18);
             label1.Name = "label1";
-            label1.Size = new Size(57, 32);
+            label1.Size = new Size(28, 15);
             label1.TabIndex = 1;
             label1.Text = "SKU";
             // 
             // saveButton
             // 
-            saveButton.Location = new Point(72, 691);
-            saveButton.Margin = new Padding(4, 2, 4, 2);
+            saveButton.Location = new Point(39, 324);
+            saveButton.Margin = new Padding(2, 1, 2, 1);
             saveButton.Name = "saveButton";
-            saveButton.Size = new Size(210, 70);
+            saveButton.Size = new Size(113, 33);
             saveButton.TabIndex = 2;
             saveButton.Text = "Update";
             saveButton.UseVisualStyleBackColor = true;
@@ -233,10 +221,10 @@
             // 
             // deleteButton
             // 
-            deleteButton.Location = new Point(446, 691);
-            deleteButton.Margin = new Padding(4, 2, 4, 2);
+            deleteButton.Location = new Point(240, 324);
+            deleteButton.Margin = new Padding(2, 1, 2, 1);
             deleteButton.Name = "deleteButton";
-            deleteButton.Size = new Size(210, 70);
+            deleteButton.Size = new Size(113, 33);
             deleteButton.TabIndex = 3;
             deleteButton.Text = "Delete";
             deleteButton.UseVisualStyleBackColor = true;
@@ -244,16 +232,16 @@
             // 
             // EditRowForm
             // 
-            AutoScaleDimensions = new SizeF(13F, 32F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             CancelButton = cancelButton;
-            ClientSize = new Size(1103, 783);
+            ClientSize = new Size(594, 367);
             Controls.Add(deleteButton);
             Controls.Add(saveButton);
             Controls.Add(panel1);
             Controls.Add(cancelButton);
             Icon = (Icon)resources.GetObject("$this.Icon");
-            Margin = new Padding(4, 2, 4, 2);
+            Margin = new Padding(2, 1, 2, 1);
             Name = "EditRowForm";
             ShowInTaskbar = false;
             Text = "Previous Total";
@@ -279,9 +267,9 @@
         private TextBox descTextBox;
         private TextBox barCodeTextBox;
         private Label label5;
-        private TextBox totalTextBox;
+        private TextBox deltalTextBox;
         private Label label7;
-        private TextBox prevTotTextBox;
+        private TextBox currentTextBox;
         private Label label6;
         private Button deleteButton;
     }

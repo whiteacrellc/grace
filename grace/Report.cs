@@ -21,6 +21,7 @@ using System.Threading.Tasks;
 using NLog;
 using NLog.Config;
 using System.Windows.Forms;
+using System.IO;
 
 namespace grace
 {
@@ -28,12 +29,12 @@ namespace grace
     {
         private Dictionary<string, List<string>> items;
         Dictionary<string, List<Row>> collections;
-        private int currentRow = 0;
+        private int currentRow;
         public ExcelPackage package { get; }
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         Vivian vivian;
-        private int endLastBlock = 0;
-        private int currentPage = 0;
+        private int endLastBlock;
+        private int currentPage;
 
         public Report(Dictionary<string, List<Row>> collections, Dictionary<string, List<string>> items, Vivian vivian)
         {
@@ -65,7 +66,7 @@ namespace grace
                 foreach (var itemcol in collist)
                 {
                     if (itemcol == null) break;
-                    if (itemcol.Equals(collection)) continue;
+                    if (itemcol.Equals(collection, StringComparison.Ordinal)) continue;
                     worksheet.Cells[currentRow, 5 + i].Value = itemcol;
                     i++;
                 }
@@ -95,7 +96,7 @@ namespace grace
             return rowsWritten;
         }
 
-        private void WritePrintHeader(ExcelWorksheet worksheet)
+        private static void WritePrintHeader(ExcelWorksheet worksheet)
         {
             // Get the current date and format it as desired
             string currentDate = DateTime.Now.ToString("MMMM dd, yyyy");
@@ -185,7 +186,7 @@ namespace grace
             // Loop through the sorted dictionary and write out the values grouped by key.
             foreach (var key in sortedKeys)
             {
-                vivian.DisplayLogMessage("Processing Collection = " + key);
+                vivian.DisplayLogMessage("Processing CollectionName = " + key);
                 List<Row> rows = collections[key];
                 int rowsWritten = writeCollectoion(key, rows, worksheet);
 

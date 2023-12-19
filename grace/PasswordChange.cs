@@ -73,7 +73,7 @@ namespace grace
                 newPasswordTextBox.Text = string.Empty;
                 confirmTextBox.Text = string.Empty;
             }
-            else if (newpassword.Equals(confirmpass) == false)
+            else if (newpassword.Equals(confirmpass, StringComparison.Ordinal) == false)
             {
                 MessageBox.Show("Passwords don't match.", "Error",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);

@@ -1,0 +1,6 @@
+﻿is_global = true
+
+[*.{cs,vb}]
+dotnet_diagnostic.CA1305.severity = none
+dotnet_diagnostic.CA1707.severity = none
+

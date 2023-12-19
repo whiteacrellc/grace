@@ -29,15 +29,19 @@ namespace grace
     {
 
         private DataBase dataBase;
-        GraceDbContext graceDb;
+        private GraceDbContext graceDb;
         DataGridViewRow? row;
+        private Dictionary<string, int> collectionHash = new Dictionary<string, int>();
         private string Sku = string.Empty;
         private string Brand = string.Empty;
         private string Description = string.Empty;
-        List<string> colList = new List<string>();
-        private bool update = false;
+        private List<string> colList = new List<string>();
+        private bool update;
         private StringBuilder sb = new StringBuilder();
         private bool readyForNewCode = true;
+        private GraceRow? graceRow;
+
+
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         public EditRowForm(DataGridViewRow? row)
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
@@ -48,48 +52,73 @@ namespace grace
 
         private void EditRowForm_Load(object sender, EventArgs e)
         {
+            collectionHash.Clear();
             dataBase = new DataBase();
             graceDb = dataBase.graceDb;
 
-            var distinctFooValues = graceDb.Collections
+
+            // We will need this to update the database
+            if (row != null)
+            {
+                var sku = row.Cells["Sku"].ToString();
+                graceRow = dataBase.GetGraceRowFromSku(sku);
+                if (graceRow == null)
+                {
+                    MessageBox.Show("There was a problem loading the row.", "Error",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    DialogResult = DialogResult.Cancel;
+                    Close();
+                }
+            }
+
+            var distinctCollectionNames = graceDb.Collections
                 .Select(e => e.Name)
                 .Distinct()
                 .ToList();
-            foreach (var d in distinctFooValues)
+
+            checkedListBox.Items.Clear();
+            foreach (var d in distinctCollectionNames)
             {
                 if (d != null)
                 {
                     colList.Add(d);
                     checkedListBox.Items.Add(d);
+                    int fk = GetCollectionId(d);
+                    if (fk >= 0)
+                    {
+                        collectionHash.Add(d, fk);
+                    }
                 }
             }
 
             if (row != null && row.Cells.Count > 11)
             {
                 update = true;
-                skuTextBox.Text = row.Cells[0].Value.ToString();
-                skuTextBox.Enabled = false;
-                brandTextBox.Text = row.Cells[2].Value.ToString();
-                descTextBox.Text = row.Cells[1].Value.ToString();
-                var obj = row.Cells[3].Value;
-                if (obj != null)
+                if (graceRow != null)
                 {
-                    availabilityTextBox.Text = obj.ToString();
-                }
-                obj = row.Cells[4].Value;
-                if (obj != null)
-                {
-                    barCodeTextBox.Text = obj.ToString();
-                }
-                checkItem(row.Cells[5].Value);
-                checkItem(row.Cells[6].Value);
-                checkItem(row.Cells[7].Value);
-                checkItem(row.Cells[8].Value);
-                checkItem(row.Cells[9].Value);
-                checkItem(row.Cells[10].Value);
+                    skuTextBox.Text = graceRow.Sku;
+                    skuTextBox.Enabled = false;
+                    brandTextBox.Text = graceRow.Brand;
+                    descTextBox.Text = graceRow.Description;
+                    if (graceRow.Availability != null)
+                    {
+                        availabilityTextBox.Text = graceRow.Availability;
+                    }
+                    var obj = row.Cells[4].Value;
+                    if (obj != null)
+                    {
+                        barCodeTextBox.Text = obj.ToString();
+                    }
+                    checkItem(row.Cells[5].Value);
+                    checkItem(row.Cells[6].Value);
+                    checkItem(row.Cells[7].Value);
+                    checkItem(row.Cells[8].Value);
+                    checkItem(row.Cells[9].Value);
+                    checkItem(row.Cells[10].Value);
 
-                prevTotTextBox.Text = row.Cells["PreviousTotal"].Value.ToString();
-                totalTextBox.Text = row.Cells["Total"].Value.ToString();
+                    currentTextBox.Text = row.Cells["Total"].Value.ToString();
+                    deltalTextBox.Text = "0";
+                }
             }
 
             if (!update)
@@ -131,92 +160,31 @@ namespace grace
 
         private void saveFormToDb()
         {
-            //graceDb.Dispose();
-            //graceDb.Database.OpenConnection();
+            var Sku = skuTextBox.Text;
+            var Brand = brandTextBox.Text;
+            var Description = descTextBox.Text;
+            string? Availability = null;
+            string? BarCode = null;
+            int deltaTotal;
 
-            var newGrace = new Grace
-            {
-                Sku = skuTextBox.Text,
-                Brand = brandTextBox.Text,
-                Description = descTextBox.Text,
-            };
             if (availabilityTextBox.Text.Length > 0)
             {
-                newGrace.Availability = availabilityTextBox.Text;
+                Availability = availabilityTextBox.Text;
             }
             if (barCodeTextBox.Text.Length > 0)
             {
-                newGrace.Barcode = barCodeTextBox.Text;
+                BarCode = barCodeTextBox.Text;
             }
 
-            // Add the new Grace object to the DbContext
-            graceDb.Graces.Add(newGrace);
-
-
-            int insertId = newGrace.ID;
-
-            int total = -1;
-            int prevTotal = -1;
             try
             {
-                var obj = totalTextBox.Text;
-                if (obj == null)
-                {
-                    totalTextBox.BackColor = System.Drawing.Color.Yellow;
-                    return;
-                }
-                total = Convert.ToInt32(obj);
-            } catch
-            {
-                totalTextBox.BackColor = System.Drawing.Color.Yellow;
+                deltaTotal = Int32.Parse(deltalTextBox.Text);
             }
-            try
+            catch (Exception ex)
             {
-                var obj = prevTotTextBox.Text;
-                if (obj == null)
-                {
-                    prevTotTextBox.BackColor = System.Drawing.Color.Yellow;
-                    return;
-                }
-                prevTotal = Convert.ToInt32(obj);
-            }
-            catch
-            {
-                totalTextBox.BackColor = System.Drawing.Color.Yellow;
+
             }
 
-            if (prevTotal >= 0 && total >= 0)
-            {
-                var totalrow = new Total
-                {
-                    total = prevTotal,
-                    date_field = DateTime.Now.AddDays(-14),
-                    GraceId = insertId
-                };
-                graceDb.Totals.Add(totalrow);
-                totalrow = new Total
-                {
-                    total = total,
-                    date_field = DateTime.Now,
-                    GraceId = insertId
-                };
-                graceDb.Totals.Add(totalrow);
-            }
-
-
-            var selectedList = checkedListBox.SelectedItems;
-            foreach (var item in selectedList)
-            {
-#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
-                string val = item.ToString();
-#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
-                var collection = new Collection
-                {
-                    Name = val,
-                    GraceId = insertId
-                };
-                graceDb.Collections.Add(collection);
-            }
             // Save the changes to the database
             graceDb.SaveChanges();
 
@@ -266,7 +234,8 @@ namespace grace
             }
         }
 
-        private void deleteButton_Click(object sender, EventArgs e)
+        private void deleteButton_Click(
+            object sender, EventArgs e)
         {
             if (update == true && row != null)
             {
@@ -288,6 +257,60 @@ namespace grace
 
             }
             Close();
+        }
+
+        private int GetCollectionId(string collectionName)
+        {
+            int ret = -1;
+
+            using (var context = new GraceDbContext())
+            {
+                // LINQ query to get the ID based on the conditions
+                var result = context.Collections
+                    .Where(c => c.Name == collectionName && c.GraceId == graceRow.GraceId)
+                    .Select(c => c.ID)
+                    .FirstOrDefault();
+
+                if (result is not 0)
+                {
+                    ret = result;
+                }
+            }
+            return ret;
+        }
+
+   
+
+        private void checkedListBox_SelectedValueChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void checkedListBox_ItemCheck(object sender, ItemCheckEventArgs e)
+        {
+            string? itemName = checkedListBox.Items[e.Index].ToString();
+            if (itemName != null)
+            {
+                int graceId = collectionHash[itemName];
+                if (e.NewValue == CheckState.Checked)
+                {
+                    dataBase.AddCollectionRow(graceId, itemName);
+                }
+                else if (e.NewValue == CheckState.Unchecked)
+                {
+                    dataBase.DeleteCollectionRow(graceId, itemName);
+                }
+            }
+        }
+
+        private void deltalTextBox_TextChanged(object sender, EventArgs e)
+        {
+            // Ensure the entered text is a valid integer
+            if (!int.TryParse(deltalTextBox.Text, out int result))
+            {
+                // If not a valid integer, clear the TextBox
+                deltalTextBox.Text = "";
+            }
         }
     }
 }
