@@ -1,4 +1,5 @@
 ﻿using grace.data;
+using grace.data.models;
 using grace.utils;
 using OfficeOpenXml.ConditionalFormatting;
 using OfficeOpenXml.Drawing.Slicer.Style;
@@ -73,7 +74,7 @@ namespace grace
                 newPasswordTextBox.Text = string.Empty;
                 confirmTextBox.Text = string.Empty;
             }
-            else if (newpassword.Equals(confirmpass) == false)
+            else if (newpassword.Equals(confirmpass, StringComparison.Ordinal) == false)
             {
                 MessageBox.Show("Passwords don't match.", "Error",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);

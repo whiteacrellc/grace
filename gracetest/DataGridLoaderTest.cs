@@ -39,7 +39,7 @@ namespace gracetest
                 + "test_file.xlsx";
             try
             {
-                dataBase.LoadFromExcel(filename);
+                DataBase.LoadFromExcel(filename);
             } catch (Exception ex)
             {
                 Assert.Fail(ex.Message);

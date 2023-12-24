@@ -52,13 +52,16 @@
             label3 = new Label();
             label2 = new Label();
             chooseUserButton = new Button();
-            groupBox1 = new GroupBox();
             dataPage = new TabPage();
             addRowButton = new Button();
             label1 = new Label();
-            textBox1 = new TextBox();
+            filterSkuTextBox = new TextBox();
             dataGridView = new DataGridView();
             checkoutPage = new TabPage();
+            coResetButton = new Button();
+            checkOutSearchTextBox = new TextBox();
+            label6 = new Label();
+            checkOutDataGrid = new DataGridView();
             barcodeLabel = new Label();
             textBoxBarcode = new TextBox();
             checkinPage = new TabPage();
@@ -67,6 +70,7 @@
             resetComboBox = new ComboBox();
             label5 = new Label();
             errorProvider1 = new ErrorProvider(components);
+            checkoutBindingSource = new BindingSource(components);
             menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             tabControl.SuspendLayout();
@@ -76,8 +80,10 @@
             dataPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridView).BeginInit();
             checkoutPage.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)checkOutDataGrid).BeginInit();
             adminPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)errorProvider1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)checkoutBindingSource).BeginInit();
             SuspendLayout();
             // 
             // openFileDialog
@@ -92,7 +98,7 @@
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
             menuStrip1.Padding = new Padding(7, 2, 0, 2);
-            menuStrip1.Size = new Size(1624, 28);
+            menuStrip1.Size = new Size(1620, 28);
             menuStrip1.TabIndex = 4;
             menuStrip1.Text = "menuStrip1";
             // 
@@ -138,7 +144,7 @@
             pictureBox1.AccessibleName = "Logo";
             pictureBox1.BackColor = SystemColors.ControlLight;
             pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
-            pictureBox1.Location = new Point(36, 32);
+            pictureBox1.Location = new Point(10, 17);
             pictureBox1.Margin = new Padding(5, 2, 5, 2);
             pictureBox1.Name = "pictureBox1";
             pictureBox1.Size = new Size(342, 126);
@@ -148,36 +154,35 @@
             // tabControl
             // 
             tabControl.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            tabControl.Appearance = TabAppearance.FlatButtons;
+            tabControl.Appearance = TabAppearance.Buttons;
             tabControl.Controls.Add(loginPage);
             tabControl.Controls.Add(dataPage);
             tabControl.Controls.Add(checkoutPage);
             tabControl.Controls.Add(checkinPage);
             tabControl.Controls.Add(adminPage);
             tabControl.Font = new Font("Verdana", 11.25F, FontStyle.Bold, GraphicsUnit.Point);
-            tabControl.ItemSize = new Size(150, 48);
+            tabControl.ItemSize = new Size(150, 40);
             tabControl.Location = new Point(0, 30);
             tabControl.Margin = new Padding(5, 2, 5, 2);
             tabControl.Name = "tabControl";
             tabControl.Padding = new Point(30, 5);
             tabControl.SelectedIndex = 0;
-            tabControl.Size = new Size(1804, 632);
+            tabControl.Size = new Size(2416, 927);
             tabControl.TabIndex = 9;
             tabControl.TabStop = false;
             tabControl.Selecting += tabControl_Selecting;
             // 
             // loginPage
             // 
-            loginPage.Controls.Add(loggedInBox);
             loginPage.Controls.Add(passwordGroupBox);
             loginPage.Controls.Add(chooseUserButton);
-            loginPage.Controls.Add(groupBox1);
             loginPage.Controls.Add(pictureBox1);
+            loginPage.Controls.Add(loggedInBox);
             loginPage.Location = new Point(4, 52);
             loginPage.Margin = new Padding(5, 2, 5, 2);
             loginPage.Name = "loginPage";
             loginPage.Padding = new Padding(5, 2, 5, 2);
-            loginPage.Size = new Size(1796, 576);
+            loginPage.Size = new Size(2408, 871);
             loginPage.TabIndex = 0;
             loginPage.Text = "Home";
             loginPage.ToolTipText = "Login Page";
@@ -187,17 +192,17 @@
             // 
             loggedInBox.Controls.Add(logoutButton);
             loggedInBox.Controls.Add(loggedInLabel);
-            loggedInBox.Location = new Point(434, 304);
+            loggedInBox.Location = new Point(427, 91);
             loggedInBox.Name = "loggedInBox";
-            loggedInBox.Size = new Size(386, 181);
+            loggedInBox.Size = new Size(374, 196);
             loggedInBox.TabIndex = 24;
             loggedInBox.TabStop = false;
             // 
             // logoutButton
             // 
-            logoutButton.Location = new Point(153, 113);
+            logoutButton.Location = new Point(54, 86);
             logoutButton.Name = "logoutButton";
-            logoutButton.Size = new Size(75, 28);
+            logoutButton.Size = new Size(127, 26);
             logoutButton.TabIndex = 1;
             logoutButton.Text = "Logout";
             logoutButton.UseVisualStyleBackColor = true;
@@ -220,43 +225,42 @@
             passwordGroupBox.Controls.Add(changePasswordButton);
             passwordGroupBox.Controls.Add(label3);
             passwordGroupBox.Controls.Add(label2);
-            passwordGroupBox.Location = new Point(434, 59);
+            passwordGroupBox.Location = new Point(427, 66);
             passwordGroupBox.Name = "passwordGroupBox";
-            passwordGroupBox.Size = new Size(386, 239);
+            passwordGroupBox.Size = new Size(470, 242);
             passwordGroupBox.TabIndex = 16;
             passwordGroupBox.TabStop = false;
             // 
             // loginButton
             // 
             loginButton.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
-            loginButton.Location = new Point(193, 124);
+            loginButton.Location = new Point(185, 161);
             loginButton.Name = "loginButton";
-            loginButton.Size = new Size(88, 23);
+            loginButton.Size = new Size(121, 29);
             loginButton.TabIndex = 19;
             loginButton.Text = "Login";
             loginButton.UseVisualStyleBackColor = true;
             // 
             // passwordTextBox
             // 
-            passwordTextBox.Location = new Point(178, 91);
+            passwordTextBox.Location = new Point(210, 89);
             passwordTextBox.Name = "passwordTextBox";
             passwordTextBox.PasswordChar = '*';
-            passwordTextBox.Size = new Size(121, 26);
+            passwordTextBox.Size = new Size(198, 26);
             passwordTextBox.TabIndex = 18;
             // 
             // comboBoxUsers
             // 
             comboBoxUsers.FormattingEnabled = true;
-            comboBoxUsers.Location = new Point(178, 51);
+            comboBoxUsers.Location = new Point(210, 46);
             comboBoxUsers.Name = "comboBoxUsers";
-            comboBoxUsers.Size = new Size(121, 26);
+            comboBoxUsers.Size = new Size(198, 26);
             comboBoxUsers.TabIndex = 17;
-            comboBoxUsers.SelectedIndexChanged += grace.tabs.HomeTab.comboBoxUsers_SelectedIndexChanged;
             // 
             // label4
             // 
             label4.AutoSize = true;
-            label4.Location = new Point(77, 91);
+            label4.Location = new Point(36, 92);
             label4.Name = "label4";
             label4.Size = new Size(88, 18);
             label4.TabIndex = 23;
@@ -267,7 +271,7 @@
             changePasswordButton.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
             changePasswordButton.Location = new Point(36, 161);
             changePasswordButton.Name = "changePasswordButton";
-            changePasswordButton.Size = new Size(129, 23);
+            changePasswordButton.Size = new Size(129, 29);
             changePasswordButton.TabIndex = 22;
             changePasswordButton.Text = "Change Password";
             changePasswordButton.UseVisualStyleBackColor = true;
@@ -285,7 +289,7 @@
             // 
             label2.AutoSize = true;
             label2.BackColor = SystemColors.Control;
-            label2.Location = new Point(77, 54);
+            label2.Location = new Point(36, 54);
             label2.Name = "label2";
             label2.Size = new Size(84, 18);
             label2.TabIndex = 16;
@@ -297,32 +301,21 @@
             chooseUserButton.Location = new Point(778, 335);
             chooseUserButton.Margin = new Padding(5, 2, 5, 2);
             chooseUserButton.Name = "chooseUserButton";
-            chooseUserButton.Size = new Size(0, 0);
+            chooseUserButton.Size = new Size(0, 295);
             chooseUserButton.TabIndex = 8;
             chooseUserButton.Text = "Choose User";
             chooseUserButton.UseVisualStyleBackColor = true;
-            // 
-            // groupBox1
-            // 
-            groupBox1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
-            groupBox1.Location = new Point(542, 59);
-            groupBox1.Margin = new Padding(5, 2, 5, 2);
-            groupBox1.Name = "groupBox1";
-            groupBox1.Padding = new Padding(5, 2, 5, 2);
-            groupBox1.Size = new Size(320, 0);
-            groupBox1.TabIndex = 7;
-            groupBox1.TabStop = false;
             // 
             // dataPage
             // 
             dataPage.Controls.Add(addRowButton);
             dataPage.Controls.Add(label1);
-            dataPage.Controls.Add(textBox1);
+            dataPage.Controls.Add(filterSkuTextBox);
             dataPage.Controls.Add(dataGridView);
             dataPage.Location = new Point(4, 52);
             dataPage.Name = "dataPage";
             dataPage.Padding = new Padding(11, 12, 11, 12);
-            dataPage.Size = new Size(1796, 576);
+            dataPage.Size = new Size(2408, 871);
             dataPage.TabIndex = 1;
             dataPage.Text = "Inventory";
             dataPage.ToolTipText = "Inventory for Patti";
@@ -336,7 +329,6 @@
             addRowButton.TabIndex = 4;
             addRowButton.Text = "Add Row";
             addRowButton.UseVisualStyleBackColor = true;
-            addRowButton.Click += addRowButton_Click;
             // 
             // label1
             // 
@@ -348,14 +340,13 @@
             label1.TabIndex = 3;
             label1.Text = "Filter SKU";
             // 
-            // textBox1
+            // filterSkuTextBox
             // 
-            textBox1.Location = new Point(15, 15);
-            textBox1.Margin = new Padding(4, 3, 4, 3);
-            textBox1.Name = "textBox1";
-            textBox1.Size = new Size(314, 26);
-            textBox1.TabIndex = 2;
-            textBox1.TextChanged += textBox1_TextChanged;
+            filterSkuTextBox.Location = new Point(15, 15);
+            filterSkuTextBox.Margin = new Padding(4, 3, 4, 3);
+            filterSkuTextBox.Name = "filterSkuTextBox";
+            filterSkuTextBox.Size = new Size(314, 26);
+            filterSkuTextBox.TabIndex = 2;
             // 
             // dataGridView
             // 
@@ -363,57 +354,95 @@
             dataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
             dataGridView.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.DisplayedCells;
             dataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView.Location = new Point(-4, 47);
+            dataGridView.Location = new Point(0, 49);
             dataGridView.Margin = new Padding(5, 2, 5, 2);
             dataGridView.Name = "dataGridView";
             dataGridView.RowHeadersWidth = 82;
             dataGridView.RowTemplate.Height = 41;
-            dataGridView.Size = new Size(1624, 527);
+            dataGridView.Size = new Size(2232, 527);
             dataGridView.TabIndex = 1;
-            dataGridView.CellBeginEdit += dataGridView_CellBeginEdit;
-            dataGridView.CellEndEdit += dataGridView_CellEndEdit;
-            dataGridView.CellMouseDoubleClick += dataGridView_CellMouseDoubleClick;
-            dataGridView.DataBindingComplete += dataGridView_DataBindingComplete;
-            dataGridView.Paint += dataGridView_Paint;
             // 
             // checkoutPage
             // 
+            checkoutPage.Controls.Add(coResetButton);
+            checkoutPage.Controls.Add(checkOutSearchTextBox);
+            checkoutPage.Controls.Add(label6);
+            checkoutPage.Controls.Add(checkOutDataGrid);
             checkoutPage.Controls.Add(barcodeLabel);
             checkoutPage.Controls.Add(textBoxBarcode);
-            checkoutPage.Location = new Point(4, 52);
+            checkoutPage.Location = new Point(4, 44);
             checkoutPage.Margin = new Padding(7);
             checkoutPage.Name = "checkoutPage";
-            checkoutPage.Size = new Size(1796, 576);
+            checkoutPage.Size = new Size(2408, 879);
             checkoutPage.TabIndex = 2;
             checkoutPage.Text = "Check Out";
             checkoutPage.ToolTipText = "Checkout Items";
             checkoutPage.UseVisualStyleBackColor = true;
             // 
+            // coResetButton
+            // 
+            coResetButton.Location = new Point(1067, 167);
+            coResetButton.Name = "coResetButton";
+            coResetButton.Size = new Size(137, 31);
+            coResetButton.TabIndex = 7;
+            coResetButton.Text = "Reset";
+            coResetButton.UseVisualStyleBackColor = true;
+            // 
+            // checkOutSearchTextBox
+            // 
+            checkOutSearchTextBox.Location = new Point(1237, 109);
+            checkOutSearchTextBox.Name = "checkOutSearchTextBox";
+            checkOutSearchTextBox.Size = new Size(265, 26);
+            checkOutSearchTextBox.TabIndex = 6;
+            // 
+            // label6
+            // 
+            label6.AutoSize = true;
+            label6.Location = new Point(1067, 117);
+            label6.Margin = new Padding(7, 0, 7, 0);
+            label6.Name = "label6";
+            label6.Size = new Size(160, 18);
+            label6.TabIndex = 5;
+            label6.Text = "Search Description";
+            // 
+            // checkOutDataGrid
+            // 
+            checkOutDataGrid.AllowUserToAddRows = false;
+            checkOutDataGrid.AllowUserToDeleteRows = false;
+            checkOutDataGrid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+            checkOutDataGrid.BorderStyle = BorderStyle.Fixed3D;
+            checkOutDataGrid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            checkOutDataGrid.Location = new Point(27, 50);
+            checkOutDataGrid.MultiSelect = false;
+            checkOutDataGrid.Name = "checkOutDataGrid";
+            checkOutDataGrid.RowHeadersWidth = 82;
+            checkOutDataGrid.RowTemplate.Height = 25;
+            checkOutDataGrid.Size = new Size(1018, 500);
+            checkOutDataGrid.TabIndex = 4;
+            // 
             // barcodeLabel
             // 
             barcodeLabel.AutoSize = true;
-            barcodeLabel.Location = new Point(889, 45);
+            barcodeLabel.Location = new Point(1067, 58);
             barcodeLabel.Margin = new Padding(7, 0, 7, 0);
             barcodeLabel.Name = "barcodeLabel";
             barcodeLabel.Size = new Size(118, 18);
-            barcodeLabel.TabIndex = 1;
+            barcodeLabel.TabIndex = 3;
             barcodeLabel.Text = "Scan Barcode";
             // 
             // textBoxBarcode
             // 
-            textBoxBarcode.Location = new Point(1005, 38);
+            textBoxBarcode.Location = new Point(1237, 50);
             textBoxBarcode.Margin = new Padding(7);
             textBoxBarcode.Name = "textBoxBarcode";
-            textBoxBarcode.Size = new Size(434, 26);
-            textBoxBarcode.TabIndex = 0;
-            textBoxBarcode.TextChanged += textBoxBarcode_TextChanged;
-            textBoxBarcode.KeyDown += textBoxBarcode_KeyDown;
+            textBoxBarcode.Size = new Size(265, 26);
+            textBoxBarcode.TabIndex = 2;
             // 
             // checkinPage
             // 
             checkinPage.Location = new Point(4, 52);
             checkinPage.Name = "checkinPage";
-            checkinPage.Size = new Size(1796, 576);
+            checkinPage.Size = new Size(2408, 871);
             checkinPage.TabIndex = 4;
             checkinPage.Text = "Check In";
             checkinPage.UseVisualStyleBackColor = true;
@@ -425,9 +454,9 @@
             adminPage.Controls.Add(resetPasswordButton);
             adminPage.Controls.Add(resetComboBox);
             adminPage.Controls.Add(label5);
-            adminPage.Location = new Point(4, 52);
+            adminPage.Location = new Point(4, 44);
             adminPage.Name = "adminPage";
-            adminPage.Size = new Size(1796, 576);
+            adminPage.Size = new Size(2408, 879);
             adminPage.TabIndex = 3;
             adminPage.Text = "Admin";
             adminPage.ToolTipText = "Admin Settings";
@@ -468,7 +497,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             AutoSize = true;
             BackColor = Color.White;
-            ClientSize = new Size(1624, 661);
+            ClientSize = new Size(1620, 661);
             Controls.Add(tabControl);
             Controls.Add(menuStrip1);
             Font = new Font("Segoe UI", 10.125F, FontStyle.Regular, GraphicsUnit.Point);
@@ -483,7 +512,6 @@
             SizeGripStyle = SizeGripStyle.Show;
             Text = "VivianGrace";
             Load += Vivian_Load;
-            Resize += Vivian_Resize;
             menuStrip1.ResumeLayout(false);
             menuStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
@@ -498,9 +526,11 @@
             ((System.ComponentModel.ISupportInitialize)dataGridView).EndInit();
             checkoutPage.ResumeLayout(false);
             checkoutPage.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)checkOutDataGrid).EndInit();
             adminPage.ResumeLayout(false);
             adminPage.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)errorProvider1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)checkoutBindingSource).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -516,24 +546,16 @@
         private PictureBox pictureBox1;
         private TabPage loginPage;
         private Button chooseUserButton;
-        private GroupBox groupBox1;
         private TabPage dataPage;
-        private DataGridView dataGridView;
         private TabPage checkoutPage;
-        private TextBox textBoxBarcode;
-        private Label barcodeLabel;
         private Label label1;
-        private TextBox textBox1;
         private TabPage adminPage;
-        private Button addRowButton;
         private ErrorProvider errorProvider1;
         private Label label4;
-        private Button changePasswordButton;
         private Label label3;
         private Label label2;
         private Label label5;
         private TabPage checkinPage;
-        public Button logoutButton;
         public Label loggedInLabel;
         public ComboBox resetComboBox;
         public Button resetPasswordButton;
@@ -543,5 +565,17 @@
         public TextBox passwordTextBox;
         public ComboBox comboBoxUsers;
         public GroupBox loggedInBox;
+        internal TextBox filterSkuTextBox;
+        internal Button addRowButton;
+        internal DataGridView dataGridView;
+        internal Button changePasswordButton;
+        internal Button logoutButton;
+        private Label barcodeLabel;
+        internal DataGridView checkOutDataGrid;
+        internal BindingSource checkoutBindingSource;
+        private Label label6;
+        internal TextBox checkOutSearchTextBox;
+        internal TextBox textBoxBarcode;
+        internal Button coResetButton;
     }
 }

@@ -11,6 +11,7 @@
  * Year: 2023
  */
 using grace.data;
+using grace.data.models;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using NLog;
@@ -22,11 +23,12 @@ using static OfficeOpenXml.ExcelErrorValue;
 
 namespace grace
 {
-    internal class DataGridLoader
+    internal class DataGridLoader : IDisposable
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         private DataTable dataTable = new DataTable();
         private Dictionary<long, GraceRow> graceRows = new Dictionary<long, GraceRow>();
+        private bool disposed;
 
         public GraceDbContext graceDb { get; private set; }
 
@@ -63,20 +65,14 @@ namespace grace
                 var totalList = graceDb.Totals
                     .Where(t => t.GraceId == item.ID)
                     .OrderByDescending(t => t.date_field)
-                    .Take(2)
+                    .Take(1)
                     .ToList();
 
                 if (totalList != null)
                 {
-                    if (totalList.Count == 2)
+                    if (totalList.Count == 1)
                     {
                         row.Total = totalList[0].total;
-                        row.PreviousTotal = totalList[1].total;
-                    }
-                    else if (totalList.Count == 1)
-                    {
-                        row.Total = totalList[0].total;
-
                     }
                     else
                     {
@@ -118,6 +114,32 @@ namespace grace
                 graceDb.GraceRows.Add(row);
             }
             graceDb.SaveChanges();
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        // Protected method for actual resource cleanup
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposed)
+            {
+                if (disposing)
+                {
+                    graceDb.Dispose();
+                }
+
+                disposed = true;
+            }
+        }
+
+        // Destructor (Finalizer) to ensure cleanup in case Dispose is not called
+        ~DataGridLoader()
+        {
+            Dispose(false);
         }
     }
 

@@ -36,6 +36,7 @@ namespace gracetest
         {
             // Create a mock SQLite connection and command
             dataBase = new DataBase(testDbFile);
+            connectionString = DataBase.ConnectionString;
             graceDb = new GraceDbContext();
         }
 
@@ -49,8 +50,8 @@ namespace gracetest
         [TestMethod]
         public void Test_DataBase()
         {
-            string testConnectString = "Data Source=C:\\Users\\tom\\source\\" + 
-                "repos\\grace\\gracetest\\bin\\Debug\\net6.0-windows\\" + 
+            string testConnectString = "Data Source=C:\\Users\\tom\\source\\" +
+                "repos\\whiteacrellc\\grace\\gracetest\\bin\\Debug\\net7.0-windows7.0\\" + 
                 "testgrace.db;Mode=ReadWriteCreate;Cache=Private";
 
             Assert.IsNotNull(connectionString);
@@ -60,9 +61,9 @@ namespace gracetest
         [TestMethod]
         public void TestMethod_LoadFromExcel()
         {
-            string filename = "C:\\Users\\tom\\source\\repos\\grace\\gracetest\\" 
-                + "test_file.xlsx";
-            dataBase.LoadFromExcel(filename);
+            string filename = "C:\\Users\\tom\\source\\repos\\whiteacrellc\\"
+                + "grace\\gracetest\\test_file.xlsx";
+            DataBase.LoadFromExcel(filename);
 
 
             Assert.AreEqual(graceDb.Graces.ToList().Count, 19);

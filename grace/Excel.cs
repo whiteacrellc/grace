@@ -27,6 +27,7 @@ using System.Threading.Tasks;
 using static NLog.LayoutRenderers.Wrappers.ReplaceLayoutRendererWrapper;
 using System.Windows.Forms;
 using LicenseContext = OfficeOpenXml.LicenseContext;
+using System.IO;
 
 namespace grace
 {
@@ -83,9 +84,9 @@ namespace grace
             }
             var trimmedKey = key.Trim();
             r.Collection = trimmedKey;
-            if (collections.ContainsKey(trimmedKey))
+            if (collections.TryGetValue(trimmedKey, out List<Row>? value))
             {
-                List<Row> rows = collections[trimmedKey];
+                List<Row> rows = value;
                 rows.Add(r);
                 collections[trimmedKey] = rows;
             }
@@ -104,9 +105,9 @@ namespace grace
             }
             var trimmedkey = key.Trim();
             var tcol = col.Trim();
-            if (items.ContainsKey(trimmedkey))
+            if (items.TryGetValue(trimmedkey, out List<string>? value))
             {
-                List<string> skus = items[trimmedkey];
+                List<string> skus = value;
                 skus.Add(tcol);
             }
             else
@@ -118,7 +119,7 @@ namespace grace
 
         }
 
-        private int checkInt(object n)
+        private static int checkInt(object n)
         {
             int ret = 0;
             try
@@ -139,7 +140,7 @@ namespace grace
             }
             return ret;
         }
-        private string checkString(object n)
+        private static string checkString(object n)
         {
             string ret = "";
             if (n is string)
@@ -161,7 +162,7 @@ namespace grace
             return ret.Trim();
         }
 
-        private string parseColumnHeader(string header, int daysBack, out DateTime dateTime)
+        private static string parseColumnHeader(string header, int daysBack, out DateTime dateTime)
         {
             dateTime = DateTime.Now.AddDays(daysBack);
 

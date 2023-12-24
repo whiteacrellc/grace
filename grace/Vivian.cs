@@ -36,11 +36,16 @@ namespace grace
 
         private StringBuilder sb = new StringBuilder();
         private bool readyForNewCode = true;
-        private DataGridLoader dataGridLoader;
-        private BindingSource bindingSource1;
+
+
+
+        // To keep this file a reasonable size put all tab code and callbacks
+        // in their own class
         private HomeTab homeTab;
         private AdminTab adminTab;
-
+        private DataTab dataTab;
+        private CheckInTab checkInTab;
+        private CheckOutTab checkOutTab;
 
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
@@ -57,12 +62,14 @@ namespace grace
 
 
             dataGridView.AutoGenerateColumns = true;
-            bindingSource1 = new BindingSource();
-            dataGridView.DataSource = bindingSource1;
+
 
             // Init the tab page classes
             homeTab = new HomeTab(this);
             adminTab = new AdminTab(this);
+            dataTab = new DataTab(this);
+            checkOutTab = new CheckOutTab(this);
+            checkInTab = new CheckInTab(this);
 
         }
 
@@ -123,37 +130,26 @@ namespace grace
             // Loads the preferences into the globals singleton
             DataBase data = new DataBase();
 
-            homeTab.InitializeComboBox();
-            adminTab.InitializeComboBox();
+            // Load all the tab classes
+            homeTab.Load();
+            adminTab.Load();
 
-            if (data.HaveData() == false)
-            {
-                dataPage.Hide();
-            }
-            else
+            if (DataBase.HaveData())
             {
                 try
                 {
-                    dataGridLoader = new DataGridLoader();
-                    bindingSource1.DataSource = dataGridLoader.getData();
-                    RemoveColumnsByName("ID", "Grace", "GraceId");
+                    dataTab.Load();
 
                 }
                 catch (Exception ex)
                 {
                     logger.Error(ex);
-                    data.InitializeDatabase();
+                    DataBase.InitializeDatabase();
                 }
             }
+            checkInTab.Load();
+            checkOutTab.Load();
 
-            tabControl.Height = this.Height;
-            tabControl.Width = this.Width;
-            dataGridView.Height = tabControl.Height;
-            dataGridView.Width = tabControl.Width;
-            dataPage.Height = dataGridView.Height;
-            dataPage.Width = tabControl.Width;
-
-            loggedInBox.Hide();
         }
 
 
@@ -186,7 +182,7 @@ namespace grace
                     er.ReadExcelFile(filePath);
 
                     DataBase data = new DataBase();
-                    data.LoadFromExcel(filePath);
+                    DataBase.LoadFromExcel(filePath);
                 }
             }
             catch (Exception ex)
@@ -199,14 +195,8 @@ namespace grace
             generateReport();
 
             EnableReportButton(true);
-            if (dataGridLoader == null)
-            {
-                dataGridLoader = new DataGridLoader();
-                dataGridView.DataSource = bindingSource1;
-            }
-            dataGridLoader.LoadBindingTable();
-            bindingSource1.DataSource = dataGridLoader.graceDb.GraceRows.ToList();
-            RemoveColumnsByName("ID", "Grace", "GraceId");
+
+            dataTab.BindDataSource();
         }
 
         private void saveReportToolStripMenuItem_Click(object sender, EventArgs e)
@@ -249,191 +239,6 @@ namespace grace
             }
         }
 
-        private void textBoxBarcode_TextChanged(object sender, EventArgs e)
-        {
-            //TextBox box = (TextBox)sender;
-            //textBoxBarcode.Text += box.Text;
-        }
-
-        private void formatTotals()
-        {
-
-            int numRows = dataGridView.Rows.Count;
-            int numCols = dataGridView.Columns.Count;
-            if (numCols > 14)
-            {
-                return;
-            }
-            for (int i = 0; i < numRows; i++)
-            {
-                DataGridViewRow row = dataGridView.Rows[i];
-
-                if (row == null || row.Cells[12].Value == null) { continue; }
-
-                // Compare the values of the two columns
-                int value1 = (int)row.Cells[12].Value;
-                int value2 = (int)row.Cells[11].Value;
-
-                if (value1 != value2)
-                {
-                    // Set the background color to yellow if values are not equal
-                    row.Cells[12].Style.BackColor = Color.Yellow;
-                }
-            }
-
-        }
-
-        private void dataGridView_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
-        {
-            RemoveColumnsByName("ID", "Grace", "GraceId");
-        }
-
-        private void Vivian_Resize(object sender, EventArgs e)
-        {
-
-            tabControl.Height = this.Height;
-            tabControl.Width = this.Width;
-            dataGridView.Height = tabControl.Height;
-            dataGridView.Width = tabControl.Width;
-            dataPage.Height = dataGridView.Height;
-            dataPage.Width = tabControl.Width;
-        }
-
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
-            string searchTerm = textBox1.Text;
-
-
-            if (!string.IsNullOrWhiteSpace(searchTerm))
-            {
-                // Query the DbContext to filter products based on the "Sku" column
-                var filteredProducts = dataGridLoader.graceDb.GraceRows
-                    .Where(p => p.Sku.Contains(searchTerm))
-                    .ToList();
-
-                // Bind the filtered products to the DataGridView
-                bindingSource1.DataSource = filteredProducts;
-                // dataGridView.DataSource = filteredProducts;
-            }
-            else
-            {
-                // If the search box is empty, show all products
-                bindingSource1.DataSource = dataGridLoader.getData();
-                // dataGridView.DataSource = dataGridLoader.graceDb.GraceRows.ToList();
-            }
-            RemoveColumnsByName("ID", "Grace", "GraceId");
-        }
-
-        private void RemoveColumnsByName(params string[] columnNames)
-        {
-            foreach (string columnName in columnNames)
-            {
-                if (dataGridView.Columns.Contains(columnName))
-                {
-                    dataGridView.Columns.Remove(columnName);
-                }
-            }
-        }
-
-        private void dataGridView_Paint(object sender, PaintEventArgs e)
-        {
-            formatTotals();
-        }
-
-        private void dataGridView_CellEndEdit(object sender, DataGridViewCellEventArgs e)
-        {
-            string User = Globals.GetInstance().CurrentUser;
-
-            // Get the modified cell value and the corresponding product
-            int rowIndex = e.RowIndex;
-            int columnIndex = e.ColumnIndex;
-            object cellValue = dataGridView.Rows[rowIndex].Cells[columnIndex].Value;
-
-            try
-            {
-                int newTotal = Convert.ToInt32(cellValue);
-
-                if (columnIndex == 12) // Assuming the second column is the "Totals" column
-                {
-                    // Update the corresponding product in the DbContext
-                    int id = Convert.ToInt32(dataGridView.Rows[rowIndex].Cells[0].Value); // Assuming the first column is the "Id" column
-                    var graceRow = dataGridLoader.graceDb.GraceRows.Find(id);
-                    if (graceRow != null)
-                    {
-                        //var graceRow = dataGridLoader.graceDb.GraceRows.Where(t => t.GraceId == grace.ID);
-                        var grace = dataGridLoader.graceDb.Graces.First(t => t.ID == graceRow.GraceId);
-
-                        if (grace != null)
-                        {
-                            var total = new Total
-                            {
-                                date_field = DateTime.Now,
-                                total = newTotal,
-                                GraceId = id
-                            };
-                            grace.Totals.Add(total);
-                            graceRow.PreviousTotal = graceRow.Total;
-                            graceRow.Total = newTotal;
-                            dataGridLoader.graceDb.SaveChanges(); // Save changes to the database
-                            logger.Info($"{total.date_field} {User} changed {grace.Sku} total to {newTotal}");
-                        }
-                    }
-                }
-            }
-            catch
-            {
-                int id = (int)dataGridView.Rows[rowIndex].Cells[0].Value;
-                var graceRow = dataGridLoader.graceDb.GraceRows.Find(id);
-                if (graceRow != null)
-                {
-                    if (columnIndex == 12) // Assuming the second column is the "Name" column
-                    {
-                        dataGridView.Rows[rowIndex].Cells[13].Value = graceRow.Total;
-                    }
-                }
-            }
-
-        }
-
-        private void dataGridView_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
-        {
-            int rowIndex = e.RowIndex;
-            DataGridViewRow row = dataGridView.Rows[rowIndex];
-            using (EditRowForm editRowForm = new EditRowForm(row))
-            {
-                DialogResult result = editRowForm.ShowDialog();
-                if (result == DialogResult.OK)
-                {
-                    // we need to reload the grid.
-                    bindingSource1.DataSource = dataGridLoader.getData();
-                    RemoveColumnsByName("ID", "Grace", "GraceId");
-                }
-            }
-        }
-
-        private void dataGridView_CellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
-        {
-            int columnIndex = e.ColumnIndex;
-            if (columnIndex < 13)
-            {
-                e.Cancel = true; // Cancel the edit for the first 12 columns
-            }
-        }
-
-        private void addRowButton_Click(object sender, EventArgs e)
-        {
-            using (EditRowForm editRowForm = new EditRowForm(null))
-            {
-                DialogResult dialogResult = editRowForm.ShowDialog();
-                if (dialogResult == DialogResult.OK)
-                {
-                    bindingSource1.DataSource = dataGridLoader.getData();
-                    RemoveColumnsByName("ID", "Grace", "GraceId");
-                }
-            }
-        }
-
-
         private void tabControl_Selecting(object sender, TabControlCancelEventArgs e)
         {
             string username = Globals.GetInstance().CurrentUser;
@@ -449,6 +254,11 @@ namespace grace
                 }
 
             }
+        }
+
+        private void passwordGroupBox_Enter(object sender, EventArgs e)
+        {
+
         }
     }
 }
