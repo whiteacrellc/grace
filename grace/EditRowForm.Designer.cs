@@ -32,7 +32,7 @@
             cancelButton = new Button();
             panel1 = new Panel();
             deltalTextBox = new TextBox();
-            label7 = new Label();
+            adjustInventoryLabel = new Label();
             currentTextBox = new TextBox();
             label6 = new Label();
             barCodeTextBox = new TextBox();
@@ -64,7 +64,7 @@
             // panel1
             // 
             panel1.Controls.Add(deltalTextBox);
-            panel1.Controls.Add(label7);
+            panel1.Controls.Add(adjustInventoryLabel);
             panel1.Controls.Add(currentTextBox);
             panel1.Controls.Add(label6);
             panel1.Controls.Add(barCodeTextBox);
@@ -91,14 +91,14 @@
             deltalTextBox.TabIndex = 17;
             deltalTextBox.TextChanged += deltalTextBox_TextChanged;
             // 
-            // label7
+            // adjustInventoryLabel
             // 
-            label7.AutoSize = true;
-            label7.Location = new Point(27, 229);
-            label7.Name = "label7";
-            label7.Size = new Size(94, 15);
-            label7.TabIndex = 16;
-            label7.Text = "Adjust Inventory";
+            adjustInventoryLabel.AutoSize = true;
+            adjustInventoryLabel.Location = new Point(27, 229);
+            adjustInventoryLabel.Name = "adjustInventoryLabel";
+            adjustInventoryLabel.Size = new Size(94, 15);
+            adjustInventoryLabel.TabIndex = 16;
+            adjustInventoryLabel.Text = "Adjust Inventory";
             // 
             // currentTextBox
             // 
@@ -268,7 +268,7 @@
         private TextBox barCodeTextBox;
         private Label label5;
         private TextBox deltalTextBox;
-        private Label label7;
+        private Label adjustInventoryLabel;
         private TextBox currentTextBox;
         private Label label6;
         private Button deleteButton;

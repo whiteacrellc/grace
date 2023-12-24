@@ -13,22 +13,22 @@
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using grace.data.models;
 
 namespace grace.data
 {
 
     public class GraceDbContext : DbContext
     {
-        public DbSet<Grace> Graces { get; set; }
-        public DbSet<CollectionName> Collections { get; set; }
-        public DbSet<Total> Totals { get; set; }
-        public DbSet<GraceRow> GraceRows { get; set; }
-        public DbSet<User> Users { get; set; }
-        public DbSet<Pulled> PulledDb { get; set; }
-        public DbSet<Prefs> PrefsDb { get; set; }
+        public virtual DbSet<Grace> Graces { get; set; }
+        public virtual DbSet<CollectionName> Collections { get; set; }
+        public virtual DbSet<Total> Totals { get; set; }
+        public virtual DbSet<GraceRow> GraceRows { get; set; }
+        public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<Pulled> PulledDb { get; set; }
+        public virtual DbSet<Prefs> PrefsDb { get; set; }
         public static string ConnectionString { get => connectionString; set => connectionString = value; }
 
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         private static string connectionString;
 
         public GraceDbContext(string connectionString)
@@ -42,9 +42,9 @@ namespace grace.data
                 GraceDbContext.ConnectionString = DataBase.ConnectionString;
             }
         }
-#pragma warning restore CS8618 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<Grace>(entity =>
             {
@@ -66,8 +66,15 @@ namespace grace.data
             modelBuilder.Entity<User>(entity =>
             {
                 entity.ToTable("Users");
+
                 // Primary key
                 entity.HasKey(e => e.ID);
+
+                entity.Property(e => e.Username)
+                    .IsRequired();
+
+                entity.Property(e => e.Password)
+                    .IsRequired();
 
             });
 
@@ -76,7 +83,6 @@ namespace grace.data
                 entity.ToTable("Prefs");
                 // Primary key
                 entity.HasKey(e => e.ID);
-
                 // Properties
                 entity.Property(e => e.Name)
                     .IsRequired();
@@ -97,8 +103,7 @@ namespace grace.data
 
                 entity.HasOne(e => e.Grace)
                   .WithMany()
-                  .HasForeignKey(e => e.GraceId)
-                  .OnDelete(DeleteBehavior.Cascade);
+                  .HasForeignKey(e => e.GraceId);
 
             });
 
@@ -111,8 +116,7 @@ namespace grace.data
 
                 entity.HasOne(e => e.Grace)
                   .WithMany()
-                  .HasForeignKey(e => e.GraceId)
-                  .OnDelete(DeleteBehavior.Cascade);
+                  .HasForeignKey(e => e.GraceId);
 
             });
 
@@ -124,8 +128,7 @@ namespace grace.data
 
                 entity.HasOne(e => e.Grace)
                   .WithMany()
-                  .HasForeignKey(e => e.GraceId)
-                  .OnDelete(DeleteBehavior.Cascade);
+                  .HasForeignKey(e => e.GraceId);
 
             });
 
@@ -143,18 +146,15 @@ namespace grace.data
                 // Relationships
                 entity.HasOne(e => e.User)
                     .WithMany()
-                    .HasForeignKey(e => e.UserId)
-                    .OnDelete(DeleteBehavior.Cascade); // Choose the appropriate delete behavior
+                    .HasForeignKey(e => e.UserId); // Choose the appropriate delete behavior
 
                 entity.HasOne(e => e.Grace)
                     .WithMany()
-                    .HasForeignKey(e => e.GraceId)
-                    .OnDelete(DeleteBehavior.Cascade); // Choose the appropriate delete behavior
+                    .HasForeignKey(e => e.GraceId); // Choose the appropriate delete behavior
 
                 entity.HasOne(e => e.Collection)
                     .WithMany()
-                    .HasForeignKey(e => e.CollectionId)
-                    .OnDelete(DeleteBehavior.Restrict); // Choose the appropriate delete behavior
+                    .HasForeignKey(e => e.CollectionId); // Choose the appropriate delete behavior
             });
 
             base.OnModelCreating(modelBuilder);
@@ -166,154 +166,4 @@ namespace grace.data
             optionsBuilder.UseSqlite(ConnectionString).EnableSensitiveDataLogging();
         }
     }
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-    [Table("Graces")]
-    public class Grace
-    {
-        [Key]
-        public int ID { get; set; }
-        [Required]
-
-        public string Sku { get; set; }
-        [Required]
-        public string Description { get; set; }
-        [Required]
-        public string Brand { get; set; }
-
-        public string? Availability { get; set; }
-        public string? Barcode { get; set; }
-
-        public List<Total> Totals { get; set; }
-
-        public List<CollectionName> Collections { get; set; }
-
-        public List<GraceRow> GraceRows { get; set; }
-
-        public List<Pulled> PulledDb { get; set; }
-    }
-
-    [Table("Totals")]
-    public class Total
-    {
-        [Key]
-        public int ID { get; set; }
-        [Required]
-        public DateTime date_field { get; set; }
-        public int total { get; set; }
-
-        // Foreign key property
-        public int GraceId { get; set; }
-        // Navigation property
-        [ForeignKey("GraceId")]
-        public Grace Grace { get; set; }
-
-    }
-
-    [Table("Collections")]
-    public class CollectionName
-    {
-        [Key]
-        public int ID { get; set; }
-        public string? Name { get; set; }
-        // Foreign key property
-        public int GraceId { get; set; }
-        // Navigation property
-        [ForeignKey("GraceId")]
-        public Grace Grace { get; set; }
-
-    }
-
-    [Table("GraceRows")]
-    public class GraceRow
-    {
-        [Key]
-        public int ID { get; set; }
-        [Required]
-
-        public string Sku { get; set; }
-        [Required]
-        public string Description { get; set; }
-        [Required]
-        public string Brand { get; set; }
-
-        public string? Availability { get; set; }
-        public string? BarCode { get; set; }
-        public string? Col1 { get; set; }
-        public string? Col2 { get; set; }
-        public string? Col3 { get; set; }
-        public string? Col4 { get; set; }
-        public string? Col5 { get; set; }
-        public string? Col6 { get; set; }
-        public int Total { get; set; }
-
-        public int GraceId { get; set; }
-        [ForeignKey("GraceId")]
-        public Grace Grace { get; set; }
-    }
-
-    [Table("Users")]
-    public class User
-    {
-        [Key]
-        public int ID { get; set; }
-
-        public string Username { get; set; }
-
-        public string Password { get; set; }
-
-        public string ResetAnswer { get; set; } = string.Empty;
-
-        public int ResetAnswerIndex { get; set; }
-
-        public bool Admin { get; set; } = false;
- 
-        public bool ResetPassword { get; set; } = true;
-
-        public List<Pulled> PulledDb { get; set; }
-
-    }
-
-    [Table("PulledDb")]
-    public class Pulled
-    {
-        [Key]
-        public int ID { get; set; }
-        public string Comment { get; set; } = String.Empty;
-
-        public DateTime LastUpdated { get; set; } = DateTime.Now;
-
-        public int Amount { get; set; } = 0;
-
-        [Required]
-        public int CurrentTotal { get; set; } = 0;
-
-        public int UserId { get; set; }
-        [ForeignKey("UserId")]
-
-        public User User { get; set; }
-
-        public int GraceId { get; set; }
-        [ForeignKey("GraceId")]
-
-        public Grace Grace { get; set; }
-
-        public int CollectionId { get; set; }
-        [ForeignKey("CollectionId")]
-        public CollectionName Collection { get; set; }
-    }
-
-    [Table("Prefs")]
-    public class Prefs
-    {
-        [Key]
-        public int ID { get; set; }
-
-        [Required]
-        public string Name { get; set; }
-
-        [Required]
-        public string Value { get; set; }
-
-    }
-#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 }

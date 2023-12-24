@@ -15,6 +15,16 @@
     <AnalysisLevel>preview-recommended</AnalysisLevel>
     <ApplicationHighDpiMode>SystemAware</ApplicationHighDpiMode>
     <ForceDesignerDpiUnaware>true</ForceDesignerDpiUnaware>
+    <NeutralLanguage>en-US</NeutralLanguage>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <NoWarn>1701;1702;8600;8602;CA1305;CA1707;CA1822;CA1805;CS8604;CA1860;CA1309</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <NoWarn>1701;1702;8600;8602;CA1305;CA1707;CA1822;CA1805;CS8604;CA1860;CA1309</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
@@ -65,10 +75,18 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <None Update="README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
   
   <ItemGroup>
     <GlobalAnalyzerConfigFiles Include="C:\Users\tom\source\repos\grace\grace\.globalconfig" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <EditorConfigFiles Remove="C:\Users\tom\source\repos\whiteacrellc\grace\grace\.globalconfig" />
   </ItemGroup>
   
 </Project>

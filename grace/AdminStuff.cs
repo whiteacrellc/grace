@@ -11,6 +11,7 @@
  * Year: 2023
  */
 using grace.data;
+using grace.data.models;
 using NLog;
 using System;
 using System.Collections.Generic;

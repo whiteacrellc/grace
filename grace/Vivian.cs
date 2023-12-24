@@ -134,7 +134,7 @@ namespace grace
             homeTab.Load();
             adminTab.Load();
 
-            if (data.HaveData())
+            if (DataBase.HaveData())
             {
                 try
                 {
@@ -144,7 +144,7 @@ namespace grace
                 catch (Exception ex)
                 {
                     logger.Error(ex);
-                    data.InitializeDatabase();
+                    DataBase.InitializeDatabase();
                 }
             }
             checkInTab.Load();
@@ -182,7 +182,7 @@ namespace grace
                     er.ReadExcelFile(filePath);
 
                     DataBase data = new DataBase();
-                    data.LoadFromExcel(filePath);
+                    DataBase.LoadFromExcel(filePath);
                 }
             }
             catch (Exception ex)
