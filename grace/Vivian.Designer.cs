@@ -40,18 +40,16 @@
             pictureBox1 = new PictureBox();
             tabControl = new TabControl();
             loginPage = new TabPage();
-            loggedInBox = new GroupBox();
-            logoutButton = new Button();
-            loggedInLabel = new Label();
             passwordGroupBox = new GroupBox();
             loginButton = new Button();
             passwordTextBox = new TextBox();
             comboBoxUsers = new ComboBox();
             label4 = new Label();
             changePasswordButton = new Button();
-            label3 = new Label();
             label2 = new Label();
-            chooseUserButton = new Button();
+            loggedInBox = new GroupBox();
+            logoutButton = new Button();
+            loggedInLabel = new Label();
             dataPage = new TabPage();
             addRowButton = new Button();
             label1 = new Label();
@@ -75,8 +73,8 @@
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             tabControl.SuspendLayout();
             loginPage.SuspendLayout();
-            loggedInBox.SuspendLayout();
             passwordGroupBox.SuspendLayout();
+            loggedInBox.SuspendLayout();
             dataPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridView).BeginInit();
             checkoutPage.SuspendLayout();
@@ -98,7 +96,7 @@
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
             menuStrip1.Padding = new Padding(7, 2, 0, 2);
-            menuStrip1.Size = new Size(1620, 28);
+            menuStrip1.Size = new Size(2180, 28);
             menuStrip1.TabIndex = 4;
             menuStrip1.Text = "menuStrip1";
             // 
@@ -165,9 +163,9 @@
             tabControl.Location = new Point(0, 30);
             tabControl.Margin = new Padding(5, 2, 5, 2);
             tabControl.Name = "tabControl";
-            tabControl.Padding = new Point(30, 5);
+            tabControl.Padding = new Point(5, 5);
             tabControl.SelectedIndex = 0;
-            tabControl.Size = new Size(2416, 927);
+            tabControl.Size = new Size(2200, 1150);
             tabControl.TabIndex = 9;
             tabControl.TabStop = false;
             tabControl.Selecting += tabControl_Selecting;
@@ -175,46 +173,17 @@
             // loginPage
             // 
             loginPage.Controls.Add(passwordGroupBox);
-            loginPage.Controls.Add(chooseUserButton);
             loginPage.Controls.Add(pictureBox1);
             loginPage.Controls.Add(loggedInBox);
-            loginPage.Location = new Point(4, 52);
+            loginPage.Location = new Point(4, 44);
             loginPage.Margin = new Padding(5, 2, 5, 2);
             loginPage.Name = "loginPage";
             loginPage.Padding = new Padding(5, 2, 5, 2);
-            loginPage.Size = new Size(2408, 871);
+            loginPage.Size = new Size(2192, 1102);
             loginPage.TabIndex = 0;
             loginPage.Text = "Home";
             loginPage.ToolTipText = "Login Page";
             loginPage.UseVisualStyleBackColor = true;
-            // 
-            // loggedInBox
-            // 
-            loggedInBox.Controls.Add(logoutButton);
-            loggedInBox.Controls.Add(loggedInLabel);
-            loggedInBox.Location = new Point(427, 91);
-            loggedInBox.Name = "loggedInBox";
-            loggedInBox.Size = new Size(374, 196);
-            loggedInBox.TabIndex = 24;
-            loggedInBox.TabStop = false;
-            // 
-            // logoutButton
-            // 
-            logoutButton.Location = new Point(54, 86);
-            logoutButton.Name = "logoutButton";
-            logoutButton.Size = new Size(127, 26);
-            logoutButton.TabIndex = 1;
-            logoutButton.Text = "Logout";
-            logoutButton.UseVisualStyleBackColor = true;
-            // 
-            // loggedInLabel
-            // 
-            loggedInLabel.AutoSize = true;
-            loggedInLabel.Location = new Point(54, 39);
-            loggedInLabel.Name = "loggedInLabel";
-            loggedInLabel.Size = new Size(57, 18);
-            loggedInLabel.TabIndex = 0;
-            loggedInLabel.Text = "label5";
             // 
             // passwordGroupBox
             // 
@@ -223,7 +192,6 @@
             passwordGroupBox.Controls.Add(comboBoxUsers);
             passwordGroupBox.Controls.Add(label4);
             passwordGroupBox.Controls.Add(changePasswordButton);
-            passwordGroupBox.Controls.Add(label3);
             passwordGroupBox.Controls.Add(label2);
             passwordGroupBox.Location = new Point(427, 66);
             passwordGroupBox.Name = "passwordGroupBox";
@@ -276,15 +244,6 @@
             changePasswordButton.Text = "Change Password";
             changePasswordButton.UseVisualStyleBackColor = true;
             // 
-            // label3
-            // 
-            label3.AutoSize = true;
-            label3.Location = new Point(77, 87);
-            label3.Name = "label3";
-            label3.Size = new Size(88, 18);
-            label3.TabIndex = 21;
-            label3.Text = "Password";
-            // 
             // label2
             // 
             label2.AutoSize = true;
@@ -295,16 +254,33 @@
             label2.TabIndex = 16;
             label2.Text = "Pick User";
             // 
-            // chooseUserButton
+            // loggedInBox
             // 
-            chooseUserButton.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            chooseUserButton.Location = new Point(778, 335);
-            chooseUserButton.Margin = new Padding(5, 2, 5, 2);
-            chooseUserButton.Name = "chooseUserButton";
-            chooseUserButton.Size = new Size(0, 295);
-            chooseUserButton.TabIndex = 8;
-            chooseUserButton.Text = "Choose User";
-            chooseUserButton.UseVisualStyleBackColor = true;
+            loggedInBox.Controls.Add(logoutButton);
+            loggedInBox.Controls.Add(loggedInLabel);
+            loggedInBox.Location = new Point(427, 91);
+            loggedInBox.Name = "loggedInBox";
+            loggedInBox.Size = new Size(374, 196);
+            loggedInBox.TabIndex = 24;
+            loggedInBox.TabStop = false;
+            // 
+            // logoutButton
+            // 
+            logoutButton.Location = new Point(54, 86);
+            logoutButton.Name = "logoutButton";
+            logoutButton.Size = new Size(127, 26);
+            logoutButton.TabIndex = 1;
+            logoutButton.Text = "Logout";
+            logoutButton.UseVisualStyleBackColor = true;
+            // 
+            // loggedInLabel
+            // 
+            loggedInLabel.AutoSize = true;
+            loggedInLabel.Location = new Point(54, 39);
+            loggedInLabel.Name = "loggedInLabel";
+            loggedInLabel.Size = new Size(57, 18);
+            loggedInLabel.TabIndex = 0;
+            loggedInLabel.Text = "label5";
             // 
             // dataPage
             // 
@@ -312,10 +288,10 @@
             dataPage.Controls.Add(label1);
             dataPage.Controls.Add(filterSkuTextBox);
             dataPage.Controls.Add(dataGridView);
-            dataPage.Location = new Point(4, 52);
+            dataPage.Location = new Point(4, 44);
             dataPage.Name = "dataPage";
             dataPage.Padding = new Padding(11, 12, 11, 12);
-            dataPage.Size = new Size(2408, 871);
+            dataPage.Size = new Size(2192, 1102);
             dataPage.TabIndex = 1;
             dataPage.Text = "Inventory";
             dataPage.ToolTipText = "Inventory for Patti";
@@ -359,7 +335,7 @@
             dataGridView.Name = "dataGridView";
             dataGridView.RowHeadersWidth = 82;
             dataGridView.RowTemplate.Height = 41;
-            dataGridView.Size = new Size(2232, 527);
+            dataGridView.Size = new Size(2200, 1000);
             dataGridView.TabIndex = 1;
             // 
             // checkoutPage
@@ -373,7 +349,7 @@
             checkoutPage.Location = new Point(4, 44);
             checkoutPage.Margin = new Padding(7);
             checkoutPage.Name = "checkoutPage";
-            checkoutPage.Size = new Size(2408, 879);
+            checkoutPage.Size = new Size(2092, 1102);
             checkoutPage.TabIndex = 2;
             checkoutPage.Text = "Check Out";
             checkoutPage.ToolTipText = "Checkout Items";
@@ -440,9 +416,9 @@
             // 
             // checkinPage
             // 
-            checkinPage.Location = new Point(4, 52);
+            checkinPage.Location = new Point(4, 44);
             checkinPage.Name = "checkinPage";
-            checkinPage.Size = new Size(2408, 871);
+            checkinPage.Size = new Size(2092, 1102);
             checkinPage.TabIndex = 4;
             checkinPage.Text = "Check In";
             checkinPage.UseVisualStyleBackColor = true;
@@ -456,7 +432,7 @@
             adminPage.Controls.Add(label5);
             adminPage.Location = new Point(4, 44);
             adminPage.Name = "adminPage";
-            adminPage.Size = new Size(2408, 879);
+            adminPage.Size = new Size(2092, 1102);
             adminPage.TabIndex = 3;
             adminPage.Text = "Admin";
             adminPage.ToolTipText = "Admin Settings";
@@ -497,7 +473,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             AutoSize = true;
             BackColor = Color.White;
-            ClientSize = new Size(1620, 661);
+            ClientSize = new Size(2180, 884);
             Controls.Add(tabControl);
             Controls.Add(menuStrip1);
             Font = new Font("Segoe UI", 10.125F, FontStyle.Regular, GraphicsUnit.Point);
@@ -517,10 +493,10 @@
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             tabControl.ResumeLayout(false);
             loginPage.ResumeLayout(false);
-            loggedInBox.ResumeLayout(false);
-            loggedInBox.PerformLayout();
             passwordGroupBox.ResumeLayout(false);
             passwordGroupBox.PerformLayout();
+            loggedInBox.ResumeLayout(false);
+            loggedInBox.PerformLayout();
             dataPage.ResumeLayout(false);
             dataPage.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridView).EndInit();
@@ -545,14 +521,12 @@
         private ToolStripMenuItem saveReportToolStripMenuItem;
         private PictureBox pictureBox1;
         private TabPage loginPage;
-        private Button chooseUserButton;
         private TabPage dataPage;
         private TabPage checkoutPage;
         private Label label1;
         private TabPage adminPage;
         private ErrorProvider errorProvider1;
         private Label label4;
-        private Label label3;
         private Label label2;
         private Label label5;
         private TabPage checkinPage;

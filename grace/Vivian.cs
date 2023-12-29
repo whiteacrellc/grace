@@ -149,9 +149,22 @@ namespace grace
             }
             checkInTab.Load();
             checkOutTab.Load();
-
+           
         }
 
+        private void SizeForm()
+        {
+            var numcols = dataGridView.ColumnCount;
+            int width = 0;
+            for (int i = 0; i < numcols; i++)
+            {
+                width += dataGridView.Columns[i].Width;
+            }
+            dataGridView.Width = width;
+            tabControl.Width = width + 5;
+            this.Width = width + 10;
+            Size = new Size(width + 10, this.Height);
+        }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -243,9 +256,10 @@ namespace grace
         {
             string username = Globals.GetInstance().CurrentUser;
             bool isadmin = PasswordChecker.IsUserAdmin(username);
+            int tabIndex = e.TabPageIndex;
             if (!isadmin)
             {
-                int tabIndex = e.TabPageIndex;
+           
                 if (tabIndex == 1 || tabIndex == 4)
                 {
                     e.Cancel = true;
@@ -253,6 +267,12 @@ namespace grace
                         MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
 
+            } else
+            {
+                if (tabIndex == 1)
+                {
+                   // SizeForm();
+                }
             }
         }
 

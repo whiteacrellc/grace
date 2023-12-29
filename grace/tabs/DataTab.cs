@@ -40,10 +40,8 @@ namespace grace.tabs
         private TextBox filterSkuTextBox;
         private Button addRowButton;
         private DataGridView dataGridView;
-        private DataGridLoader dataGridLoader;
         private BindingSource bindingSource;
         private bool disposedValue;
-
         public DataTab(Vivian v)
         {
             vivian = v;
@@ -64,14 +62,8 @@ namespace grace.tabs
             addRowButton.Click += addRowButton_Click;
             filterSkuTextBox.TextChanged += filterSkuTextBox_TextChanged;
             bindingSource = new BindingSource();
-            dataGridView.DataSource = bindingSource;
-            dataGridLoader = new DataGridLoader();
-            bindingSource.DataSource = dataGridLoader.getData();
-            RemoveColumnsByName("ID", "Grace", "GraceId");
-
-            // Change column names in the DataGridView
             ChangeColumnNames();
-
+            BindDataSource();
         }
         private void ChangeColumnNames()
         {
@@ -79,9 +71,8 @@ namespace grace.tabs
             Dictionary<string, string> columnMappings = new Dictionary<string, string>
         {
             {"Total", "Current Inventory"},
-            {"PreviousTotal", "Previous Inventory"},
-            {"Col1", "CollectionName 1"},
-            {"Col2", "CollectionName 2"},
+            {"Col1", "Collection 1"},
+            {"Col2", "Collection 2"},
             // Add more mappings as needed
         };
 
@@ -98,13 +89,9 @@ namespace grace.tabs
         }
         internal void BindDataSource()
         {
-            if (dataGridLoader == null)
-            {
-                dataGridLoader = new DataGridLoader();
-                dataGridView.DataSource = bindingSource;
-            }
-            dataGridLoader.LoadBindingTable();
-            bindingSource.DataSource = dataGridLoader.graceDb.GraceRows.ToList();
+            dataGridView.DataSource = bindingSource;
+            DataGridLoader.LoadBindingTable();
+            bindingSource.DataSource = DataGridLoader.getData();
             RemoveColumnsByName("ID", "Grace", "GraceId");
         }
 
@@ -115,7 +102,7 @@ namespace grace.tabs
                 DialogResult dialogResult = editRowForm.ShowDialog();
                 if (dialogResult == DialogResult.OK)
                 {
-                    bindingSource.DataSource = dataGridLoader.getData();
+                    bindingSource.DataSource = DataGridLoader.getData();
                     RemoveColumnsByName("ID", "Grace", "GraceId");
                 }
             }
@@ -136,7 +123,7 @@ namespace grace.tabs
                 if (result == DialogResult.OK)
                 {
                     // we need to reload the grid.
-                    bindingSource.DataSource = dataGridLoader.getData();
+                    bindingSource.DataSource = DataGridLoader.getData();
                     RemoveColumnsByName("ID", "Grace", "GraceId");
                 }
             }
@@ -149,20 +136,21 @@ namespace grace.tabs
 
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {
-                // Query the DbContext to filter products based on the "Sku" column
-                var filteredProducts = dataGridLoader.graceDb.GraceRows
-                    .Where(p => p.Sku.Contains(searchTerm))
-                    .ToList();
+                using (var context = new GraceDbContext())
+                {
+                    // Query the DbContext to filter products based on the "Sku" column
+                    var filteredProducts = context.GraceRows
+                        .Where(p => p.Sku.Contains(searchTerm))
+                        .ToList();
 
-                // Bind the filtered products to the DataGridView
-                bindingSource.DataSource = filteredProducts;
-                // dataGridView.DataSource = filteredProducts;
+                    // Bind the filtered products to the DataGridView
+                    bindingSource.DataSource = filteredProducts;
+                }
             }
             else
             {
                 // If the search box is empty, show all products
-                bindingSource.DataSource = dataGridLoader.getData();
-                // dataGridView.DataSource = dataGridLoader.graceDb.GraceRows.ToList();
+                bindingSource.DataSource = DataGridLoader.getData();
             }
             RemoveColumnsByName("ID", "Grace", "GraceId");
         }
@@ -184,18 +172,16 @@ namespace grace.tabs
             {
                 if (disposing)
                 {
-                    dataGridLoader.Dispose();
+                    bindingSource.Dispose();
                 }
 
-                // TODO: free unmanaged resources (unmanaged objects) and override finalizer
-                // TODO: set large fields to null
                 disposedValue = true;
             }
         }
 
         ~DataTab()
         {
-             Dispose(disposing: false);
+            Dispose(disposing: false);
         }
 
         public void Dispose()
@@ -204,6 +190,7 @@ namespace grace.tabs
             Dispose(disposing: true);
             GC.SuppressFinalize(this);
         }
+
 #pragma warning restore CS8601 // Possible null reference assignment.
 #pragma warning restore CS8602
 #pragma warning restore CS8618

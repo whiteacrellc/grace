@@ -39,7 +39,7 @@ namespace grace.tabs
             checkOutSearchTextBox.TextChanged += checkOutSearchTextBox_TextChanged;
             textBoxBarCode.KeyPress += textBoxBarcode_KeyPress;
             coResetButton.Click += coResetButton_Click;
-
+            checkOutDataGrid.CellMouseDoubleClick += checkOutDataGrid_CellMouseDoubleClick;
         }
 
         public void InitializeDataGridView()
@@ -47,6 +47,23 @@ namespace grace.tabs
             var username = Globals.GetInstance().CurrentUser;
             user_id = DataBase.GetUserIdFromName(username);
             LoadDataGrid();
+        }
+
+        private void checkOutDataGrid_CellMouseDoubleClick(object? sender,
+            DataGridViewCellMouseEventArgs e)
+        {
+            int rowIndex = e.RowIndex;
+            DataGridViewRow row = checkOutDataGrid.Rows[rowIndex];
+            var sku = row.Cells["Sku"].Value as string;
+            using (CheckOutForm editRowForm = new CheckOutForm(sku))
+            {
+                DialogResult result = editRowForm.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    // we need to reload the grid.
+                    LoadDataGrid();
+                }
+            }
         }
 
         internal void LoadDataGrid()

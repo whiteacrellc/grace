@@ -24,7 +24,6 @@ namespace gracetest
         private string connectionString = string.Empty;
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         private DataBase dataBase;
-        private DataGridLoader loader;
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
 
@@ -44,7 +43,6 @@ namespace gracetest
             {
                 Assert.Fail(ex.Message);
             }
-            loader = new DataGridLoader();
         }
 
         [TestCleanup]
@@ -60,7 +58,7 @@ namespace gracetest
 
             try
             {
-                loader.LoadBindingTable();
+                DataGridLoader.LoadBindingTable();
             }
             catch (Exception ex)
             {
@@ -71,6 +69,7 @@ namespace gracetest
 
         private void Cleanup(string databaseName)
         {
+            /* We don't need to do this since we are deleting the sqlite file
             var sqliteConnection = new SQLiteConnection(connectionString);
             sqliteConnection.Open();
 
@@ -81,6 +80,7 @@ namespace gracetest
                 command.ExecuteNonQuery();
             }
             sqliteConnection.Dispose();
+            */
 
             try
             {

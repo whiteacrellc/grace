@@ -23,27 +23,21 @@ using static OfficeOpenXml.ExcelErrorValue;
 
 namespace grace
 {
-    internal class DataGridLoader : IDisposable
+    internal class DataGridLoader
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
-        private DataTable dataTable = new DataTable();
-        private Dictionary<long, GraceRow> graceRows = new Dictionary<long, GraceRow>();
-        private bool disposed;
 
-        public GraceDbContext graceDb { get; private set; }
-
-        public DataGridLoader()
+        public static List<GraceRow> getData()
         {
-            graceDb = new GraceDbContext();
-      
+            List<GraceRow> list = new List<GraceRow>();
+            using (var context = new GraceDbContext())
+            {
+                list = context.GraceRows.ToList();
+            }
+            return list;
         }
 
-        public List<GraceRow> getData()
-        {
-            return graceDb.GraceRows.ToList();
-        }
-
-        internal void LoadBindingTable()
+        internal static void LoadBindingTable()
         {
             using (var context = new GraceDbContext())
             {
@@ -82,7 +76,7 @@ namespace grace
                         }
                     }
 
-                    var collectionList = graceDb.Collections.Where(t => t.GraceId == item.ID);
+                    var collectionList = context.Collections.Where(t => t.GraceId == item.ID);
 
                     int i = 0;
                     foreach (var col in collectionList)
@@ -113,38 +107,11 @@ namespace grace
                         }
                         i++;
                     }
-                    graceDb.GraceRows.Add(row);
+                    context.GraceRows.Add(row);
                 }
-                graceDb.SaveChanges();
+                context.SaveChanges();
             }
         }
 
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        // Protected method for actual resource cleanup
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposed)
-            {
-                if (disposing)
-                {
-                    graceDb.Dispose();
-                }
-
-                disposed = true;
-            }
-        }
-
-        // Destructor (Finalizer) to ensure cleanup in case Dispose is not called
-        ~DataGridLoader()
-        {
-            Dispose(false);
-        }
     }
-
-
 }
