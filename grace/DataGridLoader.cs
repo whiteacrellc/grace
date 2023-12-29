@@ -45,75 +45,78 @@ namespace grace
 
         internal void LoadBindingTable()
         {
-
-            if (graceDb.GraceRows.ToList().Count > 0) {
-                return;
-            }
-
-            List<GraceRow> rows = new List<GraceRow>();
-            var result = graceDb.Graces.ToList();
-            foreach (var item in result)
+            using (var context = new GraceDbContext())
             {
-                GraceRow row = new GraceRow();
-                row.GraceId = item.ID;
-                row.Sku = item.Sku;
-                row.BarCode = item.Barcode;
-                row.Brand = item.Brand;
-                row.Description = item.Description;
-
-                // Lets get the two totals
-                var totalList = graceDb.Totals
-                    .Where(t => t.GraceId == item.ID)
-                    .OrderByDescending(t => t.date_field)
-                    .Take(1)
-                    .ToList();
-
-                if (totalList != null)
+                if (context.GraceRows.ToList().Count > 0)
                 {
-                    if (totalList.Count == 1)
-                    {
-                        row.Total = totalList[0].total;
-                    }
-                    else
-                    {
-                        logger.Info("No totals found");
-                    }
+                    return;
                 }
 
-                var collectionList = graceDb.Collections.Where(t => t.GraceId == item.ID);
-
-                int i = 0;
-                foreach (var col in collectionList)
+                List<GraceRow> rows = new List<GraceRow>();
+                var result = context.Graces.ToList();
+                foreach (var item in result)
                 {
-                    switch (i)
+                    GraceRow row = new GraceRow();
+                    row.GraceId = item.ID;
+                    row.Sku = item.Sku;
+                    row.BarCode = item.Barcode;
+                    row.Brand = item.Brand;
+                    row.Description = item.Description;
+
+                    // Lets get the two totals
+                    var totalList = context.Totals
+                        .Where(t => t.GraceId == item.ID)
+                        .OrderByDescending(t => t.date_field)
+                        .Take(1)
+                        .ToList();
+
+                    if (totalList != null)
                     {
-                        case 0:
-                            row.Col1 = col.Name;
-                            break;
-                        case 1:
-                            row.Col2 = col.Name;
-                            break;
-                        case 2:
-                            row.Col3 = col.Name;
-                            break;
-                        case 3:
-                            row.Col4 = col.Name;
-                            break;
-                        case 4:
-                            row.Col5 = col.Name;
-                            break;
-                        case 5:
-                            row.Col6 = col.Name;
-                            break;
-                        default:
-                            logger.Info("Should never see this");
-                            break;
+                        if (totalList.Count == 1)
+                        {
+                            row.Total = totalList[0].total;
+                        }
+                        else
+                        {
+                            logger.Info("No totals found");
+                        }
                     }
-                    i++;
+
+                    var collectionList = graceDb.Collections.Where(t => t.GraceId == item.ID);
+
+                    int i = 0;
+                    foreach (var col in collectionList)
+                    {
+                        switch (i)
+                        {
+                            case 0:
+                                row.Col1 = col.Name;
+                                break;
+                            case 1:
+                                row.Col2 = col.Name;
+                                break;
+                            case 2:
+                                row.Col3 = col.Name;
+                                break;
+                            case 3:
+                                row.Col4 = col.Name;
+                                break;
+                            case 4:
+                                row.Col5 = col.Name;
+                                break;
+                            case 5:
+                                row.Col6 = col.Name;
+                                break;
+                            default:
+                                logger.Info("Should never see this");
+                                break;
+                        }
+                        i++;
+                    }
+                    graceDb.GraceRows.Add(row);
                 }
-                graceDb.GraceRows.Add(row);
+                graceDb.SaveChanges();
             }
-            graceDb.SaveChanges();
         }
 
         public void Dispose()

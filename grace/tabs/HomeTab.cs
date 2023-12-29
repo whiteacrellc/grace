@@ -212,6 +212,10 @@ namespace grace.tabs
             passwordGroupBox.Hide();
             loggedInLabel.Text = username;
             loggedInBox.Show();
+
+            // Since the checkout tab grid depends on the logged in user
+            // we initialize it here. 
+            vivian.checkOutTab.InitializeDataGridView();
             if (PasswordChecker.IsUserAdmin(username))
             {
                 tabControl.SelectedTab = vivian.tabControl.TabPages[1];

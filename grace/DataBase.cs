@@ -325,6 +325,7 @@ namespace grace
                             break;
                     }
                 }
+                graceRow.GraceId =  graceId;
                 context.GraceRows.Add( graceRow );
                 context.SaveChanges();
             }
@@ -374,6 +375,20 @@ namespace grace
                 row = context.Graces.FirstOrDefault(item => item.Sku == sku);
             }
             return row;
+        }
+
+        public static int GetUserIdFromName(string name)
+        {
+            int id = 0;
+            using (var context = new GraceDbContext())
+            {
+                var user = context.Users.FirstOrDefault(item => item.Username == name);
+                if (user != null)
+                {
+                    id = user.ID;
+                }
+            }
+            return id;
         }
 
         public static List<string?> CollectionNames
@@ -453,6 +468,18 @@ namespace grace
                 }
             }
             return total;
+        }
+
+        public static void UpdateGraceRowTotal(int graceId, int newTotal)
+        {
+       
+            using (var context = new GraceDbContext())
+            {
+                var graceRow = context.GraceRows.FirstOrDefault(e =>  e.GraceId == graceId);
+                graceRow.Total = newTotal;
+                context.SaveChanges();
+            }
+           
         }
 
         public static void UpdateGraceRowCollection(int GraceId)

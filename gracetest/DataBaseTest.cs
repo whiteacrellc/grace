@@ -12,6 +12,7 @@
  */
 using grace;
 using grace.data;
+using grace.data.models;
 using Microsoft.EntityFrameworkCore;
 using System.Data.Entity;
 using System.Data.SQLite;
@@ -31,7 +32,7 @@ namespace gracetest
         private DataBase dataBase;
         public GraceDbContext graceDb;
 
-      [TestInitialize]
+        [TestInitialize]
         public void Setup()
         {
             // Create a mock SQLite connection and command
@@ -77,6 +78,82 @@ namespace gracetest
                 Assert.AreEqual(item.Sku, "FBA445-CR/GR");
                 Assert.AreEqual(item.Brand, "Allstate");
                 break;
+            }
+
+        }
+
+        private int CreateTestData()
+        {
+            int graceId = 0;
+            using (var context = new GraceDbContext())
+            {
+                var grace = new Grace
+                {
+                    Brand = "brand",
+                    Sku = "sku",
+                    Description = "Description",
+                    Barcode = "1234",
+                    Availability = "Availability",
+                };
+                context.Graces.Add(grace);
+                context.SaveChanges();
+                graceId = grace.ID;
+            }
+            DataBase.AddTotal(1234, graceId);
+            DataBase.AddCollection("col1", graceId);
+            DataBase.AddCollection("col2", graceId);
+            DataBase.AddCollection("col3", graceId);
+            return graceId;
+        }
+
+        [TestMethod]
+        public void TestMethod_CreateGraceRow()
+        {
+            int graceId = CreateTestData();
+            bool ret = DataBase.CreateGraceRow(graceId);
+        
+            Assert.IsFalse(ret);
+
+            // Delete grace row
+            using (var context = new GraceDbContext())
+            {
+                var grace = context.Graces.Find(graceId);
+                Assert.IsNotNull(grace);
+
+                var sku = grace.Sku;
+                Assert.IsNotNull(sku);
+
+                var graceRow = DataBase.GetGraceRowFromSku(sku);
+                Assert.IsNotNull(graceRow);
+                Assert.AreEqual(graceRow.Total, 1234);
+                Assert.AreEqual(graceRow.Description, "Description");
+                Assert.IsTrue(graceRow.Col1.Contains("col"));
+                Assert.IsTrue(graceRow.Col2.Contains("col"));
+                Assert.IsTrue(graceRow.Col3.Contains("col"));
+                Assert.IsNull(graceRow.Col4);
+                Assert.IsNull(graceRow.Col5);
+                Assert.IsNull(graceRow.Col6);
+
+                context.Graces.Remove(grace);
+                context.SaveChanges();
+
+                // Make sure grace row is deleted
+                graceRow = context.GraceRows.
+                    FirstOrDefault(item => item.GraceId == graceId);
+                Assert.IsNull(graceRow);
+
+                // Make sure collection rows are deleted
+                var collectionRows = context.Collections
+                    .Select(e => e.GraceId == graceId)
+                    .ToList();
+                Assert.AreEqual(collectionRows.Count, 0);
+
+                // No total rows
+                var totalRows = context.Totals
+                       .Select(e => e.GraceId == graceId)
+                       .ToList();
+                Assert.AreEqual(totalRows.Count, 0);
+
             }
 
         }

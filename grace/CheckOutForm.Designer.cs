@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             label1 = new Label();
             brandLabel = new Label();
             label2 = new Label();
@@ -44,6 +45,8 @@
             cancelButton = new Button();
             commentBox = new TextBox();
             label7 = new Label();
+            helpProvider1 = new HelpProvider();
+            toolTip1 = new ToolTip(components);
             SuspendLayout();
             // 
             // label1
@@ -128,9 +131,10 @@
             label6.AutoSize = true;
             label6.Location = new Point(319, 67);
             label6.Name = "label6";
-            label6.Size = new Size(61, 15);
+            label6.Size = new Size(93, 15);
             label6.TabIndex = 9;
             label6.Text = "CollectionName";
+            label6.HelpRequested += label6_HelpRequested;
             // 
             // numCheckOutTextBox
             // 
@@ -234,5 +238,7 @@
         private Button cancelButton;
         private TextBox commentBox;
         private Label label7;
+        private HelpProvider helpProvider1;
+        private ToolTip toolTip1;
     }
 }

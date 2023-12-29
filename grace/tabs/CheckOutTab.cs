@@ -35,26 +35,22 @@ namespace grace.tabs
 
         public void Load()
         {
-            InitializeDataGridView();
             // Add callbacks
             checkOutSearchTextBox.TextChanged += checkOutSearchTextBox_TextChanged;
             textBoxBarCode.KeyPress += textBoxBarcode_KeyPress;
             coResetButton.Click += coResetButton_Click;
 
-            using (var context = new GraceDbContext())
-            {
-                var username = Globals.GetInstance().CurrentUser;
-                var user = context.Users.FirstOrDefault(item => item.Username == username);
-                if (user != null)
-                {
-                    user_id = user.ID;
-                }
-            }
         }
 
-        private void InitializeDataGridView()
+        public void InitializeDataGridView()
         {
+            var username = Globals.GetInstance().CurrentUser;
+            user_id = DataBase.GetUserIdFromName(username);
+            LoadDataGrid();
+        }
 
+        internal void LoadDataGrid()
+        {
             checkOutDataGrid.DataSource = checkoutBindingSource;
 
             using (var context = new GraceDbContext())
@@ -62,7 +58,8 @@ namespace grace.tabs
 
                 var graceRowsData = (
                     from graceRow in context.GraceRows
-                    join pulledItem in context.PulledDb on graceRow.ID equals pulledItem.GraceId into pulledItemsGroup
+                    join pulledItem in context.PulledDb on graceRow.ID equals pulledItem.GraceId into
+                    pulledItemsGroup
                     from pulledItem in pulledItemsGroup.DefaultIfEmpty() // Left outer join
                     where pulledItem == null || pulledItem.UserId == user_id
                     orderby pulledItem != null ? pulledItem.CurrentTotal : 0 descending
@@ -80,9 +77,7 @@ namespace grace.tabs
                 // Bind data to the DataGridView
                 checkoutBindingSource.DataSource = graceRowsData;
             }
-
         }
-
         internal void coResetButton_Click(object? sender, EventArgs e)
         {
 
@@ -124,18 +119,7 @@ namespace grace.tabs
                 else
                 {
                     // Reset to normal view
-                    var graceRowsData = context.GraceRows.Select(row => new
-                    {
-                        Sku = row.Sku,
-                        Brand = row.Brand,
-                        Description = row.Description,
-                        BarCode = row.BarCode,
-                        Total = row.Total
-                    }).ToList();
-
-                    // Bind data to the DataGridView
-                    checkoutBindingSource.DataSource = graceRowsData; ;
-                    // dataGridView.DataSource = dataGridLoader.graceDb.GraceRows.ToList();
+                    LoadDataGrid();
                 }
             }
         }

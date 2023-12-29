@@ -20,19 +20,12 @@ namespace grace.data.models
     public partial class User
     {
         public int ID { get; set; }
-
         public string Username { get; set; }
-
         public string Password { get; set; }
-
         public string ResetAnswer { get; set; } = string.Empty;
-
         public int ResetAnswerIndex { get; set; }
-
         public bool Admin { get; set; } = false;
-
         public bool ResetPassword { get; set; } = true;
-
-
+        public bool Deleted { get; set; } = false;
     }
 }

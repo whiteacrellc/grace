@@ -12,6 +12,7 @@
  */
 using grace;
 using grace.data;
+using grace.data.models;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

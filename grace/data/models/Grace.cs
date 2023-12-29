@@ -24,6 +24,7 @@ namespace grace.data.models
         public string Brand { get; set; }
         public string? Availability { get; set; }
         public string? Barcode { get; set; }
+        public bool Deleted { get; set; } = false;
 
     }
 }
