@@ -103,7 +103,8 @@ namespace grace.data
 
                 entity.HasOne(e => e.Grace)
                   .WithMany()
-                  .HasForeignKey(e => e.GraceId);
+                  .HasForeignKey(e => e.GraceId)
+                  .OnDelete(DeleteBehavior.Cascade);
 
             });
 
@@ -116,7 +117,8 @@ namespace grace.data
 
                 entity.HasOne(e => e.Grace)
                   .WithMany()
-                  .HasForeignKey(e => e.GraceId);
+                  .HasForeignKey(e => e.GraceId)
+                  .OnDelete(DeleteBehavior.Cascade);
 
             });
 
@@ -128,7 +130,8 @@ namespace grace.data
 
                 entity.HasOne(e => e.Grace)
                   .WithMany()
-                  .HasForeignKey(e => e.GraceId);
+                  .HasForeignKey(e => e.GraceId)
+                  .OnDelete(DeleteBehavior.Cascade);
 
             });
 
@@ -146,11 +149,12 @@ namespace grace.data
                 // Relationships
                 entity.HasOne(e => e.User)
                     .WithMany()
-                    .HasForeignKey(e => e.UserId); // Choose the appropriate delete behavior
+                    .HasForeignKey(e => e.UserId);
 
                 entity.HasOne(e => e.Grace)
                     .WithMany()
-                    .HasForeignKey(e => e.GraceId); // Choose the appropriate delete behavior
+                    .HasForeignKey(e => e.GraceId)
+                    .OnDelete(DeleteBehavior.Cascade);
 
                 entity.HasOne(e => e.Collection)
                     .WithMany()

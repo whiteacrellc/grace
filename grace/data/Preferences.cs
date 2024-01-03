@@ -13,13 +13,24 @@ namespace grace.data
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
+        // Define an enum named DaysOfWeek
+        public enum Preference
+        {
+            RowHeight,
+            RowsPerPage,
+            Tuesday,
+            HeaderHeight,
+            BarCodeAutoOpen
+        }
+
         public Preferences()
         {
         }
 
-        public string? GetStringValue(string name)
+        public static string? GetStringValue(Preference pref)
         {
             Prefs? preference = null;
+            var name = pref.ToString();
 
             using (var _context = new GraceDbContext())
             {
@@ -28,9 +39,10 @@ namespace grace.data
             return preference?.Value; // If preference is null, return null, otherwise return the Value
         }
 
-        public int GetIntValue(string name)
+        public static int GetIntValue(Preference pref)
         {
             int ret = 0;
+            var name = pref.ToString();
             using (var _context = new GraceDbContext())
             {
                 var preference = _context.PrefsDb.FirstOrDefault(p => p.Name == name);
@@ -50,13 +62,50 @@ namespace grace.data
             return ret; 
         }
 
-        public void AddOrUpdateIntPreference(string name, int value)
+        public static bool GetBooleanValue(Preference pref)
+        {
+            bool ret = false;
+            var name = pref.ToString();
+            using (var _context = new GraceDbContext())
+            {
+                var preference = _context.PrefsDb.FirstOrDefault(p => p.Name == name);
+
+                if (preference != null)
+                {
+                    try
+                    {
+                        ret = Boolean.Parse(preference.Value);
+                    }
+                    catch (FormatException fe)
+                    {
+                        logger.Error(fe);
+                    }
+                }
+            }
+            return ret;
+        }
+
+        public static void AddOrUpdateIntPreference(Preference pref, int value)
         {
             string string_val = value.ToString();
+            var name = pref.ToString();
             AddOrUpdateStringPreference(name, string_val);
         }
 
-        public void AddOrUpdateStringPreference(string name, string value)
+        public static void AddOrUpdateBooleanPreference(Preference pref, bool value)
+        {
+            string val = (value) ? "true" : "false";
+            var name = pref.ToString();
+            AddOrUpdateStringPreference(name, val);
+        }
+
+        public static void AddOrUpdateStringPreference(Preference pref, string value)
+        {
+            var name = pref.ToString();
+            AddOrUpdateStringPreference(name, value);
+        }
+
+        private static void AddOrUpdateStringPreference(string name, string value)
         {
             using (var _context = new GraceDbContext())
             {

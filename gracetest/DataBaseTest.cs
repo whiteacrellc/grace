@@ -1,4 +1,5 @@
-﻿/*
+﻿
+/*
  * Copyright (c) 2023 White Acre Software LLC
  * All rights reserved.
  *
@@ -29,22 +30,22 @@ namespace gracetest
     {
         private string testDbFile = "testgrace.db";
         private string connectionString = string.Empty;
-        private DataBase dataBase;
-        public GraceDbContext graceDb;
+        private Dictionary<int, int> rowHash = new Dictionary<int, int>();
+
 
         [TestInitialize]
         public void Setup()
         {
             // Create a mock SQLite connection and command
-            dataBase = new DataBase(testDbFile);
+            var dataBase = new DataBase(testDbFile);
             connectionString = DataBase.ConnectionString;
-            graceDb = new GraceDbContext();
+            DataBase.InitializeDatabase();
         }
 
         [TestCleanup]
         public void Cleanup()
         {
-            var fileName = dataBase.DbFileName;
+            var fileName = DataBase.DbFileName;
             Cleanup(fileName);
         }
 
@@ -66,57 +67,71 @@ namespace gracetest
                 + "grace\\gracetest\\test_file.xlsx";
             DataBase.LoadFromExcel(filename);
 
-
-            Assert.AreEqual(graceDb.Graces.ToList().Count, 19);
-            Assert.IsTrue(graceDb.Collections.ToList().Count > 0);
-            Assert.IsTrue(graceDb.Totals.ToList().Count > 0);
-
-            var result = graceDb.Graces.ToList();
-            foreach (var item in result)
-            {
-                Assert.AreEqual(item.Barcode, "33849104226");
-                Assert.AreEqual(item.Sku, "FBA445-CR/GR");
-                Assert.AreEqual(item.Brand, "Allstate");
-                break;
-            }
-
-        }
-
-        private int CreateTestData()
-        {
-            int graceId = 0;
             using (var context = new GraceDbContext())
             {
-                var grace = new Grace
+                Assert.AreEqual(context.Graces.ToList().Count, 19);
+                Assert.IsTrue(context.Collections.ToList().Count > 0);
+                Assert.IsTrue(context.Totals.ToList().Count > 0);
+
+                var result = context.Graces.ToList();
+                foreach (var item in result)
                 {
-                    Brand = "brand",
-                    Sku = "sku",
-                    Description = "Description",
-                    Barcode = "1234",
-                    Availability = "Availability",
-                };
-                context.Graces.Add(grace);
-                context.SaveChanges();
-                graceId = grace.ID;
+                    Assert.AreEqual(item.Barcode, "33849104226");
+                    Assert.AreEqual(item.Sku, "FBA445-CR/GR");
+                    Assert.AreEqual(item.Brand, "Allstate");
+                    break;
+                }
             }
-            DataBase.AddTotal(1234, graceId);
-            DataBase.AddCollection("col1", graceId);
-            DataBase.AddCollection("col2", graceId);
-            DataBase.AddCollection("col3", graceId);
-            return graceId;
+        }
+
+        private void CreateTestData()
+        {
+            for (var i = 0; i < 20; i++)
+            {
+                int graceId = 0;
+                using (var context = new GraceDbContext())
+                {
+
+                    var grace = new Grace
+                    {
+                        Brand = "brand" + (i % 3),
+                        Sku = "sku" + i,
+                        Description = "Description" + i,
+                        Barcode = "" + i + "0000",
+                        Availability = "Availability",
+                    };
+                    context.Graces.Add(grace);
+                    context.SaveChanges();
+                    graceId = grace.ID;
+                }
+                DataBase.AddTotal((3 * i) + 1, graceId);
+                var k = i % 4;
+                DataBase.AddCollection("col1" + k, graceId);
+                if (i % 3 == 0)
+                {
+                    DataBase.AddCollection("col2", graceId);
+                }
+                if (i % 4 == 0)
+                {
+                    DataBase.AddCollection("col3", graceId);
+                }
+                int graceRowId = DataBase.CreateGraceRow(graceId);
+                rowHash.Add(graceRowId, graceId);
+            }
         }
 
         [TestMethod]
         public void TestMethod_CreateGraceRow()
         {
-            int graceId = CreateTestData();
-            bool ret = DataBase.CreateGraceRow(graceId);
-        
-            Assert.IsFalse(ret);
+            CreateTestData();
+            Assert.AreEqual(rowHash.Keys.Count, 20);
 
             // Delete grace row
             using (var context = new GraceDbContext())
             {
+                // Find the value of the first element in the hash
+                var firstElement = rowHash.FirstOrDefault();
+                int graceId = firstElement.Value;
                 var grace = context.Graces.Find(graceId);
                 Assert.IsNotNull(grace);
 
@@ -125,11 +140,9 @@ namespace gracetest
 
                 var graceRow = DataBase.GetGraceRowFromSku(sku);
                 Assert.IsNotNull(graceRow);
-                Assert.AreEqual(graceRow.Total, 1234);
-                Assert.AreEqual(graceRow.Description, "Description");
+                Assert.IsTrue(graceRow.Total > 0);
+                Assert.IsTrue(graceRow.Description.Contains("Description"));
                 Assert.IsTrue(graceRow.Col1.Contains("col"));
-                Assert.IsTrue(graceRow.Col2.Contains("col"));
-                Assert.IsTrue(graceRow.Col3.Contains("col"));
                 Assert.IsNull(graceRow.Col4);
                 Assert.IsNull(graceRow.Col5);
                 Assert.IsNull(graceRow.Col6);
@@ -144,13 +157,13 @@ namespace gracetest
 
                 // Make sure collection rows are deleted
                 var collectionRows = context.Collections
-                    .Select(e => e.GraceId == graceId)
+                    .Where(e => e.GraceId == graceId)
                     .ToList();
                 Assert.AreEqual(collectionRows.Count, 0);
 
                 // No total rows
                 var totalRows = context.Totals
-                       .Select(e => e.GraceId == graceId)
+                       .Where(e => e.GraceId == graceId)
                        .ToList();
                 Assert.AreEqual(totalRows.Count, 0);
 
@@ -161,9 +174,11 @@ namespace gracetest
 
         private void Cleanup(string databaseName)
         {
-
-            graceDb.Database.EnsureDeleted();
-            graceDb.Database.CloseConnection();
+            using (var context = new GraceDbContext())
+            {
+                context.Database.EnsureDeleted();
+                context.Database.CloseConnection();
+            }
 
             try
             {

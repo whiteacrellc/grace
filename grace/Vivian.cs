@@ -29,8 +29,6 @@ namespace grace
 {
     public partial class Vivian : Form
     {
-
-        public ExcelReader er { get; }
         Report? report;
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
@@ -53,16 +51,7 @@ namespace grace
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
             InitializeComponent();
-
-            // If you use EPPlus in a noncommercial context
-            // according to the Polyform Noncommercial license:
-            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-            er = new ExcelReader(this);
             EnableReportButton(false);
-
-
-            dataGridView.AutoGenerateColumns = true;
-
 
             // Init the tab page classes
             homeTab = new HomeTab(this);
@@ -77,9 +66,7 @@ namespace grace
         {
             try
             {
-                var collections = er.Collections;
-                var items = er.Items;
-                report = new Report(collections, items, this);
+                report = new Report();
                 report.GenerateReport();
             }
             catch (Exception ex)
@@ -149,7 +136,7 @@ namespace grace
             }
             checkInTab.Load();
             checkOutTab.Load();
-           
+
         }
 
         private void SizeForm()
@@ -192,9 +179,7 @@ namespace grace
                         return;
 
                     string filePath = openFileDialog.FileName;
-                    er.ReadExcelFile(filePath);
-
-                    DataBase data = new DataBase();
+                    //er.ReadExcelFile(filePath);
                     DataBase.LoadFromExcel(filePath);
                 }
             }
@@ -259,7 +244,7 @@ namespace grace
             int tabIndex = e.TabPageIndex;
             if (!isadmin)
             {
-           
+
                 if (tabIndex == 1 || tabIndex == 4)
                 {
                     e.Cancel = true;
@@ -267,18 +252,14 @@ namespace grace
                         MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
 
-            } else
+            }
+            else
             {
                 if (tabIndex == 1)
                 {
-                   // SizeForm();
+                    // SizeForm();
                 }
             }
-        }
-
-        private void passwordGroupBox_Enter(object sender, EventArgs e)
-        {
-
         }
     }
 }

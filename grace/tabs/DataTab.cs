@@ -57,10 +57,14 @@ namespace grace.tabs
 
         internal void Load()
         {
+            dataGridView.AutoGenerateColumns = true;
+            // Callbacks 
             dataGridView.CellMouseDoubleClick += dataGridView_CellMouseDoubleClick;
             dataGridView.DataBindingComplete += dataGridView_DataBindingComplete;
             addRowButton.Click += addRowButton_Click;
             filterSkuTextBox.TextChanged += filterSkuTextBox_TextChanged;
+
+            // Setup data connection to grid view
             bindingSource = new BindingSource();
             ChangeColumnNames();
             BindDataSource();

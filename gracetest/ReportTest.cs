@@ -11,55 +11,74 @@
  * Year: 2023
  */
 using grace;
+using grace.data.models;
+using grace.data;
 using Microsoft.Office.Interop.Excel;
 using OfficeOpenXml;
 using System.Collections.Generic;
 using System.IO;
+using Microsoft.EntityFrameworkCore;
 
 namespace gracetest
 {
     [TestClass]
     public class ReportTests
     {
-        Dictionary<string, List<Row>> collections = new Dictionary<string, List<Row>>();
-        Dictionary<string, List<string>> items = new Dictionary<string, List<string>>();
-
+        private string testDbFile = "reportgrace.db";
         [TestInitialize]
         public void Setup()
         {
-            // Arrange
-            collections = new Dictionary<string, List<Row>>();
-            items = new Dictionary<string, List<string>>();
-            Row row = new Row();
-            row.Sku = "SKU";
-            row.Collection = "Collection1";
-            row.Description = "Description";
-            row.PreviousTotal = 10;
-            row.Total = 20;
-            List<Row> rows = new List<Row>();
-            rows.Add(row);
-            List<string> list = new List<string>();
-            list.Add("Collections2");
-            items.Add("SKU", list);
-            collections.Add("Collections1", rows);
-            row = new Row();
-            row.Sku = "SKU2";
-            row.Collection = "Collection2";
-            row.Description = "Description";
-            row.PreviousTotal = 20;
-            row.Total = 20;
-            rows = new List<Row>();
-            rows.Add(row);
-            list = new List<string>();
-            list.Add("Collections1");
-            items.Add("SKU2", list);
-            collections.Add("Collections2", rows);
+            // Create instances of these classes to set the debug database
+            var dataBase = new DataBase(testDbFile);
+            DataBase.InitializeDatabase();
+            CreateTestData();
+        }
+        [TestCleanup]
+        public void Cleanup()
+        {
+            var fileName = DataBase.DbFileName;
+            Cleanup(fileName);
+        }
+
+        private void CreateTestData()
+        {
+            for (var i = 0; i < 20; i++)
+            {
+                int graceId = 0;
+                using (var context = new GraceDbContext())
+                {
+                   
+                    var grace = new Grace
+                    {
+                        Brand = "brand" + (i % 3),
+                        Sku = "sku" + i,
+                        Description = "Description" + i,
+                        Barcode = "" + i + "0000",
+                        Availability = "Availability",
+                    };
+                    context.Graces.Add(grace);
+                    context.SaveChanges();
+                    graceId = grace.ID;
+                }
+                DataBase.AddTotal(3 * i, graceId);
+                var k = i % 4;
+                DataBase.AddCollection("col1" + k, graceId);
+                if (i % 3 == 0)
+                {
+                    DataBase.AddCollection("col2", graceId);
+                }
+                if (i % 4 == 0)
+                {
+                    DataBase.AddCollection("col3", graceId);
+                }
+                DataBase.CreateGraceRow(graceId);
+            }
         }
 
         [TestMethod]
         public void WriteReport_GenerateReport()
         {
-            var report = new Report(collections, items, new Vivian());
+            var report = new Report();
             report.GenerateReport();
 
             ExcelPackage package = report.package;
@@ -67,10 +86,33 @@ namespace gracetest
             var worksheet = package.Workbook.Worksheets[0];
             Assert.AreEqual(worksheet.Name, "Report");
             int rowCount = worksheet.Dimension.Rows;
-            Assert.AreEqual(rowCount, 6);
+            Assert.AreEqual(rowCount,50);
             int colCount = worksheet.Dimension.Columns;
             Assert.AreEqual(colCount, 12);
 
+        }
+        private void Cleanup(string databaseName)
+        {
+            using (var context = new GraceDbContext())
+            {
+                context.Database.CloseConnection();
+            }
+
+            try
+            {
+                if (File.Exists(databaseName))
+                {
+                    File.Delete(databaseName);
+                }
+                else
+                {
+                    Console.WriteLine("Database does not exist.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
         }
     }
 }

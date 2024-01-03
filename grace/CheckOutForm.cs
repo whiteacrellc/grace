@@ -50,7 +50,7 @@ namespace grace
                     this.Close();
                 }
                 var collections =
-                    context.Collections.Where(item => item.ID == graceId).ToList();
+                    context.Collections.Where(item => item.GraceId == graceId).ToList();
                 if (collections.Any())
                 {
                     collectionComboBox.Items.Clear();
@@ -97,8 +97,8 @@ namespace grace
             }
 
             var commentText = commentBox.Text;
-            var collectionName = collectionComboBox.SelectedIndex;
-            if (collectionName > 0)
+            var selectedIndex = collectionComboBox.SelectedIndex;
+            if (selectedIndex > 0)
             {
                 MessageBox.Show("You must choose a collection. If this isn't " +
                     "for a collection please choose Other",
@@ -168,6 +168,9 @@ namespace grace
             }
             // update the GraceRow
             DataBase.UpdateGraceRowTotal(graceId, newTotal);
+
+            DialogResult = DialogResult.OK;
+            Close();
         }
 
         private void label6_HelpRequested(object sender, HelpEventArgs hlpevent)

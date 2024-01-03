@@ -49,11 +49,11 @@ namespace grace
         public int RowHeight
         {
             get {
-                return prefs.GetIntValue("rowheight");
+                return Preferences.GetIntValue(Preferences.Preference.RowHeight);
             }
             set
             {
-                prefs.AddOrUpdateIntPreference("rowheight", value);
+                Preferences.AddOrUpdateIntPreference(Preferences.Preference.RowHeight, value);
             }
         }
 
@@ -61,11 +61,11 @@ namespace grace
         {
             get
             {
-                return prefs.GetIntValue("rowsperpage");
+                return Preferences.GetIntValue(Preferences.Preference.RowsPerPage);
             }
             set
             {
-                prefs.AddOrUpdateIntPreference("rowsperpage", value);
+                Preferences.AddOrUpdateIntPreference(Preferences.Preference.RowsPerPage, value);
             }
         }
 
@@ -73,11 +73,23 @@ namespace grace
         {
             get
             {
-                return prefs.GetIntValue("headerheight");
+                return Preferences.GetIntValue(Preferences.Preference.HeaderHeight);
             }
             set
             {
-                prefs.AddOrUpdateIntPreference("headerheight", value);
+                Preferences.AddOrUpdateIntPreference(Preferences.Preference.HeaderHeight, value);
+            }
+        }
+
+        public bool BarCodeAutoOpen
+        {
+            get
+            {
+                return Preferences.GetBooleanValue(Preferences.Preference.BarCodeAutoOpen);
+            }
+            set
+            {
+                Preferences.AddOrUpdateBooleanPreference(Preferences.Preference.BarCodeAutoOpen, value);
             }
         }
 

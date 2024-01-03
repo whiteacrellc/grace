@@ -216,6 +216,7 @@
             ShowInTaskbar = false;
             StartPosition = FormStartPosition.CenterParent;
             Text = "Check Out Form";
+            Load += CheckoutForm_Load;
             ResumeLayout(false);
             PerformLayout();
         }

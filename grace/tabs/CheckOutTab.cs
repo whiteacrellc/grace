@@ -19,7 +19,7 @@ namespace grace.tabs
         private TextBox checkOutSearchTextBox;
         private TextBox textBoxBarCode;
         private Button coResetButton;
-
+        private CheckBox autoOpenCheckBox;
         private string scannedBarcode = string.Empty;
         private int user_id = 0;
 
@@ -31,6 +31,7 @@ namespace grace.tabs
             checkOutSearchTextBox = vivian.checkOutSearchTextBox;
             textBoxBarCode = vivian.textBoxBarcode;
             coResetButton = vivian.coResetButton;
+            autoOpenCheckBox = vivian.autoOpenOnScanCheckBox;
         }
 
         public void Load()
@@ -40,6 +41,9 @@ namespace grace.tabs
             textBoxBarCode.KeyPress += textBoxBarcode_KeyPress;
             coResetButton.Click += coResetButton_Click;
             checkOutDataGrid.CellMouseDoubleClick += checkOutDataGrid_CellMouseDoubleClick;
+            autoOpenCheckBox.CheckedChanged += AutoOpenCheckBox_CheckedChanged;
+            // Set row height and font
+            SetDataGridViewStyle();
         }
 
         public void InitializeDataGridView()
@@ -47,6 +51,21 @@ namespace grace.tabs
             var username = Globals.GetInstance().CurrentUser;
             user_id = DataBase.GetUserIdFromName(username);
             LoadDataGrid();
+        }
+
+        private void SetDataGridViewStyle()
+        {
+            // Set the default cell style
+            DataGridViewCellStyle cellStyle = new DataGridViewCellStyle
+            {
+                Font = new Font("Veranda", 12),
+                // Set other style properties if needed
+            };
+
+            checkOutDataGrid.DefaultCellStyle = cellStyle;
+
+            // Set the row height
+            //checkOutDataGrid.RowTemplate.Height = 18;
         }
 
         private void checkOutDataGrid_CellMouseDoubleClick(object? sender,
@@ -66,34 +85,37 @@ namespace grace.tabs
             }
         }
 
+        private void ChangeColumnNames()
+        {
+            // Dictionary to map DbContext column names to desired DataGridView column names
+            Dictionary<string, string> columnMappings = new Dictionary<string, string>
+        {
+            {"Total", "Available" },
+            {"UserTotal", "Checked Out"},
+            // Add more mappings as needed
+        };
+
+            // Iterate through the columns in the DataGridView
+            foreach (DataGridViewColumn dataGridViewColumn in checkOutDataGrid.Columns)
+            {
+                // Check if there is a mapping for the current column name
+                if (columnMappings.TryGetValue(dataGridViewColumn.DataPropertyName, out string? value))
+                {
+                    // Set the HeaderText to the desired name
+                    dataGridViewColumn.HeaderText = value;
+                }
+            }
+        }
+
         internal void LoadDataGrid()
         {
             checkOutDataGrid.DataSource = checkoutBindingSource;
 
-            using (var context = new GraceDbContext())
-            {
+            var graceRowsData = DataBase.GetPulledGrid(user_id);
 
-                var graceRowsData = (
-                    from graceRow in context.GraceRows
-                    join pulledItem in context.PulledDb on graceRow.ID equals pulledItem.GraceId into
-                    pulledItemsGroup
-                    from pulledItem in pulledItemsGroup.DefaultIfEmpty() // Left outer join
-                    where pulledItem == null || pulledItem.UserId == user_id
-                    orderby pulledItem != null ? pulledItem.CurrentTotal : 0 descending
-                    select new
-                    {
-                        Sku = graceRow.Sku,
-                        Brand = graceRow.Brand,
-                        Description = graceRow.Description,
-                        BarCode = graceRow.BarCode,
-                        Total = graceRow.Total,
-                        UserTotal = pulledItem != null ? pulledItem.CurrentTotal : 0
-                    }
-                ).ToList();
-
-                // Bind data to the DataGridView
-                checkoutBindingSource.DataSource = graceRowsData;
-            }
+            // Bind data to the DataGridView
+            checkoutBindingSource.DataSource = graceRowsData;
+            
         }
         internal void coResetButton_Click(object? sender, EventArgs e)
         {
@@ -112,23 +134,8 @@ namespace grace.tabs
             {
                 if (!string.IsNullOrWhiteSpace(searchTerm))
                 {
-                    var filteredProducts = (
-                         from graceRow in context.GraceRows
-                         join pulledItem in context.PulledDb on graceRow.ID equals pulledItem.GraceId into pulledItemsGroup
-                         from pulledItem in pulledItemsGroup.DefaultIfEmpty() // Left outer join
-                         where (pulledItem == null || pulledItem.UserId == user_id) &&
-                               (searchTerm == null || graceRow.Description.Contains(searchTerm))
-                         orderby pulledItem != null ? pulledItem.CurrentTotal : 0 descending
-                         select new
-                         {
-                             Sku = graceRow.Sku,
-                             Brand = graceRow.Brand,
-                             Description = graceRow.Description,
-                             BarCode = graceRow.BarCode,
-                             Total = graceRow.Total,
-                             UserTotal = pulledItem != null ? pulledItem.CurrentTotal : 0
-                         }
-                     ).ToList();
+                    var filteredProducts =
+                        DataBase.GetFilteredPulledGrid(user_id, searchTerm);
 
                     // Bind the filtered products to the DataGridView
                     checkoutBindingSource.DataSource = filteredProducts;
@@ -155,37 +162,49 @@ namespace grace.tabs
                 }
                 else
                 {
-                    using (var context = new GraceDbContext())
-                    {
+                    var filteredProducts =
+                        DataBase.GetPulledGridFromBarCode(user_id, scannedBarcode);
 
-                        var filteredProducts = (
-                            from graceRow in context.GraceRows
-                            join pulledItem in context.PulledDb on graceRow.ID equals pulledItem.GraceId into pulledItemsGroup
-                            from pulledItem in pulledItemsGroup.DefaultIfEmpty() // Left outer join
-                            where (pulledItem == null || pulledItem.UserId == user_id) &&
-                                  (graceRow.BarCode != null && graceRow.BarCode.Equals(scannedBarcode))
-                            orderby pulledItem != null ? pulledItem.CurrentTotal : 0 descending
-                            select new
-                            {
-                                Sku = graceRow.Sku,
-                                Brand = graceRow.Brand,
-                                Description = graceRow.Description,
-                                BarCode = graceRow.BarCode,
-                                Total = graceRow.Total,
-                                UserTotal = pulledItem != null ? pulledItem.CurrentTotal : 0
-                            }
-                        ).ToList();
+                    // Bind the filtered products to the DataGridView
+                    checkoutBindingSource.DataSource = filteredProducts;
 
-                        // Bind the filtered products to the DataGridView
-                        checkoutBindingSource.DataSource = filteredProducts;
-
-                        // Reset the scanned barcode for the next scan
-                        scannedBarcode = string.Empty;
-                    }
+                    // Reset the scanned barcode for the next scan
+                    scannedBarcode = string.Empty;
 
                     // Mark the keypress as handled to prevent it from being processed further
                     e.Handled = true;
+
+                    if (autoOpenCheckBox.Checked)
+                    {
+                        if (filteredProducts.Count > 0)
+                        {
+                            var sku = filteredProducts[0].Sku;
+                            using (CheckOutForm editRowForm = new CheckOutForm(sku))
+                            {
+                                DialogResult result = editRowForm.ShowDialog();
+                                if (result == DialogResult.OK)
+                                {
+                                    // we need to reload the grid.
+                                    LoadDataGrid();
+                                }
+                            }
+                        }
+                    }
+
                 }
+            }
+        }
+
+        private void AutoOpenCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            // Callback function to handle checkbox state change
+            if (autoOpenCheckBox.Checked)
+            {
+                MessageBox.Show("Checkbox is checked!");
+            }
+            else
+            {
+                MessageBox.Show("Checkbox is unchecked!");
             }
         }
 

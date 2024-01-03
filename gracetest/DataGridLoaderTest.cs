@@ -48,7 +48,7 @@ namespace gracetest
         [TestCleanup]
         public void Cleanup()
         {
-            var fileName = dataBase.DbFileName;
+            var fileName = DataBase.DbFileName;
             Cleanup(fileName);
         }
 

@@ -51,6 +51,7 @@ namespace grace
                             }
                             u.ResetPassword = true;
                             graceDb.Users.Add(u);
+                            u.Deleted = false;
                         }
                     }
                     graceDb.SaveChanges();
@@ -65,7 +66,9 @@ namespace grace
             {
                 try
                 {
-                    List<User> users = graceDb.Users.ToList();
+                    List<User> users = graceDb.Users
+                        .Where(e => e.Deleted == false)
+                        .ToList();
                     foreach (var user in users)
                     {
                         usernames.Add(user.Username);
