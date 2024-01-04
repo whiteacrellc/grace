@@ -31,6 +31,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using grace.data.models;
 using System.Data.Entity;
+using Microsoft.Office.Interop.Excel;
+using System.Xml.Linq;
 
 [assembly: InternalsVisibleTo("gracetest")]
 
@@ -138,6 +140,8 @@ namespace grace
                 return filteredProducts;
             }
         }
+
+
         public static List<PulledData> GetFilteredPulledGrid(int user_id, string searchTerm)
         {
             using (var context = new GraceDbContext())
@@ -162,24 +166,68 @@ namespace grace
                 return filteredProducts;
             }
         }
-
-        public static List<PulledData> GetCheckedOutGrid(int user_id)
+        public class CheckInData
+        {
+            public string UserName { get; set; }
+            public string Sku { get; set; }
+            public string Brand { get; set; }
+            public string Description { get; set; }
+            public string? BarCode { get; set; }
+            public string Collection { get; set; }
+            public int UserTotal { get; set; }
+            public int CheckIn { get; set; }
+            public int GraceId { get; set; }
+        }
+        public static List<CheckInData> GetCheckedOutGrid(int user_id)
         {
             using (var dbContext = new GraceDbContext())
             {
-                var result = dbContext.GraceRows
-                    .Join(dbContext.PulledDb
-                    .Where(p => p.UserId == user_id),
-                    gr => gr.GraceId,
-                    p => p.GraceId,
-                    (gr, p) => new PulledData
+                // Performing the join and projection
+                var result = (
+                    from gr in dbContext.GraceRows
+                             join pulled in dbContext.PulledDb on gr.GraceId equals pulled.GraceId
+                             join user in dbContext.Users on pulled.UserId equals user.ID
+                             join collection in dbContext.Collections on pulled.CollectionId equals collection.ID
+                             where user.ID == user_id
+                             orderby pulled.CurrentTotal descending
+                             select new CheckInData
+                             {
+                                 UserName = user.Username,
+                                 Sku = gr.Sku,
+                                 Brand = gr.Brand,
+                                 Description = gr.Description,
+                                 BarCode = gr.BarCode,
+                                 Collection = collection.Name,
+                                 UserTotal = pulled.Amount,
+                                 CheckIn = 0,
+                                 GraceId = gr.GraceId
+                             }).ToList();
+                return result;
+            }
+        }
+
+        public static List<CheckInData> GetCheckedOutGridAll()
+        {
+            using (var dbContext = new GraceDbContext())
+            {
+                // Performing the join and projection
+                var result = (
+                    from gr in dbContext.GraceRows
+                    join pulled in dbContext.PulledDb on gr.GraceId equals pulled.GraceId
+                    join user in dbContext.Users on pulled.UserId equals user.ID
+                    join collection in dbContext.Collections on pulled.CollectionId equals collection.ID
+                    orderby pulled.CurrentTotal descending
+                    select new CheckInData
                     {
+                        UserName = user.Username,
                         Sku = gr.Sku,
                         Brand = gr.Brand,
                         Description = gr.Description,
                         BarCode = gr.BarCode,
-                        Total = gr.Total,
-                        UserTotal = p.Amount
+                        Collection = collection.Name,
+                        UserTotal = pulled.Amount,
+                        CheckIn = 0,
+                        GraceId = gr.GraceId
                     }).ToList();
                 return result;
             }
@@ -557,7 +605,7 @@ namespace grace
             using (var context = new GraceDbContext())
             {
                 bool rowExists = context.Collections
-                .Any(c => c.GraceId == GraceId && c.Name == name);
+                    .Any(c => c.GraceId == GraceId && c.Name == name);
                 if (rowExists)
                 {
                     return;
@@ -573,6 +621,16 @@ namespace grace
 
                 context.Collections.Add(newRow);
                 context.SaveChanges();
+            }
+        }
+
+        public static int GetCollectionId(int graceId, string name)
+        {
+            using (var context = new GraceDbContext())
+            {
+                var row = context.Collections
+                    .SingleOrDefault(c => c.GraceId == graceId && c.Name == name);
+                return row.GraceId;
             }
         }
 

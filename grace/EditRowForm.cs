@@ -65,7 +65,7 @@ namespace grace
             // We will need this to update the database
             if (row != null)
             {
-                var sku = row.Cells["Sku"].ToString();
+                var sku = row.Cells["Sku"].Value as string;
                 graceRow = DataBase.GetGraceRowFromSku(sku);
                 if (graceRow == null)
                 {

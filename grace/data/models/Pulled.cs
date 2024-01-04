@@ -30,5 +30,6 @@ namespace grace.data.models
         public Grace Grace { get; set; }
         public int CollectionId { get; set; }
         public CollectionName Collection { get; set; }
+        bool IsCompleted { get; set; } = false;
     }
 }

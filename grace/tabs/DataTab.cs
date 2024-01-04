@@ -96,7 +96,9 @@ namespace grace.tabs
             dataGridView.DataSource = bindingSource;
             DataGridLoader.LoadBindingTable();
             bindingSource.DataSource = DataGridLoader.getData();
-            RemoveColumnsByName("ID", "Grace", "GraceId");
+            Utils.RemoveColumnByName(dataGridView, "ID");
+            Utils.RemoveColumnByName(dataGridView,"Grace");
+            Utils.RemoveColumnByName(dataGridView, "GraceId");
         }
 
         private void addRowButton_Click(object? sender, EventArgs e)
@@ -107,14 +109,18 @@ namespace grace.tabs
                 if (dialogResult == DialogResult.OK)
                 {
                     bindingSource.DataSource = DataGridLoader.getData();
-                    RemoveColumnsByName("ID", "Grace", "GraceId");
+                    Utils.RemoveColumnByName(dataGridView, "ID");
+                    Utils.RemoveColumnByName(dataGridView, "Grace");
+                    Utils.RemoveColumnByName(dataGridView, "GraceId");
                 }
             }
         }
 
         private void dataGridView_DataBindingComplete(object? sender, DataGridViewBindingCompleteEventArgs e)
         {
-            RemoveColumnsByName("ID", "Grace", "GraceId");
+            Utils.RemoveColumnByName(dataGridView, "ID");
+            Utils.RemoveColumnByName(dataGridView, "Grace");
+            Utils.RemoveColumnByName(dataGridView, "GraceId");
         }
 
         private void dataGridView_CellMouseDoubleClick(object? sender, DataGridViewCellMouseEventArgs e)
@@ -128,7 +134,9 @@ namespace grace.tabs
                 {
                     // we need to reload the grid.
                     bindingSource.DataSource = DataGridLoader.getData();
-                    RemoveColumnsByName("ID", "Grace", "GraceId");
+                    Utils.RemoveColumnByName(dataGridView, "ID");
+                    Utils.RemoveColumnByName(dataGridView, "Grace");
+                    Utils.RemoveColumnByName(dataGridView, "GraceId");
                 }
             }
         }
@@ -156,18 +164,9 @@ namespace grace.tabs
                 // If the search box is empty, show all products
                 bindingSource.DataSource = DataGridLoader.getData();
             }
-            RemoveColumnsByName("ID", "Grace", "GraceId");
-        }
-
-        private void RemoveColumnsByName(params string[] columnNames)
-        {
-            foreach (string columnName in columnNames)
-            {
-                if (dataGridView.Columns.Contains(columnName))
-                {
-                    dataGridView.Columns.Remove(columnName);
-                }
-            }
+            Utils.RemoveColumnByName(dataGridView, "ID");
+            Utils.RemoveColumnByName(dataGridView, "Grace");
+            Utils.RemoveColumnByName(dataGridView, "GraceId");
         }
 
         protected virtual void Dispose(bool disposing)

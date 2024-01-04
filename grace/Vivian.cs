@@ -42,7 +42,7 @@ namespace grace
         private HomeTab homeTab;
         private AdminTab adminTab;
         private DataTab dataTab;
-        private CheckInTab checkInTab;
+        internal CheckInTab checkInTab { get; set; }
         internal CheckOutTab checkOutTab { get; }
 
 
@@ -261,5 +261,6 @@ namespace grace
                 }
             }
         }
+
     }
 }

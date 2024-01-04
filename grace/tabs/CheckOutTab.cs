@@ -42,6 +42,7 @@ namespace grace.tabs
             coResetButton.Click += coResetButton_Click;
             checkOutDataGrid.CellMouseDoubleClick += checkOutDataGrid_CellMouseDoubleClick;
             autoOpenCheckBox.CheckedChanged += AutoOpenCheckBox_CheckedChanged;
+            autoOpenCheckBox.Checked = Globals.GetInstance().BarCodeAutoOpen;
             // Set row height and font
             SetDataGridViewStyle();
         }
@@ -115,7 +116,9 @@ namespace grace.tabs
 
             // Bind data to the DataGridView
             checkoutBindingSource.DataSource = graceRowsData;
-            
+            ChangeColumnNames();
+
+
         }
         internal void coResetButton_Click(object? sender, EventArgs e)
         {
@@ -139,6 +142,7 @@ namespace grace.tabs
 
                     // Bind the filtered products to the DataGridView
                     checkoutBindingSource.DataSource = filteredProducts;
+                    ChangeColumnNames();
                 }
                 else
                 {
@@ -167,14 +171,14 @@ namespace grace.tabs
 
                     // Bind the filtered products to the DataGridView
                     checkoutBindingSource.DataSource = filteredProducts;
-
+                    ChangeColumnNames();
                     // Reset the scanned barcode for the next scan
                     scannedBarcode = string.Empty;
 
                     // Mark the keypress as handled to prevent it from being processed further
                     e.Handled = true;
 
-                    if (autoOpenCheckBox.Checked)
+                    if (Globals.GetInstance().BarCodeAutoOpen)
                     {
                         if (filteredProducts.Count > 0)
                         {
@@ -195,16 +199,16 @@ namespace grace.tabs
             }
         }
 
-        private void AutoOpenCheckBox_CheckedChanged(object sender, EventArgs e)
+        private void AutoOpenCheckBox_CheckedChanged(object? sender, EventArgs e)
         {
             // Callback function to handle checkbox state change
             if (autoOpenCheckBox.Checked)
             {
-                MessageBox.Show("Checkbox is checked!");
+                Globals.GetInstance().BarCodeAutoOpen = true;
             }
             else
             {
-                MessageBox.Show("Checkbox is unchecked!");
+                Globals.GetInstance().BarCodeAutoOpen = false;
             }
         }
 

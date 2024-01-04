@@ -30,7 +30,7 @@
         {
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Vivian));
-            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
             openFileDialog = new OpenFileDialog();
             menuStrip1 = new MenuStrip();
             editToolStripMenuItem = new ToolStripMenuItem();
@@ -65,6 +65,9 @@
             barcodeLabel = new Label();
             textBoxBarcode = new TextBox();
             checkinPage = new TabPage();
+            applyChangesButton = new Button();
+            allUsersCheckBox = new CheckBox();
+            label3 = new Label();
             checkInDataGrid = new DataGridView();
             adminPage = new TabPage();
             resetPasswordButton = new Button();
@@ -72,6 +75,7 @@
             label5 = new Label();
             errorProvider1 = new ErrorProvider(components);
             checkoutBindingSource = new BindingSource(components);
+            checkInBindingSource = new BindingSource(components);
             menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             tabControl.SuspendLayout();
@@ -87,6 +91,7 @@
             adminPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)errorProvider1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)checkoutBindingSource).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)checkInBindingSource).BeginInit();
             SuspendLayout();
             // 
             // openFileDialog
@@ -101,7 +106,7 @@
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
             menuStrip1.Padding = new Padding(7, 2, 0, 2);
-            menuStrip1.Size = new Size(1620, 28);
+            menuStrip1.Size = new Size(1934, 28);
             menuStrip1.TabIndex = 4;
             menuStrip1.Text = "menuStrip1";
             // 
@@ -170,7 +175,7 @@
             tabControl.Name = "tabControl";
             tabControl.Padding = new Point(5, 5);
             tabControl.SelectedIndex = 0;
-            tabControl.Size = new Size(2200, 1000);
+            tabControl.Size = new Size(2514, 1000);
             tabControl.TabIndex = 9;
             tabControl.TabStop = false;
             tabControl.Selecting += tabControl_Selecting;
@@ -296,7 +301,7 @@
             dataPage.Location = new Point(4, 44);
             dataPage.Name = "dataPage";
             dataPage.Padding = new Padding(11, 12, 11, 12);
-            dataPage.Size = new Size(2192, 952);
+            dataPage.Size = new Size(2506, 952);
             dataPage.TabIndex = 1;
             dataPage.Text = "Inventory";
             dataPage.ToolTipText = "Inventory for Patti";
@@ -341,7 +346,7 @@
             dataGridView.Name = "dataGridView";
             dataGridView.RowHeadersWidth = 82;
             dataGridView.RowTemplate.Height = 41;
-            dataGridView.Size = new Size(2200, 1000);
+            dataGridView.Size = new Size(2514, 1000);
             dataGridView.TabIndex = 1;
             // 
             // checkoutPage
@@ -405,18 +410,19 @@
             checkOutDataGrid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
             checkOutDataGrid.BorderStyle = BorderStyle.Fixed3D;
             checkOutDataGrid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = SystemColors.Window;
-            dataGridViewCellStyle2.Font = new Font("Verdana", 10.875F, FontStyle.Regular, GraphicsUnit.Point);
-            dataGridViewCellStyle2.ForeColor = SystemColors.ControlText;
-            dataGridViewCellStyle2.Padding = new Padding(0, 2, 0, 0);
-            dataGridViewCellStyle2.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.False;
-            checkOutDataGrid.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = Color.FromArgb(224, 224, 224);
+            dataGridViewCellStyle1.Font = new Font("Verdana", 10.875F, FontStyle.Regular, GraphicsUnit.Point);
+            dataGridViewCellStyle1.ForeColor = SystemColors.ControlText;
+            dataGridViewCellStyle1.Padding = new Padding(0, 2, 0, 0);
+            dataGridViewCellStyle1.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.False;
+            checkOutDataGrid.DefaultCellStyle = dataGridViewCellStyle1;
             checkOutDataGrid.Location = new Point(27, 50);
             checkOutDataGrid.MultiSelect = false;
             checkOutDataGrid.Name = "checkOutDataGrid";
+            checkOutDataGrid.ReadOnly = true;
             checkOutDataGrid.RowHeadersWidth = 82;
             checkOutDataGrid.RowTemplate.Height = 25;
             checkOutDataGrid.Size = new Size(1118, 500);
@@ -442,21 +448,57 @@
             // 
             // checkinPage
             // 
+            checkinPage.Controls.Add(applyChangesButton);
+            checkinPage.Controls.Add(allUsersCheckBox);
+            checkinPage.Controls.Add(label3);
             checkinPage.Controls.Add(checkInDataGrid);
             checkinPage.Location = new Point(4, 44);
             checkinPage.Name = "checkinPage";
-            checkinPage.Size = new Size(2192, 952);
+            checkinPage.Size = new Size(2506, 952);
             checkinPage.TabIndex = 4;
             checkinPage.Text = "Check In";
             checkinPage.UseVisualStyleBackColor = true;
             // 
+            // applyChangesButton
+            // 
+            applyChangesButton.Location = new Point(1416, 80);
+            applyChangesButton.Name = "applyChangesButton";
+            applyChangesButton.Size = new Size(75, 23);
+            applyChangesButton.TabIndex = 3;
+            applyChangesButton.Text = "Apply Changes";
+            applyChangesButton.UseVisualStyleBackColor = true;
+            // 
+            // allUsersCheckBox
+            // 
+            allUsersCheckBox.AutoSize = true;
+            allUsersCheckBox.Location = new Point(1416, 37);
+            allUsersCheckBox.Name = "allUsersCheckBox";
+            allUsersCheckBox.Size = new Size(149, 22);
+            allUsersCheckBox.TabIndex = 2;
+            allUsersCheckBox.Text = "Show All Users";
+            allUsersCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // label3
+            // 
+            label3.AutoSize = true;
+            label3.Location = new Point(1034, 38);
+            label3.Name = "label3";
+            label3.Size = new Size(0, 18);
+            label3.TabIndex = 1;
+            // 
             // checkInDataGrid
             // 
+            checkInDataGrid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+            checkInDataGrid.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
+            checkInDataGrid.BorderStyle = BorderStyle.Fixed3D;
+            checkInDataGrid.CellBorderStyle = DataGridViewCellBorderStyle.Sunken;
+            checkInDataGrid.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Sunken;
             checkInDataGrid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             checkInDataGrid.Location = new Point(8, 38);
             checkInDataGrid.Name = "checkInDataGrid";
             checkInDataGrid.RowTemplate.Height = 25;
-            checkInDataGrid.Size = new Size(963, 497);
+            checkInDataGrid.SelectionMode = DataGridViewSelectionMode.CellSelect;
+            checkInDataGrid.Size = new Size(1364, 497);
             checkInDataGrid.TabIndex = 0;
             // 
             // adminPage
@@ -507,9 +549,9 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 17F);
             AutoScaleMode = AutoScaleMode.Font;
-            AutoSize = true;
+            AutoScroll = true;
             BackColor = Color.White;
-            ClientSize = new Size(1620, 884);
+            ClientSize = new Size(1934, 884);
             Controls.Add(tabControl);
             Controls.Add(menuStrip1);
             Font = new Font("Segoe UI", 10.125F, FontStyle.Regular, GraphicsUnit.Point);
@@ -517,7 +559,6 @@
             Icon = (Icon)resources.GetObject("$this.Icon");
             MainMenuStrip = menuStrip1;
             Margin = new Padding(5, 2, 5, 2);
-            MaximizeBox = false;
             MdiChildrenMinimizedAnchorBottom = false;
             MinimizeBox = false;
             Name = "Vivian";
@@ -540,11 +581,13 @@
             checkoutPage.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)checkOutDataGrid).EndInit();
             checkinPage.ResumeLayout(false);
+            checkinPage.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)checkInDataGrid).EndInit();
             adminPage.ResumeLayout(false);
             adminPage.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)errorProvider1).EndInit();
             ((System.ComponentModel.ISupportInitialize)checkoutBindingSource).EndInit();
+            ((System.ComponentModel.ISupportInitialize)checkInBindingSource).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -589,7 +632,11 @@
         internal TextBox checkOutSearchTextBox;
         internal TextBox textBoxBarcode;
         internal Button coResetButton;
-        private DataGridView checkInDataGrid;
         internal CheckBox autoOpenOnScanCheckBox;
+        internal DataGridView checkInDataGrid;
+        internal BindingSource checkInBindingSource;
+        private Label label3;
+        internal CheckBox allUsersCheckBox;
+        private Button applyChangesButton;
     }
 }
