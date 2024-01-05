@@ -1,4 +1,16 @@
-﻿using System;
+﻿/*
+ * Copyright (c) 2023 White Acre Software LLC
+ * All rights reserved.
+ *
+ * This software is the confidential and proprietary information
+ * of White Acre Software LLC. You shall not disclose such
+ * Confidential Information and shall use it only in accordance
+ * with the terms of the license agreement you entered into with
+ * White Acre Software LLC.
+ *
+ * Year: 2023
+ */
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -12,6 +24,7 @@ namespace grace
 {
     public partial class SettingsForm : Form
     {
+        private Globals globals = Globals.GetInstance();
         public SettingsForm()
         {
             InitializeComponent();
@@ -20,8 +33,8 @@ namespace grace
         private void SettingsForm_Load(object sender, EventArgs e)
         {
             // Load the current setting into the form control
-            textBoxRowsPerPage.Text = Properties.Settings.Default.rowsperpage.ToString();
-            rowHeighrTextBox.Text = Properties.Settings.Default.rowheight.ToString();
+            textBoxRowsPerPage.Text = globals.RowsPerPage.ToString();
+            rowHeighrTextBox.Text = globals.RowHeight.ToString();
         }
 
         private void CancelButton_Click(object sender, EventArgs e)
@@ -48,14 +61,12 @@ namespace grace
             int rowHeight = parseeTextBox(textBoxRowsPerPage);
             if (rowHeight > 0)
             {
-                Properties.Settings.Default.rowsperpage = rowHeight;
-                // Save the settings
-                Properties.Settings.Default.Save();
+                globals.RowsPerPage = rowHeight;
             }
             int rowsPerPage = parseeTextBox(rowHeighrTextBox);
             if (rowHeight > 0)
             {
-                Properties.Settings.Default.rowheight = rowHeight;
+                globals.RowHeight = rowHeight;
                 // Save the settings
                 Properties.Settings.Default.Save();
             }
@@ -72,7 +83,7 @@ namespace grace
 
         private void textBoxRowsPerPage_Validating(object sender, CancelEventArgs e)
         {
-            if (!int.TryParse(textBoxRowsPerPage.Text, out _))
+            if (int.TryParse(textBoxRowsPerPage.Text, out _))
             {
                 MessageBox.Show("Invalid input. Please enter a valid integer.",
                     "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);

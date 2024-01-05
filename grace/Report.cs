@@ -1,4 +1,16 @@
-﻿using OfficeOpenXml;
+﻿/*
+ * Copyright (c) 2023 White Acre Software LLC
+ * All rights reserved.
+ *
+ * This software is the confidential and proprietary information
+ * of White Acre Software LLC. You shall not disclose such
+ * Confidential Information and shall use it only in accordance
+ * with the terms of the license agreement you entered into with
+ * White Acre Software LLC.
+ *
+ * Year: 2023
+ */
+using OfficeOpenXml;
 using OfficeOpenXml.Style;
 using System;
 using System.Collections.Generic;
@@ -9,61 +21,69 @@ using System.Threading.Tasks;
 using NLog;
 using NLog.Config;
 using System.Windows.Forms;
+using System.IO;
+using grace.data.models;
+
 
 namespace grace
 {
     public class Report
     {
-        private Dictionary<string, List<string>> items;
-        Dictionary<string, List<Row>> collections;
-        private int currentRow = 0;
-        public ExcelPackage package {  get; }
+        private int currentRow;
+        public ExcelPackage package { get; }
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
-        Vivian vivian;
-        private int endLastBlock = 0;
-        private int currentPage = 0;
+        private int endLastBlock;
+        private int currentPage;
 
-        public Report(Dictionary<string, List<Row>> collections, Dictionary<string, List<string>> items, Vivian vivian)
+        public Report()
         {
-            this.collections = collections;
-            this.items = items;
-            this.vivian = vivian;
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             this.package = new ExcelPackage();
         }
 
 
 
-        private int writeCollectoion(string collection, List<Row> rows, ExcelWorksheet worksheet)
+        private int writeCollectoion(string collection, List<GraceRow> rows,
+            ExcelWorksheet worksheet)
         {
             int startRow = currentRow;
             endLastBlock = currentRow;
             int rowsWritten = 0;
             var sortedRows = rows.OrderBy(row => row.Brand).ToArray();
-            foreach (Row row in sortedRows)
+            foreach (var row in sortedRows)
             {
                 if (row == null || row.Sku == null) continue;
-                var collist = items[row.Sku];
 
                 worksheet.Cells[currentRow, 1].Value = row.Brand;
                 worksheet.Cells[currentRow, 2].Value = row.Sku;
                 worksheet.Cells[currentRow, 3].Value = row.Description;
                 worksheet.Cells[currentRow, 4].Value = collection;
-
-                int i = 0;
-                foreach (var itemcol in collist)
+                if (row.Col2 != null)
                 {
-                    if (itemcol == null) break;
-                    if (itemcol.Equals(collection)) continue;
-                    worksheet.Cells[currentRow, 5 + i].Value = itemcol;
-                    i++;
+                    worksheet.Cells[currentRow, 5].Value = row.Col2;
                 }
-                worksheet.Cells[currentRow, 10].Value = row.Availabilty;
-                worksheet.Cells[currentRow, 11].Value = row.PreviousTotal;
-                worksheet.Cells[currentRow, 12].Value = row.Total;
-                if (row.PreviousTotal != row.Total)
+                if (row.Col3 != null)
                 {
-                    worksheet.Cells[currentRow, 12].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                    worksheet.Cells[currentRow, 12].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
+                    worksheet.Cells[currentRow, 6].Value = row.Col3;
+                }
+                if (row.Col4 != null)
+                {
+                    worksheet.Cells[currentRow, 7].Value = row.Col4;
+                }
+                if (row.Col5 != null)
+                {
+                    worksheet.Cells[currentRow, 8].Value = row.Col5;
+                }
+                if (row.Col6 != null)
+                {
+                    worksheet.Cells[currentRow, 9].Value = row.Col6;
+                }
+                worksheet.Cells[currentRow, 10].Value = row.Availability;
+                worksheet.Cells[currentRow, 11].Value = row.Total;
+                if (row.Total < 0)
+                {
+                    worksheet.Cells[currentRow, 11].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    worksheet.Cells[currentRow, 11].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
                 }
 
                 // Put border around cells 
@@ -83,7 +103,7 @@ namespace grace
             return rowsWritten;
         }
 
-        private void WritePrintHeader(ExcelWorksheet worksheet)
+        private static void WritePrintHeader(ExcelWorksheet worksheet)
         {
             // Get the current date and format it as desired
             string currentDate = DateTime.Now.ToString("MMMM dd, yyyy");
@@ -112,9 +132,7 @@ namespace grace
             worksheet.Cells[spanIndex].Merge = true;
             worksheet.Cells[spanIndex].Value = "Collections";
             worksheet.Cells["J" + row].Value = "Availability";
-            worksheet.Cells["K" + row].Value = vivian.er.PreviousColumnHeader;
-            string currentDate = DateTime.Now.ToString("MMMM dd, yyyy");
-            worksheet.Cells["L" + row].Value = $"Total for {currentDate}";
+            worksheet.Cells["L" + row].Value = "Total";
 
             // Set the font size to 14 and make the text bold for the inserted row
             worksheet.Cells[row, 1, row, 10].Style.Font.Size = 16;
@@ -145,30 +163,17 @@ namespace grace
 
 
             // Sort the keys alphabetically
-            var sortedKeys = collections.Keys.OrderBy(key => key).ToList();
+            var sortedKeys = DataBase.OrderedCollectionNames();
 
             var worksheet = package.Workbook.Worksheets.Add("Report");
             worksheet.Cells.Style.Font.Size = 14;
 
             // Set the row height to 10 for all rows
-            worksheet.DefaultRowHeight = 35;
+            worksheet.DefaultRowHeight = Globals.GetInstance().RowHeight;
 
             currentRow = 1;
             currentPage = 1;
             WriteHeader(worksheet, 1);
-
-            /*
-            worksheet.Cells["A1"].Value = "Brand";
-            worksheet.Cells["B1"].Value = "Item Number";
-            worksheet.Cells["C1"].Value = "Description";
-            worksheet.Cells["D1:I1"].Merge = true;
-            worksheet.Cells["D1:I1"].Value = "Collections";
-            worksheet.Cells["J1"].Value = "Previous Count";
-            worksheet.Cells["K1"].Value = "Total Count";
-            */
-
-
-            // worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
 
             for (int columnIndex = 1; columnIndex <= 12; columnIndex++)
             {
@@ -184,23 +189,20 @@ namespace grace
             WritePrintHeader(worksheet);
 
             // Loop through the sorted dictionary and write out the values grouped by key.
-            foreach (var key in sortedKeys)
+            foreach (var group in sortedKeys)
             {
-                vivian.DisplayLogMessage("Processing Collection = " + key);
-                List<Row> rows = collections[key];
-                int rowsWritten = writeCollectoion(key, rows, worksheet);
+                var key = group.Key;
+                var groupRows = DataBase.GetGraceRows(group.ToList());
+                int rowsWritten = writeCollectoion(key, groupRows, worksheet);
 
-                var rowsPerPage = Properties.Settings.Default.rowsperpage;
-                if (currentPage > 30)
+                var rowsPerPage = Globals.GetInstance().RowsPerPage;
+                if (currentPage > rowsPerPage)
                 {
                     worksheet.InsertRow(endLastBlock, 1);
                     //currentRow++;
                     worksheet.Row(endLastBlock).PageBreak = true;
                     currentPage = rowsWritten;
                     InsertHeader(worksheet, endLastBlock + 1);
-
-                    string msg = "currentrow " + currentRow + " endlastblock " + endLastBlock;
-                    vivian.DisplayLogMessage(msg);
                 }
                 worksheet.InsertRow(currentRow, 2);
                 currentRow += 2;
@@ -212,8 +214,6 @@ namespace grace
             {
                 cells.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
             }
-
-            vivian.DisplayLogMessage("End Processing, you can write the report now");
         }
         public void WriteReport(string fileName)
         {
@@ -242,7 +242,7 @@ namespace grace
                     worksheet.PrinterSettings.LeftMargin = 0;
                     worksheet.PrinterSettings.RightMargin = 0;
 
-                   package.SaveAs(fileInfo);
+                    package.SaveAs(fileInfo);
                 }
             }
             catch (Exception ex)

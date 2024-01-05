@@ -2,18 +2,39 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0-windows</TargetFramework>
+    <!--<TargetFramework>net6.0-windows</TargetFramework>-->
+    <TargetFramework>net7.0-windows7.0</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
     <ApplicationIcon>whiteacre_pkn_icon.ico</ApplicationIcon>
+    <UseWPF>True</UseWPF>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Company>White Acre Software LLC</Company>
+    <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
+    <AnalysisLevel>preview-recommended</AnalysisLevel>
+    <ApplicationHighDpiMode>SystemAware</ApplicationHighDpiMode>
+    <ForceDesignerDpiUnaware>true</ForceDesignerDpiUnaware>
+    <NeutralLanguage>en-US</NeutralLanguage>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <NoWarn>1701;1702;8600;8602;CA1305;CA1707;CA1822;CA1805;CS8604;CA1860;CA1309</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <NoWarn>1701;1702;8600;8602;CA1305;CA1707;CA1822;CA1805;CS8604;CA1860;CA1309</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="EPPlus" Version="6.2.8" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.11" />
     <PackageReference Include="Microsoft.Office.Interop.Excel" Version="15.0.4795.1001" />
     <PackageReference Include="NLog" Version="5.2.4" />
     <PackageReference Include="NLog.Config" Version="4.7.15" />
+    <PackageReference Include="System.Collections.NonGeneric" Version="4.3.0" />
+    <PackageReference Include="System.Data.SQLite" Version="1.0.118" />
   </ItemGroup>
 
   <ItemGroup>
@@ -26,6 +47,11 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Update="Settings1.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings1.settings</DependentUpon>
     </Compile>
   </ItemGroup>
 
@@ -45,14 +71,22 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="C:\Users\tom\source\repos\grace\grace\.editorconfig" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Update="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <None Update="README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
-
+  
+  <ItemGroup>
+    <GlobalAnalyzerConfigFiles Include="C:\Users\tom\source\repos\grace\grace\.globalconfig" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <EditorConfigFiles Remove="C:\Users\tom\source\repos\whiteacrellc\grace\grace\.globalconfig" />
+  </ItemGroup>
+  
 </Project>

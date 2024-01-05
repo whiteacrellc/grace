@@ -9,6 +9,11 @@ max_line_length = 80
 
 [*.{cs,vb}]
 #### Naming styles ####
+indent_style = space
+indent_size = 4
+max_line_length = 80
+insert_final_newline = true
+trim_trailing_whitespace = true
 
 # Naming rules
 
@@ -138,3 +143,6 @@ csharp_style_prefer_extended_property_pattern = true:suggestion
 csharp_style_var_for_built_in_types = false:silent
 csharp_style_var_when_type_is_apparent = false:silent
 csharp_style_var_elsewhere = false:silent
+
+# CS8618: Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+dotnet_diagnostic.CS8618.severity = none
