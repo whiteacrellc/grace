@@ -96,7 +96,7 @@ namespace grace
                 var result = (
                     from graces in dbContext.Graces
                     join total in dbContext.Totals on graces.ID equals total.GraceId
-                    orderby graces.Sku descending
+                    orderby graces.Sku ascending
                     select new CheckOut
                     {
                         Sku = graces.Sku,
@@ -119,7 +119,7 @@ namespace grace
                     from graces in dbContext.Graces
                     join total in dbContext.Totals on graces.ID equals total.GraceId
                     where (graces.Barcode != null && graces.Barcode.Equals(scannedBarcode))
-                    orderby graces.Sku descending
+                    orderby graces.Sku ascending
                     select new CheckOut
                     {
                         Sku = graces.Sku,
@@ -144,7 +144,7 @@ namespace grace
                     join total in dbContext.Totals on graces.ID equals total.GraceId
                     where (searchTerm == null || (graces.Sku.Contains(searchTerm, StringComparison.CurrentCultureIgnoreCase) ||
                     graces.Description.Contains(searchTerm, StringComparison.CurrentCultureIgnoreCase)))
-                    orderby graces.Sku descending
+                    orderby graces.Sku ascending
                     select new CheckOut
                     {
                         Sku = graces.Sku,
@@ -211,7 +211,7 @@ namespace grace
                     join user in dbContext.Users on pulled.UserId equals user.ID
                     join collection in dbContext.Collections on pulled.CollectionId equals collection.ID
                     where pulled.IsCompleted == false
-                    orderby user.Username descending, pulled.LastUpdated ascending, pulled.CurrentTotal descending
+                    orderby user.Username ascending, pulled.LastUpdated ascending, pulled.CurrentTotal descending
                     select new CheckInData
                     {
                         UserName = user.Username,

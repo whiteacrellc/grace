@@ -125,9 +125,7 @@ namespace grace.tabs
             // Bind data to the DataGridView
             checkoutBindingSource.DataSource = graceRowsData;
             ChangeColumnNames();
-            Utils.RemoveColumnByName(checkOutDataGrid, "ID");
-            Utils.RemoveColumnByName(checkOutDataGrid, "Availability");
-            Utils.RemoveColumnByName(checkOutDataGrid, "Deleted");
+            Utils.RemoveColumnByName(checkOutDataGrid, "GraceId");
         }
         internal void coResetButton_Click(object? sender, EventArgs e)
         {
