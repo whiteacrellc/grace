@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Copyright (c) 2023 White Acre Software LLC
  * All rights reserved.
  *
@@ -80,42 +80,81 @@ namespace grace
 
         }
 
-        public static  List<GraceRow>GetPulledGrid()
+        public class CheckOut
         {
-            using (var context = new GraceDbContext())
-            {
+            public string Sku { get; set; }
+            public string Description { get; set; }
+            public string Brand { get; set; }
+            public string Barcode { get; set; }
+            public int Total {  get; set; }
+            public int GraceId { get; set; }
+        }
 
-                var graceRowsData = context.GraceRows.ToList();
-                return graceRowsData;
+        public static List<CheckOut> GetPulledGrid()
+        {
+            using (var dbContext = new GraceDbContext()) {
+                var result = (
+                    from graces in dbContext.Graces
+                    join total in dbContext.Totals on graces.ID equals total.GraceId
+                    orderby graces.Sku ascending
+                    select new CheckOut
+                    {
+                        Sku = graces.Sku,
+                        Description = graces.Description,
+                        Brand = graces.Brand,
+                        Barcode = graces.Barcode,
+                        Total = total.total,
+                        GraceId = graces.ID
+                    }
+                ).ToList();
+                return result;
             }
         }
 
-        public static List<GraceRow> GetPulledGridFromBarCode(string scannedBarcode)
+        public static List<CheckOut> GetPulledGridFromBarCode(string scannedBarcode)
         {
-            using (var context = new GraceDbContext())
+            using (var dbContext = new GraceDbContext())
             {
-
                 var filteredProducts = (
-                    from graceRow in context.GraceRows 
-                    where (graceRow.BarCode != null && graceRow.BarCode.Equals(scannedBarcode))
-                    orderby graceRow.Sku descending
-                    select graceRow
+                    from graces in dbContext.Graces
+                    join total in dbContext.Totals on graces.ID equals total.GraceId
+                    where (graces.Barcode != null && graces.Barcode.Equals(scannedBarcode))
+                    orderby graces.Sku ascending
+                    select new CheckOut
+                    {
+                        Sku = graces.Sku,
+                        Description = graces.Description,
+                        Brand = graces.Brand,
+                        Barcode = graces.Barcode,
+                        Total = total.total,
+                        GraceId = graces.ID
+                    }
                 ).ToList();
                 return filteredProducts;
             }
         }
 
 
-        public static List<GraceRow> GetFilteredPulledGrid(string searchTerm)
+        public static List<CheckOut> GetFilteredPulledGrid(string searchTerm)
         {
-            using (var context = new GraceDbContext())
+            using (var dbContext = new GraceDbContext())
             {
                 var filteredProducts = (
-                        from graceRow in context.GraceRows
-                        where (searchTerm == null || graceRow.Sku.Contains(searchTerm, StringComparison.CurrentCultureIgnoreCase))
-                        orderby graceRow.Sku descending
-                        select graceRow
-                    ).ToList();
+                    from graces in dbContext.Graces
+                    join total in dbContext.Totals on graces.ID equals total.GraceId
+                    where (searchTerm == null || (graces.Sku.Contains(searchTerm, StringComparison.CurrentCultureIgnoreCase) ||
+                    graces.Description.Contains(searchTerm, StringComparison.CurrentCultureIgnoreCase)))
+                    orderby graces.Sku ascending
+                    select new CheckOut
+                    {
+                        Sku = graces.Sku,
+                        Description = graces.Description,
+                        Brand = graces.Brand,
+                        Barcode = graces.Barcode,
+                        Total = total.total,
+                        GraceId = graces.ID
+                    }
+                ).ToList();
                 return filteredProducts;
             }
         }
@@ -172,7 +211,7 @@ namespace grace
                     join user in dbContext.Users on pulled.UserId equals user.ID
                     join collection in dbContext.Collections on pulled.CollectionId equals collection.ID
                     where pulled.IsCompleted == false
-                    orderby user.Username descending, pulled.LastUpdated ascending, pulled.CurrentTotal descending
+                    orderby user.Username ascending, pulled.LastUpdated ascending, pulled.CurrentTotal descending
                     select new CheckInData
                     {
                         UserName = user.Username,

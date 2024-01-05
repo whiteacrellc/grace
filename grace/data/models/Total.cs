@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Copyright (c) 2023 White Acre Software LLC
  * All rights reserved.
  *
@@ -20,7 +20,7 @@ namespace grace.data.models
     public partial class Total
     {
         public int ID { get; set; }
-        public DateTime date_field { get; set; }
+        public DateTime date_field { get; set; } = DateTime.Now;
         public int total { get; set; }
         public int GraceId { get; set; }
         public Grace Grace { get; set; }

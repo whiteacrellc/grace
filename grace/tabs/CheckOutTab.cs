@@ -1,4 +1,4 @@
-﻿using grace.data;
+using grace.data;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -125,8 +125,7 @@ namespace grace.tabs
             // Bind data to the DataGridView
             checkoutBindingSource.DataSource = graceRowsData;
             ChangeColumnNames();
-
-
+            Utils.RemoveColumnByName(checkOutDataGrid, "GraceId");
         }
         internal void coResetButton_Click(object? sender, EventArgs e)
         {
