@@ -1,7 +1,9 @@
 ﻿using grace.data;
 using grace.data.models;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using System;
 using System.Collections.Generic;
+using System.Drawing.Text;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,6 +22,7 @@ namespace grace.tabs
         private TabPage checkInTabPage;
         private CheckBox allUsersCheckBox;
         private List<CheckInData> checkInDataList = new List<CheckInData>();
+        private Button applyChangesButton;
 
         internal CheckInTab(Vivian v)
         {
@@ -29,6 +32,7 @@ namespace grace.tabs
             checkInBindingSource = vivian.checkInBindingSource;
             checkInTabPage = vivian.tabControl.TabPages[3];
             allUsersCheckBox = vivian.allUsersCheckBox;
+            applyChangesButton = vivian.applyChangesButton;
         }
 
         public void Load()
@@ -36,9 +40,11 @@ namespace grace.tabs
             checkInDataGrid.KeyPress += checkInDataGrid_KeyPress;
             checkInDataGrid.CellBeginEdit += checkInDataGrid_CellBeginEdit;
             checkInDataGrid.DataBindingComplete += checkInDataGrid_DataBindingComplete;
+            checkInDataGrid.CellFormatting += CheckInDataGrid_CellFormatting;
             checkInDataGrid.CellEndEdit += checkInDataGrid_CellEndEdit; 
             checkInTabPage.Enter += CheckInTabPage_Enter;
             allUsersCheckBox.CheckedChanged += AllUsersCheckBox_CheckedChanged;
+            applyChangesButton.Click += ApplyChangesButton_Click;
         }
 
         public void InitializeDataGridView()
@@ -86,7 +92,7 @@ namespace grace.tabs
             Dictionary<string, string> columnMappings = new Dictionary<string, string>
         {
             {"CheckIn", "Checked In" },
-            {"UserTotal", "Checked Out"},
+            {"dateTime", "Date"},
             // Add more mappings as needed
         };
 
@@ -108,16 +114,19 @@ namespace grace.tabs
         }
 
         // Only allow positive integers in the text box
-        private void checkInDataGrid_KeyPress(object? sender, KeyPressEventArgs e)
+        private void checkInDataGrid_KeyPress(object? sender,
+            KeyPressEventArgs e)
         {
             // Allow digits (0-9) and control keys
             if (!char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar))
             {
-                // Cancel the keypress if the entered character is not a digit or control key
+                // Cancel the keypress if the entered character
+                // is not a digit or control key
                 e.Handled = true;
             }
         }
-        private void checkInDataGrid_CellBeginEdit(object? sender, DataGridViewCellCancelEventArgs e)
+        private void checkInDataGrid_CellBeginEdit(object? sender,
+            DataGridViewCellCancelEventArgs e)
         {
             // Allow editing only for the "Total" column
             if (e.ColumnIndex != checkInDataGrid.Columns["CheckIn"].Index)
@@ -126,51 +135,26 @@ namespace grace.tabs
             }
         }
 
-        private void checkInDataGrid_CellEndEdit(object? sender, DataGridViewCellEventArgs e)
+        private void CheckInDataGrid_CellFormatting(object? sender,
+            DataGridViewCellFormattingEventArgs e)
         {
-            // Check if the edit is in the "Total" column
-            if (e.ColumnIndex == checkInDataGrid.Columns["CheckIn"].Index)
+            // Check if the formatting is for the DateTime column
+            if (checkInDataGrid.Columns[e.ColumnIndex].Name == "dateTime"
+                && e.Value != null)
             {
-                // Get the updated value
-                int updatedValue =
-                    Convert.ToInt32(checkInDataGrid.Rows[e.RowIndex].Cells[e.ColumnIndex].Value);
-                CheckInData checkInData = checkInDataList[e.RowIndex];
-                int graceId = checkInData.GraceId;
-                string collectionName = checkInData.Collection;
-                string username = checkInData.UserName;
-                var user_id = DataBase.GetUserIdFromName(username);
-                int col_id = DataBase.GetCollectionId(graceId, collectionName);
-                int currentTotal = DataBase.GetTotal(graceId);
-                int newTotal = currentTotal - updatedValue;
-
-                using (var context = new GraceDbContext())
+                // Format the DateTime value to the desired format
+                if (e.Value is DateTime dateTimeValue)
                 {
-                    /*
-                    // Add to pulled table
-                    Pulled pulled = new Pulled
-                    {
-
-                        UserId = user_id,
-                        GraceId = graceId,
-                        CollectionId = col_id,
-                        Amount = updatedValue,
-                        CurrentTotal = newTotal,
-                    };
-                    context.PulledDb.Add(pulled);
-                    context.SaveChanges();
-                    // Add Totals in total db
-                    Total total = new Total
-                    {
-                        date_field = DateTime.Now,
-                        GraceId = graceId,
-                        total = newTotal
-                    };
-                    context.Totals.Add(total);
-                    context.SaveChanges();
-                    LoadDataGrid();
-                    */
+                    e.Value = dateTimeValue.ToString("dd/MM/yyyy HH:mm");
+                    e.FormattingApplied = true;
                 }
             }
+        }
+
+        private void checkInDataGrid_CellEndEdit(object? sender,
+            DataGridViewCellEventArgs e)
+        {
+          
         }
 
         private void AllUsersCheckBox_CheckedChanged(object? sender, EventArgs e)
@@ -183,5 +167,75 @@ namespace grace.tabs
             // Remove Collection Id Column
             Utils.RemoveColumnByName(checkInDataGrid, "GraceId");
         }
+
+        private void ApplyChangesButton_Click(object? sender, EventArgs e)
+        {
+            // Check if the edit is in the "Total" column
+            var numrows = checkInDataGrid.Rows.Count;
+            for (int i = 0; i < numrows; i++)
+            {
+                var row = checkInDataGrid.Rows[i];
+                var value = row.Cells["CheckIn"].Value as string;
+                if (value != string.Empty)
+                {
+                    // Get the updated value
+                    int updatedValue = Convert.ToInt32(value);
+                    // TODO: need to test if sorting or filtering breaks this.
+                    // for now don't allow sorting or filtering
+                    CheckInData checkInData = checkInDataList[i];
+                    int graceId = checkInData.GraceId;
+                    string collectionName = checkInData.Collection;
+                    string username = checkInData.UserName;
+                    DateTime dateTime = checkInData.LastUpdated;
+                    var user_id = DataBase.GetUserIdFromName(username);
+                    int col_id = DataBase.GetCollectionId(graceId, collectionName);
+                    int currentTotal = DataBase.GetTotal(graceId);
+                    int newTotal = currentTotal - updatedValue;
+
+                    using (var context = new GraceDbContext())
+                    {
+                        
+                        // Add to pulled table
+                        Pulled pulled = new Pulled
+                        {
+                            UserId = user_id,
+                            GraceId = graceId,
+                            CollectionId = col_id,
+                            Amount = updatedValue,
+                            CurrentTotal = newTotal,
+                            LastUpdated = DateTime.Now
+                        };
+                        context.PulledDb.Add(pulled);
+
+                        // Add Totals in total db
+                        Total total = new Total
+                        {
+                            date_field = DateTime.Now,
+                            GraceId = graceId,
+                            total = newTotal
+                        };
+                        context.Totals.Add(total);
+                        context.SaveChanges();
+                    }
+                    PulledEntrySetComplete(dateTime, user_id, col_id, graceId);
+                }
+                LoadDataGrid();
+
+            }
+        }
+        private void PulledEntrySetComplete(DateTime dateTime, int userId,
+            int collectionId, int graceId)
+        {
+            using (var context = new GraceDbContext())
+            {
+                var pulled = context.PulledDb.SingleOrDefault(e =>  e.UserId
+                    == userId && e.CollectionId == collectionId
+                    && e.GraceId == graceId && e.LastUpdated == dateTime);
+                if (pulled != null)
+                {
+                    pulled.IsCompleted = true;
+                    context.SaveChanges();
+                }
+            }
     }
 }

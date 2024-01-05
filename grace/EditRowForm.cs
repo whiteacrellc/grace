@@ -32,7 +32,6 @@ namespace grace
     {
         DataGridViewRow? row;
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
-        private Dictionary<string, int> collectionHash = new Dictionary<string, int>();
         private string Sku = string.Empty;
         private string Brand = string.Empty;
         private string Description = string.Empty;
@@ -60,7 +59,6 @@ namespace grace
 
         private void EditRowForm_Load(object sender, EventArgs e)
         {
-            collectionHash.Clear();
 
             // We will need this to update the database
             if (row != null)
@@ -92,11 +90,6 @@ namespace grace
                 {
                     colList.Add(d);
                     checkedListBox.Items.Add(d);
-                    int fk = GetCollectionId(d);
-                    if (fk >= 0)
-                    {
-                        collectionHash.Add(d, fk);
-                    }
                 }
             }
 
@@ -348,13 +341,6 @@ namespace grace
                 logger.Error(ex);
             }
 
-            for (int i = 0; i < checkedListBox.SelectedItems.Count; i++)
-            {
-                var name = checkedListBox.SelectedItems[i].ToString();
-                int cid = DataBase.AddCollection(name, graceId);
-                collectionHash.Add(name, cid);
-            }
-
             // Now add the grace row. 
             DataBase.CreateGraceRow(graceId);
 
@@ -445,19 +431,18 @@ namespace grace
             string? itemName = checkedListBox.Items[e.Index].ToString();
             if (itemName != null)
             {
-                int graceId = collectionHash[itemName];
                 if (e.NewValue == CheckState.Checked)
                 {
-                    DataBase.AddCollectionRow(graceId, itemName);
+                    DataBase.AddCollectionRow(graceRow.GraceId, itemName);
                 }
                 else if (e.NewValue == CheckState.Unchecked)
                 {
-                    DataBase.DeleteCollectionRow(graceId, itemName);
+                    DataBase.DeleteCollectionRow(graceRow.GraceId, itemName);
                 }
             }
         }
 
-        private void deltalTextBox_TextChanged(object sender, EventArgs e)
+        private void deltaTextBox_TextChanged(object sender, EventArgs e)
         {
             // Ensure the entered text is a valid integer
             if (!int.TryParse(deltalTextBox.Text, out int result))

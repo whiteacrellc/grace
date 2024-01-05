@@ -189,7 +189,7 @@
             loginPage.Margin = new Padding(5, 2, 5, 2);
             loginPage.Name = "loginPage";
             loginPage.Padding = new Padding(5, 2, 5, 2);
-            loginPage.Size = new Size(2192, 952);
+            loginPage.Size = new Size(2506, 952);
             loginPage.TabIndex = 0;
             loginPage.Text = "Home";
             loginPage.ToolTipText = "Login Page";
@@ -361,7 +361,7 @@
             checkoutPage.Location = new Point(4, 44);
             checkoutPage.Margin = new Padding(7);
             checkoutPage.Name = "checkoutPage";
-            checkoutPage.Size = new Size(2192, 952);
+            checkoutPage.Size = new Size(2506, 952);
             checkoutPage.TabIndex = 2;
             checkoutPage.Text = "Check Out";
             checkoutPage.ToolTipText = "Checkout Items";
@@ -463,7 +463,7 @@
             // 
             applyChangesButton.Location = new Point(1416, 80);
             applyChangesButton.Name = "applyChangesButton";
-            applyChangesButton.Size = new Size(75, 23);
+            applyChangesButton.Size = new Size(181, 34);
             applyChangesButton.TabIndex = 3;
             applyChangesButton.Text = "Apply Changes";
             applyChangesButton.UseVisualStyleBackColor = true;
@@ -510,7 +510,7 @@
             adminPage.Controls.Add(label5);
             adminPage.Location = new Point(4, 44);
             adminPage.Name = "adminPage";
-            adminPage.Size = new Size(2192, 952);
+            adminPage.Size = new Size(2506, 952);
             adminPage.TabIndex = 3;
             adminPage.Text = "Admin";
             adminPage.ToolTipText = "Admin Settings";
@@ -637,6 +637,6 @@
         internal BindingSource checkInBindingSource;
         private Label label3;
         internal CheckBox allUsersCheckBox;
-        private Button applyChangesButton;
+        internal Button applyChangesButton;
     }
 }

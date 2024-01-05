@@ -116,14 +116,17 @@ namespace grace.tabs
             }
         }
 
-        private void dataGridView_DataBindingComplete(object? sender, DataGridViewBindingCompleteEventArgs e)
+        // Callback for data binding complete for dataGridView Widget
+        private void dataGridView_DataBindingComplete(object? sender,
+            DataGridViewBindingCompleteEventArgs e)
         {
             Utils.RemoveColumnByName(dataGridView, "ID");
             Utils.RemoveColumnByName(dataGridView, "Grace");
             Utils.RemoveColumnByName(dataGridView, "GraceId");
         }
 
-        private void dataGridView_CellMouseDoubleClick(object? sender, DataGridViewCellMouseEventArgs e)
+        private void dataGridView_CellMouseDoubleClick(object? sender,
+            DataGridViewCellMouseEventArgs e)
         {
             int rowIndex = e.RowIndex;
             DataGridViewRow row = dataGridView.Rows[rowIndex];

@@ -22,6 +22,7 @@ namespace grace.tabs
         private CheckBox autoOpenCheckBox;
         private string scannedBarcode = string.Empty;
         private int user_id = 0;
+        private TabPage checkOutTabPage;
 
         internal CheckOutTab(Vivian v)
         {
@@ -32,6 +33,7 @@ namespace grace.tabs
             textBoxBarCode = vivian.textBoxBarcode;
             coResetButton = vivian.coResetButton;
             autoOpenCheckBox = vivian.autoOpenOnScanCheckBox;
+            checkOutTabPage = vivian.tabControl.TabPages[2];
         }
 
         public void Load()
@@ -43,6 +45,7 @@ namespace grace.tabs
             checkOutDataGrid.CellMouseDoubleClick += checkOutDataGrid_CellMouseDoubleClick;
             autoOpenCheckBox.CheckedChanged += AutoOpenCheckBox_CheckedChanged;
             autoOpenCheckBox.Checked = Globals.GetInstance().BarCodeAutoOpen;
+            checkOutTabPage.Enter += CheckOutTabPage_Enter;
             // Set row height and font
             SetDataGridViewStyle();
         }
@@ -69,6 +72,12 @@ namespace grace.tabs
             //checkOutDataGrid.RowTemplate.Height = 18;
         }
 
+        private void CheckOutTabPage_Enter(object? sender, EventArgs e)
+        {
+            // Initialize the data grid when the user enters the page
+            InitializeDataGridView();
+        }
+
         private void checkOutDataGrid_CellMouseDoubleClick(object? sender,
             DataGridViewCellMouseEventArgs e)
         {
@@ -92,7 +101,6 @@ namespace grace.tabs
             Dictionary<string, string> columnMappings = new Dictionary<string, string>
         {
             {"Total", "Available" },
-            {"UserTotal", "Checked Out"},
             // Add more mappings as needed
         };
 
@@ -112,7 +120,7 @@ namespace grace.tabs
         {
             checkOutDataGrid.DataSource = checkoutBindingSource;
 
-            var graceRowsData = DataBase.GetPulledGrid(user_id);
+            var graceRowsData = DataBase.GetPulledGrid();
 
             // Bind data to the DataGridView
             checkoutBindingSource.DataSource = graceRowsData;
@@ -138,7 +146,7 @@ namespace grace.tabs
                 if (!string.IsNullOrWhiteSpace(searchTerm))
                 {
                     var filteredProducts =
-                        DataBase.GetFilteredPulledGrid(user_id, searchTerm);
+                        DataBase.GetFilteredPulledGrid(searchTerm);
 
                     // Bind the filtered products to the DataGridView
                     checkoutBindingSource.DataSource = filteredProducts;
@@ -167,7 +175,7 @@ namespace grace.tabs
                 else
                 {
                     var filteredProducts =
-                        DataBase.GetPulledGridFromBarCode(user_id, scannedBarcode);
+                        DataBase.GetPulledGridFromBarCode(scannedBarcode);
 
                     // Bind the filtered products to the DataGridView
                     checkoutBindingSource.DataSource = filteredProducts;

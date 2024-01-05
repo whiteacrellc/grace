@@ -79,89 +79,42 @@ namespace grace
             }
 
         }
-        public class PulledData
-        {
-            public string Sku {  get;  set; }
-            public string Brand {  get; set; }
-            public string Description { get; set; }
-            public string? BarCode { get; set; }
-            public int Total {  get; set; }
-            public int UserTotal { get; set; }
-        }
 
-        public static  List<PulledData> GetPulledGrid(int user_id)
+        public static  List<GraceRow>GetPulledGrid()
         {
             using (var context = new GraceDbContext())
             {
 
-                var graceRowsData = (
-                    from graceRow in context.GraceRows
-                    join pulledItem in context.PulledDb on graceRow.GraceId equals pulledItem.GraceId into
-                    pulledItemsGroup
-                    from pulledItem in pulledItemsGroup.DefaultIfEmpty() // Left outer join
-                    where pulledItem == null || pulledItem.UserId == user_id
-                    orderby pulledItem != null ? pulledItem.Amount : 0 descending
-                    select new PulledData
-                    {
-                        Sku = graceRow.Sku,
-                        Brand = graceRow.Brand,
-                        Description = graceRow.Description,
-                        BarCode = graceRow.BarCode,
-                        Total = graceRow.Total,
-                        UserTotal = pulledItem != null ? pulledItem.Amount : 0
-                    }
-                ).ToList();
+                var graceRowsData = context.GraceRows.ToList();
                 return graceRowsData;
             }
         }
 
-        public static List<PulledData> GetPulledGridFromBarCode(int user_id, string scannedBarcode)
+        public static List<GraceRow> GetPulledGridFromBarCode(string scannedBarcode)
         {
             using (var context = new GraceDbContext())
             {
 
                 var filteredProducts = (
-                    from graceRow in context.GraceRows
-                    join pulledItem in context.PulledDb on graceRow.ID equals pulledItem.GraceId into pulledItemsGroup
-                    from pulledItem in pulledItemsGroup.DefaultIfEmpty() // Left outer join
-                    where (pulledItem == null || pulledItem.UserId == user_id) &&
-                          (graceRow.BarCode != null && graceRow.BarCode.Equals(scannedBarcode))
-                    orderby pulledItem != null ? pulledItem.CurrentTotal : 0 descending
-                    select new PulledData
-                    {
-                        Sku = graceRow.Sku,
-                        Brand = graceRow.Brand,
-                        Description = graceRow.Description,
-                        BarCode = graceRow.BarCode,
-                        Total = graceRow.Total,
-                        UserTotal = pulledItem != null ? pulledItem.CurrentTotal : 0
-                    }
+                    from graceRow in context.GraceRows 
+                    where (graceRow.BarCode != null && graceRow.BarCode.Equals(scannedBarcode))
+                    orderby graceRow.Sku descending
+                    select graceRow
                 ).ToList();
                 return filteredProducts;
             }
         }
 
 
-        public static List<PulledData> GetFilteredPulledGrid(int user_id, string searchTerm)
+        public static List<GraceRow> GetFilteredPulledGrid(string searchTerm)
         {
             using (var context = new GraceDbContext())
             {
                 var filteredProducts = (
                         from graceRow in context.GraceRows
-                        join pulledItem in context.PulledDb on graceRow.GraceId equals pulledItem.GraceId into pulledItemsGroup
-                        from pulledItem in pulledItemsGroup.DefaultIfEmpty() // Left outer join
-                        where (pulledItem == null || pulledItem.UserId == user_id) &&
-                            (searchTerm == null || graceRow.Description.Contains(searchTerm))
-                        orderby pulledItem != null ? pulledItem.CurrentTotal : 0 descending
-                        select new PulledData
-                        {
-                            Sku = graceRow.Sku,
-                            Brand = graceRow.Brand,
-                            Description = graceRow.Description,
-                            BarCode = graceRow.BarCode,
-                            Total = graceRow.Total,
-                            UserTotal = pulledItem != null ? pulledItem.CurrentTotal : 0
-                        }
+                        where (searchTerm == null || graceRow.Sku.Contains(searchTerm, StringComparison.CurrentCultureIgnoreCase))
+                        orderby graceRow.Sku descending
+                        select graceRow
                     ).ToList();
                 return filteredProducts;
             }
@@ -173,9 +126,10 @@ namespace grace
             public string Brand { get; set; }
             public string Description { get; set; }
             public string? BarCode { get; set; }
+            public DateTime LastUpdated { get; set; }
             public string Collection { get; set; }
             public int UserTotal { get; set; }
-            public int CheckIn { get; set; }
+            public string CheckIn { get; set; } = string.Empty;
             public int GraceId { get; set; }
         }
         public static List<CheckInData> GetCheckedOutGrid(int user_id)
@@ -185,23 +139,24 @@ namespace grace
                 // Performing the join and projection
                 var result = (
                     from gr in dbContext.GraceRows
-                             join pulled in dbContext.PulledDb on gr.GraceId equals pulled.GraceId
-                             join user in dbContext.Users on pulled.UserId equals user.ID
-                             join collection in dbContext.Collections on pulled.CollectionId equals collection.ID
-                             where user.ID == user_id
-                             orderby pulled.CurrentTotal descending
-                             select new CheckInData
-                             {
+                            join pulled in dbContext.PulledDb on gr.GraceId equals pulled.GraceId
+                            join user in dbContext.Users on pulled.UserId equals user.ID
+                            join collection in dbContext.Collections on pulled.CollectionId equals collection.ID
+                            where user.ID == user_id && pulled.IsCompleted == false
+                            orderby pulled.LastUpdated ascending, pulled.CurrentTotal descending
+                            select new CheckInData
+                            {
                                  UserName = user.Username,
                                  Sku = gr.Sku,
                                  Brand = gr.Brand,
                                  Description = gr.Description,
                                  BarCode = gr.BarCode,
                                  Collection = collection.Name,
+                                 LastUpdated = pulled.LastUpdated,
                                  UserTotal = pulled.Amount,
-                                 CheckIn = 0,
+                                 CheckIn = string.Empty,
                                  GraceId = gr.GraceId
-                             }).ToList();
+                            }).ToList();
                 return result;
             }
         }
@@ -216,7 +171,8 @@ namespace grace
                     join pulled in dbContext.PulledDb on gr.GraceId equals pulled.GraceId
                     join user in dbContext.Users on pulled.UserId equals user.ID
                     join collection in dbContext.Collections on pulled.CollectionId equals collection.ID
-                    orderby pulled.CurrentTotal descending
+                    where pulled.IsCompleted == false
+                    orderby user.Username descending, pulled.LastUpdated ascending, pulled.CurrentTotal descending
                     select new CheckInData
                     {
                         UserName = user.Username,
@@ -225,8 +181,9 @@ namespace grace
                         Description = gr.Description,
                         BarCode = gr.BarCode,
                         Collection = collection.Name,
+                        LastUpdated = pulled.LastUpdated,
                         UserTotal = pulled.Amount,
-                        CheckIn = 0,
+                        CheckIn = string.Empty,
                         GraceId = gr.GraceId
                     }).ToList();
                 return result;
@@ -424,6 +381,8 @@ namespace grace
             }
             return id;
         }
+
+        
 
         public static int CreateGraceRow(int graceId)
         {

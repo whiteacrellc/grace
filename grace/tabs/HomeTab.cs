@@ -213,11 +213,6 @@ namespace grace.tabs
             loggedInLabel.Text = username;
             loggedInBox.Show();
 
-            // Since the checkout and checkout tabs grids depends on the logged
-            // in user we initialize it here. 
-            vivian.checkOutTab.InitializeDataGridView();
-            //vivian.checkInTab.InitializeDataGridView();
-
             // For admin users send them to the inventory tab otherwise send
             // them to the checkout tab
             if (PasswordChecker.IsUserAdmin(username))

@@ -89,7 +89,7 @@
             deltalTextBox.Name = "deltalTextBox";
             deltalTextBox.Size = new Size(150, 23);
             deltalTextBox.TabIndex = 17;
-            deltalTextBox.TextChanged += deltalTextBox_TextChanged;
+            deltalTextBox.TextChanged += deltaTextBox_TextChanged;
             // 
             // adjustInventoryLabel
             // 
