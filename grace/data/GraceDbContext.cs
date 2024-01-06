@@ -98,7 +98,7 @@ namespace grace.data
                 // Primary key
                 entity.HasKey(e => e.ID);
 
-                entity.Property(e => e.date_field)
+                entity.Property(e => e.LastUpdated)
                    .IsRequired();
 
                 entity.HasOne(e => e.Grace)

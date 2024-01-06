@@ -17,7 +17,6 @@ namespace grace
         private string sku;
         private int currentTotal = 0;
         private int graceId = 0;
-        private Dictionary<string, int> collectionHash = new Dictionary<string, int>();
 
         public CheckOutForm(string sku)
         {
@@ -58,7 +57,6 @@ namespace grace
                     foreach (var collection in collections)
                     {
                         collectionComboBox.Items.Add(collection.Name);
-                        collectionHash.Add(collection.Name, collection.ID);
                     }
                     collectionComboBox.Items.Add("Other");
                     if (collectionComboBox.Items.Count > 0)
@@ -89,85 +87,96 @@ namespace grace
 
         private void saveButton_Click(object sender, EventArgs e)
         {
-            string username = Globals.GetInstance().CurrentUser;
-            if (string.IsNullOrEmpty(username))
+            try
             {
-                DialogResult = DialogResult.Abort;
-                Close();
-            }
-
-            var commentText = commentBox.Text;
-            var selectedIndex = collectionComboBox.SelectedIndex;
-            if (selectedIndex > 0)
-            {
-                MessageBox.Show("You must choose a collection. If this isn't " +
-                    "for a collection please choose Other",
-                    "Information", MessageBoxButtons.OK,
-                     MessageBoxIcon.Exclamation);
-
-                collectionComboBox.BackColor = System.Drawing.Color.Yellow;
-                return;
-            }
-
-            if (numCheckOutTextBox.Text is null)
-            {
-                MessageBox.Show("You must enter a number to check out.",
-                    "Information", MessageBoxButtons.OK,
-                    MessageBoxIcon.Exclamation);
-                numCheckOutTextBox.BackColor = System.Drawing.Color.Yellow;
-                return;
-            }
-
-            int checkoutTotal = Convert.ToInt32(numCheckOutTextBox.Text);
-            int newTotal = currentTotal - checkoutTotal;
-            if (newTotal < 0)
-            {
-                DialogResult dialogResult = MessageBox.Show($"The new total {newTotal} "
-                    + "is less than zero. Do you want to proceed?",
-                    "Confirmation", MessageBoxButtons.YesNo);
-
-                // Check the user's choice
-                if (dialogResult == DialogResult.No)
+                string username = Globals.GetInstance().CurrentUser;
+                if (string.IsNullOrEmpty(username))
                 {
+                    DialogResult = DialogResult.Abort;
+                    Close();
+                }
+
+                var commentText = commentBox.Text;
+                var selectedIndex = collectionComboBox.SelectedIndex;
+                if (selectedIndex > 0)
+                {
+                    MessageBox.Show("You must choose a collection. If this isn't " +
+                        "for a collection please choose Other",
+                        "Information", MessageBoxButtons.OK,
+                         MessageBoxIcon.Exclamation);
+
+                    collectionComboBox.BackColor = System.Drawing.Color.Yellow;
                     return;
                 }
 
-            }
-
-            // Get fkeys for PulledDB 
-            var user_id = DataBase.GetUserIdFromName(username);
-            var col_id = collectionHash[collectionComboBox.SelectedItem.ToString()];
-
-            using (var context = new GraceDbContext())
-            {
-                // Add to pulled table
-                Pulled pulled = new Pulled
+                if (numCheckOutTextBox.Text is null)
                 {
-
-                    UserId = user_id,
-                    GraceId = graceId,
-                    CollectionId = col_id,
-                    Amount = checkoutTotal,
-                    CurrentTotal = newTotal,
-                };
-                if (commentBox.Text is not null)
-                {
-                    pulled.Comment = commentBox.Text;
+                    MessageBox.Show("You must enter a number to check out.",
+                        "Information", MessageBoxButtons.OK,
+                        MessageBoxIcon.Exclamation);
+                    numCheckOutTextBox.BackColor = System.Drawing.Color.Yellow;
+                    return;
                 }
-                context.PulledDb.Add(pulled);
 
-                // Add Totals in total db
-                Total total = new Total
+                int checkoutTotal = Convert.ToInt32(numCheckOutTextBox.Text);
+                int newTotal = currentTotal - checkoutTotal;
+                if (newTotal < 0)
                 {
-                    date_field = DateTime.Now,
-                    GraceId = graceId,
-                    total = newTotal
-                };
-                context.Totals.Add(total);
-                context.SaveChanges();
+                    DialogResult dialogResult = MessageBox.Show($"The new CurrentTotal {newTotal} "
+                        + "is less than zero. Do you want to proceed?",
+                        "Confirmation", MessageBoxButtons.YesNo);
+
+                    // Check the user's choice
+                    if (dialogResult == DialogResult.No)
+                    {
+                        return;
+                    }
+
+                }
+
+                // Get fkeys for PulledDB 
+                var user_id = DataBase.GetUserIdFromName(username);
+                var collectionName = collectionComboBox.SelectedItem.ToString();
+                var col_id = DataBase.GetCollectionId(graceId, collectionName);
+
+                using (var context = new GraceDbContext())
+                {
+                    // Add to pulled table
+                    Pulled pulled = new Pulled
+                    {
+
+                        UserId = user_id,
+                        GraceId = graceId,
+                        CollectionId = col_id,
+                        Amount = checkoutTotal,
+                        CurrentTotal = newTotal,
+                    };
+                    if (commentBox.Text is not null)
+                    {
+                        pulled.Comment = commentBox.Text;
+                    }
+                    context.PulledDb.Add(pulled);
+
+                    // Add Totals in CurrentTotal db
+                    Total total = new Total
+                    {
+                        LastUpdated = DateTime.Now,
+                        GraceId = graceId,
+                        CurrentTotal = newTotal
+                    };
+                    context.Totals.Add(total);
+                    context.SaveChanges();
+                }
+                // update the GraceRow
+                DataBase.UpdateGraceRowTotal(graceId, newTotal);
+            } catch (Exception ex)
+            {
+                var exString = ex.ToString();
+                MessageBox.Show(this, $"Error Loading file {exString}", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                DialogResult = DialogResult.TryAgain;
+                Close();
             }
-            // update the GraceRow
-            DataBase.UpdateGraceRowTotal(graceId, newTotal);
 
             DialogResult = DialogResult.OK;
             Close();

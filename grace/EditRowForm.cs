@@ -223,7 +223,7 @@ namespace grace
                 if (newTotal < 0)
                 {
                     DialogResult result = MessageBox.Show(
-                        $"The new total is less than zero {newTotal} " +
+                        $"The new CurrentTotal is less than zero {newTotal} " +
                         "are you sure you want to enter this?", "Question",
                         MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                     if (result == DialogResult.No)
@@ -305,18 +305,18 @@ namespace grace
                 }
                 if (barCodeTextBox.Text.Length > 0)
                 {
-                    grace.Barcode = barCodeTextBox.Text;
+                    grace.BarCode = barCodeTextBox.Text;
                 }
                 else
                 {
-                    grace.Barcode = string.Empty;
+                    grace.BarCode = string.Empty;
                 }
                 context.Graces.Add(grace);
                 context.SaveChanges();
                 graceId = grace.ID;
             }
 
-            // Add the total from the currentTextBox 
+            // Add the CurrentTotal from the currentTextBox 
             try
             {
                 int newTotal = Convert.ToInt32(currentTextBox.Text);
@@ -324,7 +324,7 @@ namespace grace
                 if (newTotal < 1)
                 {
                     DialogResult result = MessageBox.Show(
-                        $"The new total is less than one {newTotal} " +
+                        $"The new CurrentTotal is less than one {newTotal} " +
                         "are you sure you want to enter this?", "Question",
                         MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                     if (result == DialogResult.No)

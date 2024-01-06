@@ -434,9 +434,9 @@
             barcodeLabel.Location = new Point(1168, 58);
             barcodeLabel.Margin = new Padding(7, 0, 7, 0);
             barcodeLabel.Name = "barcodeLabel";
-            barcodeLabel.Size = new Size(118, 18);
+            barcodeLabel.Size = new Size(121, 18);
             barcodeLabel.TabIndex = 3;
-            barcodeLabel.Text = "Scan Barcode";
+            barcodeLabel.Text = "Scan BarCode";
             // 
             // textBoxBarcode
             // 
@@ -598,7 +598,6 @@
         private ToolStripMenuItem editToolStripMenuItem;
         private ToolStripMenuItem settingsToolStripMenuItem;
         private ToolStripMenuItem exitToolStripMenuItem;
-        private ToolStripMenuItem importInventoryToolStripMenuItem;
         private ToolStripMenuItem saveReportToolStripMenuItem;
         private PictureBox pictureBox1;
         private TabPage loginPage;
@@ -638,5 +637,6 @@
         private Label label3;
         internal CheckBox allUsersCheckBox;
         internal Button applyChangesButton;
+        internal ToolStripMenuItem importInventoryToolStripMenuItem;
     }
 }

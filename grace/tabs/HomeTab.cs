@@ -45,6 +45,7 @@ namespace grace.tabs
         private Button loginButton;
         private Button changePasswordButton;
         private Button logoutButton;
+        private ToolStripMenuItem importInventoryToolStripMenuItem;
 
         public HomeTab(Vivian v) {
             vivian = v;
@@ -60,6 +61,7 @@ namespace grace.tabs
             loginButton = vivian.loginButton;
             changePasswordButton = vivian.changePasswordButton;
             logoutButton = vivian.logoutButton;
+            importInventoryToolStripMenuItem = vivian.importInventoryToolStripMenuItem;
         }
 
         internal void Load()
@@ -73,6 +75,7 @@ namespace grace.tabs
 
             InitializeComboBox();
             loggedInBox.Hide();
+            importInventoryToolStripMenuItem.Enabled = false;
         }
 
         // Callback for Login button in HomePage table. 
@@ -96,7 +99,7 @@ namespace grace.tabs
                 DialogResult dialogResult = passwordChange.ShowDialog();
                 if (dialogResult == DialogResult.OK)
                 {
-                    MessageBox.Show("Password updated succefully.", "Yay",
+                    MessageBox.Show("Password updated successfully.", "Yay",
                         MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
@@ -118,7 +121,7 @@ namespace grace.tabs
 
         public void logoutButton_Click(object? sender, EventArgs e)
         {
-            Globals.GetInstance().CurrentUser = "";
+            Globals.GetInstance().CurrentUser = string.Empty;
             passwordGroupBox.Show();
             loggedInBox.Hide();
             passwordTextBox.Text = string.Empty;
@@ -170,7 +173,7 @@ namespace grace.tabs
                         DialogResult dialogResult = passwordChange.ShowDialog();
                         if (dialogResult == DialogResult.OK)
                         {
-                            MessageBox.Show("Password updated succefully.", "Yay",
+                            MessageBox.Show("Password updated successfully.", "Yay",
                                 MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }
                     }
@@ -189,7 +192,7 @@ namespace grace.tabs
                     DialogResult dialogResult = passwordChange.ShowDialog();
                     if (dialogResult == DialogResult.OK)
                     {
-                        MessageBox.Show("Password updated succefully.", "Yay",
+                        MessageBox.Show("Password updated successfully.", "Yay",
                             MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                 }
@@ -217,6 +220,7 @@ namespace grace.tabs
             // them to the checkout tab
             if (PasswordChecker.IsUserAdmin(username))
             {
+                importInventoryToolStripMenuItem.Enabled = true;
                 tabControl.SelectedTab = vivian.tabControl.TabPages[1];
             }
             else

@@ -53,14 +53,14 @@ namespace grace
                     GraceRow row = new GraceRow();
                     row.GraceId = item.ID;
                     row.Sku = item.Sku;
-                    row.BarCode = item.Barcode;
+                    row.BarCode = item.BarCode;
                     row.Brand = item.Brand;
                     row.Description = item.Description;
 
                     // Lets get the two totals
                     var totalList = context.Totals
                         .Where(t => t.GraceId == item.ID)
-                        .OrderByDescending(t => t.date_field)
+                        .OrderByDescending(t => t.LastUpdated)
                         .Take(1)
                         .ToList();
 
@@ -68,7 +68,7 @@ namespace grace
                     {
                         if (totalList.Count == 1)
                         {
-                            row.Total = totalList[0].total;
+                            row.Total = totalList[0].CurrentTotal;
                         }
                         else
                         {
