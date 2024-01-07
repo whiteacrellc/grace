@@ -190,9 +190,6 @@ namespace grace
                     "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
-            generateReport();
-
-            EnableReportButton(true);
 
             dataTab.BindDataSource();
         }
@@ -208,7 +205,10 @@ namespace grace
             if (saveFileDialog.ShowDialog() == DialogResult.OK)
             {
                 string filePath = saveFileDialog.FileName;
-                if (report != null) report.WriteReport(filePath);
+                EnableReportButton(false);
+                generateReport();
+                report.WriteReport(filePath);
+                EnableReportButton(true);
             }
         }
 

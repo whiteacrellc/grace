@@ -150,14 +150,21 @@ namespace grace.tabs
         private void CheckInDataGrid_CellFormatting(object? sender,
             DataGridViewCellFormattingEventArgs e)
         {
+            TimeZoneInfo systemTimeZone = TimeZoneInfo.Local;
+
             // Check if the formatting is for the DateTime column
             if (checkInDataGrid.Columns[e.ColumnIndex].Name == "dateTime"
                 && e.Value != null)
             {
+
                 // Format the DateTime value to the desired format
                 if (e.Value is DateTime dateTimeValue)
                 {
-                    e.Value = dateTimeValue.ToString("dd/MM/yyyy HH:mm");
+                    DateTime systemTime =
+                        TimeZoneInfo.ConvertTimeFromUtc(dateTimeValue.ToUniversalTime(),
+                        systemTimeZone);
+
+                    e.Value = systemTime.ToString("dd/MM/yyyy HH:mm");
                     e.FormattingApplied = true;
                 }
             }
@@ -184,12 +191,14 @@ namespace grace.tabs
         {
             // Check if the edit is in the "Total" column
             var numrows = checkInDataGrid.Rows.Count;
+            bool changed = false;
             for (int i = 0; i < numrows; i++)
             {
                 var row = checkInDataGrid.Rows[i];
                 var value = row.Cells["CheckIn"].Value as string;
-                if (value != string.Empty)
+                if (value != null && value != string.Empty)
                 {
+                    changed = true;
                     // Get the updated value
                     int updatedValue = Convert.ToInt32(value);
                     // TODO: need to test if sorting or filtering breaks this.
@@ -206,33 +215,23 @@ namespace grace.tabs
 
                     using (var context = new GraceDbContext())
                     {
-                        
-                        // Add to pulled table
-                        Pulled pulled = new Pulled
-                        {
-                            UserId = user_id,
-                            GraceId = graceId,
-                            CollectionId = col_id,
-                            Amount = updatedValue,
-                            CurrentTotal = newTotal,
-                            LastUpdated = DateTime.Now
-                        };
-                        context.PulledDb.Add(pulled);
 
-                        // Add Totals in total db
-                        Total total = new Total
+                        // Add Totals in CurrentTotal db
+                        Total total = new ()
                         {
-                            date_field = DateTime.Now,
+                            LastUpdated = DateTime.Now,
                             GraceId = graceId,
-                            total = newTotal
+                            CurrentTotal = newTotal
                         };
                         context.Totals.Add(total);
                         context.SaveChanges();
                     }
                     PulledEntrySetComplete(dateTime, user_id, col_id, graceId);
                 }
+            }
+            if (changed)
+            {
                 LoadDataGrid();
-
             }
         }
         private void PulledEntrySetComplete(DateTime dateTime, int userId,

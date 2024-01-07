@@ -115,6 +115,7 @@
             confirmTextBox.PasswordChar = '*';
             confirmTextBox.Size = new Size(159, 23);
             confirmTextBox.TabIndex = 15;
+            confirmTextBox.KeyPress += confirmTextBox_KeyPress;
             // 
             // currentPasswordTextBox
             // 

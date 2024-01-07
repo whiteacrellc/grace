@@ -40,6 +40,7 @@ namespace grace.tabs
         {
             // Add callbacks
             checkOutSearchTextBox.TextChanged += checkOutSearchTextBox_TextChanged;
+            checkOutDataGrid.DataBindingComplete += CheckOutDataGrid_DataBindingComplete;
             textBoxBarCode.KeyPress += textBoxBarcode_KeyPress;
             coResetButton.Click += coResetButton_Click;
             checkOutDataGrid.CellMouseDoubleClick += checkOutDataGrid_CellMouseDoubleClick;
@@ -89,6 +90,8 @@ namespace grace.tabs
                 DialogResult result = editRowForm.ShowDialog();
                 if (result == DialogResult.OK)
                 {
+                    textBoxBarCode.Clear();
+                    checkOutSearchTextBox.Clear();
                     // we need to reload the grid.
                     LoadDataGrid();
                 }
@@ -99,10 +102,10 @@ namespace grace.tabs
         {
             // Dictionary to map DbContext column names to desired DataGridView column names
             Dictionary<string, string> columnMappings = new Dictionary<string, string>
-        {
-            {"Total", "Available" },
-            // Add more mappings as needed
-        };
+            {
+                {"Total", "Available" },
+                // Add more mappings as needed
+            };
 
             // Iterate through the columns in the DataGridView
             foreach (DataGridViewColumn dataGridViewColumn in checkOutDataGrid.Columns)
@@ -119,20 +122,19 @@ namespace grace.tabs
         internal void LoadDataGrid()
         {
             checkOutDataGrid.DataSource = checkoutBindingSource;
-
             var graceRowsData = DataBase.GetPulledGrid();
 
             // Bind data to the DataGridView
             checkoutBindingSource.DataSource = graceRowsData;
+
             ChangeColumnNames();
-            Utils.RemoveColumnByName(checkOutDataGrid, "GraceId");
         }
         internal void coResetButton_Click(object? sender, EventArgs e)
         {
 
             InitializeDataGridView();
-            textBoxBarCode.Text = string.Empty;
-            checkOutSearchTextBox.Text = string.Empty;
+            textBoxBarCode.Clear();
+            checkOutSearchTextBox.Clear();
 
         }
 
@@ -157,6 +159,11 @@ namespace grace.tabs
                     LoadDataGrid();
                 }
             }
+        }
+        private void CheckOutDataGrid_DataBindingComplete(object? sender,
+            DataGridViewBindingCompleteEventArgs e)
+        {
+            Utils.RemoveColumnByName(checkOutDataGrid, "GraceId");
         }
 
         private void textBoxBarcode_KeyPress(object? sender, KeyPressEventArgs e)
@@ -197,6 +204,8 @@ namespace grace.tabs
                                 {
                                     // we need to reload the grid.
                                     LoadDataGrid();
+                                    textBoxBarCode.Clear();
+                                    checkOutSearchTextBox.Clear();
                                 }
                             }
                         }

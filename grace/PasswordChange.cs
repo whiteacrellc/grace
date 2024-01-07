@@ -48,38 +48,38 @@ namespace grace
             this.Close();
         }
 
-        private void saveButton_Click(object sender, EventArgs e)
+        private bool ProcessLogin()
         {
-            string oldpassowrd = currentPasswordTextBox.Text.Trim();
-            string newpassword = newPasswordTextBox.Text.Trim();
-            string confirmpass = confirmTextBox.Text.Trim();
+            string oldPassword = currentPasswordTextBox.Text.Trim();
+            string newPassword = newPasswordTextBox.Text.Trim();
+            string confirmPassword = confirmTextBox.Text.Trim();
 
 
 
-            if (string.IsNullOrEmpty(newpassword)
-                || string.IsNullOrEmpty(confirmpass))
+            if (string.IsNullOrEmpty(newPassword)
+                || string.IsNullOrEmpty(confirmPassword))
             {
                 MessageBox.Show("Please fill in all fields.", "Error",
                   MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            else if (reset == false && string.IsNullOrEmpty(oldpassowrd))
+            else if (reset == false && string.IsNullOrEmpty(oldPassword))
             {
                 MessageBox.Show("Please fill in old password.", "Error",
-              MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            else if (!PasswordChecker.IsPasswordValid(newpassword))
+            else if (!PasswordChecker.IsPasswordValid(newPassword))
             {
                 MessageBox.Show("Passwords must be at least 3 characters long.",
                     "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                newPasswordTextBox.Text = string.Empty;
-                confirmTextBox.Text = string.Empty;
+                newPasswordTextBox.Clear();
+                confirmTextBox.Clear();
             }
-            else if (newpassword.Equals(confirmpass, StringComparison.Ordinal) == false)
+            else if (newPassword.Equals(confirmPassword, StringComparison.Ordinal) == false)
             {
                 MessageBox.Show("Passwords don't match.", "Error",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
-                newPasswordTextBox.Text = string.Empty;
-                confirmTextBox.Text = string.Empty;
+                newPasswordTextBox.Clear();
+                confirmTextBox.Clear();
             }
             else
             {
@@ -93,31 +93,39 @@ namespace grace
                         MessageBox.Show("User not in database, please contact admin.",
                             "Error", MessageBoxButtons.OK,
                             MessageBoxIcon.Exclamation);
-                        DialogResult = DialogResult.Cancel;
-                        this.Close();
                     }
                     else
                     {
-                        string dbpass = user.Password;
-                        if ((reset == false) && (dbpass.Equals(oldpassowrd) == false))
+                        string dbPassword = user.Password;
+                        if ((reset == false) && (dbPassword.Equals(oldPassword) == false))
                         {
                             MessageBox.Show("Current password is incorrect.",
                                 "Error", MessageBoxButtons.OK,
                                 MessageBoxIcon.Error);
+                            currentPasswordTextBox.Clear();
                         }
                         else
                         {
                             Globals.GetInstance().CurrentUser = username;
-                            user.Password = newpassword;
+                            user.Password = newPassword;
                             user.ResetPassword = false;
                             dbContext.SaveChanges();
-                            DialogResult = DialogResult.OK;
-                            this.Close();
+                            return true;
                         }
                     }
                 }
-
             }
+            return false;
+        }
+        private void saveButton_Click(object sender, EventArgs e)
+        {
+            if (ProcessLogin())
+            {
+                DialogResult = DialogResult.OK;
+                Close();
+            }
+            return;
+           
         }
 
         private void currentPasswordShow(bool show)
@@ -151,10 +159,20 @@ namespace grace
             }
         }
 
-        private void cancelButton_Click_1(object sender, EventArgs e)
+        private void confirmTextBox_KeyPress(object sender, KeyPressEventArgs e)
         {
-            this.Close();
-        }
+            if (e.KeyChar == (char)Keys.Return)
+            {
+                // Prevent the Enter key from being processed by the TextBox
+                e.Handled = true;
 
+                // Call the processLogin function
+                if (ProcessLogin())
+                {
+                    DialogResult = DialogResult.OK;
+                    Close();
+                }
+            }
+        }
     }
 }

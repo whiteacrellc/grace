@@ -20,8 +20,8 @@ namespace grace.data.models
     public partial class Total
     {
         public int ID { get; set; }
-        public DateTime date_field { get; set; } = DateTime.Now;
-        public int total { get; set; }
+        public DateTime LastUpdated { get; set; } = DateTime.Now;
+        public int CurrentTotal { get; set; }
         public int GraceId { get; set; }
         public Grace Grace { get; set; }
     }

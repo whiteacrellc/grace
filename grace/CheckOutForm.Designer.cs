@@ -151,6 +151,7 @@
             collectionComboBox.Name = "collectionComboBox";
             collectionComboBox.Size = new Size(121, 23);
             collectionComboBox.TabIndex = 11;
+            collectionComboBox.ValueMemberChanged += collectionComboBox_ValueMemberChanged;
             // 
             // saveButton
             // 

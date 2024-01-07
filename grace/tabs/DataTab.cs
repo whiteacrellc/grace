@@ -66,8 +66,8 @@ namespace grace.tabs
 
             // Setup data connection to grid view
             bindingSource = new BindingSource();
-            ChangeColumnNames();
             BindDataSource();
+    
         }
         private void ChangeColumnNames()
         {
@@ -93,12 +93,17 @@ namespace grace.tabs
         }
         internal void BindDataSource()
         {
+            if (bindingSource == null)
+            {
+                bindingSource = new BindingSource();
+            }
             dataGridView.DataSource = bindingSource;
             DataGridLoader.LoadBindingTable();
             bindingSource.DataSource = DataGridLoader.getData();
             Utils.RemoveColumnByName(dataGridView, "ID");
             Utils.RemoveColumnByName(dataGridView,"Grace");
             Utils.RemoveColumnByName(dataGridView, "GraceId");
+            ChangeColumnNames();
         }
 
         private void addRowButton_Click(object? sender, EventArgs e)

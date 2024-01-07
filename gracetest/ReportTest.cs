@@ -53,7 +53,7 @@ namespace gracetest
                         Brand = "brand" + (i % 3),
                         Sku = "sku" + i,
                         Description = "Description" + i,
-                        Barcode = "" + i + "0000",
+                        BarCode = "" + i + "0000",
                         Availability = "Availability",
                     };
                     context.Graces.Add(grace);

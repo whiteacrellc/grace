@@ -22,8 +22,8 @@ namespace grace.data.models
         public string Sku { get; set; }
         public string Description { get; set; }
         public string Brand { get; set; }
-        public string? Availability { get; set; }
-        public string? Barcode { get; set; }
+        public string Availability { get; set; } = string.Empty;
+        public string BarCode { get; set; } = string.Empty;
         public bool Deleted { get; set; } = false;
 
     }

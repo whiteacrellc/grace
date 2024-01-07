@@ -76,6 +76,7 @@
             errorProvider1 = new ErrorProvider(components);
             checkoutBindingSource = new BindingSource(components);
             checkInBindingSource = new BindingSource(components);
+            label7 = new Label();
             menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             tabControl.SuspendLayout();
@@ -155,7 +156,8 @@
             pictureBox1.Location = new Point(10, 17);
             pictureBox1.Margin = new Padding(5, 2, 5, 2);
             pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(342, 126);
+            pictureBox1.Size = new Size(348, 123);
+            pictureBox1.SizeMode = PictureBoxSizeMode.AutoSize;
             pictureBox1.TabIndex = 1;
             pictureBox1.TabStop = false;
             // 
@@ -351,6 +353,7 @@
             // 
             // checkoutPage
             // 
+            checkoutPage.Controls.Add(label7);
             checkoutPage.Controls.Add(autoOpenOnScanCheckBox);
             checkoutPage.Controls.Add(coResetButton);
             checkoutPage.Controls.Add(checkOutSearchTextBox);
@@ -434,9 +437,9 @@
             barcodeLabel.Location = new Point(1168, 58);
             barcodeLabel.Margin = new Padding(7, 0, 7, 0);
             barcodeLabel.Name = "barcodeLabel";
-            barcodeLabel.Size = new Size(118, 18);
+            barcodeLabel.Size = new Size(121, 18);
             barcodeLabel.TabIndex = 3;
-            barcodeLabel.Text = "Scan Barcode";
+            barcodeLabel.Text = "Scan BarCode";
             // 
             // textBoxBarcode
             // 
@@ -545,6 +548,16 @@
             // 
             errorProvider1.ContainerControl = this;
             // 
+            // label7
+            // 
+            label7.AutoSize = true;
+            label7.Font = new Font("Verdana", 15.75F, FontStyle.Bold, GraphicsUnit.Point);
+            label7.Location = new Point(127, 569);
+            label7.Name = "label7";
+            label7.Size = new Size(905, 25);
+            label7.TabIndex = 9;
+            label7.Text = "Please go to the Check In screen to see a list of what you have checked out.";
+            // 
             // Vivian
             // 
             AutoScaleDimensions = new SizeF(7F, 17F);
@@ -570,6 +583,7 @@
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             tabControl.ResumeLayout(false);
             loginPage.ResumeLayout(false);
+            loginPage.PerformLayout();
             passwordGroupBox.ResumeLayout(false);
             passwordGroupBox.PerformLayout();
             loggedInBox.ResumeLayout(false);
@@ -598,7 +612,6 @@
         private ToolStripMenuItem editToolStripMenuItem;
         private ToolStripMenuItem settingsToolStripMenuItem;
         private ToolStripMenuItem exitToolStripMenuItem;
-        private ToolStripMenuItem importInventoryToolStripMenuItem;
         private ToolStripMenuItem saveReportToolStripMenuItem;
         private PictureBox pictureBox1;
         private TabPage loginPage;
@@ -638,5 +651,7 @@
         private Label label3;
         internal CheckBox allUsersCheckBox;
         internal Button applyChangesButton;
+        internal ToolStripMenuItem importInventoryToolStripMenuItem;
+        private Label label7;
     }
 }

@@ -76,7 +76,7 @@ namespace gracetest
                 var result = context.Graces.ToList();
                 foreach (var item in result)
                 {
-                    Assert.AreEqual(item.Barcode, "33849104226");
+                    Assert.AreEqual(item.BarCode, "33849104226");
                     Assert.AreEqual(item.Sku, "FBA445-CR/GR");
                     Assert.AreEqual(item.Brand, "Allstate");
                     break;
@@ -97,7 +97,7 @@ namespace gracetest
                         Brand = "brand" + (i % 3),
                         Sku = "sku" + i,
                         Description = "Description" + i,
-                        Barcode = "" + i + "0000",
+                        BarCode = "" + i + "0000",
                         Availability = "Availability",
                     };
                     context.Graces.Add(grace);
@@ -161,7 +161,7 @@ namespace gracetest
                     .ToList();
                 Assert.AreEqual(collectionRows.Count, 0);
 
-                // No total rows
+                // No CurrentTotal rows
                 var totalRows = context.Totals
                        .Where(e => e.GraceId == graceId)
                        .ToList();
