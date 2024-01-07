@@ -43,7 +43,7 @@ namespace grace
 
 
 
-        private int writeCollectoion(string collection, List<GraceRow> rows,
+        private int writeCollection(string collection, List<GraceRow> rows,
             ExcelWorksheet worksheet)
         {
             int startRow = currentRow;
@@ -58,23 +58,23 @@ namespace grace
                 worksheet.Cells[currentRow, 2].Value = row.Sku;
                 worksheet.Cells[currentRow, 3].Value = row.Description;
                 worksheet.Cells[currentRow, 4].Value = collection;
-                if (row.Col2 != null)
+                if (row.Col2 != null && row.Col2 != "Other")
                 {
                     worksheet.Cells[currentRow, 5].Value = row.Col2;
                 }
-                if (row.Col3 != null)
+                if (row.Col3 != null && row.Col3 != "Other")
                 {
                     worksheet.Cells[currentRow, 6].Value = row.Col3;
                 }
-                if (row.Col4 != null)
+                if (row.Col4 != null && row.Col4 != "Other")
                 {
                     worksheet.Cells[currentRow, 7].Value = row.Col4;
                 }
-                if (row.Col5 != null)
+                if (row.Col5 != null && row.Col5 != "Other")
                 {
                     worksheet.Cells[currentRow, 8].Value = row.Col5;
                 }
-                if (row.Col6 != null)
+                if (row.Col6 != null && row.Col6 != "Other")
                 {
                     worksheet.Cells[currentRow, 9].Value = row.Col6;
                 }
@@ -132,16 +132,14 @@ namespace grace
             worksheet.Cells[spanIndex].Merge = true;
             worksheet.Cells[spanIndex].Value = "Collections";
             worksheet.Cells["J" + row].Value = "Availability";
-            worksheet.Cells["L" + row].Value = "Total";
+            worksheet.Cells["K" + row].Value = "Total";
 
             // Set the font size to 14 and make the text bold for the inserted row
             worksheet.Cells[row, 1, row, 10].Style.Font.Size = 16;
-            worksheet.Cells[row, 11, row, 12].Style.Font.Size = 14;
-            worksheet.Cells[row, 1, row, 12].Style.Font.Bold = true;
+            worksheet.Cells[row, 11, row, 11].Style.Font.Size = 14;
+            worksheet.Cells[row, 1, row, 11].Style.Font.Bold = true;
             worksheet.Cells[row, 11].Style.HorizontalAlignment.Equals(HorizontalAlignment.Center);
             worksheet.Cells[row, 11].Style.WrapText = true;
-            worksheet.Cells[row, 12].Style.HorizontalAlignment.Equals(HorizontalAlignment.Center);
-            worksheet.Cells[row, 12].Style.WrapText = true;
 
             currentRow++;
             currentPage++;
@@ -192,8 +190,8 @@ namespace grace
             foreach (var group in sortedKeys)
             {
                 var key = group.Key;
-                var groupRows = DataBase.GetGraceRows(group.ToList());
-                int rowsWritten = writeCollectoion(key, groupRows, worksheet);
+                var groupRows = group.ToList();
+                int rowsWritten = writeCollection(key, groupRows, worksheet);
 
                 var rowsPerPage = Globals.GetInstance().RowsPerPage;
                 if (currentPage > rowsPerPage)

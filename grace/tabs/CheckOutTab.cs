@@ -90,6 +90,8 @@ namespace grace.tabs
                 DialogResult result = editRowForm.ShowDialog();
                 if (result == DialogResult.OK)
                 {
+                    textBoxBarCode.Clear();
+                    checkOutSearchTextBox.Clear();
                     // we need to reload the grid.
                     LoadDataGrid();
                 }
@@ -131,8 +133,8 @@ namespace grace.tabs
         {
 
             InitializeDataGridView();
-            textBoxBarCode.Text = string.Empty;
-            checkOutSearchTextBox.Text = string.Empty;
+            textBoxBarCode.Clear();
+            checkOutSearchTextBox.Clear();
 
         }
 
@@ -202,6 +204,8 @@ namespace grace.tabs
                                 {
                                     // we need to reload the grid.
                                     LoadDataGrid();
+                                    textBoxBarCode.Clear();
+                                    checkOutSearchTextBox.Clear();
                                 }
                             }
                         }

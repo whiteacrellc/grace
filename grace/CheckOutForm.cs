@@ -1,5 +1,6 @@
 ﻿using grace.data;
 using grace.data.models;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -17,6 +18,7 @@ namespace grace
         private string sku;
         private int currentTotal = 0;
         private int graceId = 0;
+        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
         public CheckOutForm(string sku)
         {
@@ -49,7 +51,8 @@ namespace grace
                     this.Close();
                 }
                 var collections =
-                    context.Collections.Where(item => item.GraceId == graceId).ToList();
+                    context.Collections.Where(item => item.GraceId == graceId
+                    && item.Name != "Other").ToList();
                 if (collections.Any())
                 {
                     collectionComboBox.Items.Clear();
@@ -97,17 +100,6 @@ namespace grace
                 }
 
                 var commentText = commentBox.Text;
-                var selectedIndex = collectionComboBox.SelectedIndex;
-                if (selectedIndex > 0)
-                {
-                    MessageBox.Show("You must choose a collection. If this isn't " +
-                        "for a collection please choose Other",
-                        "Information", MessageBoxButtons.OK,
-                         MessageBoxIcon.Exclamation);
-
-                    collectionComboBox.BackColor = System.Drawing.Color.Yellow;
-                    return;
-                }
 
                 if (numCheckOutTextBox.Text is null)
                 {
@@ -136,7 +128,7 @@ namespace grace
 
                 // Get fkeys for PulledDB 
                 var user_id = DataBase.GetUserIdFromName(username);
-                var collectionName = collectionComboBox.SelectedItem.ToString();
+                var collectionName = collectionComboBox.SelectedItem as string;
                 var col_id = DataBase.GetCollectionId(graceId, collectionName);
 
                 using (var context = new GraceDbContext())
@@ -169,7 +161,8 @@ namespace grace
                 }
                 // update the GraceRow
                 DataBase.UpdateGraceRowTotal(graceId, newTotal);
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 var exString = ex.ToString();
                 MessageBox.Show(this, $"Error Loading file {exString}", "Error",
@@ -194,6 +187,13 @@ namespace grace
             // myToolTip.ForeColor = System.Drawing.Color.Blue;
             // myToolTip.InitialDelay = 500; // milliseconds
 
+        }
+
+        private void collectionComboBox_ValueMemberChanged(object sender, EventArgs e)
+        {
+            var comboBox = sender as ComboBox;
+            var selectedValue = comboBox.SelectedItem as string;
+            logger.Debug($"value is {selectedValue}");
         }
     }
 }

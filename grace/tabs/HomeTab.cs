@@ -221,10 +221,13 @@ namespace grace.tabs
             if (PasswordChecker.IsUserAdmin(username))
             {
                 importInventoryToolStripMenuItem.Enabled = true;
+                vivian.EnableReportButton(true);
                 tabControl.SelectedTab = vivian.tabControl.TabPages[1];
             }
             else
             {
+                importInventoryToolStripMenuItem.Enabled = false;
+                vivian.EnableReportButton(false);
                 tabControl.SelectedTab = vivian.tabControl.TabPages[2];
             }
         }
