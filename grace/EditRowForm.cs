@@ -36,11 +36,11 @@ namespace grace
         private string Brand = string.Empty;
         private string Description = string.Empty;
         private List<string> colList = new List<string>();
-        private bool update;
+        private bool newRow;
         private StringBuilder sb = new StringBuilder();
         private bool readyForNewCode = true;
         private GraceRow? graceRow;
-
+        private bool updateGraceRow = false;
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         public EditRowForm(DataGridViewRow? row)
@@ -50,17 +50,18 @@ namespace grace
             this.row = row;
             if (row is null)
             {
-                update = false;
-            } else
+                newRow = true;
+            }
+            else
             {
-                update = true;
+                newRow = false;
             }
         }
 
         private void EditRowForm_Load(object sender, EventArgs e)
         {
 
-            // We will need this to update the database
+            // We will need this to newRow the database
             if (row != null)
             {
                 var sku = row.Cells["Sku"].Value as string;
@@ -98,7 +99,6 @@ namespace grace
                 if (graceRow != null)
                 {
                     skuTextBox.Text = graceRow.Sku;
-                    skuTextBox.Enabled = false;
                     brandTextBox.Text = graceRow.Brand;
                     descTextBox.Text = graceRow.Description;
                     if (graceRow.Availability != null)
@@ -118,18 +118,21 @@ namespace grace
                     checkItem(row.Cells[10].Value);
 
                     currentTextBox.Text = row.Cells["Total"].Value.ToString();
-                    deltalTextBox.Text = "0";
+                    addTextBox.Text = "0";
+                    deleteTextBox.Text = "0";
                 }
             }
 
-            if (!update)
+            if (newRow)
             {
                 saveButton.Text = "Add Row";
                 deleteButton.Enabled = false;
                 deleteButton.Hide();
                 adjustInventoryLabel.Hide();
-                deltalTextBox.Hide();
+                addTextBox.Hide();
                 currentTextBox.ReadOnly = false;
+                deleteTextBox.Hide();
+                deleteInventoryLabel.Hide();
             }
             else
             {
@@ -137,7 +140,7 @@ namespace grace
                 deleteButton.Enabled = true;
                 deleteButton.Show();
                 adjustInventoryLabel.Show();
-                deltalTextBox.Show();
+                addTextBox.Show();
                 currentTextBox.ReadOnly = true;
             }
         }
@@ -149,7 +152,8 @@ namespace grace
                 if (checkedListBox.Items.Contains((string)var))
                 {
                     int i = checkedListBox.Items.IndexOf((string)var);
-                    checkedListBox.SetItemChecked(i, true);
+                    //checkedListBox.SetItemChecked(i, true);
+                    checkedListBox.SetItemCheckState(i, CheckState.Checked);
                 }
             }
         }
@@ -157,16 +161,16 @@ namespace grace
         private void saveButton_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.Cancel;
-            if (update)
+            if (newRow)
             {
-                if (updateRow())
+                if (addRow())
                 {
                     return;
                 }
             }
             else
             {
-                if (addRow())
+                if (updateRow())
                 {
                     return;
                 }
@@ -183,32 +187,57 @@ namespace grace
             {
                 return true;
             }
-
+            int graceId = 0;
             // Update Graces DB
             using (var context = new GraceDbContext())
             {
                 var grace =
                         context.Graces.FirstOrDefault(item => item.Sku == graceRow.Sku);
-                bool update = false;
 
                 if (grace != null)
                 {
+                    graceId = grace.ID;
                     if (grace.Sku != skuTextBox.Text)
                     {
-                        grace.Sku = skuTextBox.Text;
-                        update = true;
+                        var sku = skuTextBox.Text;
+                        if (string.IsNullOrEmpty(sku))
+                        {
+                            MessageBox.Show("SKU Must have a Value.",
+                                "Information", MessageBoxButtons.OK,
+                                MessageBoxIcon.Information);
+                            return true;
+                        }
+                        grace.Sku = sku.Trim();
+                        updateGraceRow = true;
                     }
                     if (grace.Brand != brandTextBox.Text)
                     {
-                        grace.Brand = brandTextBox.Text;
-                        update = true;
+                        var brand = brandTextBox.Text;
+                        if (!string.IsNullOrEmpty(brand))
+                        {
+                            brand = brand.Trim();
+                        }
+                        grace.Brand = brand;
+                        updateGraceRow = true;
                     }
                     if (grace.Description != descTextBox.Text)
                     {
-                        grace.Description = descTextBox.Text;
-                        update = true;
+                        var desc = descTextBox.Text;
+                        if (!string.IsNullOrEmpty(desc)) { desc = desc.Trim(); }
+                        grace.Description = desc;
+                        updateGraceRow = true;
                     }
-                    if (update)
+                    if (grace.Availability != availabilityTextBox.Text)
+                    {
+                        var availability = availabilityTextBox.Text;
+                        if (!string.IsNullOrEmpty(availability))
+                        {
+                            availability = availability.Trim();
+                        }
+                        grace.Availability = availability;
+                        updateGraceRow = true;
+                    }
+                    if (updateGraceRow)
                     {
                         context.SaveChanges();
                     }
@@ -217,25 +246,50 @@ namespace grace
 
             try
             {
-                int newTotal = Convert.ToInt32(currentTextBox.Text) +
-                    Convert.ToInt32(deltalTextBox.Text);
+                int delta = 0;
 
-                if (newTotal < 0)
+                delta = Convert.ToInt32(addTextBox.Text);
+
+                if (delta == 0)
                 {
-                    DialogResult result = MessageBox.Show(
-                        $"The new CurrentTotal is less than zero {newTotal} " +
-                        "are you sure you want to enter this?", "Question",
-                        MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                    if (result == DialogResult.No)
-                    {
-                        return true;
-                    }
-
+                    delta = -Convert.ToInt32(deleteTextBox.Text);
                 }
-                DataBase.AddTotal(newTotal, graceRow.GraceId);
-            } catch (Exception ex)
+
+                int newTotal = Convert.ToInt32(currentTextBox.Text) + delta;
+
+                if (delta != 0)
+                {
+                    if (newTotal < 0)
+                    {
+                        DialogResult result = MessageBox.Show(
+                            $"The new CurrentTotal is less than zero {newTotal} " +
+                            "are you sure you want to enter this?", "Question",
+                            MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                        if (result == DialogResult.No)
+                        {
+                            return true;
+                        }
+
+                    }
+                    DataBase.AddTotal(newTotal, graceRow.GraceId);
+
+                    var sku = skuTextBox.Text.Trim();
+                    using (var context = new GraceDbContext())
+                    {
+                        graceRow = context.GraceRows.FirstOrDefault(item => item.Sku == sku);
+                        graceRow.Total = newTotal;
+                        context.SaveChanges();
+                    }
+                    updateGraceRow = true;
+                }
+                if (updateGraceRow)
+                {
+                    DataBase.UpdateGraceRow(graceId);
+                }
+            }
+            catch (Exception ex)
             {
-               logger.Error(ex);
+                logger.Error(ex);
                 ret = true;
             }
 
@@ -267,7 +321,7 @@ namespace grace
                 currentTextBox.BackColor = System.Drawing.Color.Yellow;
                 ret = true;
             }
-            if (checkedListBox.SelectedItems.Count == 0)
+            if (checkedListBox.CheckedItems.Count == 0)
             {
                 MessageBox.Show("You need to select at least one category.",
                     "Information", MessageBoxButtons.OK,
@@ -330,15 +384,20 @@ namespace grace
                     if (result == DialogResult.No)
                     {
                         return true;
-                       
-                    }
-                    DataBase.AddTotal(newTotal, graceId);
-                }
 
+                    }
+                }
+                DataBase.AddTotal(newTotal, graceId);
             }
             catch (Exception ex)
             {
                 logger.Error(ex);
+            }
+
+            var selectedList = checkedListBox.SelectedItems.Cast<string>().ToList();
+            foreach (var selected in selectedList)
+            {
+                DataBase.AddCollectionRow(graceId, selected);
             }
 
             // Now add the grace row. 
@@ -372,33 +431,18 @@ namespace grace
             }
         }
 
-        private void deleteButton_Click(
-            object sender, EventArgs e)
+        private void deleteButton_Click(object sender, EventArgs e)
         {
-            if (update == true && row != null)
-            {
-                var obj = row.Cells[0].Value;
-                if (obj != null)
-                {
-#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
-                    string sku = obj.ToString();
-#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
-                    using (var context = new GraceDbContext())
-                    {
-                        var grace = context.Graces.First(t => t.Sku.Equals(sku,
-                            StringComparison.Ordinal));
-                        context.Graces.Remove(grace);
-                        context.SaveChanges();
-                    }
-                    DialogResult = DialogResult.OK;
-                }
-                else
-                {
-                    DialogResult = DialogResult.None;
-                }
 
+            using (var context = new GraceDbContext())
+            {
+                var grace = context.Graces.FirstOrDefault(item => item.Sku == graceRow.Sku);
+                context.Graces.Remove(grace);
+                context.SaveChanges();
             }
+            DialogResult = DialogResult.OK;
             Close();
+   
         }
 
         private int GetCollectionId(string collectionName)
@@ -421,23 +465,23 @@ namespace grace
             return ret;
         }
 
-        private void checkedListBox_SelectedValueChanged(object sender, EventArgs e)
-        {
-
-        }
-
         private void checkedListBox_ItemCheck(object sender, ItemCheckEventArgs e)
         {
+            if (newRow)
+            {
+                return;
+            }
+
             string? itemName = checkedListBox.Items[e.Index].ToString();
             if (itemName != null)
             {
                 if (e.NewValue == CheckState.Checked)
                 {
-                    DataBase.AddCollectionRow(graceRow.GraceId, itemName);
+                    updateGraceRow = DataBase.AddCollectionRow(graceRow.GraceId, itemName);
                 }
                 else if (e.NewValue == CheckState.Unchecked)
                 {
-                    DataBase.DeleteCollectionRow(graceRow.GraceId, itemName);
+                    updateGraceRow = DataBase.DeleteCollectionRow(graceRow.GraceId, itemName);
                 }
             }
         }
@@ -445,11 +489,12 @@ namespace grace
         private void deltaTextBox_TextChanged(object sender, EventArgs e)
         {
             // Ensure the entered text is a valid integer
-            if (!int.TryParse(deltalTextBox.Text, out int result))
+            if (!int.TryParse(addTextBox.Text, out int result))
             {
                 // If not a valid integer, clear the TextBox
-                deltalTextBox.Text = "";
+                addTextBox.Text = "";
             }
         }
+
     }
 }

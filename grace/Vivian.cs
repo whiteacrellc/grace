@@ -62,6 +62,32 @@ namespace grace
 
         }
 
+        private void InitializeLogger()
+        {
+            // Set up NLog configuration. This can be done in the NLog.config file as well.
+            var config = new NLog.Config.LoggingConfiguration();
+
+            // Create targets and rules
+            var textboxTarget = new NLog.Targets.MethodCallTarget("textboxTarget", LogToTextBox);
+            config.AddRule(LogLevel.Info, LogLevel.Fatal, textboxTarget);
+
+            // Apply configuration
+            LogManager.Configuration = config;
+        }
+
+        private void LogToTextBox(LogEventInfo logEvent, object[] arg2)
+        {
+            // This method is called when a log event occurs
+            string logMessage = logEvent.FormattedMessage;
+
+            // Use Invoke to update UI from another thread (e.g., if logging from a background thread)
+            loggingTextBox.Invoke(new Action(() =>
+            {
+                loggingTextBox.AppendText(logMessage + Environment.NewLine);
+                loggingTextBox.ScrollToCaret(); // Scroll to the end to show the latest log entry
+            }));
+        }
+
         private void generateReport()
         {
             try
@@ -103,7 +129,7 @@ namespace grace
             {
                 if (settingsForm.ShowDialog() == DialogResult.OK)
                 {
-                    // Settings were modified, update the MainForm
+                    // Settings were modified, newRow the MainForm
                     // UpdateFormWithSettings();
                 }
             }

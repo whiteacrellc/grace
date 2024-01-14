@@ -87,7 +87,7 @@ namespace grace
                 }
 
                 // Put border around cells 
-                for (int columnIndex = 1; columnIndex <= 12; columnIndex++)
+                for (int columnIndex = 1; columnIndex < 12; columnIndex++)
                 {
                     worksheet.Cells[currentRow, columnIndex].Style.Border.BorderAround(ExcelBorderStyle.Thin);
                 }
@@ -173,7 +173,7 @@ namespace grace
             currentPage = 1;
             WriteHeader(worksheet, 1);
 
-            for (int columnIndex = 1; columnIndex <= 12; columnIndex++)
+            for (int columnIndex = 1; columnIndex < 12; columnIndex++)
             {
                 worksheet.Column(columnIndex).Width = 20;
 
@@ -182,7 +182,6 @@ namespace grace
             worksheet.Column(3).Width = 50;
             worksheet.Column(10).Width = 15;
             worksheet.Column(11).Width = 15;
-            worksheet.Column(12).Width = 15;
 
             WritePrintHeader(worksheet);
 

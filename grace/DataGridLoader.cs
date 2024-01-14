@@ -19,6 +19,7 @@ using System.ComponentModel.Design;
 using System.Data;
 using System.Data.SQLite;
 using System.Globalization;
+using static grace.DataBase;
 using static OfficeOpenXml.ExcelErrorValue;
 
 namespace grace
@@ -35,6 +36,30 @@ namespace grace
                 list = context.GraceRows.ToList();
             }
             return list;
+        }
+
+        public static List<GraceRow> getFilteredData(string searchTerm)
+        {
+            List<GraceRow> result = new List<GraceRow>();
+            var list = getData();
+            if (searchTerm == null || searchTerm == string.Empty)
+            {
+                return list;
+            }
+
+            // Look through the list for either matches in the sku or
+            // description
+            foreach (var graceRow in list)
+            {
+                if (graceRow.Sku.Contains(searchTerm,
+                    StringComparison.CurrentCultureIgnoreCase) ||
+                    graceRow.Description.Contains(searchTerm,
+                    StringComparison.CurrentCultureIgnoreCase))
+                {
+                    result.Add(graceRow);
+                }
+            }
+            return result;
         }
 
         internal static void LoadBindingTable()
@@ -81,6 +106,7 @@ namespace grace
                     int i = 0;
                     foreach (var col in collectionList)
                     {
+                        if (col.Name == "Other") { continue; }
                         switch (i)
                         {
                             case 0:

@@ -44,7 +44,7 @@
             textBoxRowsPerPage.Name = "textBoxRowsPerPage";
             textBoxRowsPerPage.Size = new Size(63, 23);
             textBoxRowsPerPage.TabIndex = 0;
-            textBoxRowsPerPage.Validating += textBoxRowsPerPage_Validating;
+            textBoxRowsPerPage.KeyPress += ValidateNumber_Callback;
             // 
             // SettingsCancelButton
             // 
@@ -95,8 +95,7 @@
             rowHeighrTextBox.Name = "rowHeighrTextBox";
             rowHeighrTextBox.Size = new Size(63, 23);
             rowHeighrTextBox.TabIndex = 5;
-            rowHeighrTextBox.TextChanged += rowHeighrTextBox_TextChanged;
-            rowHeighrTextBox.Validating += rowHeighrTextBox_Validating;
+            rowHeighrTextBox.KeyPress += ValidateNumber_Callback;
             // 
             // SettingsForm
             // 

@@ -31,7 +31,9 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EditRowForm));
             cancelButton = new Button();
             panel1 = new Panel();
-            deltalTextBox = new TextBox();
+            deleteTextBox = new TextBox();
+            deleteInventoryLabel = new Label();
+            addTextBox = new TextBox();
             adjustInventoryLabel = new Label();
             currentTextBox = new TextBox();
             label6 = new Label();
@@ -63,7 +65,9 @@
             // 
             // panel1
             // 
-            panel1.Controls.Add(deltalTextBox);
+            panel1.Controls.Add(deleteTextBox);
+            panel1.Controls.Add(deleteInventoryLabel);
+            panel1.Controls.Add(addTextBox);
             panel1.Controls.Add(adjustInventoryLabel);
             panel1.Controls.Add(currentTextBox);
             panel1.Controls.Add(label6);
@@ -83,22 +87,39 @@
             panel1.Size = new Size(562, 308);
             panel1.TabIndex = 1;
             // 
-            // deltalTextBox
+            // deleteTextBox
             // 
-            deltalTextBox.Location = new Point(133, 226);
-            deltalTextBox.Name = "deltalTextBox";
-            deltalTextBox.Size = new Size(150, 23);
-            deltalTextBox.TabIndex = 17;
-            deltalTextBox.TextChanged += deltaTextBox_TextChanged;
+            deleteTextBox.Location = new Point(135, 255);
+            deleteTextBox.Name = "deleteTextBox";
+            deleteTextBox.Size = new Size(154, 23);
+            deleteTextBox.TabIndex = 19;
+            deleteTextBox.TextChanged += deltaTextBox_TextChanged;
+            // 
+            // deleteInventoryLabel
+            // 
+            deleteInventoryLabel.AutoSize = true;
+            deleteInventoryLabel.Location = new Point(27, 263);
+            deleteInventoryLabel.Name = "deleteInventoryLabel";
+            deleteInventoryLabel.Size = new Size(93, 15);
+            deleteInventoryLabel.TabIndex = 18;
+            deleteInventoryLabel.Text = "Delete Inventory";
+            // 
+            // addTextBox
+            // 
+            addTextBox.Location = new Point(133, 224);
+            addTextBox.Name = "addTextBox";
+            addTextBox.Size = new Size(156, 23);
+            addTextBox.TabIndex = 17;
+            addTextBox.TextChanged += deltaTextBox_TextChanged;
             // 
             // adjustInventoryLabel
             // 
             adjustInventoryLabel.AutoSize = true;
             adjustInventoryLabel.Location = new Point(27, 229);
             adjustInventoryLabel.Name = "adjustInventoryLabel";
-            adjustInventoryLabel.Size = new Size(94, 15);
+            adjustInventoryLabel.Size = new Size(82, 15);
             adjustInventoryLabel.TabIndex = 16;
-            adjustInventoryLabel.Text = "Adjust Inventory";
+            adjustInventoryLabel.Text = "Add Inventory";
             // 
             // currentTextBox
             // 
@@ -174,7 +195,6 @@
             checkedListBox.Size = new Size(120, 274);
             checkedListBox.TabIndex = 5;
             checkedListBox.ItemCheck += checkedListBox_ItemCheck;
-            checkedListBox.SelectedValueChanged += checkedListBox_SelectedValueChanged;
             // 
             // brandTextBox
             // 
@@ -243,7 +263,9 @@
             Icon = (Icon)resources.GetObject("$this.Icon");
             Margin = new Padding(2, 1, 2, 1);
             Name = "EditRowForm";
+            ShowIcon = false;
             ShowInTaskbar = false;
+            StartPosition = FormStartPosition.CenterParent;
             Text = "Previous Total";
             Load += EditRowForm_Load;
             panel1.ResumeLayout(false);
@@ -267,10 +289,12 @@
         private TextBox descTextBox;
         private TextBox barCodeTextBox;
         private Label label5;
-        private TextBox deltalTextBox;
+        private TextBox addTextBox;
         private Label adjustInventoryLabel;
         private TextBox currentTextBox;
         private Label label6;
         private Button deleteButton;
+        private TextBox deleteTextBox;
+        private Label deleteInventoryLabel;
     }
 }

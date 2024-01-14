@@ -159,8 +159,9 @@ namespace grace
                     context.Totals.Add(total);
                     context.SaveChanges();
                 }
-                // update the GraceRow
+                // newRow the GraceRow
                 DataBase.UpdateGraceRowTotal(graceId, newTotal);
+                DataBase.UpdateGraceRow(graceId);
             }
             catch (Exception ex)
             {

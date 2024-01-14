@@ -93,6 +93,7 @@ namespace grace.tabs
             checkInDataGrid.Columns["UserTotal"].DefaultCellStyle.BackColor = Color.LightGray;
             checkInDataGrid.Columns["BarCode"].DefaultCellStyle.BackColor = Color.LightGray;
             checkInDataGrid.Columns["UserName"].DefaultCellStyle.BackColor = Color.LightGray;
+            checkInDataGrid.Columns["dateTime"].DefaultCellStyle.BackColor = Color.LightGray;
             ChangeColumnNames();
             Utils.RemoveColumnByName(checkInDataGrid, "GraceId");
 

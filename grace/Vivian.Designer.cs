@@ -30,7 +30,8 @@
         {
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Vivian));
-            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
             openFileDialog = new OpenFileDialog();
             menuStrip1 = new MenuStrip();
             editToolStripMenuItem = new ToolStripMenuItem();
@@ -57,6 +58,7 @@
             filterSkuTextBox = new TextBox();
             dataGridView = new DataGridView();
             checkoutPage = new TabPage();
+            label7 = new Label();
             autoOpenOnScanCheckBox = new CheckBox();
             coResetButton = new Button();
             checkOutSearchTextBox = new TextBox();
@@ -70,13 +72,15 @@
             label3 = new Label();
             checkInDataGrid = new DataGridView();
             adminPage = new TabPage();
+            loggingTextBox = new TextBox();
             resetPasswordButton = new Button();
             resetComboBox = new ComboBox();
             label5 = new Label();
             errorProvider1 = new ErrorProvider(components);
             checkoutBindingSource = new BindingSource(components);
             checkInBindingSource = new BindingSource(components);
-            label7 = new Label();
+            backupButton = new MaterialSkin.Controls.MaterialButton();
+            restoreDatabaseButton = new MaterialSkin.Controls.MaterialButton();
             menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             tabControl.SuspendLayout();
@@ -370,10 +374,20 @@
             checkoutPage.ToolTipText = "Checkout Items";
             checkoutPage.UseVisualStyleBackColor = true;
             // 
+            // label7
+            // 
+            label7.AutoSize = true;
+            label7.Font = new Font("Verdana", 15.75F, FontStyle.Bold, GraphicsUnit.Point);
+            label7.Location = new Point(127, 569);
+            label7.Name = "label7";
+            label7.Size = new Size(905, 25);
+            label7.TabIndex = 9;
+            label7.Text = "Please go to the Check In screen to see a list of what you have checked out.";
+            // 
             // autoOpenOnScanCheckBox
             // 
             autoOpenOnScanCheckBox.AutoSize = true;
-            autoOpenOnScanCheckBox.Location = new Point(1171, 88);
+            autoOpenOnScanCheckBox.Location = new Point(1483, 88);
             autoOpenOnScanCheckBox.Name = "autoOpenOnScanCheckBox";
             autoOpenOnScanCheckBox.Size = new Size(395, 22);
             autoOpenOnScanCheckBox.TabIndex = 8;
@@ -382,16 +396,16 @@
             // 
             // coResetButton
             // 
-            coResetButton.Location = new Point(1168, 176);
+            coResetButton.Location = new Point(1480, 176);
             coResetButton.Name = "coResetButton";
-            coResetButton.Size = new Size(137, 31);
+            coResetButton.Size = new Size(160, 31);
             coResetButton.TabIndex = 7;
-            coResetButton.Text = "Reset";
+            coResetButton.Text = "Show All Data";
             coResetButton.UseVisualStyleBackColor = true;
             // 
             // checkOutSearchTextBox
             // 
-            checkOutSearchTextBox.Location = new Point(1338, 118);
+            checkOutSearchTextBox.Location = new Point(1650, 118);
             checkOutSearchTextBox.Name = "checkOutSearchTextBox";
             checkOutSearchTextBox.Size = new Size(265, 26);
             checkOutSearchTextBox.TabIndex = 6;
@@ -399,7 +413,7 @@
             // label6
             // 
             label6.AutoSize = true;
-            label6.Location = new Point(1168, 126);
+            label6.Location = new Point(1480, 126);
             label6.Margin = new Padding(7, 0, 7, 0);
             label6.Name = "label6";
             label6.Size = new Size(160, 18);
@@ -413,28 +427,34 @@
             checkOutDataGrid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
             checkOutDataGrid.BorderStyle = BorderStyle.Fixed3D;
             checkOutDataGrid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = Color.FromArgb(224, 224, 224);
-            dataGridViewCellStyle1.Font = new Font("Verdana", 10.875F, FontStyle.Regular, GraphicsUnit.Point);
-            dataGridViewCellStyle1.ForeColor = SystemColors.ControlText;
-            dataGridViewCellStyle1.Padding = new Padding(0, 2, 0, 0);
-            dataGridViewCellStyle1.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.False;
-            checkOutDataGrid.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = Color.FromArgb(224, 224, 224);
+            dataGridViewCellStyle3.Font = new Font("Verdana", 10.875F, FontStyle.Regular, GraphicsUnit.Point);
+            dataGridViewCellStyle3.ForeColor = SystemColors.ControlText;
+            dataGridViewCellStyle3.Padding = new Padding(0, 2, 10, 0);
+            dataGridViewCellStyle3.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = DataGridViewTriState.False;
+            checkOutDataGrid.DefaultCellStyle = dataGridViewCellStyle3;
             checkOutDataGrid.Location = new Point(27, 50);
             checkOutDataGrid.MultiSelect = false;
             checkOutDataGrid.Name = "checkOutDataGrid";
             checkOutDataGrid.ReadOnly = true;
-            checkOutDataGrid.RowHeadersWidth = 82;
+            checkOutDataGrid.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders;
+            dataGridViewCellStyle4.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.Padding = new Padding(0, 0, 10, 0);
+            checkOutDataGrid.RowsDefaultCellStyle = dataGridViewCellStyle4;
+            checkOutDataGrid.RowTemplate.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            checkOutDataGrid.RowTemplate.DefaultCellStyle.Padding = new Padding(0, 0, 10, 0);
             checkOutDataGrid.RowTemplate.Height = 25;
-            checkOutDataGrid.Size = new Size(1118, 500);
+            checkOutDataGrid.RowTemplate.Resizable = DataGridViewTriState.True;
+            checkOutDataGrid.Size = new Size(1426, 500);
             checkOutDataGrid.TabIndex = 4;
             // 
             // barcodeLabel
             // 
             barcodeLabel.AutoSize = true;
-            barcodeLabel.Location = new Point(1168, 58);
+            barcodeLabel.Location = new Point(1480, 58);
             barcodeLabel.Margin = new Padding(7, 0, 7, 0);
             barcodeLabel.Name = "barcodeLabel";
             barcodeLabel.Size = new Size(121, 18);
@@ -443,7 +463,7 @@
             // 
             // textBoxBarcode
             // 
-            textBoxBarcode.Location = new Point(1338, 50);
+            textBoxBarcode.Location = new Point(1650, 50);
             textBoxBarcode.Margin = new Padding(7);
             textBoxBarcode.Name = "textBoxBarcode";
             textBoxBarcode.Size = new Size(265, 26);
@@ -464,7 +484,7 @@
             // 
             // applyChangesButton
             // 
-            applyChangesButton.Location = new Point(1416, 80);
+            applyChangesButton.Location = new Point(1730, 81);
             applyChangesButton.Name = "applyChangesButton";
             applyChangesButton.Size = new Size(181, 34);
             applyChangesButton.TabIndex = 3;
@@ -474,7 +494,7 @@
             // allUsersCheckBox
             // 
             allUsersCheckBox.AutoSize = true;
-            allUsersCheckBox.Location = new Point(1416, 37);
+            allUsersCheckBox.Location = new Point(1730, 38);
             allUsersCheckBox.Name = "allUsersCheckBox";
             allUsersCheckBox.Size = new Size(149, 22);
             allUsersCheckBox.TabIndex = 2;
@@ -501,13 +521,16 @@
             checkInDataGrid.Name = "checkInDataGrid";
             checkInDataGrid.RowTemplate.Height = 25;
             checkInDataGrid.SelectionMode = DataGridViewSelectionMode.CellSelect;
-            checkInDataGrid.Size = new Size(1364, 497);
+            checkInDataGrid.Size = new Size(1677, 497);
             checkInDataGrid.TabIndex = 0;
             // 
             // adminPage
             // 
             adminPage.BackColor = SystemColors.Control;
             adminPage.BorderStyle = BorderStyle.Fixed3D;
+            adminPage.Controls.Add(restoreDatabaseButton);
+            adminPage.Controls.Add(backupButton);
+            adminPage.Controls.Add(loggingTextBox);
             adminPage.Controls.Add(resetPasswordButton);
             adminPage.Controls.Add(resetComboBox);
             adminPage.Controls.Add(label5);
@@ -517,6 +540,17 @@
             adminPage.TabIndex = 3;
             adminPage.Text = "Admin";
             adminPage.ToolTipText = "Admin Settings";
+            // 
+            // loggingTextBox
+            // 
+            loggingTextBox.BorderStyle = BorderStyle.FixedSingle;
+            loggingTextBox.Location = new Point(525, 43);
+            loggingTextBox.Multiline = true;
+            loggingTextBox.Name = "loggingTextBox";
+            loggingTextBox.ReadOnly = true;
+            loggingTextBox.ScrollBars = ScrollBars.Vertical;
+            loggingTextBox.Size = new Size(666, 579);
+            loggingTextBox.TabIndex = 3;
             // 
             // resetPasswordButton
             // 
@@ -548,15 +582,43 @@
             // 
             errorProvider1.ContainerControl = this;
             // 
-            // label7
+            // backupButton
             // 
-            label7.AutoSize = true;
-            label7.Font = new Font("Verdana", 15.75F, FontStyle.Bold, GraphicsUnit.Point);
-            label7.Location = new Point(127, 569);
-            label7.Name = "label7";
-            label7.Size = new Size(905, 25);
-            label7.TabIndex = 9;
-            label7.Text = "Please go to the Check In screen to see a list of what you have checked out.";
+            backupButton.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            backupButton.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.Default;
+            backupButton.Depth = 0;
+            backupButton.HighEmphasis = true;
+            backupButton.Icon = null;
+            backupButton.Location = new Point(55, 205);
+            backupButton.Margin = new Padding(4, 6, 4, 6);
+            backupButton.MouseState = MaterialSkin.MouseState.HOVER;
+            backupButton.Name = "backupButton";
+            backupButton.NoAccentTextColor = Color.Empty;
+            backupButton.Size = new Size(156, 36);
+            backupButton.TabIndex = 4;
+            backupButton.Text = "Backup Database";
+            backupButton.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
+            backupButton.UseAccentColor = false;
+            backupButton.UseVisualStyleBackColor = true;
+            // 
+            // restoreDatabaseButton
+            // 
+            restoreDatabaseButton.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            restoreDatabaseButton.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.Default;
+            restoreDatabaseButton.Depth = 0;
+            restoreDatabaseButton.HighEmphasis = true;
+            restoreDatabaseButton.Icon = null;
+            restoreDatabaseButton.Location = new Point(53, 266);
+            restoreDatabaseButton.Margin = new Padding(4, 6, 4, 6);
+            restoreDatabaseButton.MouseState = MaterialSkin.MouseState.HOVER;
+            restoreDatabaseButton.Name = "restoreDatabaseButton";
+            restoreDatabaseButton.NoAccentTextColor = Color.Empty;
+            restoreDatabaseButton.Size = new Size(156, 36);
+            restoreDatabaseButton.TabIndex = 5;
+            restoreDatabaseButton.Text = "Restore Database";
+            restoreDatabaseButton.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
+            restoreDatabaseButton.UseAccentColor = false;
+            restoreDatabaseButton.UseVisualStyleBackColor = true;
             // 
             // Vivian
             // 
@@ -653,5 +715,8 @@
         internal Button applyChangesButton;
         internal ToolStripMenuItem importInventoryToolStripMenuItem;
         private Label label7;
+        private TextBox loggingTextBox;
+        internal MaterialSkin.Controls.MaterialButton restoreDatabaseButton;
+        internal MaterialSkin.Controls.MaterialButton backupButton;
     }
 }

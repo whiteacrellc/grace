@@ -61,6 +61,7 @@ namespace grace.tabs
             // Callbacks 
             dataGridView.CellMouseDoubleClick += dataGridView_CellMouseDoubleClick;
             dataGridView.DataBindingComplete += dataGridView_DataBindingComplete;
+            dataTabPage.Enter += DataTabPage_Enter;
             addRowButton.Click += addRowButton_Click;
             filterSkuTextBox.TextChanged += filterSkuTextBox_TextChanged;
 
@@ -73,12 +74,12 @@ namespace grace.tabs
         {
             // Dictionary to map DbContext column names to desired DataGridView column names
             Dictionary<string, string> columnMappings = new Dictionary<string, string>
-        {
-            {"Total", "Current Inventory"},
-            {"Col1", "Collection 1"},
-            {"Col2", "Collection 2"},
-            // Add more mappings as needed
-        };
+            {
+                {"Total", "Current Inventory"},
+                {"Col1", "Collection 1"},
+                {"Col2", "Collection 2"},
+                // Add more mappings as needed
+            };
 
             // Iterate through the columns in the DataGridView
             foreach (DataGridViewColumn dataGridViewColumn in dataGridView.Columns)
@@ -106,6 +107,12 @@ namespace grace.tabs
             ChangeColumnNames();
         }
 
+        private void DataTabPage_Enter(object? sender, EventArgs e)
+        {
+            filterSkuTextBox.Clear();
+            BindDataSource();
+        }
+
         private void addRowButton_Click(object? sender, EventArgs e)
         {
             using (EditRowForm editRowForm = new EditRowForm(null))
@@ -113,7 +120,15 @@ namespace grace.tabs
                 DialogResult dialogResult = editRowForm.ShowDialog();
                 if (dialogResult == DialogResult.OK)
                 {
-                    bindingSource.DataSource = DataGridLoader.getData();
+                    if (!string.IsNullOrEmpty(filterSkuTextBox.Text))
+                    {
+                        bindingSource.DataSource =
+                            DataGridLoader.getFilteredData(filterSkuTextBox.Text);
+                    }
+                    else
+                    {
+                        bindingSource.DataSource = DataGridLoader.getData();
+                    }
                     Utils.RemoveColumnByName(dataGridView, "ID");
                     Utils.RemoveColumnByName(dataGridView, "Grace");
                     Utils.RemoveColumnByName(dataGridView, "GraceId");
@@ -141,10 +156,7 @@ namespace grace.tabs
                 if (result == DialogResult.OK)
                 {
                     // we need to reload the grid.
-                    bindingSource.DataSource = DataGridLoader.getData();
-                    Utils.RemoveColumnByName(dataGridView, "ID");
-                    Utils.RemoveColumnByName(dataGridView, "Grace");
-                    Utils.RemoveColumnByName(dataGridView, "GraceId");
+                    BindDataSource();
                 }
             }
         }
@@ -152,26 +164,7 @@ namespace grace.tabs
         internal void filterSkuTextBox_TextChanged(object? sender, EventArgs e)
         {
             string searchTerm = filterSkuTextBox.Text;
-
-
-            if (!string.IsNullOrWhiteSpace(searchTerm))
-            {
-                using (var context = new GraceDbContext())
-                {
-                    // Query the DbContext to filter products based on the "Sku" column
-                    var filteredProducts = context.GraceRows
-                        .Where(p => p.Sku.Contains(searchTerm))
-                        .ToList();
-
-                    // Bind the filtered products to the DataGridView
-                    bindingSource.DataSource = filteredProducts;
-                }
-            }
-            else
-            {
-                // If the search box is empty, show all products
-                bindingSource.DataSource = DataGridLoader.getData();
-            }
+            bindingSource.DataSource = DataGridLoader.getFilteredData(searchTerm);
             Utils.RemoveColumnByName(dataGridView, "ID");
             Utils.RemoveColumnByName(dataGridView, "Grace");
             Utils.RemoveColumnByName(dataGridView, "GraceId");

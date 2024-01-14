@@ -34,6 +34,7 @@ using System.Data.Entity;
 using Microsoft.Office.Interop.Excel;
 using System.Xml.Linq;
 using System.Diagnostics;
+using Microsoft.Extensions.Logging;
 
 [assembly: InternalsVisibleTo("gracetest")]
 
@@ -43,7 +44,6 @@ namespace grace
 #pragma warning disable CS8619
     public class DataBase
     {
-        public static Logger Logger => logger;
 
         public static string ConnectionString { get => connectionString; set => connectionString = value; }
         public string DbName { get => dbName; set => dbName = value; }
@@ -248,7 +248,7 @@ namespace grace
                 Cache = SqliteCacheMode.Private
             }.ToString();
 
-            Logger.Info(connectionString);
+            logger.Info(connectionString);
             return connectionString;
         }
 
@@ -428,7 +428,73 @@ namespace grace
             return id;
         }
 
-        
+        public static void UpdateGraceRow(int graceId)
+        {
+            using (var context = new GraceDbContext())
+            {
+                var graceRow = context.GraceRows.FirstOrDefault(e => e.GraceId == graceId);
+                var grace = context.Graces.Find(graceId);
+                if (grace != null)
+                {
+                    graceRow.Sku = grace.Sku;
+                    graceRow.BarCode = grace.BarCode;
+                    graceRow.Brand = grace.Brand;
+                    graceRow.Description = grace.Description;
+                    graceRow.Availability = grace.Availability;
+                }
+                else
+                {
+                    logger.Error($"UpdateGraceRow couldn't find {graceId}");
+                    return;
+                }
+                graceRow.Total = GetTotal(graceId);
+
+                // Set columns
+                graceRow.Col1 = null;
+                graceRow.Col2 = null;
+                graceRow.Col3 = null;
+                graceRow.Col4 = null;
+                graceRow.Col5 = null;
+                graceRow.Col6 = null;
+
+                var collectionRows = context.Collections.
+                    Where(row => row.GraceId == graceId && row.Name != "Other")
+                    .ToList();
+                for (int i = 0; i < collectionRows.Count; i++)
+                {
+                    var collectionRow = collectionRows[i];
+                    if (collectionRow.Name == "Other")
+                    {
+                        continue;
+                    }
+                    switch (i)
+                    {
+                        case 0:
+                            graceRow.Col1 = collectionRow.Name;
+                            break;
+                        case 1:
+                            graceRow.Col2 = collectionRow.Name;
+                            break;
+                        case 2:
+                            graceRow.Col3 = collectionRow.Name;
+                            break;
+                        case 3:
+                            graceRow.Col4 = collectionRow.Name;
+                            break;
+                        case 4:
+                            graceRow.Col5 = collectionRow.Name;
+                            break;
+                        case 5:
+                            graceRow.Col6 = collectionRow.Name;
+                            break;
+                        default:
+                            logger.Error($"Too many collections for graceId {graceId}");
+                            break;
+                    }
+                }
+                context.SaveChanges();
+            }
+        }
 
         public static int CreateGraceRow(int graceId)
         {
@@ -465,6 +531,10 @@ namespace grace
                 for (int i = 0; i < collectionRows.Count; i++)
                 {
                     var collectionRow = collectionRows[i];
+                    if (collectionRow.Name == "Other")
+                    {
+                        continue;
+                    }
                     switch (i)
                     {
                         case 0:
@@ -516,7 +586,7 @@ namespace grace
             }
             else
             {
-                Logger.Error("cannot convert " + n);
+                logger.Error("cannot convert " + n);
             }
             return ret;
         }
@@ -588,7 +658,7 @@ namespace grace
             }
         }
 
-        public static void DeleteCollectionRow (int GraceId, string name)
+        public static bool DeleteCollectionRow (int GraceId, string name)
         {
             using (var context = new GraceDbContext())
             {
@@ -601,12 +671,14 @@ namespace grace
                     // Row exists, so delete it
                     context.Collections.Remove(rowToDelete);
                     context.SaveChanges();
+                    return true;
                 }
+                return false;
             }
         }
     
 
-        public static void AddCollectionRow(int GraceId, string name)
+        public static bool AddCollectionRow(int GraceId, string name)
         {
             using (var context = new GraceDbContext())
             {
@@ -614,7 +686,7 @@ namespace grace
                     .Any(c => c.GraceId == GraceId && c.Name == name);
                 if (rowExists)
                 {
-                    return;
+                    return false;
                 }
 
                 // Row does not exist, so insert a new row
@@ -627,6 +699,7 @@ namespace grace
 
                 context.Collections.Add(newRow);
                 context.SaveChanges();
+                return true;
             }
         }
 
@@ -647,10 +720,10 @@ namespace grace
             {
                 var total = context.Totals
                     .Where(t => t.GraceId == graceId)
-                    .OrderByDescending(t => t.LastUpdated)
-                    .Take(1)
-                    .First();
-                return total.CurrentTotal;
+                    .OrderByDescending(t => t.ID)
+                    .Take(2).ToList();
+                var currentTotal = total[0].CurrentTotal;
+                return currentTotal;
             }
         }
 
@@ -692,6 +765,10 @@ namespace grace
                     for (int i = 0; i < collectionRows.Count; i++)
                     {
                         var collectionRow = collectionRows[i];
+                        if (collectionRow.Name == "Other")
+                        {
+                            continue;
+                        }
                         switch (i)
                         {
                             case 0:
