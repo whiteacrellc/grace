@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 using System.Data.SQLite;
 using System.IO;
 using NLog;
-using Microsoft.Extensions.Logging;
+using grace.data;
+using Microsoft.EntityFrameworkCore;
 
 namespace grace
 {
@@ -16,6 +17,7 @@ namespace grace
         private string connectionString;
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
+        string restoredDatabasePath = "backup.db";
 
         public BackupAndRestore() {
             sourcePath = DataBase.DbFileName;
@@ -25,59 +27,63 @@ namespace grace
 
         public void BackupDatabase()
         {
-            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            string backupFileName = GenerateFileName(restoredDatabasePath);
+            BackupDatabase2(backupFileName);
+        }
 
-            // Set properties for the file dialog
-            saveFileDialog.Title = "Create a Backup File";
-            saveFileDialog.Filter = "Database Files (*.db)|*.db|All Files (*.*)|*.*";
-            saveFileDialog.FilterIndex = 1;
-            saveFileDialog.RestoreDirectory = true;
+        internal string GenerateFileName(string baseFileName)
+        {
+            int version = 0;
+            string programDirectory = AppDomain.CurrentDomain.BaseDirectory;
 
-            // Show the file dialog
-            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            // Specify the database file path in the program's directory
+            string newFileName = Path.Combine(programDirectory, baseFileName);
+            string backupFileName = baseFileName;
+
+            while (File.Exists(newFileName))
             {
-                // Get the selected file path
-                string selectedFilePath = saveFileDialog.FileName;
+                version++;
+                backupFileName = $"{Path.GetFileNameWithoutExtension(baseFileName)}_{version}{Path.GetExtension(baseFileName)}";
+                newFileName = Path.Combine(programDirectory, backupFileName);
 
-                // Ensure the selected file has the .db extension
-                if (!Path.GetExtension(selectedFilePath).Equals(".db", StringComparison.OrdinalIgnoreCase))
-                {
-                    // Append .db extension if not present
-                    selectedFilePath += ".db";
-                }
-
-                // Call the BackupDatabase() function with the selected file path
-                BackupDatabase(selectedFilePath);
             }
+
+            return backupFileName;
         }
 
         public void RestoreDatabase()
         {
+            
             OpenFileDialog openFileDialog = new OpenFileDialog();
 
             // Set properties for the file dialog
             openFileDialog.Title = "Select a .db File";
             openFileDialog.Filter = "Database Files (*.db)|*.db|All Files (*.*)|*.*";
             openFileDialog.FilterIndex = 1;
-            openFileDialog.RestoreDirectory = true;
+            openFileDialog.InitialDirectory = AppDomain.CurrentDomain.BaseDirectory;
 
             // Show the file dialog
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
                 // Get the selected file path
-                string selectedFilePath = openFileDialog.FileName;
+                string selectedFilePath = openFileDialog.SafeFileName;
 
                 // Check if the selected file has the .db extension
                 if (Path.GetExtension(selectedFilePath).Equals(".db", StringComparison.OrdinalIgnoreCase))
                 {
                     // Call the RestoreDatabase() function with the selected file path
-                    RestoreDatabase(selectedFilePath);
+                    RestoreDatabase2(selectedFilePath);
                 }
                 else
                 {
-                    MessageBox.Show("Please select a file with the .db extension.", "Invalid File Type", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Please select a file with the .db extension.",
+                        "Invalid File Type",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error);
                 }
             }
+            
+
         }
 
         internal void BackupDatabase(string destinationPath)
@@ -98,13 +104,17 @@ namespace grace
                         command.ExecuteNonQuery();
                     }
 
-                    using (SQLiteCommand command = new SQLiteCommand("SELECT * FROM backup.sqlite_master WHERE type='table'", sourceConnection))
+                    using (SQLiteCommand command = new SQLiteCommand("SELECT * FROM sqlite_master WHERE type='table'", sourceConnection))
                     {
                         using (SQLiteDataReader reader = command.ExecuteReader())
                         {
                             while (reader.Read())
                             {
                                 string tableName = reader["name"].ToString();
+                                if (tableName.Equals("sqlite_sequence"))
+                                {
+                                    continue;
+                                }
                                 string createTableSql = reader["sql"].ToString();
 
                                 using (SQLiteCommand createTableCommand = new SQLiteCommand(createTableSql, destinationConnection))
@@ -167,6 +177,46 @@ namespace grace
                             }
                         }
                     }
+                }
+            }
+        }
+
+
+
+        private void BackupDatabase2(string backupPath)
+        {
+            using (var context = new GraceDbContext())
+            {
+                context.Database.ExecuteSqlRaw($"ATTACH DATABASE '{backupPath}' AS backup");
+
+                foreach (var entityType in context.Model.GetEntityTypes())
+                {
+                    var tableName = context.Model.FindEntityType(entityType.Name).GetTableName();
+
+                    // Drop existing table in backup database
+                    context.Database.ExecuteSqlRaw($"DROP TABLE IF EXISTS backup.{tableName}");
+
+                    // Create table in backup database
+                    context.Database.ExecuteSqlRaw($"CREATE TABLE backup.{tableName} AS SELECT * FROM {tableName}");
+                }
+            }
+        }
+
+        static void RestoreDatabase2(string backupPath)
+        {
+            using (var context = new GraceDbContext())
+            {
+                context.Database.ExecuteSqlRaw($"ATTACH DATABASE '{backupPath}' AS backup");
+
+                foreach (var entityType in context.Model.GetEntityTypes())
+                {
+                    var tableName = context.Model.FindEntityType(entityType.Name).GetTableName();
+
+                    // Drop existing table in destination database
+                    context.Database.ExecuteSqlRaw($"DROP TABLE IF EXISTS {tableName}");
+
+                    // Create table in destination database
+                    context.Database.ExecuteSqlRaw($"CREATE TABLE {tableName} AS SELECT * FROM backup.{tableName}");
                 }
             }
         }

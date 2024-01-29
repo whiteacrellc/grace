@@ -43,7 +43,7 @@ namespace grace
 
 
 
-        private int writeCollection(string collection, List<GraceRow> rows,
+        private int writeCollection(string collection, List<Grace> rows,
             ExcelWorksheet worksheet)
         {
             int startRow = currentRow;
@@ -58,29 +58,47 @@ namespace grace
                 worksheet.Cells[currentRow, 2].Value = row.Sku;
                 worksheet.Cells[currentRow, 3].Value = row.Description;
                 worksheet.Cells[currentRow, 4].Value = collection;
-                if (row.Col2 != null && row.Col2 != "Other")
-                {
-                    worksheet.Cells[currentRow, 5].Value = row.Col2;
+
+                // Get the collections and fill them in except for the
+                // collection we are sorting on which is in the Col1 col1
+                // column
+                var collections = DataBase.GetCollections(row.ID);
+                int i = 0;
+                foreach (var c in collections) { 
+                    var col = c.Name;
+                    // Don't write out the current collection
+                    if (col.Equals(collection)) {
+                        continue;
+                    }
+                    switch (i)
+                    {
+                        case 0:
+                            worksheet.Cells[currentRow, 5].Value = col;
+                            break;
+                        case 1:
+                            worksheet.Cells[currentRow, 6].Value = col;
+                            break;
+                        case 2:
+                            worksheet.Cells[currentRow, 7].Value = col;
+                            break;
+                        case 3:
+                            worksheet.Cells[currentRow, 8].Value = col;
+                            break;
+                        case 4:
+                            worksheet.Cells[currentRow, 9].Value = col;
+                            break;
+                        default:
+                            break;
+                    }
+                    i++;
                 }
-                if (row.Col3 != null && row.Col3 != "Other")
-                {
-                    worksheet.Cells[currentRow, 6].Value = row.Col3;
-                }
-                if (row.Col4 != null && row.Col4 != "Other")
-                {
-                    worksheet.Cells[currentRow, 7].Value = row.Col4;
-                }
-                if (row.Col5 != null && row.Col5 != "Other")
-                {
-                    worksheet.Cells[currentRow, 8].Value = row.Col5;
-                }
-                if (row.Col6 != null && row.Col6 != "Other")
-                {
-                    worksheet.Cells[currentRow, 9].Value = row.Col6;
-                }
+
                 worksheet.Cells[currentRow, 10].Value = row.Availability;
-                worksheet.Cells[currentRow, 11].Value = row.Total;
-                if (row.Total < 0)
+                var total = DataBase.GetTotal(row.ID);
+                worksheet.Cells[currentRow, 11].Value = total;
+                // Highlight any negative totals by making the background
+                // yellow
+                if (total < 0)
                 {
                     worksheet.Cells[currentRow, 11].Style.Fill.PatternType = ExcelFillStyle.Solid;
                     worksheet.Cells[currentRow, 11].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
@@ -189,7 +207,7 @@ namespace grace
             foreach (var group in sortedKeys)
             {
                 var key = group.Key;
-                var groupRows = group.ToList();
+                var groupRows = group.Value;
                 int rowsWritten = writeCollection(key, groupRows, worksheet);
 
                 var rowsPerPage = Globals.GetInstance().RowsPerPage;

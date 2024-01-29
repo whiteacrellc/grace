@@ -28,12 +28,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="EPPlus" Version="6.2.8" />
+    <PackageReference Include="EPPlus" Version="7.0.6" />
     <PackageReference Include="MaterialSkin.2" Version="2.3.1" />
+    <PackageReference Include="Microsoft.Data.Sqlite.Core" Version="8.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.11" />
     <PackageReference Include="Microsoft.Office.Interop.Excel" Version="15.0.4795.1001" />
-    <PackageReference Include="NLog" Version="5.2.4" />
-    <PackageReference Include="NLog.Config" Version="4.7.15" />
+    <PackageReference Include="MSTest.TestAdapter" Version="3.1.1" />
+    <PackageReference Include="MSTest.TestFramework" Version="3.1.1" />
+    <PackageReference Include="NLog" Version="5.2.8" />
+    <PackageReference Include="SQLite" Version="3.13.0" />
     <PackageReference Include="System.Collections.NonGeneric" Version="4.3.0" />
     <PackageReference Include="System.Data.SQLite" Version="1.0.118" />
   </ItemGroup>

@@ -1,6 +1,9 @@
-﻿namespace grace
+﻿using MaterialSkin.Controls;
+
+namespace grace
 {
-    partial class Vivian
+
+    partial class Vivian : MaterialForm
     {
         /// <summary>
         ///  Required designer variable.
@@ -30,8 +33,8 @@
         {
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Vivian));
-            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
             openFileDialog = new OpenFileDialog();
             menuStrip1 = new MenuStrip();
             editToolStripMenuItem = new ToolStripMenuItem();
@@ -58,13 +61,13 @@
             filterSkuTextBox = new TextBox();
             dataGridView = new DataGridView();
             checkoutPage = new TabPage();
+            label8 = new Label();
+            label6 = new Label();
             label7 = new Label();
             autoOpenOnScanCheckBox = new CheckBox();
             coResetButton = new Button();
             checkOutSearchTextBox = new TextBox();
-            label6 = new Label();
             checkOutDataGrid = new DataGridView();
-            barcodeLabel = new Label();
             textBoxBarcode = new TextBox();
             checkinPage = new TabPage();
             applyChangesButton = new Button();
@@ -73,14 +76,14 @@
             checkInDataGrid = new DataGridView();
             adminPage = new TabPage();
             loggingTextBox = new TextBox();
+            restoreDatabaseButton = new MaterialButton();
+            backupButton = new MaterialButton();
             resetPasswordButton = new Button();
             resetComboBox = new ComboBox();
             label5 = new Label();
             errorProvider1 = new ErrorProvider(components);
             checkoutBindingSource = new BindingSource(components);
             checkInBindingSource = new BindingSource(components);
-            backupButton = new MaterialSkin.Controls.MaterialButton();
-            restoreDatabaseButton = new MaterialSkin.Controls.MaterialButton();
             menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             tabControl.SuspendLayout();
@@ -108,10 +111,10 @@
             menuStrip1.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point);
             menuStrip1.ImageScalingSize = new Size(32, 32);
             menuStrip1.Items.AddRange(new ToolStripItem[] { editToolStripMenuItem });
-            menuStrip1.Location = new Point(0, 0);
+            menuStrip1.Location = new Point(3, 64);
             menuStrip1.Name = "menuStrip1";
             menuStrip1.Padding = new Padding(7, 2, 0, 2);
-            menuStrip1.Size = new Size(1934, 28);
+            menuStrip1.Size = new Size(2137, 28);
             menuStrip1.TabIndex = 4;
             menuStrip1.Text = "menuStrip1";
             // 
@@ -167,27 +170,29 @@
             // 
             // tabControl
             // 
-            tabControl.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            tabControl.Appearance = TabAppearance.Buttons;
             tabControl.Controls.Add(loginPage);
             tabControl.Controls.Add(dataPage);
             tabControl.Controls.Add(checkoutPage);
             tabControl.Controls.Add(checkinPage);
             tabControl.Controls.Add(adminPage);
+            tabControl.Dock = DockStyle.Fill;
             tabControl.Font = new Font("Verdana", 11.25F, FontStyle.Bold, GraphicsUnit.Point);
-            tabControl.ItemSize = new Size(150, 40);
-            tabControl.Location = new Point(0, 30);
+            tabControl.HotTrack = true;
+            tabControl.ItemSize = new Size(200, 40);
+            tabControl.Location = new Point(3, 92);
             tabControl.Margin = new Padding(5, 2, 5, 2);
             tabControl.Name = "tabControl";
             tabControl.Padding = new Point(5, 5);
             tabControl.SelectedIndex = 0;
-            tabControl.Size = new Size(2514, 1000);
+            tabControl.ShowToolTips = true;
+            tabControl.Size = new Size(2137, 1176);
             tabControl.TabIndex = 9;
             tabControl.TabStop = false;
             tabControl.Selecting += tabControl_Selecting;
             // 
             // loginPage
             // 
+            loginPage.BorderStyle = BorderStyle.Fixed3D;
             loginPage.Controls.Add(passwordGroupBox);
             loginPage.Controls.Add(pictureBox1);
             loginPage.Controls.Add(loggedInBox);
@@ -195,7 +200,7 @@
             loginPage.Margin = new Padding(5, 2, 5, 2);
             loginPage.Name = "loginPage";
             loginPage.Padding = new Padding(5, 2, 5, 2);
-            loginPage.Size = new Size(2506, 952);
+            loginPage.Size = new Size(2129, 1128);
             loginPage.TabIndex = 0;
             loginPage.Text = "Home";
             loginPage.ToolTipText = "Login Page";
@@ -307,7 +312,7 @@
             dataPage.Location = new Point(4, 44);
             dataPage.Name = "dataPage";
             dataPage.Padding = new Padding(11, 12, 11, 12);
-            dataPage.Size = new Size(2506, 952);
+            dataPage.Size = new Size(2109, 1085);
             dataPage.TabIndex = 1;
             dataPage.Text = "Inventory";
             dataPage.ToolTipText = "Inventory for Patti";
@@ -342,47 +347,68 @@
             // 
             // dataGridView
             // 
-            dataGridView.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            dataGridView.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             dataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
             dataGridView.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
             dataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView.Location = new Point(0, 49);
+            dataGridView.Location = new Point(-4, 46);
             dataGridView.Margin = new Padding(5, 2, 5, 2);
             dataGridView.MultiSelect = false;
             dataGridView.Name = "dataGridView";
             dataGridView.RowHeadersWidth = 82;
             dataGridView.RowTemplate.Height = 41;
-            dataGridView.Size = new Size(2514, 1000);
+            dataGridView.Size = new Size(1973, 736);
             dataGridView.TabIndex = 1;
             // 
             // checkoutPage
             // 
+            checkoutPage.Controls.Add(label8);
+            checkoutPage.Controls.Add(label6);
             checkoutPage.Controls.Add(label7);
             checkoutPage.Controls.Add(autoOpenOnScanCheckBox);
             checkoutPage.Controls.Add(coResetButton);
             checkoutPage.Controls.Add(checkOutSearchTextBox);
-            checkoutPage.Controls.Add(label6);
             checkoutPage.Controls.Add(checkOutDataGrid);
-            checkoutPage.Controls.Add(barcodeLabel);
             checkoutPage.Controls.Add(textBoxBarcode);
             checkoutPage.Location = new Point(4, 44);
             checkoutPage.Margin = new Padding(7);
             checkoutPage.Name = "checkoutPage";
-            checkoutPage.Size = new Size(2506, 952);
+            checkoutPage.Size = new Size(2129, 1128);
             checkoutPage.TabIndex = 2;
             checkoutPage.Text = "Check Out";
             checkoutPage.ToolTipText = "Checkout Items";
             checkoutPage.UseVisualStyleBackColor = true;
             // 
+            // label8
+            // 
+            label8.AutoSize = true;
+            label8.Location = new Point(1483, 126);
+            label8.Name = "label8";
+            label8.Size = new Size(104, 18);
+            label8.TabIndex = 12;
+            label8.Text = "Search SKU";
+            // 
+            // label6
+            // 
+            label6.AutoSize = true;
+            label6.Location = new Point(1483, 58);
+            label6.Name = "label6";
+            label6.Size = new Size(118, 18);
+            label6.TabIndex = 11;
+            label6.Text = "Scan Barcode";
+            // 
             // label7
             // 
             label7.AutoSize = true;
+            label7.BackColor = Color.Transparent;
+            label7.BorderStyle = BorderStyle.FixedSingle;
             label7.Font = new Font("Verdana", 15.75F, FontStyle.Bold, GraphicsUnit.Point);
-            label7.Location = new Point(127, 569);
+            label7.ForeColor = SystemColors.Highlight;
+            label7.Location = new Point(1507, 258);
             label7.Name = "label7";
-            label7.Size = new Size(905, 25);
+            label7.Size = new Size(397, 77);
             label7.TabIndex = 9;
-            label7.Text = "Please go to the Check In screen to see a list of what you have checked out.";
+            label7.Text = "Please go to the Check In screen\r\n to see a list of what you have \r\nchecked out.";
             // 
             // autoOpenOnScanCheckBox
             // 
@@ -410,56 +436,37 @@
             checkOutSearchTextBox.Size = new Size(265, 26);
             checkOutSearchTextBox.TabIndex = 6;
             // 
-            // label6
-            // 
-            label6.AutoSize = true;
-            label6.Location = new Point(1480, 126);
-            label6.Margin = new Padding(7, 0, 7, 0);
-            label6.Name = "label6";
-            label6.Size = new Size(160, 18);
-            label6.TabIndex = 5;
-            label6.Text = "Search Description";
-            // 
             // checkOutDataGrid
             // 
             checkOutDataGrid.AllowUserToAddRows = false;
             checkOutDataGrid.AllowUserToDeleteRows = false;
-            checkOutDataGrid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+            checkOutDataGrid.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            checkOutDataGrid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.DisplayedCells;
             checkOutDataGrid.BorderStyle = BorderStyle.Fixed3D;
             checkOutDataGrid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = Color.FromArgb(224, 224, 224);
-            dataGridViewCellStyle3.Font = new Font("Verdana", 10.875F, FontStyle.Regular, GraphicsUnit.Point);
-            dataGridViewCellStyle3.ForeColor = SystemColors.ControlText;
-            dataGridViewCellStyle3.Padding = new Padding(0, 2, 10, 0);
-            dataGridViewCellStyle3.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = DataGridViewTriState.False;
-            checkOutDataGrid.DefaultCellStyle = dataGridViewCellStyle3;
-            checkOutDataGrid.Location = new Point(27, 50);
+            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = Color.FromArgb(224, 224, 224);
+            dataGridViewCellStyle1.Font = new Font("Verdana", 11.25F, FontStyle.Bold, GraphicsUnit.Point);
+            dataGridViewCellStyle1.ForeColor = SystemColors.ControlText;
+            dataGridViewCellStyle1.Padding = new Padding(0, 2, 10, 0);
+            dataGridViewCellStyle1.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.False;
+            checkOutDataGrid.DefaultCellStyle = dataGridViewCellStyle1;
+            checkOutDataGrid.Location = new Point(0, 374);
             checkOutDataGrid.MultiSelect = false;
             checkOutDataGrid.Name = "checkOutDataGrid";
             checkOutDataGrid.ReadOnly = true;
-            checkOutDataGrid.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders;
-            dataGridViewCellStyle4.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.Padding = new Padding(0, 0, 10, 0);
-            checkOutDataGrid.RowsDefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.Padding = new Padding(0, 0, 10, 0);
+            checkOutDataGrid.RowsDefaultCellStyle = dataGridViewCellStyle2;
             checkOutDataGrid.RowTemplate.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
             checkOutDataGrid.RowTemplate.DefaultCellStyle.Padding = new Padding(0, 0, 10, 0);
             checkOutDataGrid.RowTemplate.Height = 25;
             checkOutDataGrid.RowTemplate.Resizable = DataGridViewTriState.True;
-            checkOutDataGrid.Size = new Size(1426, 500);
+            checkOutDataGrid.Size = new Size(1177, 758);
             checkOutDataGrid.TabIndex = 4;
-            // 
-            // barcodeLabel
-            // 
-            barcodeLabel.AutoSize = true;
-            barcodeLabel.Location = new Point(1480, 58);
-            barcodeLabel.Margin = new Padding(7, 0, 7, 0);
-            barcodeLabel.Name = "barcodeLabel";
-            barcodeLabel.Size = new Size(121, 18);
-            barcodeLabel.TabIndex = 3;
-            barcodeLabel.Text = "Scan BarCode";
+            checkOutDataGrid.DataError += checkOutDataGrid_DataError;
             // 
             // textBoxBarcode
             // 
@@ -471,15 +478,17 @@
             // 
             // checkinPage
             // 
+            checkinPage.AutoScroll = true;
             checkinPage.Controls.Add(applyChangesButton);
             checkinPage.Controls.Add(allUsersCheckBox);
             checkinPage.Controls.Add(label3);
             checkinPage.Controls.Add(checkInDataGrid);
             checkinPage.Location = new Point(4, 44);
             checkinPage.Name = "checkinPage";
-            checkinPage.Size = new Size(2506, 952);
+            checkinPage.Size = new Size(2109, 1085);
             checkinPage.TabIndex = 4;
             checkinPage.Text = "Check In";
+            checkinPage.ToolTipText = "Check In Items";
             checkinPage.UseVisualStyleBackColor = true;
             // 
             // applyChangesButton
@@ -511,46 +520,84 @@
             // 
             // checkInDataGrid
             // 
+            checkInDataGrid.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
             checkInDataGrid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
             checkInDataGrid.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
             checkInDataGrid.BorderStyle = BorderStyle.Fixed3D;
             checkInDataGrid.CellBorderStyle = DataGridViewCellBorderStyle.Sunken;
             checkInDataGrid.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Sunken;
             checkInDataGrid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            checkInDataGrid.Location = new Point(8, 38);
+            checkInDataGrid.Location = new Point(-30, 3);
             checkInDataGrid.Name = "checkInDataGrid";
             checkInDataGrid.RowTemplate.Height = 25;
             checkInDataGrid.SelectionMode = DataGridViewSelectionMode.CellSelect;
-            checkInDataGrid.Size = new Size(1677, 497);
+            checkInDataGrid.Size = new Size(1689, 781);
             checkInDataGrid.TabIndex = 0;
             // 
             // adminPage
             // 
+            adminPage.AutoScroll = true;
             adminPage.BackColor = SystemColors.Control;
             adminPage.BorderStyle = BorderStyle.Fixed3D;
+            adminPage.Controls.Add(loggingTextBox);
             adminPage.Controls.Add(restoreDatabaseButton);
             adminPage.Controls.Add(backupButton);
-            adminPage.Controls.Add(loggingTextBox);
             adminPage.Controls.Add(resetPasswordButton);
             adminPage.Controls.Add(resetComboBox);
             adminPage.Controls.Add(label5);
             adminPage.Location = new Point(4, 44);
             adminPage.Name = "adminPage";
-            adminPage.Size = new Size(2506, 952);
+            adminPage.Size = new Size(2109, 1085);
             adminPage.TabIndex = 3;
             adminPage.Text = "Admin";
             adminPage.ToolTipText = "Admin Settings";
             // 
             // loggingTextBox
             // 
-            loggingTextBox.BorderStyle = BorderStyle.FixedSingle;
-            loggingTextBox.Location = new Point(525, 43);
+            loggingTextBox.Font = new Font("Verdana", 9F, FontStyle.Regular, GraphicsUnit.Point);
+            loggingTextBox.Location = new Point(560, 63);
             loggingTextBox.Multiline = true;
             loggingTextBox.Name = "loggingTextBox";
-            loggingTextBox.ReadOnly = true;
-            loggingTextBox.ScrollBars = ScrollBars.Vertical;
-            loggingTextBox.Size = new Size(666, 579);
-            loggingTextBox.TabIndex = 3;
+            loggingTextBox.Size = new Size(593, 553);
+            loggingTextBox.TabIndex = 6;
+            // 
+            // restoreDatabaseButton
+            // 
+            restoreDatabaseButton.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            restoreDatabaseButton.Density = MaterialButton.MaterialButtonDensity.Default;
+            restoreDatabaseButton.Depth = 0;
+            restoreDatabaseButton.HighEmphasis = true;
+            restoreDatabaseButton.Icon = null;
+            restoreDatabaseButton.Location = new Point(53, 266);
+            restoreDatabaseButton.Margin = new Padding(4, 6, 4, 6);
+            restoreDatabaseButton.MouseState = MaterialSkin.MouseState.HOVER;
+            restoreDatabaseButton.Name = "restoreDatabaseButton";
+            restoreDatabaseButton.NoAccentTextColor = Color.Empty;
+            restoreDatabaseButton.Size = new Size(162, 36);
+            restoreDatabaseButton.TabIndex = 5;
+            restoreDatabaseButton.Text = "Restore Database";
+            restoreDatabaseButton.Type = MaterialButton.MaterialButtonType.Contained;
+            restoreDatabaseButton.UseAccentColor = false;
+            restoreDatabaseButton.UseVisualStyleBackColor = true;
+            // 
+            // backupButton
+            // 
+            backupButton.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            backupButton.Density = MaterialButton.MaterialButtonDensity.Default;
+            backupButton.Depth = 0;
+            backupButton.HighEmphasis = true;
+            backupButton.Icon = null;
+            backupButton.Location = new Point(55, 205);
+            backupButton.Margin = new Padding(4, 6, 4, 6);
+            backupButton.MouseState = MaterialSkin.MouseState.HOVER;
+            backupButton.Name = "backupButton";
+            backupButton.NoAccentTextColor = Color.Empty;
+            backupButton.Size = new Size(156, 36);
+            backupButton.TabIndex = 4;
+            backupButton.Text = "Backup Database";
+            backupButton.Type = MaterialButton.MaterialButtonType.Contained;
+            backupButton.UseAccentColor = false;
+            backupButton.UseVisualStyleBackColor = true;
             // 
             // resetPasswordButton
             // 
@@ -582,51 +629,13 @@
             // 
             errorProvider1.ContainerControl = this;
             // 
-            // backupButton
-            // 
-            backupButton.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            backupButton.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.Default;
-            backupButton.Depth = 0;
-            backupButton.HighEmphasis = true;
-            backupButton.Icon = null;
-            backupButton.Location = new Point(55, 205);
-            backupButton.Margin = new Padding(4, 6, 4, 6);
-            backupButton.MouseState = MaterialSkin.MouseState.HOVER;
-            backupButton.Name = "backupButton";
-            backupButton.NoAccentTextColor = Color.Empty;
-            backupButton.Size = new Size(156, 36);
-            backupButton.TabIndex = 4;
-            backupButton.Text = "Backup Database";
-            backupButton.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
-            backupButton.UseAccentColor = false;
-            backupButton.UseVisualStyleBackColor = true;
-            // 
-            // restoreDatabaseButton
-            // 
-            restoreDatabaseButton.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            restoreDatabaseButton.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.Default;
-            restoreDatabaseButton.Depth = 0;
-            restoreDatabaseButton.HighEmphasis = true;
-            restoreDatabaseButton.Icon = null;
-            restoreDatabaseButton.Location = new Point(53, 266);
-            restoreDatabaseButton.Margin = new Padding(4, 6, 4, 6);
-            restoreDatabaseButton.MouseState = MaterialSkin.MouseState.HOVER;
-            restoreDatabaseButton.Name = "restoreDatabaseButton";
-            restoreDatabaseButton.NoAccentTextColor = Color.Empty;
-            restoreDatabaseButton.Size = new Size(156, 36);
-            restoreDatabaseButton.TabIndex = 5;
-            restoreDatabaseButton.Text = "Restore Database";
-            restoreDatabaseButton.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
-            restoreDatabaseButton.UseAccentColor = false;
-            restoreDatabaseButton.UseVisualStyleBackColor = true;
-            // 
             // Vivian
             // 
             AutoScaleDimensions = new SizeF(7F, 17F);
             AutoScaleMode = AutoScaleMode.Font;
             AutoScroll = true;
             BackColor = Color.White;
-            ClientSize = new Size(1934, 884);
+            ClientSize = new Size(2143, 1271);
             Controls.Add(tabControl);
             Controls.Add(menuStrip1);
             Font = new Font("Segoe UI", 10.125F, FontStyle.Regular, GraphicsUnit.Point);
@@ -676,7 +685,6 @@
         private ToolStripMenuItem exitToolStripMenuItem;
         private ToolStripMenuItem saveReportToolStripMenuItem;
         private PictureBox pictureBox1;
-        private TabPage loginPage;
         private TabPage dataPage;
         private TabPage checkoutPage;
         private Label label1;
@@ -700,10 +708,8 @@
         internal DataGridView dataGridView;
         internal Button changePasswordButton;
         internal Button logoutButton;
-        private Label barcodeLabel;
         internal DataGridView checkOutDataGrid;
         internal BindingSource checkoutBindingSource;
-        private Label label6;
         internal TextBox checkOutSearchTextBox;
         internal TextBox textBoxBarcode;
         internal Button coResetButton;
@@ -715,8 +721,11 @@
         internal Button applyChangesButton;
         internal ToolStripMenuItem importInventoryToolStripMenuItem;
         private Label label7;
-        private TextBox loggingTextBox;
         internal MaterialSkin.Controls.MaterialButton restoreDatabaseButton;
         internal MaterialSkin.Controls.MaterialButton backupButton;
+        internal TextBox loggingTextBox;
+        internal TabPage loginPage;
+        private Label label8;
+        private Label label6;
     }
 }

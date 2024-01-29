@@ -17,6 +17,7 @@ using Microsoft.EntityFrameworkCore;
 using NLog;
 using System.ComponentModel.Design;
 using System.Data;
+using System.Data.Entity;
 using System.Data.SQLite;
 using System.Globalization;
 using static grace.DataBase;
@@ -62,10 +63,23 @@ namespace grace
             return result;
         }
 
-        internal static void LoadBindingTable()
+        internal static void LoadBindingTable(bool refresh = false)
         {
             using (var context = new GraceDbContext())
             {
+                if (refresh)
+                {
+                    var allGraceRows = context.GraceRows.ToList();
+                    if (allGraceRows != null)
+                    {
+                        // Remove all rows from the DbSet
+                        context.GraceRows.RemoveRange(allGraceRows);
+
+                        // Save changes to the database
+                        context.SaveChanges();
+                    }
+                }
+
                 if (context.GraceRows.ToList().Count > 0)
                 {
                     return;
@@ -83,23 +97,14 @@ namespace grace
                     row.Description = item.Description;
 
                     // Lets get the two totals
-                    var totalList = context.Totals
+                    var currentTotal = context.Totals
                         .Where(t => t.GraceId == item.ID)
-                        .OrderByDescending(t => t.LastUpdated)
+                        .OrderByDescending(t => t.ID)
                         .Take(1)
-                        .ToList();
+                        .First();
 
-                    if (totalList != null)
-                    {
-                        if (totalList.Count == 1)
-                        {
-                            row.Total = totalList[0].CurrentTotal;
-                        }
-                        else
-                        {
-                            logger.Info("No totals found");
-                        }
-                    }
+                    row.Total = currentTotal.CurrentTotal;
+
 
                     var collectionList = context.Collections.Where(t => t.GraceId == item.ID);
 

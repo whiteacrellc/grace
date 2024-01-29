@@ -74,7 +74,7 @@ namespace grace
                     Close();
                 }
             }
-            var distinctCollectionNames = new List<string?>();
+            var distinctCollectionNames = new List<string>();
             using (var context = new GraceDbContext())
             {
                 // Fill checkbox list with collection names
@@ -87,11 +87,8 @@ namespace grace
             checkedListBox.Items.Clear();
             foreach (var d in distinctCollectionNames)
             {
-                if (d != null)
-                {
-                    colList.Add(d);
-                    checkedListBox.Items.Add(d);
-                }
+                colList.Add(d);
+                checkedListBox.Items.Add(d);
             }
 
             if (row != null && row.Cells.Count > 11)
@@ -194,53 +191,46 @@ namespace grace
                 var grace =
                         context.Graces.FirstOrDefault(item => item.Sku == graceRow.Sku);
 
-                if (grace != null)
+                graceId = grace.ID;
+                if (grace.Sku != skuTextBox.Text)
                 {
-                    graceId = grace.ID;
-                    if (grace.Sku != skuTextBox.Text)
+                    var sku = skuTextBox.Text;
+                    if (string.IsNullOrEmpty(sku))
                     {
-                        var sku = skuTextBox.Text;
-                        if (string.IsNullOrEmpty(sku))
-                        {
-                            MessageBox.Show("SKU Must have a Value.",
-                                "Information", MessageBoxButtons.OK,
-                                MessageBoxIcon.Information);
-                            return true;
-                        }
-                        grace.Sku = sku.Trim();
-                        updateGraceRow = true;
+                        MessageBox.Show("SKU Must have a Value.",
+                            "Information", MessageBoxButtons.OK,
+                            MessageBoxIcon.Information);
+                        return true;
                     }
-                    if (grace.Brand != brandTextBox.Text)
+                    grace.Sku = sku.Trim();
+                    updateGraceRow = true;
+                }
+                if (grace.Brand != brandTextBox.Text)
+                {
+                    var brand = brandTextBox.Text;
+                    if (!string.IsNullOrEmpty(brand))
                     {
-                        var brand = brandTextBox.Text;
-                        if (!string.IsNullOrEmpty(brand))
-                        {
-                            brand = brand.Trim();
-                        }
-                        grace.Brand = brand;
-                        updateGraceRow = true;
+                        brand = brand.Trim();
                     }
-                    if (grace.Description != descTextBox.Text)
+                    grace.Brand = brand;
+                    updateGraceRow = true;
+                }
+                if (grace.Description != descTextBox.Text)
+                {
+                    var desc = descTextBox.Text;
+                    if (!string.IsNullOrEmpty(desc)) { desc = desc.Trim(); }
+                    grace.Description = desc;
+                    updateGraceRow = true;
+                }
+                if (grace.Availability != availabilityTextBox.Text)
+                {
+                    var availability = availabilityTextBox.Text;
+                    if (!string.IsNullOrEmpty(availability))
                     {
-                        var desc = descTextBox.Text;
-                        if (!string.IsNullOrEmpty(desc)) { desc = desc.Trim(); }
-                        grace.Description = desc;
-                        updateGraceRow = true;
+                        availability = availability.Trim();
                     }
-                    if (grace.Availability != availabilityTextBox.Text)
-                    {
-                        var availability = availabilityTextBox.Text;
-                        if (!string.IsNullOrEmpty(availability))
-                        {
-                            availability = availability.Trim();
-                        }
-                        grace.Availability = availability;
-                        updateGraceRow = true;
-                    }
-                    if (updateGraceRow)
-                    {
-                        context.SaveChanges();
-                    }
+                    grace.Availability = availability;
+                    updateGraceRow = true;
                 }
             }
 
@@ -282,15 +272,16 @@ namespace grace
                     }
                     updateGraceRow = true;
                 }
-                if (updateGraceRow)
-                {
-                    DataBase.UpdateGraceRow(graceId);
-                }
             }
             catch (Exception ex)
             {
                 logger.Error(ex);
                 ret = true;
+            }
+
+            if (!ret && updateGraceRow)
+            {
+                DataBase.UpdateGraceRow(graceId);   
             }
 
             return ret;
@@ -445,26 +436,6 @@ namespace grace
    
         }
 
-        private int GetCollectionId(string collectionName)
-        {
-            int ret = -1;
-
-            using (var context = new GraceDbContext())
-            {
-                // LINQ query to get the ID based on the conditions
-                var result = context.Collections
-                    .Where(c => c.Name == collectionName && c.GraceId == graceRow.GraceId)
-                    .Select(c => c.ID)
-                    .FirstOrDefault();
-
-                if (result is not 0)
-                {
-                    ret = result;
-                }
-            }
-            return ret;
-        }
-
         private void checkedListBox_ItemCheck(object sender, ItemCheckEventArgs e)
         {
             if (newRow)
@@ -483,6 +454,9 @@ namespace grace
                 {
                     updateGraceRow = DataBase.DeleteCollectionRow(graceRow.GraceId, itemName);
                 }
+                // Make sure the grace row is updated when the save button is
+                // hit. 
+                updateGraceRow = true;
             }
         }
 

@@ -67,7 +67,6 @@ namespace grace.tabs
 
             // Setup data connection to grid view
             bindingSource = new BindingSource();
-            BindDataSource();
     
         }
         private void ChangeColumnNames()
@@ -92,14 +91,14 @@ namespace grace.tabs
                 }
             }
         }
-        internal void BindDataSource()
+        internal void BindDataSource(bool refresh = false)
         {
             if (bindingSource == null)
             {
                 bindingSource = new BindingSource();
             }
             dataGridView.DataSource = bindingSource;
-            DataGridLoader.LoadBindingTable();
+            DataGridLoader.LoadBindingTable(refresh);
             bindingSource.DataSource = DataGridLoader.getData();
             Utils.RemoveColumnByName(dataGridView, "ID");
             Utils.RemoveColumnByName(dataGridView,"Grace");
@@ -110,7 +109,7 @@ namespace grace.tabs
         private void DataTabPage_Enter(object? sender, EventArgs e)
         {
             filterSkuTextBox.Clear();
-            BindDataSource();
+            BindDataSource(true);
         }
 
         private void addRowButton_Click(object? sender, EventArgs e)

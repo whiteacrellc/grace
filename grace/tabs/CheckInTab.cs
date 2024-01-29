@@ -93,7 +93,6 @@ namespace grace.tabs
             checkInDataGrid.Columns["UserTotal"].DefaultCellStyle.BackColor = Color.LightGray;
             checkInDataGrid.Columns["BarCode"].DefaultCellStyle.BackColor = Color.LightGray;
             checkInDataGrid.Columns["UserName"].DefaultCellStyle.BackColor = Color.LightGray;
-            checkInDataGrid.Columns["dateTime"].DefaultCellStyle.BackColor = Color.LightGray;
             ChangeColumnNames();
             Utils.RemoveColumnByName(checkInDataGrid, "GraceId");
 
@@ -212,7 +211,7 @@ namespace grace.tabs
                     var user_id = DataBase.GetUserIdFromName(username);
                     int col_id = DataBase.GetCollectionId(graceId, collectionName);
                     int currentTotal = DataBase.GetTotal(graceId);
-                    int newTotal = currentTotal - updatedValue;
+                    int newTotal = currentTotal + updatedValue;
 
                     using (var context = new GraceDbContext())
                     {

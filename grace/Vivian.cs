@@ -13,6 +13,8 @@
 using grace.data;
 using grace.tabs;
 using grace.utils;
+using MaterialSkin;
+using MaterialSkin.Controls;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.VisualBasic.ApplicationServices;
 using NLog;
@@ -27,7 +29,7 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 namespace grace
 {
-    public partial class Vivian : Form
+    public partial class Vivian : MaterialForm
     {
         Report? report;
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
@@ -51,6 +53,12 @@ namespace grace
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
             InitializeComponent();
+
+            var materialSkinManager = MaterialSkinManager.Instance;
+            materialSkinManager.AddFormToManage(this);
+            materialSkinManager.Theme = MaterialSkinManager.Themes.LIGHT;
+            materialSkinManager.ColorScheme = new ColorScheme(Primary.BlueGrey800, Primary.BlueGrey900, Primary.BlueGrey500, Accent.LightBlue200, TextShade.WHITE);
+
             EnableReportButton(false);
 
             // Init the tab page classes
@@ -59,7 +67,6 @@ namespace grace
             dataTab = new DataTab(this);
             checkOutTab = new CheckOutTab(this);
             checkInTab = new CheckInTab(this);
-
         }
 
         private void InitializeLogger()
@@ -70,6 +77,14 @@ namespace grace
             // Create targets and rules
             var textboxTarget = new NLog.Targets.MethodCallTarget("textboxTarget", LogToTextBox);
             config.AddRule(LogLevel.Info, LogLevel.Fatal, textboxTarget);
+
+            // Create file target
+            var fileTarget = new NLog.Targets.FileTarget("fileTarget")
+            {
+                FileName = @"C:\Users\tom\OneDrive\Desktop\grace.log",
+                Layout = "${longdate} ${level:uppercase=true} ${message}"
+            };
+            config.AddRule(LogLevel.Debug, LogLevel.Fatal, fileTarget);
 
             // Apply configuration
             LogManager.Configuration = config;
@@ -138,7 +153,7 @@ namespace grace
         private void Vivian_Load(object sender, EventArgs e)
         {
 
-
+            InitializeLogger();
 
             // Loads the preferences into the globals singleton
             DataBase data = new DataBase();
@@ -215,8 +230,6 @@ namespace grace
                 MessageBox.Show($"There was a problem reading the file:\n\n{ex.Message}",
                     "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-
-
             dataTab.BindDataSource();
         }
 
@@ -287,5 +300,18 @@ namespace grace
                 }
             }
         }
+
+        private void checkOutDataGrid_DataError(object sender, DataGridViewDataErrorEventArgs e)
+        {
+            try
+            {
+                logger.Error(e.ToString());
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+            }
+        }
+
     }
 }
