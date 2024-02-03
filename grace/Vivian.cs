@@ -258,7 +258,7 @@ namespace grace
             {
                 if (readyForNewCode)
                 {
-                    textBoxBarcode.Clear();
+                    checkOutSearchTextBox.Clear();
                     readyForNewCode = false;
                     sb.Clear();
                 }
@@ -269,7 +269,7 @@ namespace grace
             else
             if (e.KeyCode == Keys.Enter)
             {
-                textBoxBarcode.Text = sb.ToString();
+                checkOutSearchTextBox.Text = sb.ToString();
                 readyForNewCode = true;
                 // Process the scanned data as needed (e.g., send it to a database, perform actions)
                 // Example: ProcessScannedData(scannedData);

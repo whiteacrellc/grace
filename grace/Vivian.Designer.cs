@@ -61,21 +61,21 @@ namespace grace
             filterSkuTextBox = new TextBox();
             dataGridView = new DataGridView();
             checkoutPage = new TabPage();
+            checkOutSearchTextBox = new TextBox();
+            textBoxBarcode = new TextBox();
             label8 = new Label();
             label6 = new Label();
             label7 = new Label();
             autoOpenOnScanCheckBox = new CheckBox();
             coResetButton = new Button();
-            checkOutSearchTextBox = new TextBox();
             checkOutDataGrid = new DataGridView();
-            textBoxBarcode = new TextBox();
             checkinPage = new TabPage();
             applyChangesButton = new Button();
             allUsersCheckBox = new CheckBox();
             label3 = new Label();
             checkInDataGrid = new DataGridView();
             adminPage = new TabPage();
-            loggingTextBox = new TextBox();
+            loggingTextBox = new MaterialMultiLineTextBox();
             restoreDatabaseButton = new MaterialButton();
             backupButton = new MaterialButton();
             resetPasswordButton = new Button();
@@ -114,7 +114,7 @@ namespace grace
             menuStrip1.Location = new Point(3, 64);
             menuStrip1.Name = "menuStrip1";
             menuStrip1.Padding = new Padding(7, 2, 0, 2);
-            menuStrip1.Size = new Size(2137, 28);
+            menuStrip1.Size = new Size(1592, 28);
             menuStrip1.TabIndex = 4;
             menuStrip1.Text = "menuStrip1";
             // 
@@ -185,7 +185,7 @@ namespace grace
             tabControl.Padding = new Point(5, 5);
             tabControl.SelectedIndex = 0;
             tabControl.ShowToolTips = true;
-            tabControl.Size = new Size(2137, 1176);
+            tabControl.Size = new Size(1592, 750);
             tabControl.TabIndex = 9;
             tabControl.TabStop = false;
             tabControl.Selecting += tabControl_Selecting;
@@ -200,7 +200,7 @@ namespace grace
             loginPage.Margin = new Padding(5, 2, 5, 2);
             loginPage.Name = "loginPage";
             loginPage.Padding = new Padding(5, 2, 5, 2);
-            loginPage.Size = new Size(2129, 1128);
+            loginPage.Size = new Size(1584, 702);
             loginPage.TabIndex = 0;
             loginPage.Text = "Home";
             loginPage.ToolTipText = "Login Page";
@@ -312,7 +312,7 @@ namespace grace
             dataPage.Location = new Point(4, 44);
             dataPage.Name = "dataPage";
             dataPage.Padding = new Padding(11, 12, 11, 12);
-            dataPage.Size = new Size(2109, 1085);
+            dataPage.Size = new Size(1584, 702);
             dataPage.TabIndex = 1;
             dataPage.Text = "Inventory";
             dataPage.ToolTipText = "Inventory for Patti";
@@ -347,42 +347,59 @@ namespace grace
             // 
             // dataGridView
             // 
-            dataGridView.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            dataGridView.AllowUserToOrderColumns = true;
+            dataGridView.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             dataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
             dataGridView.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
             dataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView.Location = new Point(-4, 46);
+            dataGridView.Location = new Point(5, 47);
             dataGridView.Margin = new Padding(5, 2, 5, 2);
             dataGridView.MultiSelect = false;
             dataGridView.Name = "dataGridView";
             dataGridView.RowHeadersWidth = 82;
             dataGridView.RowTemplate.Height = 41;
-            dataGridView.Size = new Size(1973, 736);
+            dataGridView.ScrollBars = ScrollBars.Vertical;
+            dataGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dataGridView.Size = new Size(1574, 659);
             dataGridView.TabIndex = 1;
             // 
             // checkoutPage
             // 
+            checkoutPage.Controls.Add(checkOutSearchTextBox);
+            checkoutPage.Controls.Add(textBoxBarcode);
             checkoutPage.Controls.Add(label8);
             checkoutPage.Controls.Add(label6);
             checkoutPage.Controls.Add(label7);
             checkoutPage.Controls.Add(autoOpenOnScanCheckBox);
             checkoutPage.Controls.Add(coResetButton);
-            checkoutPage.Controls.Add(checkOutSearchTextBox);
             checkoutPage.Controls.Add(checkOutDataGrid);
-            checkoutPage.Controls.Add(textBoxBarcode);
             checkoutPage.Location = new Point(4, 44);
             checkoutPage.Margin = new Padding(7);
             checkoutPage.Name = "checkoutPage";
-            checkoutPage.Size = new Size(2129, 1128);
+            checkoutPage.Size = new Size(1564, 659);
             checkoutPage.TabIndex = 2;
             checkoutPage.Text = "Check Out";
             checkoutPage.ToolTipText = "Checkout Items";
             checkoutPage.UseVisualStyleBackColor = true;
             // 
+            // checkOutSearchTextBox
+            // 
+            checkOutSearchTextBox.Location = new Point(1274, 99);
+            checkOutSearchTextBox.Name = "checkOutSearchTextBox";
+            checkOutSearchTextBox.Size = new Size(203, 26);
+            checkOutSearchTextBox.TabIndex = 14;
+            // 
+            // textBoxBarcode
+            // 
+            textBoxBarcode.Location = new Point(1274, 26);
+            textBoxBarcode.Name = "textBoxBarcode";
+            textBoxBarcode.Size = new Size(203, 26);
+            textBoxBarcode.TabIndex = 13;
+            // 
             // label8
             // 
             label8.AutoSize = true;
-            label8.Location = new Point(1483, 126);
+            label8.Location = new Point(1122, 102);
             label8.Name = "label8";
             label8.Size = new Size(104, 18);
             label8.TabIndex = 12;
@@ -391,7 +408,7 @@ namespace grace
             // label6
             // 
             label6.AutoSize = true;
-            label6.Location = new Point(1483, 58);
+            label6.Location = new Point(1122, 34);
             label6.Name = "label6";
             label6.Size = new Size(118, 18);
             label6.TabIndex = 11;
@@ -404,7 +421,7 @@ namespace grace
             label7.BorderStyle = BorderStyle.FixedSingle;
             label7.Font = new Font("Verdana", 15.75F, FontStyle.Bold, GraphicsUnit.Point);
             label7.ForeColor = SystemColors.Highlight;
-            label7.Location = new Point(1507, 258);
+            label7.Location = new Point(1146, 234);
             label7.Name = "label7";
             label7.Size = new Size(397, 77);
             label7.TabIndex = 9;
@@ -413,7 +430,7 @@ namespace grace
             // autoOpenOnScanCheckBox
             // 
             autoOpenOnScanCheckBox.AutoSize = true;
-            autoOpenOnScanCheckBox.Location = new Point(1483, 88);
+            autoOpenOnScanCheckBox.Location = new Point(1122, 64);
             autoOpenOnScanCheckBox.Name = "autoOpenOnScanCheckBox";
             autoOpenOnScanCheckBox.Size = new Size(395, 22);
             autoOpenOnScanCheckBox.TabIndex = 8;
@@ -422,25 +439,18 @@ namespace grace
             // 
             // coResetButton
             // 
-            coResetButton.Location = new Point(1480, 176);
+            coResetButton.Location = new Point(1119, 152);
             coResetButton.Name = "coResetButton";
             coResetButton.Size = new Size(160, 31);
             coResetButton.TabIndex = 7;
             coResetButton.Text = "Show All Data";
             coResetButton.UseVisualStyleBackColor = true;
             // 
-            // checkOutSearchTextBox
-            // 
-            checkOutSearchTextBox.Location = new Point(1650, 118);
-            checkOutSearchTextBox.Name = "checkOutSearchTextBox";
-            checkOutSearchTextBox.Size = new Size(265, 26);
-            checkOutSearchTextBox.TabIndex = 6;
-            // 
             // checkOutDataGrid
             // 
             checkOutDataGrid.AllowUserToAddRows = false;
             checkOutDataGrid.AllowUserToDeleteRows = false;
-            checkOutDataGrid.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            checkOutDataGrid.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
             checkOutDataGrid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.DisplayedCells;
             checkOutDataGrid.BorderStyle = BorderStyle.Fixed3D;
             checkOutDataGrid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -453,7 +463,7 @@ namespace grace
             dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
             dataGridViewCellStyle1.WrapMode = DataGridViewTriState.False;
             checkOutDataGrid.DefaultCellStyle = dataGridViewCellStyle1;
-            checkOutDataGrid.Location = new Point(0, 374);
+            checkOutDataGrid.Location = new Point(0, 0);
             checkOutDataGrid.MultiSelect = false;
             checkOutDataGrid.Name = "checkOutDataGrid";
             checkOutDataGrid.ReadOnly = true;
@@ -464,17 +474,9 @@ namespace grace
             checkOutDataGrid.RowTemplate.DefaultCellStyle.Padding = new Padding(0, 0, 10, 0);
             checkOutDataGrid.RowTemplate.Height = 25;
             checkOutDataGrid.RowTemplate.Resizable = DataGridViewTriState.True;
-            checkOutDataGrid.Size = new Size(1177, 758);
+            checkOutDataGrid.Size = new Size(1095, 613);
             checkOutDataGrid.TabIndex = 4;
             checkOutDataGrid.DataError += checkOutDataGrid_DataError;
-            // 
-            // textBoxBarcode
-            // 
-            textBoxBarcode.Location = new Point(1650, 50);
-            textBoxBarcode.Margin = new Padding(7);
-            textBoxBarcode.Name = "textBoxBarcode";
-            textBoxBarcode.Size = new Size(265, 26);
-            textBoxBarcode.TabIndex = 2;
             // 
             // checkinPage
             // 
@@ -485,7 +487,7 @@ namespace grace
             checkinPage.Controls.Add(checkInDataGrid);
             checkinPage.Location = new Point(4, 44);
             checkinPage.Name = "checkinPage";
-            checkinPage.Size = new Size(2109, 1085);
+            checkinPage.Size = new Size(1564, 659);
             checkinPage.TabIndex = 4;
             checkinPage.Text = "Check In";
             checkinPage.ToolTipText = "Check In Items";
@@ -493,7 +495,7 @@ namespace grace
             // 
             // applyChangesButton
             // 
-            applyChangesButton.Location = new Point(1730, 81);
+            applyChangesButton.Location = new Point(1271, 77);
             applyChangesButton.Name = "applyChangesButton";
             applyChangesButton.Size = new Size(181, 34);
             applyChangesButton.TabIndex = 3;
@@ -503,7 +505,7 @@ namespace grace
             // allUsersCheckBox
             // 
             allUsersCheckBox.AutoSize = true;
-            allUsersCheckBox.Location = new Point(1730, 38);
+            allUsersCheckBox.Location = new Point(1271, 34);
             allUsersCheckBox.Name = "allUsersCheckBox";
             allUsersCheckBox.Size = new Size(149, 22);
             allUsersCheckBox.TabIndex = 2;
@@ -527,11 +529,11 @@ namespace grace
             checkInDataGrid.CellBorderStyle = DataGridViewCellBorderStyle.Sunken;
             checkInDataGrid.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Sunken;
             checkInDataGrid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            checkInDataGrid.Location = new Point(-30, 3);
+            checkInDataGrid.Location = new Point(3, 0);
             checkInDataGrid.Name = "checkInDataGrid";
             checkInDataGrid.RowTemplate.Height = 25;
             checkInDataGrid.SelectionMode = DataGridViewSelectionMode.CellSelect;
-            checkInDataGrid.Size = new Size(1689, 781);
+            checkInDataGrid.Size = new Size(1247, 613);
             checkInDataGrid.TabIndex = 0;
             // 
             // adminPage
@@ -547,19 +549,25 @@ namespace grace
             adminPage.Controls.Add(label5);
             adminPage.Location = new Point(4, 44);
             adminPage.Name = "adminPage";
-            adminPage.Size = new Size(2109, 1085);
+            adminPage.Size = new Size(1564, 659);
             adminPage.TabIndex = 3;
             adminPage.Text = "Admin";
             adminPage.ToolTipText = "Admin Settings";
             // 
             // loggingTextBox
             // 
-            loggingTextBox.Font = new Font("Verdana", 9F, FontStyle.Regular, GraphicsUnit.Point);
-            loggingTextBox.Location = new Point(560, 63);
-            loggingTextBox.Multiline = true;
+            loggingTextBox.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
+            loggingTextBox.BackColor = Color.FromArgb(255, 255, 255);
+            loggingTextBox.BorderStyle = BorderStyle.FixedSingle;
+            loggingTextBox.Depth = 0;
+            loggingTextBox.Font = new Font("Microsoft Sans Serif", 14F, FontStyle.Regular, GraphicsUnit.Pixel);
+            loggingTextBox.ForeColor = Color.FromArgb(222, 0, 0, 0);
+            loggingTextBox.Location = new Point(897, 18);
+            loggingTextBox.MouseState = MaterialSkin.MouseState.HOVER;
             loggingTextBox.Name = "loggingTextBox";
-            loggingTextBox.Size = new Size(593, 553);
-            loggingTextBox.TabIndex = 6;
+            loggingTextBox.Size = new Size(615, 591);
+            loggingTextBox.TabIndex = 7;
+            loggingTextBox.Text = "";
             // 
             // restoreDatabaseButton
             // 
@@ -635,7 +643,7 @@ namespace grace
             AutoScaleMode = AutoScaleMode.Font;
             AutoScroll = true;
             BackColor = Color.White;
-            ClientSize = new Size(2143, 1271);
+            ClientSize = new Size(1598, 845);
             Controls.Add(tabControl);
             Controls.Add(menuStrip1);
             Font = new Font("Segoe UI", 10.125F, FontStyle.Regular, GraphicsUnit.Point);
@@ -710,8 +718,6 @@ namespace grace
         internal Button logoutButton;
         internal DataGridView checkOutDataGrid;
         internal BindingSource checkoutBindingSource;
-        internal TextBox checkOutSearchTextBox;
-        internal TextBox textBoxBarcode;
         internal Button coResetButton;
         internal CheckBox autoOpenOnScanCheckBox;
         internal DataGridView checkInDataGrid;
@@ -723,9 +729,11 @@ namespace grace
         private Label label7;
         internal MaterialSkin.Controls.MaterialButton restoreDatabaseButton;
         internal MaterialSkin.Controls.MaterialButton backupButton;
-        internal TextBox loggingTextBox;
         internal TabPage loginPage;
         private Label label8;
         private Label label6;
+        internal MaterialMultiLineTextBox loggingTextBox;
+        internal TextBox checkOutSearchTextBox;
+        internal TextBox textBoxBarcode;
     }
 }
