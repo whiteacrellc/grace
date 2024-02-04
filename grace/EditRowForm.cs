@@ -12,6 +12,7 @@
  */
 using grace.data;
 using grace.data.models;
+using MaterialSkin.Controls;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using NLog;
@@ -28,7 +29,7 @@ using System.Windows.Forms;
 
 namespace grace
 {
-    public partial class EditRowForm : Form
+    public partial class EditRowForm : MaterialForm
     {
         DataGridViewRow? row;
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
@@ -153,6 +154,7 @@ namespace grace
                 adjustInventoryLabel.Show();
                 adjustTextBox.Show();
                 adjustTextBox.MouseHover += AddTextBox_MouseHover;
+                adjustTextBox.Text = "0";
                 currentTextBox.ReadOnly = true;
 
             }

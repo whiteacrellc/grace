@@ -32,6 +32,8 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EditRowForm));
             cancelButton = new Button();
             panel1 = new Panel();
+            label8 = new Label();
+            label7 = new Label();
             brandComboBox = new ComboBox();
             adjustTextBox = new TextBox();
             adjustInventoryLabel = new Label();
@@ -55,7 +57,7 @@
             // 
             // cancelButton
             // 
-            cancelButton.Location = new Point(451, 324);
+            cancelButton.Location = new Point(452, 451);
             cancelButton.Margin = new Padding(2, 1, 2, 1);
             cancelButton.Name = "cancelButton";
             cancelButton.Size = new Size(113, 33);
@@ -66,6 +68,9 @@
             // 
             // panel1
             // 
+            panel1.BorderStyle = BorderStyle.FixedSingle;
+            panel1.Controls.Add(label8);
+            panel1.Controls.Add(label7);
             panel1.Controls.Add(brandComboBox);
             panel1.Controls.Add(adjustTextBox);
             panel1.Controls.Add(adjustInventoryLabel);
@@ -81,10 +86,31 @@
             panel1.Controls.Add(skuTextBox);
             panel1.Controls.Add(label2);
             panel1.Controls.Add(label1);
-            panel1.Location = new Point(12, 12);
+            panel1.Location = new Point(22, 89);
             panel1.Name = "panel1";
-            panel1.Size = new Size(562, 308);
+            panel1.Size = new Size(562, 336);
             panel1.TabIndex = 1;
+            // 
+            // label8
+            // 
+            label8.AutoSize = true;
+            label8.BorderStyle = BorderStyle.FixedSingle;
+            label8.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point);
+            label8.Location = new Point(102, 299);
+            label8.Name = "label8";
+            label8.Size = new Size(254, 23);
+            label8.TabIndex = 27;
+            label8.Text = "All bolded fields are mandatory";
+            // 
+            // label7
+            // 
+            label7.AutoSize = true;
+            label7.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            label7.Location = new Point(455, 15);
+            label7.Name = "label7";
+            label7.Size = new Size(66, 15);
+            label7.TabIndex = 26;
+            label7.Text = "Categories";
             // 
             // brandComboBox
             // 
@@ -96,7 +122,7 @@
             // 
             // adjustTextBox
             // 
-            adjustTextBox.Location = new Point(133, 236);
+            adjustTextBox.Location = new Point(228, 239);
             adjustTextBox.Name = "adjustTextBox";
             adjustTextBox.Size = new Size(150, 23);
             adjustTextBox.TabIndex = 7;
@@ -106,9 +132,9 @@
             adjustInventoryLabel.AutoSize = true;
             adjustInventoryLabel.Location = new Point(27, 241);
             adjustInventoryLabel.Name = "adjustInventoryLabel";
-            adjustInventoryLabel.Size = new Size(94, 15);
+            adjustInventoryLabel.Size = new Size(181, 15);
             adjustInventoryLabel.TabIndex = 25;
-            adjustInventoryLabel.Text = "Adjust Inventory";
+            adjustInventoryLabel.Text = "Adjust Inventory By This Amount";
             // 
             // currentTextBox
             // 
@@ -170,16 +196,17 @@
             // label3
             // 
             label3.AutoSize = true;
+            label3.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point);
             label3.Location = new Point(27, 90);
             label3.Name = "label3";
-            label3.Size = new Size(67, 15);
+            label3.Size = new Size(71, 15);
             label3.TabIndex = 22;
             label3.Text = "Description";
             // 
             // checkedListBox
             // 
             checkedListBox.FormattingEnabled = true;
-            checkedListBox.Location = new Point(428, 15);
+            checkedListBox.Location = new Point(428, 40);
             checkedListBox.Name = "checkedListBox";
             checkedListBox.Size = new Size(120, 274);
             checkedListBox.TabIndex = 8;
@@ -196,24 +223,26 @@
             // label2
             // 
             label2.AutoSize = true;
+            label2.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point);
             label2.Location = new Point(27, 52);
             label2.Name = "label2";
-            label2.Size = new Size(38, 15);
+            label2.Size = new Size(40, 15);
             label2.TabIndex = 21;
             label2.Text = "Brand";
             // 
             // label1
             // 
             label1.AutoSize = true;
+            label1.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point);
             label1.Location = new Point(27, 18);
             label1.Name = "label1";
-            label1.Size = new Size(28, 15);
+            label1.Size = new Size(31, 15);
             label1.TabIndex = 20;
             label1.Text = "SKU";
             // 
             // saveButton
             // 
-            saveButton.Location = new Point(39, 324);
+            saveButton.Location = new Point(40, 451);
             saveButton.Margin = new Padding(2, 1, 2, 1);
             saveButton.Name = "saveButton";
             saveButton.Size = new Size(113, 33);
@@ -224,7 +253,7 @@
             // 
             // deleteButton
             // 
-            deleteButton.Location = new Point(240, 324);
+            deleteButton.Location = new Point(241, 451);
             deleteButton.Margin = new Padding(2, 1, 2, 1);
             deleteButton.Name = "deleteButton";
             deleteButton.Size = new Size(113, 33);
@@ -242,7 +271,7 @@
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             CancelButton = cancelButton;
-            ClientSize = new Size(594, 367);
+            ClientSize = new Size(640, 514);
             Controls.Add(deleteButton);
             Controls.Add(saveButton);
             Controls.Add(panel1);
@@ -282,5 +311,7 @@
         private Button deleteButton;
         private ToolTip toolTip;
         private ComboBox brandComboBox;
+        private Label label7;
+        private Label label8;
     }
 }

@@ -58,6 +58,11 @@ namespace grace
             materialSkinManager.AddFormToManage(this);
             materialSkinManager.Theme = MaterialSkinManager.Themes.LIGHT;
             materialSkinManager.ColorScheme = new ColorScheme(Primary.BlueGrey800, Primary.BlueGrey900, Primary.BlueGrey500, Accent.LightBlue200, TextShade.WHITE);
+            //materialSkinManager.ColorScheme = new MaterialColorScheme(0x00C926b3, 0xA1008B, 0xDC2EFF, 0x006E70FF, MaterialTextShade.LIGHT);
+            //materialSkinManager.ColorScheme = new MaterialColorScheme("#00480157", "#370142", "DC2EFF", "00BB5FCF", MaterialTextShade.LIGHT);
+          // materialSkinManager.ColorScheme = new MaterialColorScheme(MaterialPrimary.Indigo500, MaterialPrimary.Indigo700, MaterialPrimary.Indigo100, MaterialAccent.Pink200, MaterialTextShade.LIGHT);
+
+
 
             EnableReportButton(false);
 
@@ -180,20 +185,6 @@ namespace grace
 
         }
 
-        private void SizeForm()
-        {
-            var numcols = dataGridView.ColumnCount;
-            int width = 0;
-            for (int i = 0; i < numcols; i++)
-            {
-                width += dataGridView.Columns[i].Width;
-            }
-            dataGridView.Width = width;
-            tabControl.Width = width + 5;
-            this.Width = width + 10;
-            Size = new Size(width + 10, this.Height);
-        }
-
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Close the application
@@ -279,9 +270,9 @@ namespace grace
         private void tabControl_Selecting(object sender, TabControlCancelEventArgs e)
         {
             string username = Globals.GetInstance().CurrentUser;
-            bool isadmin = PasswordChecker.IsUserAdmin(username);
+            bool isAdmin = PasswordChecker.IsUserAdmin(username);
             int tabIndex = e.TabPageIndex;
-            if (!isadmin)
+            if (!isAdmin)
             {
 
                 if (tabIndex == 1 || tabIndex == 4)
