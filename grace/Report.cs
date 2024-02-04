@@ -49,7 +49,11 @@ namespace grace
             int startRow = currentRow;
             endLastBlock = currentRow;
             int rowsWritten = 0;
-            var sortedRows = rows.OrderBy(row => row.Brand).ToArray();
+            var sortedRows =
+                rows.OrderBy(p => p.Brand)
+                    .ThenBy(p => p.Sku)
+                    .ToArray();
+
             foreach (var row in sortedRows)
             {
                 if (row == null || row.Sku == null) continue;

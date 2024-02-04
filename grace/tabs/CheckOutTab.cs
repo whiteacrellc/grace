@@ -31,8 +31,8 @@ namespace grace.tabs
             vivian = v;
             checkOutDataGrid = vivian.checkOutDataGrid;
             checkoutBindingSource = vivian.checkoutBindingSource;
-            checkOutSearchTextBox = vivian.textBoxBarcode;
-            textBoxBarCode = vivian.checkOutSearchTextBox;
+            checkOutSearchTextBox =  vivian.checkOutSearchTextBox;
+            textBoxBarCode = vivian.textBoxBarcode;
             coResetButton = vivian.coResetButton;
             autoOpenCheckBox = vivian.autoOpenOnScanCheckBox;
             checkOutTabPage = vivian.tabControl.TabPages[2];

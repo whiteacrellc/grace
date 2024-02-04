@@ -777,6 +777,19 @@ namespace grace
             }
         }
 
+        public static List<String> GetBrands()
+        {
+            using (var context = new GraceDbContext())
+            {
+                var brandList = context.Graces
+                    .Select(c => c.Brand)
+                    .Distinct()
+                    .OrderBy(brand => brand)
+                    .ToList();
+                return brandList;
+            }
+        }
+
         public static int GetTotal(int graceId)
         {
 

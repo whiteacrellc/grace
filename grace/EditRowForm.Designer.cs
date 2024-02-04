@@ -28,12 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EditRowForm));
             cancelButton = new Button();
             panel1 = new Panel();
-            deleteTextBox = new TextBox();
-            deleteInventoryLabel = new Label();
-            addTextBox = new TextBox();
+            brandComboBox = new ComboBox();
+            adjustTextBox = new TextBox();
             adjustInventoryLabel = new Label();
             currentTextBox = new TextBox();
             label6 = new Label();
@@ -44,12 +44,12 @@
             descTextBox = new TextBox();
             label3 = new Label();
             checkedListBox = new CheckedListBox();
-            brandTextBox = new TextBox();
             skuTextBox = new TextBox();
             label2 = new Label();
             label1 = new Label();
             saveButton = new Button();
             deleteButton = new Button();
+            toolTip = new ToolTip(components);
             panel1.SuspendLayout();
             SuspendLayout();
             // 
@@ -59,15 +59,15 @@
             cancelButton.Margin = new Padding(2, 1, 2, 1);
             cancelButton.Name = "cancelButton";
             cancelButton.Size = new Size(113, 33);
-            cancelButton.TabIndex = 0;
+            cancelButton.TabIndex = 11;
             cancelButton.Text = "Cancel";
             cancelButton.UseVisualStyleBackColor = true;
+            cancelButton.Click += cancelButton_Click;
             // 
             // panel1
             // 
-            panel1.Controls.Add(deleteTextBox);
-            panel1.Controls.Add(deleteInventoryLabel);
-            panel1.Controls.Add(addTextBox);
+            panel1.Controls.Add(brandComboBox);
+            panel1.Controls.Add(adjustTextBox);
             panel1.Controls.Add(adjustInventoryLabel);
             panel1.Controls.Add(currentTextBox);
             panel1.Controls.Add(label6);
@@ -78,7 +78,6 @@
             panel1.Controls.Add(descTextBox);
             panel1.Controls.Add(label3);
             panel1.Controls.Add(checkedListBox);
-            panel1.Controls.Add(brandTextBox);
             panel1.Controls.Add(skuTextBox);
             panel1.Controls.Add(label2);
             panel1.Controls.Add(label1);
@@ -87,104 +86,94 @@
             panel1.Size = new Size(562, 308);
             panel1.TabIndex = 1;
             // 
-            // deleteTextBox
+            // brandComboBox
             // 
-            deleteTextBox.Location = new Point(135, 255);
-            deleteTextBox.Name = "deleteTextBox";
-            deleteTextBox.Size = new Size(154, 23);
-            deleteTextBox.TabIndex = 19;
-            deleteTextBox.TextChanged += deltaTextBox_TextChanged;
+            brandComboBox.FormattingEnabled = true;
+            brandComboBox.Location = new Point(135, 49);
+            brandComboBox.Name = "brandComboBox";
+            brandComboBox.Size = new Size(148, 23);
+            brandComboBox.TabIndex = 2;
             // 
-            // deleteInventoryLabel
+            // adjustTextBox
             // 
-            deleteInventoryLabel.AutoSize = true;
-            deleteInventoryLabel.Location = new Point(27, 263);
-            deleteInventoryLabel.Name = "deleteInventoryLabel";
-            deleteInventoryLabel.Size = new Size(93, 15);
-            deleteInventoryLabel.TabIndex = 18;
-            deleteInventoryLabel.Text = "Delete Inventory";
-            // 
-            // addTextBox
-            // 
-            addTextBox.Location = new Point(133, 224);
-            addTextBox.Name = "addTextBox";
-            addTextBox.Size = new Size(156, 23);
-            addTextBox.TabIndex = 17;
-            addTextBox.TextChanged += deltaTextBox_TextChanged;
+            adjustTextBox.Location = new Point(133, 236);
+            adjustTextBox.Name = "adjustTextBox";
+            adjustTextBox.Size = new Size(150, 23);
+            adjustTextBox.TabIndex = 7;
             // 
             // adjustInventoryLabel
             // 
             adjustInventoryLabel.AutoSize = true;
-            adjustInventoryLabel.Location = new Point(27, 229);
+            adjustInventoryLabel.Location = new Point(27, 241);
             adjustInventoryLabel.Name = "adjustInventoryLabel";
-            adjustInventoryLabel.Size = new Size(82, 15);
-            adjustInventoryLabel.TabIndex = 16;
-            adjustInventoryLabel.Text = "Add Inventory";
+            adjustInventoryLabel.Size = new Size(94, 15);
+            adjustInventoryLabel.TabIndex = 25;
+            adjustInventoryLabel.Text = "Adjust Inventory";
             // 
             // currentTextBox
             // 
-            currentTextBox.Location = new Point(133, 186);
+            currentTextBox.Location = new Point(133, 198);
             currentTextBox.Name = "currentTextBox";
             currentTextBox.ReadOnly = true;
             currentTextBox.Size = new Size(150, 23);
-            currentTextBox.TabIndex = 15;
+            currentTextBox.TabIndex = 6;
             // 
             // label6
             // 
             label6.AutoSize = true;
-            label6.Location = new Point(27, 189);
+            label6.Location = new Point(27, 201);
             label6.Name = "label6";
             label6.Size = new Size(100, 15);
-            label6.TabIndex = 14;
+            label6.TabIndex = 25;
             label6.Text = "Current Inventory";
             // 
             // barCodeTextBox
             // 
-            barCodeTextBox.Location = new Point(133, 146);
+            barCodeTextBox.Location = new Point(133, 159);
             barCodeTextBox.Name = "barCodeTextBox";
             barCodeTextBox.Size = new Size(150, 23);
-            barCodeTextBox.TabIndex = 13;
+            barCodeTextBox.TabIndex = 5;
             barCodeTextBox.KeyDown += barCodeTextBox_KeyDown;
             // 
             // availabilityTextBox
             // 
-            availabilityTextBox.Location = new Point(133, 108);
+            availabilityTextBox.Location = new Point(133, 121);
             availabilityTextBox.Name = "availabilityTextBox";
             availabilityTextBox.Size = new Size(150, 23);
-            availabilityTextBox.TabIndex = 9;
+            availabilityTextBox.TabIndex = 4;
             // 
             // label5
             // 
             label5.AutoSize = true;
-            label5.Location = new Point(27, 149);
+            label5.Location = new Point(27, 162);
             label5.Name = "label5";
             label5.Size = new Size(55, 15);
-            label5.TabIndex = 12;
+            label5.TabIndex = 24;
             label5.Text = "Bar Code";
             // 
             // label4
             // 
             label4.AutoSize = true;
-            label4.Location = new Point(27, 111);
+            label4.Location = new Point(27, 124);
             label4.Name = "label4";
-            label4.Size = new Size(65, 15);
-            label4.TabIndex = 8;
-            label4.Text = "Availability";
+            label4.Size = new Size(83, 15);
+            label4.TabIndex = 23;
+            label4.Text = "Reorder Status";
             // 
             // descTextBox
             // 
-            descTextBox.Location = new Point(135, 75);
+            descTextBox.Location = new Point(135, 85);
             descTextBox.Name = "descTextBox";
             descTextBox.Size = new Size(269, 23);
-            descTextBox.TabIndex = 7;
+            descTextBox.TabIndex = 3;
             // 
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(27, 80);
+            label3.Location = new Point(27, 90);
             label3.Name = "label3";
             label3.Size = new Size(67, 15);
-            label3.TabIndex = 6;
+            label3.TabIndex = 22;
             label3.Text = "Description";
             // 
             // checkedListBox
@@ -193,30 +182,24 @@
             checkedListBox.Location = new Point(428, 15);
             checkedListBox.Name = "checkedListBox";
             checkedListBox.Size = new Size(120, 274);
-            checkedListBox.TabIndex = 5;
+            checkedListBox.TabIndex = 8;
             checkedListBox.ItemCheck += checkedListBox_ItemCheck;
-            // 
-            // brandTextBox
-            // 
-            brandTextBox.Location = new Point(133, 44);
-            brandTextBox.Name = "brandTextBox";
-            brandTextBox.Size = new Size(150, 23);
-            brandTextBox.TabIndex = 4;
             // 
             // skuTextBox
             // 
             skuTextBox.Location = new Point(133, 15);
             skuTextBox.Name = "skuTextBox";
-            skuTextBox.Size = new Size(100, 23);
-            skuTextBox.TabIndex = 3;
+            skuTextBox.Size = new Size(150, 23);
+            skuTextBox.TabIndex = 1;
+            skuTextBox.TextChanged += skuTextBox_TextChanged;
             // 
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(27, 47);
+            label2.Location = new Point(27, 52);
             label2.Name = "label2";
             label2.Size = new Size(38, 15);
-            label2.TabIndex = 2;
+            label2.TabIndex = 21;
             label2.Text = "Brand";
             // 
             // label1
@@ -225,7 +208,7 @@
             label1.Location = new Point(27, 18);
             label1.Name = "label1";
             label1.Size = new Size(28, 15);
-            label1.TabIndex = 1;
+            label1.TabIndex = 20;
             label1.Text = "SKU";
             // 
             // saveButton
@@ -234,7 +217,7 @@
             saveButton.Margin = new Padding(2, 1, 2, 1);
             saveButton.Name = "saveButton";
             saveButton.Size = new Size(113, 33);
-            saveButton.TabIndex = 2;
+            saveButton.TabIndex = 9;
             saveButton.Text = "Update";
             saveButton.UseVisualStyleBackColor = true;
             saveButton.Click += saveButton_Click;
@@ -245,10 +228,14 @@
             deleteButton.Margin = new Padding(2, 1, 2, 1);
             deleteButton.Name = "deleteButton";
             deleteButton.Size = new Size(113, 33);
-            deleteButton.TabIndex = 3;
+            deleteButton.TabIndex = 10;
             deleteButton.Text = "Delete";
             deleteButton.UseVisualStyleBackColor = true;
             deleteButton.Click += deleteButton_Click;
+            // 
+            // toolTip
+            // 
+            toolTip.ToolTipTitle = "Inventory Help";
             // 
             // EditRowForm
             // 
@@ -266,7 +253,7 @@
             ShowIcon = false;
             ShowInTaskbar = false;
             StartPosition = FormStartPosition.CenterParent;
-            Text = "Previous Total";
+            Text = "Row Editor";
             Load += EditRowForm_Load;
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
@@ -279,7 +266,6 @@
         private Panel panel1;
         private Label label1;
         private Label label2;
-        private TextBox brandTextBox;
         private TextBox skuTextBox;
         private CheckedListBox checkedListBox;
         private Button saveButton;
@@ -289,12 +275,12 @@
         private TextBox descTextBox;
         private TextBox barCodeTextBox;
         private Label label5;
-        private TextBox addTextBox;
+        private TextBox adjustTextBox;
         private Label adjustInventoryLabel;
         private TextBox currentTextBox;
         private Label label6;
         private Button deleteButton;
-        private TextBox deleteTextBox;
-        private Label deleteInventoryLabel;
+        private ToolTip toolTip;
+        private ComboBox brandComboBox;
     }
 }

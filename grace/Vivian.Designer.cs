@@ -56,6 +56,7 @@ namespace grace
             logoutButton = new Button();
             loggedInLabel = new Label();
             dataPage = new TabPage();
+            clearFilterButton = new MaterialButton();
             addRowButton = new Button();
             label1 = new Label();
             filterSkuTextBox = new TextBox();
@@ -84,6 +85,8 @@ namespace grace
             errorProvider1 = new ErrorProvider(components);
             checkoutBindingSource = new BindingSource(components);
             checkInBindingSource = new BindingSource(components);
+            button1 = new Button();
+            materialButton1 = new MaterialButton();
             menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             tabControl.SuspendLayout();
@@ -114,7 +117,7 @@ namespace grace
             menuStrip1.Location = new Point(3, 64);
             menuStrip1.Name = "menuStrip1";
             menuStrip1.Padding = new Padding(7, 2, 0, 2);
-            menuStrip1.Size = new Size(1592, 28);
+            menuStrip1.Size = new Size(1832, 28);
             menuStrip1.TabIndex = 4;
             menuStrip1.Text = "menuStrip1";
             // 
@@ -185,7 +188,7 @@ namespace grace
             tabControl.Padding = new Point(5, 5);
             tabControl.SelectedIndex = 0;
             tabControl.ShowToolTips = true;
-            tabControl.Size = new Size(1592, 750);
+            tabControl.Size = new Size(1832, 1266);
             tabControl.TabIndex = 9;
             tabControl.TabStop = false;
             tabControl.Selecting += tabControl_Selecting;
@@ -200,7 +203,7 @@ namespace grace
             loginPage.Margin = new Padding(5, 2, 5, 2);
             loginPage.Name = "loginPage";
             loginPage.Padding = new Padding(5, 2, 5, 2);
-            loginPage.Size = new Size(1584, 702);
+            loginPage.Size = new Size(1824, 1218);
             loginPage.TabIndex = 0;
             loginPage.Text = "Home";
             loginPage.ToolTipText = "Login Page";
@@ -305,6 +308,7 @@ namespace grace
             // 
             // dataPage
             // 
+            dataPage.Controls.Add(clearFilterButton);
             dataPage.Controls.Add(addRowButton);
             dataPage.Controls.Add(label1);
             dataPage.Controls.Add(filterSkuTextBox);
@@ -312,15 +316,34 @@ namespace grace
             dataPage.Location = new Point(4, 44);
             dataPage.Name = "dataPage";
             dataPage.Padding = new Padding(11, 12, 11, 12);
-            dataPage.Size = new Size(1584, 702);
+            dataPage.Size = new Size(1804, 1175);
             dataPage.TabIndex = 1;
             dataPage.Text = "Inventory";
-            dataPage.ToolTipText = "Inventory for Patti";
+            dataPage.ToolTipText = "Inventory for Patster";
             dataPage.UseVisualStyleBackColor = true;
+            // 
+            // clearFilterButton
+            // 
+            clearFilterButton.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            clearFilterButton.Density = MaterialButton.MaterialButtonDensity.Default;
+            clearFilterButton.Depth = 0;
+            clearFilterButton.HighEmphasis = true;
+            clearFilterButton.Icon = null;
+            clearFilterButton.Location = new Point(435, 6);
+            clearFilterButton.Margin = new Padding(4, 6, 4, 6);
+            clearFilterButton.MouseState = MaterialSkin.MouseState.HOVER;
+            clearFilterButton.Name = "clearFilterButton";
+            clearFilterButton.NoAccentTextColor = Color.Empty;
+            clearFilterButton.Size = new Size(117, 36);
+            clearFilterButton.TabIndex = 5;
+            clearFilterButton.Text = "Clear Filter";
+            clearFilterButton.Type = MaterialButton.MaterialButtonType.Contained;
+            clearFilterButton.UseAccentColor = false;
+            clearFilterButton.UseVisualStyleBackColor = true;
             // 
             // addRowButton
             // 
-            addRowButton.Location = new Point(480, 4);
+            addRowButton.Location = new Point(1459, 3);
             addRowButton.Name = "addRowButton";
             addRowButton.Size = new Size(103, 38);
             addRowButton.TabIndex = 4;
@@ -360,7 +383,7 @@ namespace grace
             dataGridView.RowTemplate.Height = 41;
             dataGridView.ScrollBars = ScrollBars.Vertical;
             dataGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dataGridView.Size = new Size(1574, 659);
+            dataGridView.Size = new Size(1794, 1132);
             dataGridView.TabIndex = 1;
             // 
             // checkoutPage
@@ -376,7 +399,7 @@ namespace grace
             checkoutPage.Location = new Point(4, 44);
             checkoutPage.Margin = new Padding(7);
             checkoutPage.Name = "checkoutPage";
-            checkoutPage.Size = new Size(1564, 659);
+            checkoutPage.Size = new Size(1804, 1175);
             checkoutPage.TabIndex = 2;
             checkoutPage.Text = "Check Out";
             checkoutPage.ToolTipText = "Checkout Items";
@@ -487,7 +510,7 @@ namespace grace
             checkinPage.Controls.Add(checkInDataGrid);
             checkinPage.Location = new Point(4, 44);
             checkinPage.Name = "checkinPage";
-            checkinPage.Size = new Size(1564, 659);
+            checkinPage.Size = new Size(1804, 1175);
             checkinPage.TabIndex = 4;
             checkinPage.Text = "Check In";
             checkinPage.ToolTipText = "Check In Items";
@@ -541,6 +564,8 @@ namespace grace
             adminPage.AutoScroll = true;
             adminPage.BackColor = SystemColors.Control;
             adminPage.BorderStyle = BorderStyle.Fixed3D;
+            adminPage.Controls.Add(materialButton1);
+            adminPage.Controls.Add(button1);
             adminPage.Controls.Add(loggingTextBox);
             adminPage.Controls.Add(restoreDatabaseButton);
             adminPage.Controls.Add(backupButton);
@@ -549,7 +574,7 @@ namespace grace
             adminPage.Controls.Add(label5);
             adminPage.Location = new Point(4, 44);
             adminPage.Name = "adminPage";
-            adminPage.Size = new Size(1564, 659);
+            adminPage.Size = new Size(1824, 1218);
             adminPage.TabIndex = 3;
             adminPage.Text = "Admin";
             adminPage.ToolTipText = "Admin Settings";
@@ -562,10 +587,10 @@ namespace grace
             loggingTextBox.Depth = 0;
             loggingTextBox.Font = new Font("Microsoft Sans Serif", 14F, FontStyle.Regular, GraphicsUnit.Pixel);
             loggingTextBox.ForeColor = Color.FromArgb(222, 0, 0, 0);
-            loggingTextBox.Location = new Point(897, 18);
+            loggingTextBox.Location = new Point(917, 18);
             loggingTextBox.MouseState = MaterialSkin.MouseState.HOVER;
             loggingTextBox.Name = "loggingTextBox";
-            loggingTextBox.Size = new Size(615, 591);
+            loggingTextBox.Size = new Size(615, 634);
             loggingTextBox.TabIndex = 7;
             loggingTextBox.Text = "";
             // 
@@ -576,7 +601,7 @@ namespace grace
             restoreDatabaseButton.Depth = 0;
             restoreDatabaseButton.HighEmphasis = true;
             restoreDatabaseButton.Icon = null;
-            restoreDatabaseButton.Location = new Point(53, 266);
+            restoreDatabaseButton.Location = new Point(36, 472);
             restoreDatabaseButton.Margin = new Padding(4, 6, 4, 6);
             restoreDatabaseButton.MouseState = MaterialSkin.MouseState.HOVER;
             restoreDatabaseButton.Name = "restoreDatabaseButton";
@@ -595,7 +620,7 @@ namespace grace
             backupButton.Depth = 0;
             backupButton.HighEmphasis = true;
             backupButton.Icon = null;
-            backupButton.Location = new Point(55, 205);
+            backupButton.Location = new Point(38, 411);
             backupButton.Margin = new Padding(4, 6, 4, 6);
             backupButton.MouseState = MaterialSkin.MouseState.HOVER;
             backupButton.Name = "backupButton";
@@ -619,9 +644,9 @@ namespace grace
             // resetComboBox
             // 
             resetComboBox.FormattingEnabled = true;
-            resetComboBox.Location = new Point(243, 43);
+            resetComboBox.Location = new Point(192, 43);
             resetComboBox.Name = "resetComboBox";
-            resetComboBox.Size = new Size(143, 26);
+            resetComboBox.Size = new Size(194, 26);
             resetComboBox.TabIndex = 1;
             // 
             // label5
@@ -629,13 +654,41 @@ namespace grace
             label5.AutoSize = true;
             label5.Location = new Point(72, 43);
             label5.Name = "label5";
-            label5.Size = new Size(141, 18);
+            label5.Size = new Size(84, 18);
             label5.TabIndex = 0;
-            label5.Text = "Reset Password";
+            label5.Text = "Pick User";
             // 
             // errorProvider1
             // 
             errorProvider1.ContainerControl = this;
+            // 
+            // button1
+            // 
+            button1.Location = new Point(192, 129);
+            button1.Name = "button1";
+            button1.Size = new Size(194, 29);
+            button1.TabIndex = 8;
+            button1.Text = "Delete User";
+            button1.UseVisualStyleBackColor = true;
+            // 
+            // materialButton1
+            // 
+            materialButton1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            materialButton1.Density = MaterialButton.MaterialButtonDensity.Default;
+            materialButton1.Depth = 0;
+            materialButton1.HighEmphasis = true;
+            materialButton1.Icon = null;
+            materialButton1.Location = new Point(478, 43);
+            materialButton1.Margin = new Padding(4, 6, 4, 6);
+            materialButton1.MouseState = MaterialSkin.MouseState.HOVER;
+            materialButton1.Name = "materialButton1";
+            materialButton1.NoAccentTextColor = Color.Empty;
+            materialButton1.Size = new Size(158, 36);
+            materialButton1.TabIndex = 9;
+            materialButton1.Text = "Add User";
+            materialButton1.Type = MaterialButton.MaterialButtonType.Contained;
+            materialButton1.UseAccentColor = false;
+            materialButton1.UseVisualStyleBackColor = true;
             // 
             // Vivian
             // 
@@ -643,7 +696,7 @@ namespace grace
             AutoScaleMode = AutoScaleMode.Font;
             AutoScroll = true;
             BackColor = Color.White;
-            ClientSize = new Size(1598, 845);
+            ClientSize = new Size(1838, 1361);
             Controls.Add(tabControl);
             Controls.Add(menuStrip1);
             Font = new Font("Segoe UI", 10.125F, FontStyle.Regular, GraphicsUnit.Point);
@@ -735,5 +788,8 @@ namespace grace
         internal MaterialMultiLineTextBox loggingTextBox;
         internal TextBox checkOutSearchTextBox;
         internal TextBox textBoxBarcode;
+        internal MaterialButton clearFilterButton;
+        private MaterialButton materialButton1;
+        public Button button1;
     }
 }

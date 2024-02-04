@@ -35,7 +35,7 @@ namespace grace
 
                 if (empty)
                 {
-                    string[] defaultUsers = { "patti", "susan", "morgan",
+                    string[] defaultUsers = { "patster", "susan",
                     "christa", "mandy", "whitney" };
 
                     foreach (var user in defaultUsers)
@@ -45,7 +45,7 @@ namespace grace
                             User u = new User();
                             u.Username = user;
                             u.Password = "changeme";
-                            if (user.Equals("patti", StringComparison.Ordinal) || user.Equals("susan", StringComparison.Ordinal))
+                            if (user.Equals("patster", StringComparison.Ordinal) || user.Equals("susan", StringComparison.Ordinal))
                             {
                                 u.Admin = true;
                             }

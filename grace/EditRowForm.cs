@@ -41,6 +41,7 @@ namespace grace
         private bool readyForNewCode = true;
         private GraceRow? graceRow;
         private bool updateGraceRow = false;
+        private List<string> brandList = new List<string>();
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         public EditRowForm(DataGridViewRow? row)
@@ -74,13 +75,23 @@ namespace grace
                     Close();
                 }
             }
+
+            var distintBrandNames = new List<string>();
             var distinctCollectionNames = new List<string>();
             using (var context = new GraceDbContext())
             {
                 // Fill checkbox list with collection names
                 distinctCollectionNames = context.Collections
+                    .Where(e => e.Name != "Other")
                     .Select(e => e.Name)
                     .Distinct()
+                    .OrderBy(name => name)
+                    .ToList();
+                // Fill in drop down for brand name
+                distintBrandNames = context.Graces
+                    .Select(c => c.Brand)
+                    .Distinct()
+                    .OrderBy(brand => brand)
                     .ToList();
             }
 
@@ -91,12 +102,18 @@ namespace grace
                 checkedListBox.Items.Add(d);
             }
 
+            brandComboBox.Items.Clear();
+            foreach (var d in distintBrandNames)
+            {
+                brandComboBox.Items.Add(d);
+            }
+
             if (row != null && row.Cells.Count > 11)
             {
                 if (graceRow != null)
                 {
                     skuTextBox.Text = graceRow.Sku;
-                    brandTextBox.Text = graceRow.Brand;
+                    brandComboBox.SelectedItem = graceRow.Brand;
                     descTextBox.Text = graceRow.Description;
                     if (graceRow.Availability != null)
                     {
@@ -115,8 +132,7 @@ namespace grace
                     checkItem(row.Cells[10].Value);
 
                     currentTextBox.Text = row.Cells["Total"].Value.ToString();
-                    addTextBox.Text = "0";
-                    deleteTextBox.Text = "0";
+                    adjustTextBox.Text = "0";
                 }
             }
 
@@ -126,10 +142,8 @@ namespace grace
                 deleteButton.Enabled = false;
                 deleteButton.Hide();
                 adjustInventoryLabel.Hide();
-                addTextBox.Hide();
+                adjustTextBox.Hide();
                 currentTextBox.ReadOnly = false;
-                deleteTextBox.Hide();
-                deleteInventoryLabel.Hide();
             }
             else
             {
@@ -137,9 +151,17 @@ namespace grace
                 deleteButton.Enabled = true;
                 deleteButton.Show();
                 adjustInventoryLabel.Show();
-                addTextBox.Show();
+                adjustTextBox.Show();
+                adjustTextBox.MouseHover += AddTextBox_MouseHover;
                 currentTextBox.ReadOnly = true;
+
             }
+        }
+
+        private void AddTextBox_MouseHover(object? sender, EventArgs e)
+        {
+            // Show the tool tip when the mouse hovers over the TextBox
+            toolTip.Show("You can enter negative numbers in this field", adjustTextBox, 0, -30, 2000);
         }
 
         private void checkItem(object var)
@@ -157,7 +179,6 @@ namespace grace
 
         private void saveButton_Click(object sender, EventArgs e)
         {
-            DialogResult = DialogResult.Cancel;
             if (newRow)
             {
                 if (addRow())
@@ -203,24 +224,48 @@ namespace grace
                         return true;
                     }
                     grace.Sku = sku.Trim();
+                    // Make sure SKU is not a duplicate
+                    bool skuExists = context.Graces.Any(entity => entity.Sku == grace.Sku);
+                    if (skuExists)
+                    {
+                        MessageBox.Show($"SKU {grace.Sku} already exists. Please "
+                            + "use update to modify it",
+                            "Information", MessageBoxButtons.OK,
+                            MessageBoxIcon.Information,
+                            MessageBoxDefaultButton.Button1,
+                            MessageBoxOptions.DefaultDesktopOnly);
+                        return true;
+                    }
                     updateGraceRow = true;
                 }
-                if (grace.Brand != brandTextBox.Text)
+                if (grace.Brand != (string)brandComboBox.SelectedItem)
                 {
-                    var brand = brandTextBox.Text;
+                    var brand = (string)brandComboBox.SelectedItem;
                     if (!string.IsNullOrEmpty(brand))
                     {
                         brand = brand.Trim();
+                        grace.Brand = brand;
+                        updateGraceRow = true;
                     }
-                    grace.Brand = brand;
-                    updateGraceRow = true;
+                    else
+                    {
+                        MessageBox.Show("You need to select a brand.",
+                            "Information", MessageBoxButtons.OK,
+                            MessageBoxIcon.Information,
+                            MessageBoxDefaultButton.Button1,
+                            MessageBoxOptions.DefaultDesktopOnly);
+                        return true;
+                    }
                 }
                 if (grace.Description != descTextBox.Text)
                 {
                     var desc = descTextBox.Text;
-                    if (!string.IsNullOrEmpty(desc)) { desc = desc.Trim(); }
-                    grace.Description = desc;
-                    updateGraceRow = true;
+                    if (!string.IsNullOrEmpty(desc))
+                    {
+                        desc = desc.Trim();
+                        grace.Description = desc;
+                        updateGraceRow = true;
+                    }
                 }
                 if (grace.Availability != availabilityTextBox.Text)
                 {
@@ -232,18 +277,53 @@ namespace grace
                     grace.Availability = availability;
                     updateGraceRow = true;
                 }
+                if (grace.BarCode != barCodeTextBox.Text)
+                {
+                    var barcode = barCodeTextBox.Text;
+                    if (!string.IsNullOrEmpty(barcode))
+                    {
+                        barcode = barcode.Trim();
+                    }
+
+                    // Make sure we don't add duplicate barcodes. 
+                    bool barcodeExists = context.Graces.Any(entity => entity.BarCode == grace.BarCode);
+                    if (barcodeExists)
+                    {
+                        MessageBox.Show($"Bar Code {barcode} already exists. Please "
+                            + "check your entry and try again.",
+                            "Information", MessageBoxButtons.OK,
+                            MessageBoxIcon.Information,
+                            MessageBoxDefaultButton.Button1,
+                            MessageBoxOptions.DefaultDesktopOnly);
+                        return true;
+                    }
+                    grace.BarCode = barcode;
+                    updateGraceRow = true;
+                }
+
+                if (updateGraceRow)
+                {
+                    context.SaveChanges();
+                }
             }
 
             try
             {
-                int delta = 0;
+                //int delta = 0;
 
-                delta = Convert.ToInt32(addTextBox.Text);
-
-                if (delta == 0)
+                if (!int.TryParse(adjustTextBox.Text, out int delta))
                 {
-                    delta = -Convert.ToInt32(deleteTextBox.Text);
+                    var str = adjustTextBox.Text;
+                    // If not a valid integer, clear the TextBox
+                    adjustTextBox.Text = "";
+                    MessageBox.Show($"The entry in the Adjust Inventory box {str}"
+                        + " is not a valid number", "Error",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error);
+                    return true;
                 }
+
+                //delta = Convert.ToInt32(adjustTextBox.Text);
 
                 int newTotal = Convert.ToInt32(currentTextBox.Text) + delta;
 
@@ -281,7 +361,7 @@ namespace grace
 
             if (!ret && updateGraceRow)
             {
-                DataBase.UpdateGraceRow(graceId);   
+                DataBase.UpdateGraceRow(graceId);
             }
 
             return ret;
@@ -295,11 +375,6 @@ namespace grace
             if (skuTextBox.Text == string.Empty)
             {
                 skuTextBox.BackColor = System.Drawing.Color.Yellow;
-                ret = true;
-            }
-            if (brandTextBox.Text == string.Empty)
-            {
-                brandTextBox.BackColor = System.Drawing.Color.Yellow;
                 ret = true;
             }
             if (descTextBox.Text == string.Empty)
@@ -334,11 +409,40 @@ namespace grace
 
             int graceId = 0;
             // Update Graces DB
+            var brand = (string)brandComboBox.SelectedItem;
+            if (!string.IsNullOrEmpty(brand))
+            {
+                brand = brand.Trim();
+            }
+            else
+            {
+                MessageBox.Show("You need to select a brand.",
+                    "Information", MessageBoxButtons.OK,
+                    MessageBoxIcon.Information,
+                    MessageBoxDefaultButton.Button1,
+                    MessageBoxOptions.DefaultDesktopOnly);
+                return true;
+            }
+
             using (var context = new GraceDbContext())
             {
 
                 grace.Sku = skuTextBox.Text;
-                grace.Brand = brandTextBox.Text;
+
+                // Make sure SKU is not a duplicate
+                bool skuExists = context.Graces.Any(entity => entity.Sku == grace.Sku);
+                if (skuExists)
+                {
+                    MessageBox.Show($"SKU {grace.Sku} already exists. Please "
+                        + "use update to modify it",
+                        "Information", MessageBoxButtons.OK,
+                        MessageBoxIcon.Information,
+                        MessageBoxDefaultButton.Button1,
+                        MessageBoxOptions.DefaultDesktopOnly);
+                    return true;
+                }
+
+                grace.Brand = brand;
                 grace.Description = descTextBox.Text;
                 if (availabilityTextBox.Text.Length > 0)
                 {
@@ -351,6 +455,18 @@ namespace grace
                 if (barCodeTextBox.Text.Length > 0)
                 {
                     grace.BarCode = barCodeTextBox.Text;
+                    // Make sure SKU is not a duplicate
+                    bool barcodeExists = context.Graces.Any(entity => entity.BarCode == grace.BarCode);
+                    if (barcodeExists)
+                    {
+                        MessageBox.Show($"Bar Code {grace.BarCode} already exists. Please "
+                            + "check your entry and try again.",
+                            "Information", MessageBoxButtons.OK,
+                            MessageBoxIcon.Information,
+                            MessageBoxDefaultButton.Button1,
+                            MessageBoxOptions.DefaultDesktopOnly);
+                        return true;
+                    }
                 }
                 else
                 {
@@ -433,7 +549,7 @@ namespace grace
             }
             DialogResult = DialogResult.OK;
             Close();
-   
+
         }
 
         private void checkedListBox_ItemCheck(object sender, ItemCheckEventArgs e)
@@ -463,12 +579,29 @@ namespace grace
         private void deltaTextBox_TextChanged(object sender, EventArgs e)
         {
             // Ensure the entered text is a valid integer
-            if (!int.TryParse(addTextBox.Text, out int result))
+            if (!int.TryParse(adjustTextBox.Text, out int result))
             {
                 // If not a valid integer, clear the TextBox
-                addTextBox.Text = "";
+                adjustTextBox.Text = "";
             }
         }
 
+        private void cancelButton_Click(object sender, EventArgs e)
+        {
+            DialogResult = DialogResult.Cancel;
+            Close();
+        }
+
+        private void skuTextBox_TextChanged(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(skuTextBox.Text)) {
+                return;
+            }
+
+            // Convert the text in the TextBox to uppercase
+            skuTextBox.Text = skuTextBox.Text.ToUpper(System.Globalization.CultureInfo.CurrentCulture);
+            // Set the cursor position at the end of the text
+            skuTextBox.SelectionStart = skuTextBox.Text.Length;
+        }
     }
 }
