@@ -105,7 +105,6 @@ namespace grace
 
                     row.Total = currentTotal.CurrentTotal;
 
-
                     var collectionList = context.Collections.Where(t => t.GraceId == item.ID);
 
                     int i = 0;

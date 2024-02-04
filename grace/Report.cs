@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Copyright (c) 2023 White Acre Software LLC
  * All rights reserved.
  *

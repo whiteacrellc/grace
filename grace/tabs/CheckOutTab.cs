@@ -1,4 +1,4 @@
-﻿using grace;
+using grace;
 using grace.data;
 using System;
 using System.Collections.Generic;
