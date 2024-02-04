@@ -164,6 +164,7 @@
             Name = "PasswordChange";
             ShowIcon = false;
             ShowInTaskbar = false;
+            StartPosition = FormStartPosition.CenterParent;
             Text = "Password Change";
             Load += PasswordChange_Load;
             ResumeLayout(false);

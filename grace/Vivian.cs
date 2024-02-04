@@ -13,6 +13,8 @@
 using grace.data;
 using grace.tabs;
 using grace.utils;
+using MaterialSkin;
+using MaterialSkin.Controls;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.VisualBasic.ApplicationServices;
 using NLog;
@@ -27,7 +29,7 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 namespace grace
 {
-    public partial class Vivian : Form
+    public partial class Vivian : MaterialForm
     {
         Report? report;
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
@@ -51,6 +53,17 @@ namespace grace
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
             InitializeComponent();
+
+            var materialSkinManager = MaterialSkinManager.Instance;
+            materialSkinManager.AddFormToManage(this);
+            materialSkinManager.Theme = MaterialSkinManager.Themes.LIGHT;
+            materialSkinManager.ColorScheme = new ColorScheme(Primary.BlueGrey800, Primary.BlueGrey900, Primary.BlueGrey500, Accent.LightBlue200, TextShade.WHITE);
+            //materialSkinManager.ColorScheme = new MaterialColorScheme(0x00C926b3, 0xA1008B, 0xDC2EFF, 0x006E70FF, MaterialTextShade.LIGHT);
+            //materialSkinManager.ColorScheme = new MaterialColorScheme("#00480157", "#370142", "DC2EFF", "00BB5FCF", MaterialTextShade.LIGHT);
+          // materialSkinManager.ColorScheme = new MaterialColorScheme(MaterialPrimary.Indigo500, MaterialPrimary.Indigo700, MaterialPrimary.Indigo100, MaterialAccent.Pink200, MaterialTextShade.LIGHT);
+
+
+
             EnableReportButton(false);
 
             // Init the tab page classes
@@ -59,7 +72,40 @@ namespace grace
             dataTab = new DataTab(this);
             checkOutTab = new CheckOutTab(this);
             checkInTab = new CheckInTab(this);
+        }
 
+        private void InitializeLogger()
+        {
+            // Set up NLog configuration. This can be done in the NLog.config file as well.
+            var config = new NLog.Config.LoggingConfiguration();
+
+            // Create targets and rules
+            var textboxTarget = new NLog.Targets.MethodCallTarget("textboxTarget", LogToTextBox);
+            config.AddRule(LogLevel.Info, LogLevel.Fatal, textboxTarget);
+
+            // Create file target
+            var fileTarget = new NLog.Targets.FileTarget("fileTarget")
+            {
+                FileName = @"C:\Users\tom\OneDrive\Desktop\grace.log",
+                Layout = "${longdate} ${level:uppercase=true} ${message}"
+            };
+            config.AddRule(LogLevel.Debug, LogLevel.Fatal, fileTarget);
+
+            // Apply configuration
+            LogManager.Configuration = config;
+        }
+
+        private void LogToTextBox(LogEventInfo logEvent, object[] arg2)
+        {
+            // This method is called when a log event occurs
+            string logMessage = logEvent.FormattedMessage;
+
+            // Use Invoke to update UI from another thread (e.g., if logging from a background thread)
+            loggingTextBox.Invoke(new Action(() =>
+            {
+                loggingTextBox.AppendText(logMessage + Environment.NewLine);
+                loggingTextBox.ScrollToCaret(); // Scroll to the end to show the latest log entry
+            }));
         }
 
         private void generateReport()
@@ -103,7 +149,7 @@ namespace grace
             {
                 if (settingsForm.ShowDialog() == DialogResult.OK)
                 {
-                    // Settings were modified, update the MainForm
+                    // Settings were modified, newRow the MainForm
                     // UpdateFormWithSettings();
                 }
             }
@@ -112,7 +158,7 @@ namespace grace
         private void Vivian_Load(object sender, EventArgs e)
         {
 
-
+            InitializeLogger();
 
             // Loads the preferences into the globals singleton
             DataBase data = new DataBase();
@@ -137,20 +183,6 @@ namespace grace
             checkInTab.Load();
             checkOutTab.Load();
 
-        }
-
-        private void SizeForm()
-        {
-            var numcols = dataGridView.ColumnCount;
-            int width = 0;
-            for (int i = 0; i < numcols; i++)
-            {
-                width += dataGridView.Columns[i].Width;
-            }
-            dataGridView.Width = width;
-            tabControl.Width = width + 5;
-            this.Width = width + 10;
-            Size = new Size(width + 10, this.Height);
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -189,8 +221,6 @@ namespace grace
                 MessageBox.Show($"There was a problem reading the file:\n\n{ex.Message}",
                     "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-
-
             dataTab.BindDataSource();
         }
 
@@ -219,7 +249,7 @@ namespace grace
             {
                 if (readyForNewCode)
                 {
-                    textBoxBarcode.Clear();
+                    checkOutSearchTextBox.Clear();
                     readyForNewCode = false;
                     sb.Clear();
                 }
@@ -230,7 +260,7 @@ namespace grace
             else
             if (e.KeyCode == Keys.Enter)
             {
-                textBoxBarcode.Text = sb.ToString();
+                checkOutSearchTextBox.Text = sb.ToString();
                 readyForNewCode = true;
                 // Process the scanned data as needed (e.g., send it to a database, perform actions)
                 // Example: ProcessScannedData(scannedData);
@@ -240,9 +270,9 @@ namespace grace
         private void tabControl_Selecting(object sender, TabControlCancelEventArgs e)
         {
             string username = Globals.GetInstance().CurrentUser;
-            bool isadmin = PasswordChecker.IsUserAdmin(username);
+            bool isAdmin = PasswordChecker.IsUserAdmin(username);
             int tabIndex = e.TabPageIndex;
-            if (!isadmin)
+            if (!isAdmin)
             {
 
                 if (tabIndex == 1 || tabIndex == 4)
@@ -261,5 +291,18 @@ namespace grace
                 }
             }
         }
+
+        private void checkOutDataGrid_DataError(object sender, DataGridViewDataErrorEventArgs e)
+        {
+            try
+            {
+                logger.Error(e.ToString());
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+            }
+        }
+
     }
 }

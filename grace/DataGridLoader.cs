@@ -17,8 +17,10 @@ using Microsoft.EntityFrameworkCore;
 using NLog;
 using System.ComponentModel.Design;
 using System.Data;
+using System.Data.Entity;
 using System.Data.SQLite;
 using System.Globalization;
+using static grace.DataBase;
 using static OfficeOpenXml.ExcelErrorValue;
 
 namespace grace
@@ -37,10 +39,47 @@ namespace grace
             return list;
         }
 
-        internal static void LoadBindingTable()
+        public static List<GraceRow> getFilteredData(string searchTerm)
+        {
+            List<GraceRow> result = new List<GraceRow>();
+            var list = getData();
+            if (searchTerm == null || searchTerm == string.Empty)
+            {
+                return list;
+            }
+
+            // Look through the list for either matches in the sku or
+            // description
+            foreach (var graceRow in list)
+            {
+                if (graceRow.Sku.Contains(searchTerm,
+                    StringComparison.CurrentCultureIgnoreCase) ||
+                    graceRow.Description.Contains(searchTerm,
+                    StringComparison.CurrentCultureIgnoreCase))
+                {
+                    result.Add(graceRow);
+                }
+            }
+            return result;
+        }
+
+        internal static void LoadBindingTable(bool refresh = false)
         {
             using (var context = new GraceDbContext())
             {
+                if (refresh)
+                {
+                    var allGraceRows = context.GraceRows.ToList();
+                    if (allGraceRows != null)
+                    {
+                        // Remove all rows from the DbSet
+                        context.GraceRows.RemoveRange(allGraceRows);
+
+                        // Save changes to the database
+                        context.SaveChanges();
+                    }
+                }
+
                 if (context.GraceRows.ToList().Count > 0)
                 {
                     return;
@@ -58,29 +97,20 @@ namespace grace
                     row.Description = item.Description;
 
                     // Lets get the two totals
-                    var totalList = context.Totals
+                    var currentTotal = context.Totals
                         .Where(t => t.GraceId == item.ID)
-                        .OrderByDescending(t => t.LastUpdated)
+                        .OrderByDescending(t => t.ID)
                         .Take(1)
-                        .ToList();
+                        .First();
 
-                    if (totalList != null)
-                    {
-                        if (totalList.Count == 1)
-                        {
-                            row.Total = totalList[0].CurrentTotal;
-                        }
-                        else
-                        {
-                            logger.Info("No totals found");
-                        }
-                    }
+                    row.Total = currentTotal.CurrentTotal;
 
                     var collectionList = context.Collections.Where(t => t.GraceId == item.ID);
 
                     int i = 0;
                     foreach (var col in collectionList)
                     {
+                        if (col.Name == "Other") { continue; }
                         switch (i)
                         {
                             case 0:

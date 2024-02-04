@@ -211,7 +211,7 @@ namespace grace.tabs
                     var user_id = DataBase.GetUserIdFromName(username);
                     int col_id = DataBase.GetCollectionId(graceId, collectionName);
                     int currentTotal = DataBase.GetTotal(graceId);
-                    int newTotal = currentTotal - updatedValue;
+                    int newTotal = currentTotal + updatedValue;
 
                     using (var context = new GraceDbContext())
                     {

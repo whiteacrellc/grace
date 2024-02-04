@@ -57,7 +57,7 @@ namespace grace
         }
         private void SaveButton_Click(object sender, EventArgs e)
         {
-            // Parse the user input and update the setting
+            // Parse the user input and newRow the setting
             int rowHeight = parseeTextBox(textBoxRowsPerPage);
             if (rowHeight > 0)
             {
@@ -76,28 +76,13 @@ namespace grace
             Close();
         }
 
-        private void rowHeighrTextBox_TextChanged(object sender, EventArgs e)
+        private void ValidateNumber_Callback(object sender, KeyPressEventArgs e)
         {
-
-        }
-
-        private void textBoxRowsPerPage_Validating(object sender, CancelEventArgs e)
-        {
-            if (int.TryParse(textBoxRowsPerPage.Text, out _))
+            // Allow digits (0-9) and control keys
+            if (!char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar))
             {
-                MessageBox.Show("Invalid input. Please enter a valid integer.",
-                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                e.Cancel = true; // Prevent the control from losing focus
-            }
-        }
-
-        private void rowHeighrTextBox_Validating(object sender, CancelEventArgs e)
-        {
-            if (!int.TryParse(textBoxRowsPerPage.Text, out _))
-            {
-                MessageBox.Show("Invalid input. Please enter a valid integer.",
-                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                e.Cancel = true; // Prevent the control from losing focus
+                // Cancel the keypress if the entered character is not a digit or control key
+                e.Handled = true;
             }
         }
     }

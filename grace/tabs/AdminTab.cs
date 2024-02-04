@@ -16,6 +16,7 @@
  *  
  */
 using grace.utils;
+using MaterialSkin.Controls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,22 +37,39 @@ namespace grace.tabs
         private TabPage adminTabPage;
         private Vivian vivian;
         private Button resetPasswordButton;
+        private MaterialButton restoreDatabaseButton;
+        private MaterialButton backupButton;
 
         public AdminTab(Vivian v) {
             vivian = v;
             // Possible null reference assignment.
             adminTabPage = vivian.tabControl.TabPages[4];
             this.resetPasswordButton = vivian.resetPasswordButton;
-
+            restoreDatabaseButton = vivian.restoreDatabaseButton;
+            backupButton = vivian.backupButton;
         }
 
         public void Load()
         {
 
             resetPasswordButton.Click += ResetButton_Click;
+            backupButton.Click += BackupButton_Click;
+            restoreDatabaseButton.Click += RestoreDatabaseButton_Click;
             InitializeComboBox();
         }
-        
+
+        private void BackupButton_Click(object? sender, EventArgs e)
+        {
+            var backup = new BackupAndRestore();
+            backup.BackupDatabase();
+        }
+
+        private void RestoreDatabaseButton_Click(object? sender, EventArgs e)
+        {
+            var backup = new BackupAndRestore();
+            backup.RestoreDatabase();
+        }
+
         private void InitializeComboBox()
         {
             ComboBox resetComboBox = vivian.resetComboBox;
@@ -73,7 +91,6 @@ namespace grace.tabs
                 resetComboBox.SelectedIndex = 0;
             }
         }
-
 
         public void ResetButton_Click(object? sender, EventArgs e)
         {

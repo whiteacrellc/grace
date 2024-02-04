@@ -30,7 +30,7 @@ namespace gracetest
             Assert.IsTrue(isValid);
         }
         /* 
-         * Patti said that password security was not needed 
+         * patster said that password security was not needed 
         [TestMethod]
         public void PasswordTooShort_ReturnsFalse()
         {

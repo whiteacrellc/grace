@@ -1,7 +1,9 @@
+using grace;
 using grace.data;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.ComponentModel;
 using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
 using System.Linq;
 using System.Text;
@@ -29,7 +31,7 @@ namespace grace.tabs
             vivian = v;
             checkOutDataGrid = vivian.checkOutDataGrid;
             checkoutBindingSource = vivian.checkoutBindingSource;
-            checkOutSearchTextBox = vivian.checkOutSearchTextBox;
+            checkOutSearchTextBox =  vivian.checkOutSearchTextBox;
             textBoxBarCode = vivian.textBoxBarcode;
             coResetButton = vivian.coResetButton;
             autoOpenCheckBox = vivian.autoOpenOnScanCheckBox;
@@ -55,6 +57,7 @@ namespace grace.tabs
         {
             var username = Globals.GetInstance().CurrentUser;
             user_id = DataBase.GetUserIdFromName(username);
+            checkOutDataGrid.DataSource = checkoutBindingSource;
             LoadDataGrid();
         }
 
@@ -119,45 +122,42 @@ namespace grace.tabs
             }
         }
 
-        internal void LoadDataGrid()
+        internal async void LoadDataGrid()
         {
-            checkOutDataGrid.DataSource = checkoutBindingSource;
-            var graceRowsData = DataBase.GetPulledGrid();
-
-            // Bind data to the DataGridView
-            checkoutBindingSource.DataSource = graceRowsData;
-
+            var data = await LoadDataAsync();
+            checkoutBindingSource.DataSource = data;
             ChangeColumnNames();
         }
+        
         internal void coResetButton_Click(object? sender, EventArgs e)
         {
 
-            InitializeDataGridView();
+            LoadDataGrid();
             textBoxBarCode.Clear();
             checkOutSearchTextBox.Clear();
 
         }
 
+        private async Task<List<DataBase.CheckOut>> LoadDataAsync()
+        {
+            // Simulate an asynchronous data retrieval (replace with your actual async data retrieval logic)
+            return await Task.Run(() =>
+            {
+                return DataBase.GetPulledGrid();
+            });
+        }
+
         internal void checkOutSearchTextBox_TextChanged(object? sender, EventArgs e)
         {
             string searchTerm = checkOutSearchTextBox.Text;
-
-            using (var context = new GraceDbContext())
+            if (!string.IsNullOrWhiteSpace(searchTerm))
             {
-                if (!string.IsNullOrWhiteSpace(searchTerm))
-                {
-                    var filteredProducts =
-                        DataBase.GetFilteredPulledGrid(searchTerm);
-
-                    // Bind the filtered products to the DataGridView
-                    checkoutBindingSource.DataSource = filteredProducts;
-                    ChangeColumnNames();
-                }
-                else
-                {
-                    // Reset to normal view
-                    LoadDataGrid();
-                }
+                var data = DataBase.GetFilteredPulledGrid(searchTerm);
+                checkoutBindingSource.DataSource = data;
+            }
+            else
+            {
+                LoadDataGrid();
             }
         }
         private void CheckOutDataGrid_DataBindingComplete(object? sender,

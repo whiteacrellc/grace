@@ -20,7 +20,7 @@ namespace grace.data.models
     public partial class CollectionName
     {
         public int ID { get; set; }
-        public string? Name { get; set; }
+        public string Name { get; set; }
         public int GraceId { get; set; }
         public Grace Grace { get; set; }
 

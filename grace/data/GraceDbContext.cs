@@ -52,6 +52,8 @@ namespace grace.data
                 // Primary key
                 entity.HasKey(e => e.ID);
 
+                entity.HasIndex(e => e.Sku).IsUnique();
+
                 // Properties
                 entity.Property(e => e.Sku)
                     .IsRequired();
@@ -114,6 +116,9 @@ namespace grace.data
                 entity.ToTable("Collections");
                 // Primary key
                 entity.HasKey(e => e.ID);
+
+                entity.Property(e => e.Name)
+                .IsRequired();
 
                 entity.HasOne(e => e.Grace)
                   .WithMany()

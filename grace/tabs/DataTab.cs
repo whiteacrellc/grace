@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Copyright (c) 2023 White Acre Software LLC
  * All rights reserved.
  *
@@ -16,6 +16,7 @@
  *  
  */
 using grace.data;
+using MaterialSkin.Controls;
 using NLog;
 using System;
 using System.Collections.Generic;
@@ -38,6 +39,7 @@ namespace grace.tabs
 
         // Data table controls
         private TextBox filterSkuTextBox;
+        private MaterialButton clearFilterButton;
         private Button addRowButton;
         private DataGridView dataGridView;
         private BindingSource bindingSource;
@@ -52,7 +54,7 @@ namespace grace.tabs
             filterSkuTextBox = vivian.filterSkuTextBox;
             addRowButton = vivian.addRowButton;
             dataGridView = vivian.dataGridView;
-
+            clearFilterButton = vivian.clearFilterButton;
         }
 
         internal void Load()
@@ -61,24 +63,32 @@ namespace grace.tabs
             // Callbacks 
             dataGridView.CellMouseDoubleClick += dataGridView_CellMouseDoubleClick;
             dataGridView.DataBindingComplete += dataGridView_DataBindingComplete;
+            dataGridView.CellFormatting += DataGridView_CellFormatting;
+            dataTabPage.Enter += DataTabPage_Enter;
             addRowButton.Click += addRowButton_Click;
             filterSkuTextBox.TextChanged += filterSkuTextBox_TextChanged;
+            clearFilterButton.Click += clearFilterButton_Click;
 
             // Setup data connection to grid view
             bindingSource = new BindingSource();
-            BindDataSource();
     
         }
+
+        private void DataGridView_CellFormatting1(object? sender, DataGridViewCellFormattingEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
         private void ChangeColumnNames()
         {
             // Dictionary to map DbContext column names to desired DataGridView column names
             Dictionary<string, string> columnMappings = new Dictionary<string, string>
-        {
-            {"Total", "Current Inventory"},
-            {"Col1", "Collection 1"},
-            {"Col2", "Collection 2"},
-            // Add more mappings as needed
-        };
+            {
+                {"Total", "Current Inventory"},
+                {"Col1", "Collection 1"},
+                {"Col2", "Collection 2"},
+                // Add more mappings as needed
+            };
 
             // Iterate through the columns in the DataGridView
             foreach (DataGridViewColumn dataGridViewColumn in dataGridView.Columns)
@@ -91,19 +101,25 @@ namespace grace.tabs
                 }
             }
         }
-        internal void BindDataSource()
+        internal void BindDataSource(bool refresh = false)
         {
             if (bindingSource == null)
             {
                 bindingSource = new BindingSource();
             }
             dataGridView.DataSource = bindingSource;
-            DataGridLoader.LoadBindingTable();
+            DataGridLoader.LoadBindingTable(refresh);
             bindingSource.DataSource = DataGridLoader.getData();
             Utils.RemoveColumnByName(dataGridView, "ID");
             Utils.RemoveColumnByName(dataGridView,"Grace");
             Utils.RemoveColumnByName(dataGridView, "GraceId");
             ChangeColumnNames();
+        }
+
+        private void DataTabPage_Enter(object? sender, EventArgs e)
+        {
+            filterSkuTextBox.Clear();
+            BindDataSource(true);
         }
 
         private void addRowButton_Click(object? sender, EventArgs e)
@@ -113,10 +129,8 @@ namespace grace.tabs
                 DialogResult dialogResult = editRowForm.ShowDialog();
                 if (dialogResult == DialogResult.OK)
                 {
-                    bindingSource.DataSource = DataGridLoader.getData();
-                    Utils.RemoveColumnByName(dataGridView, "ID");
-                    Utils.RemoveColumnByName(dataGridView, "Grace");
-                    Utils.RemoveColumnByName(dataGridView, "GraceId");
+                    filterSkuTextBox.Clear();
+                    BindDataSource(true);
                 }
             }
         }
@@ -141,40 +155,51 @@ namespace grace.tabs
                 if (result == DialogResult.OK)
                 {
                     // we need to reload the grid.
-                    bindingSource.DataSource = DataGridLoader.getData();
-                    Utils.RemoveColumnByName(dataGridView, "ID");
-                    Utils.RemoveColumnByName(dataGridView, "Grace");
-                    Utils.RemoveColumnByName(dataGridView, "GraceId");
+                    BindDataSource();
                 }
             }
         }
 
-        internal void filterSkuTextBox_TextChanged(object? sender, EventArgs e)
+
+        private void clearFilterButton_Click(object? sender, EventArgs e)
+        {
+            filterSkuTextBox.Clear();
+            BindDataSource();
+        }
+
+            internal void filterSkuTextBox_TextChanged(object? sender, EventArgs e)
         {
             string searchTerm = filterSkuTextBox.Text;
-
-
-            if (!string.IsNullOrWhiteSpace(searchTerm))
-            {
-                using (var context = new GraceDbContext())
-                {
-                    // Query the DbContext to filter products based on the "Sku" column
-                    var filteredProducts = context.GraceRows
-                        .Where(p => p.Sku.Contains(searchTerm))
-                        .ToList();
-
-                    // Bind the filtered products to the DataGridView
-                    bindingSource.DataSource = filteredProducts;
-                }
-            }
-            else
-            {
-                // If the search box is empty, show all products
-                bindingSource.DataSource = DataGridLoader.getData();
-            }
+            bindingSource.DataSource = DataGridLoader.getFilteredData(searchTerm);
             Utils.RemoveColumnByName(dataGridView, "ID");
             Utils.RemoveColumnByName(dataGridView, "Grace");
             Utils.RemoveColumnByName(dataGridView, "GraceId");
+        }
+
+        private void DataGridView_CellFormatting(object? sender, DataGridViewCellFormattingEventArgs e)
+        {
+            if (e.ColumnIndex != 11) {
+                return;
+            }
+            // Check if the cell contains a numeric value and is in the desired column
+            if (e.Value != null && e.ColumnIndex == 11 && IsNumeric(e.Value))
+            {
+                // Convert the cell value to a numeric type (assuming it's a number)
+                double cellValue = Convert.ToDouble(e.Value);
+
+                // Check if the number is negative
+                if (cellValue < 0)
+                {
+                    // Set the background color to yellow for cells with negative numbers
+                    e.CellStyle.BackColor = Color.Yellow;
+                }
+            }
+        }
+
+        // Helper method to check if a value is numeric
+        private bool IsNumeric(object value)
+        {
+            return value is int || value is double || value is float || value is decimal;
         }
 
         protected virtual void Dispose(bool disposing)
