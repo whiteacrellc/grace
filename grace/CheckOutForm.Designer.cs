@@ -52,7 +52,7 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(15, 17);
+            label1.Location = new Point(15, 115);
             label1.Name = "label1";
             label1.Size = new Size(38, 15);
             label1.TabIndex = 0;
@@ -61,7 +61,7 @@
             // brandLabel
             // 
             brandLabel.AutoSize = true;
-            brandLabel.Location = new Point(133, 17);
+            brandLabel.Location = new Point(133, 115);
             brandLabel.Name = "brandLabel";
             brandLabel.Size = new Size(0, 15);
             brandLabel.TabIndex = 1;
@@ -69,7 +69,7 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(15, 63);
+            label2.Location = new Point(15, 161);
             label2.Name = "label2";
             label2.Size = new Size(78, 15);
             label2.TabIndex = 2;
@@ -78,7 +78,7 @@
             // skuLabel
             // 
             skuLabel.AutoSize = true;
-            skuLabel.Location = new Point(133, 63);
+            skuLabel.Location = new Point(133, 161);
             skuLabel.Name = "skuLabel";
             skuLabel.Size = new Size(0, 15);
             skuLabel.TabIndex = 3;
@@ -86,7 +86,7 @@
             // descriptionLabel
             // 
             descriptionLabel.AutoSize = true;
-            descriptionLabel.Location = new Point(133, 115);
+            descriptionLabel.Location = new Point(133, 213);
             descriptionLabel.Name = "descriptionLabel";
             descriptionLabel.Size = new Size(0, 15);
             descriptionLabel.TabIndex = 5;
@@ -94,7 +94,7 @@
             // label4
             // 
             label4.AutoSize = true;
-            label4.Location = new Point(15, 115);
+            label4.Location = new Point(15, 213);
             label4.Name = "label4";
             label4.Size = new Size(67, 15);
             label4.TabIndex = 4;
@@ -103,7 +103,7 @@
             // totalLabel
             // 
             totalLabel.AutoSize = true;
-            totalLabel.Location = new Point(133, 163);
+            totalLabel.Location = new Point(133, 261);
             totalLabel.Name = "totalLabel";
             totalLabel.Size = new Size(0, 15);
             totalLabel.TabIndex = 7;
@@ -111,7 +111,7 @@
             // label5
             // 
             label5.AutoSize = true;
-            label5.Location = new Point(15, 163);
+            label5.Location = new Point(15, 261);
             label5.Name = "label5";
             label5.Size = new Size(107, 15);
             label5.TabIndex = 6;
@@ -120,7 +120,7 @@
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(319, 21);
+            label3.Location = new Point(319, 119);
             label3.Name = "label3";
             label3.Size = new Size(120, 15);
             label3.TabIndex = 8;
@@ -129,7 +129,7 @@
             // label6
             // 
             label6.AutoSize = true;
-            label6.Location = new Point(319, 67);
+            label6.Location = new Point(319, 165);
             label6.Name = "label6";
             label6.Size = new Size(93, 15);
             label6.TabIndex = 9;
@@ -138,7 +138,7 @@
             // 
             // numCheckOutTextBox
             // 
-            numCheckOutTextBox.Location = new Point(489, 13);
+            numCheckOutTextBox.Location = new Point(489, 111);
             numCheckOutTextBox.Name = "numCheckOutTextBox";
             numCheckOutTextBox.Size = new Size(121, 23);
             numCheckOutTextBox.TabIndex = 10;
@@ -147,7 +147,7 @@
             // collectionComboBox
             // 
             collectionComboBox.FormattingEnabled = true;
-            collectionComboBox.Location = new Point(489, 59);
+            collectionComboBox.Location = new Point(489, 157);
             collectionComboBox.Name = "collectionComboBox";
             collectionComboBox.Size = new Size(121, 23);
             collectionComboBox.TabIndex = 11;
@@ -155,7 +155,7 @@
             // 
             // saveButton
             // 
-            saveButton.Location = new Point(133, 210);
+            saveButton.Location = new Point(133, 308);
             saveButton.Name = "saveButton";
             saveButton.Size = new Size(75, 23);
             saveButton.TabIndex = 12;
@@ -165,7 +165,7 @@
             // 
             // cancelButton
             // 
-            cancelButton.Location = new Point(269, 210);
+            cancelButton.Location = new Point(269, 308);
             cancelButton.Name = "cancelButton";
             cancelButton.Size = new Size(75, 23);
             cancelButton.TabIndex = 13;
@@ -176,7 +176,7 @@
             // commentBox
             // 
             commentBox.AcceptsReturn = true;
-            commentBox.Location = new Point(489, 112);
+            commentBox.Location = new Point(489, 210);
             commentBox.Multiline = true;
             commentBox.Name = "commentBox";
             commentBox.Size = new Size(127, 66);
@@ -185,7 +185,7 @@
             // label7
             // 
             label7.AutoSize = true;
-            label7.Location = new Point(319, 115);
+            label7.Location = new Point(319, 213);
             label7.Name = "label7";
             label7.Size = new Size(61, 15);
             label7.TabIndex = 15;
@@ -195,7 +195,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(628, 258);
+            ClientSize = new Size(658, 377);
             Controls.Add(label7);
             Controls.Add(commentBox);
             Controls.Add(cancelButton);
