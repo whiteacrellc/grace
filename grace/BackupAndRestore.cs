@@ -84,10 +84,6 @@ namespace grace
             GC.WaitForPendingFinalizers();
             SQLiteConnection.ClearAllPools();
 
-            if (File.Exists(sourcePath))
-            {
-                File.Delete(sourcePath);
-            }
         }
 
         public void RestoreDatabase()
@@ -105,23 +101,26 @@ namespace grace
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
                 // Get the selected file path
-                string selectedFilePath = openFileDialog.SafeFileName;
+                string selectedFilePath = openFileDialog.FileName;
                 // Check if the selected file has the .db extension
                 if (Path.GetExtension(selectedFilePath).Equals(".db", StringComparison.OrdinalIgnoreCase))
                 {
                     try
                     {
                         logger.Info($"restoring database from {selectedFilePath}");
-                        DeleteCurrentDb();
+                        //DeleteCurrentDb();
                         using (var sourceConn = new SQLiteConnection($"Data Source={selectedFilePath};Version=3;"))
                         using (var destinationConn = new SQLiteConnection(connectionString))
                         {
                             sourceConn.Open();
                             destinationConn.Open();
 
-                            sourceConn.BackupDatabase(destinationConn, "main", "main", -1, null, 0);
+                            sourceConn.BackupDatabase(destinationConn,
+                                destinationConn.Database, sourceConn.Database,
+                                -1, null, 10);
                         }
                         logger.Info("done restoring database");
+                        DataGridLoader.LoadBindingTable(true);
                     }
                     catch (IOException ex)
                     {
