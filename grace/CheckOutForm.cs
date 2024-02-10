@@ -1,5 +1,6 @@
 ﻿using grace.data;
 using grace.data.models;
+using MaterialSkin.Controls;
 using NLog;
 using System;
 using System.Collections.Generic;
@@ -13,7 +14,7 @@ using System.Windows.Forms;
 
 namespace grace
 {
-    public partial class CheckOutForm : Form
+    public partial class CheckOutForm : MaterialForm
     {
         private string sku;
         private int currentTotal = 0;

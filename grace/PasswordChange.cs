@@ -1,6 +1,7 @@
 ﻿using grace.data;
 using grace.data.models;
 using grace.utils;
+using MaterialSkin.Controls;
 using OfficeOpenXml.ConditionalFormatting;
 using OfficeOpenXml.Drawing.Slicer.Style;
 using System;
@@ -16,7 +17,7 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 namespace grace
 {
-    public partial class PasswordChange : Form
+    public partial class PasswordChange : MaterialForm
     {
 
         private readonly string username;

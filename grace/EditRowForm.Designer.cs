@@ -45,13 +45,13 @@
             label4 = new Label();
             descTextBox = new TextBox();
             label3 = new Label();
-            checkedListBox = new CheckedListBox();
             skuTextBox = new TextBox();
             label2 = new Label();
             label1 = new Label();
             saveButton = new Button();
             deleteButton = new Button();
             toolTip = new ToolTip(components);
+            checkedListBox = new CheckedListBox();
             panel1.SuspendLayout();
             SuspendLayout();
             // 
@@ -69,6 +69,7 @@
             // panel1
             // 
             panel1.BorderStyle = BorderStyle.FixedSingle;
+            panel1.Controls.Add(checkedListBox);
             panel1.Controls.Add(label8);
             panel1.Controls.Add(label7);
             panel1.Controls.Add(brandComboBox);
@@ -82,7 +83,6 @@
             panel1.Controls.Add(label4);
             panel1.Controls.Add(descTextBox);
             panel1.Controls.Add(label3);
-            panel1.Controls.Add(checkedListBox);
             panel1.Controls.Add(skuTextBox);
             panel1.Controls.Add(label2);
             panel1.Controls.Add(label1);
@@ -203,15 +203,6 @@
             label3.TabIndex = 22;
             label3.Text = "Description";
             // 
-            // checkedListBox
-            // 
-            checkedListBox.FormattingEnabled = true;
-            checkedListBox.Location = new Point(428, 40);
-            checkedListBox.Name = "checkedListBox";
-            checkedListBox.Size = new Size(120, 274);
-            checkedListBox.TabIndex = 8;
-            checkedListBox.ItemCheck += checkedListBox_ItemCheck;
-            // 
             // skuTextBox
             // 
             skuTextBox.Location = new Point(133, 15);
@@ -266,6 +257,14 @@
             // 
             toolTip.ToolTipTitle = "Inventory Help";
             // 
+            // checkedListBox
+            // 
+            checkedListBox.FormattingEnabled = true;
+            checkedListBox.Location = new Point(429, 45);
+            checkedListBox.Name = "checkedListBox";
+            checkedListBox.Size = new Size(113, 274);
+            checkedListBox.TabIndex = 28;
+            // 
             // EditRowForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -296,7 +295,6 @@
         private Label label1;
         private Label label2;
         private TextBox skuTextBox;
-        private CheckedListBox checkedListBox;
         private Button saveButton;
         private Label label3;
         private TextBox availabilityTextBox;
@@ -313,5 +311,6 @@
         private ComboBox brandComboBox;
         private Label label7;
         private Label label8;
+        private CheckedListBox checkedListBox;
     }
 }
