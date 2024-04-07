@@ -16,7 +16,6 @@
  *  
  */
 using grace.data;
-using MaterialSkin.Controls;
 using NLog;
 using System;
 using System.Collections.Generic;
@@ -39,7 +38,7 @@ namespace grace.tabs
 
         // Data table controls
         private TextBox filterSkuTextBox;
-        private MaterialButton clearFilterButton;
+        private Button clearFilterButton;
         private Button addRowButton;
         private DataGridView dataGridView;
         private BindingSource bindingSource;

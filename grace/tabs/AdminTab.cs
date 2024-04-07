@@ -16,7 +16,6 @@
  *  
  */
 using grace.utils;
-using MaterialSkin.Controls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,8 +36,8 @@ namespace grace.tabs
         private TabPage adminTabPage;
         private Vivian vivian;
         private Button resetPasswordButton;
-        private MaterialButton restoreDatabaseButton;
-        private MaterialButton backupButton;
+        private Button restoreDatabaseButton;
+        private Button backupButton;
 
         public AdminTab(Vivian v) {
             vivian = v;

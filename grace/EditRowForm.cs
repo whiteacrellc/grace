@@ -12,7 +12,6 @@
  */
 using grace.data;
 using grace.data.models;
-using MaterialSkin.Controls;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using NLog;
@@ -29,7 +28,7 @@ using System.Windows.Forms;
 
 namespace grace
 {
-    public partial class EditRowForm : MaterialForm
+    public partial class EditRowForm : Form
     {
         DataGridViewRow? row;
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
@@ -43,12 +42,16 @@ namespace grace
         private GraceRow? graceRow;
         private bool updateGraceRow = false;
         private List<string> brandList = new List<string>();
+        private List<string> newColList = new List<string>();
+
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         public EditRowForm(DataGridViewRow? row)
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
             InitializeComponent();
+
+
             this.row = row;
             if (row is null)
             {
@@ -503,8 +506,8 @@ namespace grace
                 logger.Error(ex);
             }
 
-            var selectedList = checkedListBox.SelectedItems.Cast<string>().ToList();
-            foreach (var selected in selectedList)
+           
+            foreach (var selected in newColList)
             {
                 DataBase.AddCollectionRow(graceId, selected);
             }
@@ -556,25 +559,42 @@ namespace grace
 
         private void checkedListBox_ItemCheck(object sender, ItemCheckEventArgs e)
         {
-            if (newRow)
-            {
-                return;
-            }
 
             string? itemName = checkedListBox.Items[e.Index].ToString();
             if (itemName != null)
             {
                 if (e.NewValue == CheckState.Checked)
                 {
-                    updateGraceRow = DataBase.AddCollectionRow(graceRow.GraceId, itemName);
+                    if (newRow)
+                    {
+                        if(newColList.Contains(itemName) == false)
+                        {
+                            newColList.Add(itemName);
+                        }
+                    }
+                    else
+                    {
+                        updateGraceRow = DataBase.AddCollectionRow(graceRow.GraceId, itemName);
+
+                    }
                 }
                 else if (e.NewValue == CheckState.Unchecked)
                 {
-                    updateGraceRow = DataBase.DeleteCollectionRow(graceRow.GraceId, itemName);
+                    if (newRow)
+                    {
+                        newColList.Remove(itemName);
+                    }
+                    else
+                    {
+                        updateGraceRow = DataBase.DeleteCollectionRow(graceRow.GraceId, itemName);
+                    }
                 }
                 // Make sure the grace row is updated when the save button is
-                // hit. 
-                updateGraceRow = true;
+                // hit.
+                if (!newRow)
+                {
+                    updateGraceRow = true;
+                }
             }
         }
 
