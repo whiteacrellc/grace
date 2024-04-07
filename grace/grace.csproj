@@ -14,10 +14,11 @@
     <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
     <AnalysisLevel>preview-recommended</AnalysisLevel>
     <ApplicationHighDpiMode>SystemAware</ApplicationHighDpiMode>
-    <!-- <ForceDesignerDpiUnaware>true</ForceDesignerDpiUnaware> -->
+    <ForceDesignerDpiUnaware>true</ForceDesignerDpiUnaware>
     <NeutralLanguage>en-US</NeutralLanguage>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <StartupObject>grace.Program</StartupObject>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
     
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
