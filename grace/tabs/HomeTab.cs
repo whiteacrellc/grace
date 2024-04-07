@@ -54,8 +54,6 @@ namespace grace.tabs
             homeTabPage = vivian.tabControl.TabPages[0];
             comboBoxUsers = vivian.comboBoxUsers;
             passwordTextBox = vivian.passwordTextBox;
-            passwordGroupBox = vivian.passwordGroupBox;
-            loggedInBox = vivian.loggedInBox;
             loggedInLabel = vivian.loggedInLabel;
             tabControl = vivian.tabControl;
             loginButton = vivian.loginButton;
@@ -74,7 +72,7 @@ namespace grace.tabs
             comboBoxUsers.SelectedIndexChanged += comboBoxUsers_SelectedIndexChanged;
 
             InitializeComboBox();
-            loggedInBox.Hide();
+            loginHide(true);
             importInventoryToolStripMenuItem.Enabled = false;
         }
 
@@ -82,6 +80,41 @@ namespace grace.tabs
         public void loginButton_Click(object? sender, EventArgs e)
         {
             processLogin();
+        }
+
+        void logoutHide(bool hide)
+        {
+            if (hide)
+            {
+                vivian.passwordLabel.Hide();
+                vivian.passwordTextBox.Hide();
+                vivian.pickUserLabel.Hide();
+                vivian.changePasswordButton.Hide();
+                vivian.comboBoxUsers.Hide();
+                vivian.loginPage.Hide();
+            }
+            else
+            {
+                vivian.passwordLabel.Show();
+                vivian.passwordTextBox.Show();
+                vivian.pickUserLabel.Show();
+                vivian.changePasswordButton.Show();
+                vivian.comboBoxUsers.Show();
+                vivian.loginPage.Show();
+            }
+        }
+
+        void loginHide(bool hide) {
+
+            if (hide)
+            {
+                vivian.loggedInLabel.Hide();
+                vivian.logoutButton.Hide();
+            } else
+            {
+                vivian.loggedInLabel.Show();
+                vivian.logoutButton.Show();
+            }
         }
 
         // Callback for change password button
@@ -122,7 +155,8 @@ namespace grace.tabs
         public void logoutButton_Click(object? sender, EventArgs e)
         {
             Globals.GetInstance().CurrentUser = string.Empty;
-            passwordGroupBox.Show();
+            loginHide(true);
+            logoutHide(false);
             loggedInBox.Hide();
             passwordTextBox.Text = string.Empty;
         }
@@ -212,9 +246,9 @@ namespace grace.tabs
         private void LoginUser(string username)
         {
             Globals.GetInstance().CurrentUser = username;
-            passwordGroupBox.Hide();
+            logoutHide(true);
             loggedInLabel.Text = username;
-            loggedInBox.Show();
+            loginHide(false);
 
             // For admin users send them to the inventory tab otherwise send
             // them to the checkout tab
