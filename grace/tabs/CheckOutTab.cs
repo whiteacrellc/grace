@@ -34,7 +34,6 @@ namespace grace.tabs
             checkOutSearchTextBox =  vivian.checkOutSearchTextBox;
             textBoxBarCode = vivian.textBoxBarcode;
             coResetButton = vivian.coResetButton;
-            autoOpenCheckBox = vivian.autoOpenOnScanCheckBox;
             checkOutTabPage = vivian.tabControl.TabPages[2];
         }
 
@@ -46,8 +45,8 @@ namespace grace.tabs
             textBoxBarCode.KeyPress += textBoxBarcode_KeyPress;
             coResetButton.Click += coResetButton_Click;
             checkOutDataGrid.CellMouseDoubleClick += checkOutDataGrid_CellMouseDoubleClick;
-            autoOpenCheckBox.CheckedChanged += AutoOpenCheckBox_CheckedChanged;
-            autoOpenCheckBox.Checked = Globals.GetInstance().BarCodeAutoOpen;
+            //autoOpenCheckBox.CheckedChanged += AutoOpenCheckBox_CheckedChanged;
+            //autoOpenCheckBox.Checked = Globals.GetInstance().BarCodeAutoOpen;
             checkOutTabPage.Enter += CheckOutTabPage_Enter;
             // Set row height and font
             SetDataGridViewStyle();
