@@ -1,4 +1,6 @@
-﻿namespace grace
+﻿
+
+namespace grace
 {
     partial class EditRowForm
     {
@@ -32,6 +34,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EditRowForm));
             cancelButton = new Button();
             panel1 = new Panel();
+            checkedListBox = new CheckedListBox();
             label8 = new Label();
             label7 = new Label();
             brandComboBox = new ComboBox();
@@ -51,7 +54,6 @@
             saveButton = new Button();
             deleteButton = new Button();
             toolTip = new ToolTip(components);
-            checkedListBox = new CheckedListBox();
             panel1.SuspendLayout();
             SuspendLayout();
             // 
@@ -88,8 +90,17 @@
             panel1.Controls.Add(label1);
             panel1.Location = new Point(22, 89);
             panel1.Name = "panel1";
-            panel1.Size = new Size(562, 336);
+            panel1.Size = new Size(790, 336);
             panel1.TabIndex = 1;
+            // 
+            // checkedListBox
+            // 
+            checkedListBox.FormattingEnabled = true;
+            checkedListBox.Location = new Point(429, 45);
+            checkedListBox.Name = "checkedListBox";
+            checkedListBox.Size = new Size(113, 274);
+            checkedListBox.TabIndex = 28;
+            checkedListBox.ItemCheck += checkedListBox_ItemCheck;
             // 
             // label8
             // 
@@ -257,20 +268,12 @@
             // 
             toolTip.ToolTipTitle = "Inventory Help";
             // 
-            // checkedListBox
-            // 
-            checkedListBox.FormattingEnabled = true;
-            checkedListBox.Location = new Point(429, 45);
-            checkedListBox.Name = "checkedListBox";
-            checkedListBox.Size = new Size(113, 274);
-            checkedListBox.TabIndex = 28;
-            // 
             // EditRowForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             CancelButton = cancelButton;
-            ClientSize = new Size(640, 514);
+            ClientSize = new Size(1015, 514);
             Controls.Add(deleteButton);
             Controls.Add(saveButton);
             Controls.Add(panel1);
