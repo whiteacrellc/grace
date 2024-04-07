@@ -1,5 +1,5 @@
 # grace
 
-Windows form app for Vivian Grace to make incentory easy
+Windows form app for Vivian Grace to make inventory easy
 
 Copyright (c) White Acre Sofrware LLC
