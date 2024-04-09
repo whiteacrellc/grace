@@ -59,6 +59,7 @@ namespace grace
             // 
             // cancelButton
             // 
+            cancelButton.Font = new Font("Segoe UI", 11.25F, FontStyle.Regular, GraphicsUnit.Point);
             cancelButton.Location = new Point(452, 451);
             cancelButton.Margin = new Padding(2, 1, 2, 1);
             cancelButton.Name = "cancelButton";
@@ -96,9 +97,9 @@ namespace grace
             // checkedListBox
             // 
             checkedListBox.FormattingEnabled = true;
-            checkedListBox.Location = new Point(429, 45);
+            checkedListBox.Location = new Point(581, 38);
             checkedListBox.Name = "checkedListBox";
-            checkedListBox.Size = new Size(113, 274);
+            checkedListBox.Size = new Size(173, 274);
             checkedListBox.TabIndex = 28;
             checkedListBox.ItemCheck += checkedListBox_ItemCheck;
             // 
@@ -116,134 +117,146 @@ namespace grace
             // label7
             // 
             label7.AutoSize = true;
-            label7.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            label7.Location = new Point(455, 15);
+            label7.Font = new Font("Segoe UI", 14.25F, FontStyle.Bold, GraphicsUnit.Point);
+            label7.Location = new Point(581, 10);
             label7.Name = "label7";
-            label7.Size = new Size(66, 15);
+            label7.Size = new Size(106, 25);
             label7.TabIndex = 26;
             label7.Text = "Categories";
             // 
             // brandComboBox
             // 
+            brandComboBox.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
             brandComboBox.FormattingEnabled = true;
-            brandComboBox.Location = new Point(135, 49);
+            brandComboBox.Location = new Point(267, 52);
             brandComboBox.Name = "brandComboBox";
-            brandComboBox.Size = new Size(148, 23);
+            brandComboBox.Size = new Size(148, 25);
             brandComboBox.TabIndex = 2;
             // 
             // adjustTextBox
             // 
-            adjustTextBox.Location = new Point(228, 239);
+            adjustTextBox.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
+            adjustTextBox.Location = new Point(265, 233);
             adjustTextBox.Name = "adjustTextBox";
-            adjustTextBox.Size = new Size(150, 23);
+            adjustTextBox.Size = new Size(150, 25);
             adjustTextBox.TabIndex = 7;
             // 
             // adjustInventoryLabel
             // 
             adjustInventoryLabel.AutoSize = true;
+            adjustInventoryLabel.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
             adjustInventoryLabel.Location = new Point(27, 241);
             adjustInventoryLabel.Name = "adjustInventoryLabel";
-            adjustInventoryLabel.Size = new Size(181, 15);
+            adjustInventoryLabel.Size = new Size(194, 17);
             adjustInventoryLabel.TabIndex = 25;
             adjustInventoryLabel.Text = "Adjust Inventory By This Amount";
             // 
             // currentTextBox
             // 
-            currentTextBox.Location = new Point(133, 198);
+            currentTextBox.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
+            currentTextBox.Location = new Point(265, 193);
             currentTextBox.Name = "currentTextBox";
             currentTextBox.ReadOnly = true;
-            currentTextBox.Size = new Size(150, 23);
+            currentTextBox.Size = new Size(150, 25);
             currentTextBox.TabIndex = 6;
             // 
             // label6
             // 
             label6.AutoSize = true;
+            label6.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
             label6.Location = new Point(27, 201);
             label6.Name = "label6";
-            label6.Size = new Size(100, 15);
+            label6.Size = new Size(108, 17);
             label6.TabIndex = 25;
             label6.Text = "Current Inventory";
             // 
             // barCodeTextBox
             // 
-            barCodeTextBox.Location = new Point(133, 159);
+            barCodeTextBox.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
+            barCodeTextBox.Location = new Point(265, 159);
             barCodeTextBox.Name = "barCodeTextBox";
-            barCodeTextBox.Size = new Size(150, 23);
+            barCodeTextBox.Size = new Size(150, 25);
             barCodeTextBox.TabIndex = 5;
             barCodeTextBox.KeyDown += barCodeTextBox_KeyDown;
             // 
             // availabilityTextBox
             // 
-            availabilityTextBox.Location = new Point(133, 121);
+            availabilityTextBox.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
+            availabilityTextBox.Location = new Point(265, 121);
             availabilityTextBox.Name = "availabilityTextBox";
-            availabilityTextBox.Size = new Size(150, 23);
+            availabilityTextBox.Size = new Size(150, 25);
             availabilityTextBox.TabIndex = 4;
             // 
             // label5
             // 
             label5.AutoSize = true;
+            label5.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
             label5.Location = new Point(27, 162);
             label5.Name = "label5";
-            label5.Size = new Size(55, 15);
+            label5.Size = new Size(62, 17);
             label5.TabIndex = 24;
             label5.Text = "Bar Code";
             // 
             // label4
             // 
             label4.AutoSize = true;
+            label4.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
             label4.Location = new Point(27, 124);
             label4.Name = "label4";
-            label4.Size = new Size(83, 15);
+            label4.Size = new Size(95, 17);
             label4.TabIndex = 23;
             label4.Text = "Reorder Status";
             // 
             // descTextBox
             // 
-            descTextBox.Location = new Point(135, 85);
+            descTextBox.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
+            descTextBox.Location = new Point(146, 87);
             descTextBox.Name = "descTextBox";
-            descTextBox.Size = new Size(269, 23);
+            descTextBox.Size = new Size(269, 25);
             descTextBox.TabIndex = 3;
             // 
             // label3
             // 
             label3.AutoSize = true;
-            label3.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            label3.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point);
             label3.Location = new Point(27, 90);
             label3.Name = "label3";
-            label3.Size = new Size(71, 15);
+            label3.Size = new Size(79, 17);
             label3.TabIndex = 22;
             label3.Text = "Description";
             // 
             // skuTextBox
             // 
-            skuTextBox.Location = new Point(133, 15);
+            skuTextBox.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
+            skuTextBox.Location = new Point(265, 15);
             skuTextBox.Name = "skuTextBox";
-            skuTextBox.Size = new Size(150, 23);
+            skuTextBox.Size = new Size(150, 25);
             skuTextBox.TabIndex = 1;
             skuTextBox.TextChanged += skuTextBox_TextChanged;
             // 
             // label2
             // 
             label2.AutoSize = true;
-            label2.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            label2.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point);
             label2.Location = new Point(27, 52);
             label2.Name = "label2";
-            label2.Size = new Size(40, 15);
+            label2.Size = new Size(44, 17);
             label2.TabIndex = 21;
             label2.Text = "Brand";
             // 
             // label1
             // 
             label1.AutoSize = true;
-            label1.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            label1.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point);
             label1.Location = new Point(27, 18);
             label1.Name = "label1";
-            label1.Size = new Size(31, 15);
+            label1.Size = new Size(32, 17);
             label1.TabIndex = 20;
             label1.Text = "SKU";
             // 
             // saveButton
             // 
+            saveButton.Font = new Font("Segoe UI", 11.25F, FontStyle.Regular, GraphicsUnit.Point);
             saveButton.Location = new Point(40, 451);
             saveButton.Margin = new Padding(2, 1, 2, 1);
             saveButton.Name = "saveButton";
@@ -255,6 +268,7 @@ namespace grace
             // 
             // deleteButton
             // 
+            deleteButton.Font = new Font("Segoe UI", 11.25F, FontStyle.Regular, GraphicsUnit.Point);
             deleteButton.Location = new Point(241, 451);
             deleteButton.Margin = new Padding(2, 1, 2, 1);
             deleteButton.Name = "deleteButton";
@@ -273,7 +287,7 @@ namespace grace
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             CancelButton = cancelButton;
-            ClientSize = new Size(1015, 514);
+            ClientSize = new Size(858, 548);
             Controls.Add(deleteButton);
             Controls.Add(saveButton);
             Controls.Add(panel1);

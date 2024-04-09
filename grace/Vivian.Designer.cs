@@ -33,8 +33,8 @@ namespace grace
         {
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Vivian));
-            DataGridViewCellStyle dataGridViewCellStyle5 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle6 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
             openFileDialog = new OpenFileDialog();
             menuStrip1 = new MenuStrip();
             editToolStripMenuItem = new ToolStripMenuItem();
@@ -45,14 +45,14 @@ namespace grace
             pictureBox1 = new PictureBox();
             tabControl = new TabControl();
             loginPage = new TabPage();
-            loginButton = new Button();
+            loggedInLabel = new Label();
+            logoutButton = new Button();
             passwordTextBox = new TextBox();
+            loginButton = new Button();
             comboBoxUsers = new ComboBox();
             passwordLabel = new Label();
-            changePasswordButton = new Button();
             pickUserLabel = new Label();
-            logoutButton = new Button();
-            loggedInLabel = new Label();
+            changePasswordButton = new Button();
             dataPage = new TabPage();
             label1 = new Label();
             addRowButton = new Button();
@@ -211,6 +211,36 @@ namespace grace
             loginPage.ToolTipText = "Login Page";
             loginPage.UseVisualStyleBackColor = true;
             // 
+            // loggedInLabel
+            // 
+            loggedInLabel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            loggedInLabel.AutoSize = true;
+            loggedInLabel.Location = new Point(572, 352);
+            loggedInLabel.Name = "loggedInLabel";
+            loggedInLabel.Size = new Size(57, 18);
+            loggedInLabel.TabIndex = 0;
+            loggedInLabel.Text = "label5";
+            // 
+            // logoutButton
+            // 
+            logoutButton.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            logoutButton.AutoSize = true;
+            logoutButton.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            logoutButton.Location = new Point(572, 395);
+            logoutButton.Name = "logoutButton";
+            logoutButton.Size = new Size(75, 28);
+            logoutButton.TabIndex = 1;
+            logoutButton.Text = "Logout";
+            logoutButton.UseVisualStyleBackColor = true;
+            // 
+            // passwordTextBox
+            // 
+            passwordTextBox.Location = new Point(690, 193);
+            passwordTextBox.Name = "passwordTextBox";
+            passwordTextBox.PasswordChar = '*';
+            passwordTextBox.Size = new Size(198, 26);
+            passwordTextBox.TabIndex = 18;
+            // 
             // loginButton
             // 
             loginButton.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
@@ -223,14 +253,6 @@ namespace grace
             loginButton.TabIndex = 19;
             loginButton.Text = "Login";
             loginButton.UseVisualStyleBackColor = true;
-            // 
-            // passwordTextBox
-            // 
-            passwordTextBox.Location = new Point(690, 193);
-            passwordTextBox.Name = "passwordTextBox";
-            passwordTextBox.PasswordChar = '*';
-            passwordTextBox.Size = new Size(198, 26);
-            passwordTextBox.TabIndex = 18;
             // 
             // comboBoxUsers
             // 
@@ -249,6 +271,16 @@ namespace grace
             passwordLabel.TabIndex = 23;
             passwordLabel.Text = "Password";
             // 
+            // pickUserLabel
+            // 
+            pickUserLabel.AutoSize = true;
+            pickUserLabel.BackColor = SystemColors.Control;
+            pickUserLabel.Location = new Point(561, 161);
+            pickUserLabel.Name = "pickUserLabel";
+            pickUserLabel.Size = new Size(84, 18);
+            pickUserLabel.TabIndex = 16;
+            pickUserLabel.Text = "Pick User";
+            // 
             // changePasswordButton
             // 
             changePasswordButton.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
@@ -261,38 +293,6 @@ namespace grace
             changePasswordButton.TabIndex = 22;
             changePasswordButton.Text = "Change Password";
             changePasswordButton.UseVisualStyleBackColor = true;
-            // 
-            // pickUserLabel
-            // 
-            pickUserLabel.AutoSize = true;
-            pickUserLabel.BackColor = SystemColors.Control;
-            pickUserLabel.Location = new Point(561, 161);
-            pickUserLabel.Name = "pickUserLabel";
-            pickUserLabel.Size = new Size(84, 18);
-            pickUserLabel.TabIndex = 16;
-            pickUserLabel.Text = "Pick User";
-            // 
-            // logoutButton
-            // 
-            logoutButton.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            logoutButton.AutoSize = true;
-            logoutButton.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            logoutButton.Location = new Point(572, 395);
-            logoutButton.Name = "logoutButton";
-            logoutButton.Size = new Size(75, 28);
-            logoutButton.TabIndex = 1;
-            logoutButton.Text = "Logout";
-            logoutButton.UseVisualStyleBackColor = true;
-            // 
-            // loggedInLabel
-            // 
-            loggedInLabel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            loggedInLabel.AutoSize = true;
-            loggedInLabel.Location = new Point(572, 352);
-            loggedInLabel.Name = "loggedInLabel";
-            loggedInLabel.Size = new Size(57, 18);
-            loggedInLabel.TabIndex = 0;
-            loggedInLabel.Text = "label5";
             // 
             // dataPage
             // 
@@ -332,9 +332,8 @@ namespace grace
             // dataGridView
             // 
             dataGridView.AllowUserToAddRows = false;
-            dataGridView.AllowUserToOrderColumns = true;
             dataGridView.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            dataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.DisplayedCells;
+            dataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dataGridView.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.DisplayedCells;
             dataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridView.Location = new Point(15, 87);
@@ -449,23 +448,23 @@ namespace grace
             checkOutDataGrid.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
             checkOutDataGrid.BorderStyle = BorderStyle.Fixed3D;
             checkOutDataGrid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle5.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle5.BackColor = Color.FromArgb(224, 224, 224);
-            dataGridViewCellStyle5.Font = new Font("Verdana", 11.25F, FontStyle.Bold, GraphicsUnit.Point);
-            dataGridViewCellStyle5.ForeColor = SystemColors.ControlText;
-            dataGridViewCellStyle5.Padding = new Padding(0, 2, 10, 0);
-            dataGridViewCellStyle5.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle5.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle5.WrapMode = DataGridViewTriState.False;
-            checkOutDataGrid.DefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = Color.FromArgb(224, 224, 224);
+            dataGridViewCellStyle1.Font = new Font("Verdana", 11.25F, FontStyle.Bold, GraphicsUnit.Point);
+            dataGridViewCellStyle1.ForeColor = SystemColors.ControlText;
+            dataGridViewCellStyle1.Padding = new Padding(0, 2, 10, 0);
+            dataGridViewCellStyle1.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.False;
+            checkOutDataGrid.DefaultCellStyle = dataGridViewCellStyle1;
             checkOutDataGrid.Location = new Point(0, 0);
             checkOutDataGrid.MultiSelect = false;
             checkOutDataGrid.Name = "checkOutDataGrid";
             checkOutDataGrid.ReadOnly = true;
             checkOutDataGrid.RowHeadersWidth = 82;
-            dataGridViewCellStyle6.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle6.Padding = new Padding(0, 0, 10, 0);
-            checkOutDataGrid.RowsDefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.Padding = new Padding(0, 0, 10, 0);
+            checkOutDataGrid.RowsDefaultCellStyle = dataGridViewCellStyle2;
             checkOutDataGrid.RowTemplate.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
             checkOutDataGrid.RowTemplate.DefaultCellStyle.Padding = new Padding(0, 0, 10, 0);
             checkOutDataGrid.RowTemplate.Height = 25;
