@@ -291,7 +291,7 @@ namespace grace
                     }
 
                     // Make sure we don't add duplicate barcodes. 
-                    bool barcodeExists = context.Graces.Any(entity => entity.BarCode == grace.BarCode);
+                    bool barcodeExists = context.Graces.Any(entity => entity.BarCode == barcode);
                     if (barcodeExists)
                     {
                         MessageBox.Show($"Bar Code {barcode} already exists. Please "

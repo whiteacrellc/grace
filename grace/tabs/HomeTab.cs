@@ -38,8 +38,6 @@ namespace grace.tabs
         private TabPage homeTabPage;
         private ComboBox comboBoxUsers;
         private TextBox passwordTextBox;
-        private GroupBox passwordGroupBox;
-        private GroupBox loggedInBox;
         private Label loggedInLabel;
         private TabControl tabControl;
         private Button loginButton;
@@ -157,7 +155,6 @@ namespace grace.tabs
             Globals.GetInstance().CurrentUser = string.Empty;
             loginHide(true);
             logoutHide(false);
-            loggedInBox.Hide();
             passwordTextBox.Text = string.Empty;
         }
 
