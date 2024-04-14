@@ -85,6 +85,11 @@ namespace grace
             errorProvider1 = new ErrorProvider(components);
             checkoutBindingSource = new BindingSource(components);
             checkInBindingSource = new BindingSource(components);
+            textBox1 = new TextBox();
+            button2 = new Button();
+            button3 = new Button();
+            button4 = new Button();
+            button5 = new Button();
             menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             tabControl.SuspendLayout();
@@ -113,7 +118,7 @@ namespace grace
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
             menuStrip1.Padding = new Padding(7, 2, 0, 2);
-            menuStrip1.Size = new Size(2641, 28);
+            menuStrip1.Size = new Size(1620, 28);
             menuStrip1.TabIndex = 4;
             menuStrip1.Text = "menuStrip1";
             // 
@@ -540,6 +545,11 @@ namespace grace
             adminPage.AutoScroll = true;
             adminPage.BackColor = SystemColors.Control;
             adminPage.BorderStyle = BorderStyle.Fixed3D;
+            adminPage.Controls.Add(button5);
+            adminPage.Controls.Add(button4);
+            adminPage.Controls.Add(button3);
+            adminPage.Controls.Add(button2);
+            adminPage.Controls.Add(textBox1);
             adminPage.Controls.Add(label5);
             adminPage.Controls.Add(resetComboBox);
             adminPage.Controls.Add(button1);
@@ -555,6 +565,7 @@ namespace grace
             adminPage.TabIndex = 3;
             adminPage.Text = "Admin";
             adminPage.ToolTipText = "Admin Settings";
+            adminPage.Click += adminPage_Click;
             // 
             // label5
             // 
@@ -653,13 +664,56 @@ namespace grace
             // 
             errorProvider1.ContainerControl = this;
             // 
+            // textBox1
+            // 
+            textBox1.Location = new Point(542, 128);
+            textBox1.Name = "textBox1";
+            textBox1.Size = new Size(217, 26);
+            textBox1.TabIndex = 11;
+            // 
+            // button2
+            // 
+            button2.Location = new Point(542, 179);
+            button2.Name = "button2";
+            button2.Size = new Size(154, 38);
+            button2.TabIndex = 12;
+            button2.Text = "Add Category";
+            button2.UseVisualStyleBackColor = true;
+            // 
+            // button3
+            // 
+            button3.Location = new Point(1236, 402);
+            button3.Name = "button3";
+            button3.Size = new Size(154, 38);
+            button3.TabIndex = 13;
+            button3.Text = "Add Category";
+            button3.UseVisualStyleBackColor = true;
+            // 
+            // button4
+            // 
+            button4.Location = new Point(1244, 410);
+            button4.Name = "button4";
+            button4.Size = new Size(154, 38);
+            button4.TabIndex = 14;
+            button4.Text = "Add Category";
+            button4.UseVisualStyleBackColor = true;
+            // 
+            // button5
+            // 
+            button5.Location = new Point(542, 239);
+            button5.Name = "button5";
+            button5.Size = new Size(154, 33);
+            button5.TabIndex = 15;
+            button5.Text = "Delete Category";
+            button5.UseVisualStyleBackColor = true;
+            // 
             // Vivian
             // 
             AutoScaleDimensions = new SizeF(7F, 17F);
             AutoScaleMode = AutoScaleMode.Font;
             AutoScroll = true;
             BackColor = Color.White;
-            ClientSize = new Size(2641, 957);
+            ClientSize = new Size(1620, 957);
             Controls.Add(tabControl);
             Controls.Add(menuStrip1);
             Font = new Font("Segoe UI", 10.125F, FontStyle.Regular, GraphicsUnit.Point);
@@ -748,5 +802,10 @@ namespace grace
         internal TextBox filterSkuTextBox;
         internal Label passwordLabel;
         internal Label pickUserLabel;
+        private TextBox textBox1;
+        private Button button2;
+        private Button button5;
+        private Button button4;
+        private Button button3;
     }
 }

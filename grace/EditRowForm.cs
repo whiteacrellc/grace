@@ -161,12 +161,24 @@ namespace grace
                 currentTextBox.ReadOnly = true;
 
             }
+
+            // Add help provider stuff
+            helpProvider.SetShowHelp(addCollectionLabel, true);
+            helpProvider.SetHelpString(addCollectionLabel,
+                "Add a new collection and assign it to the current item.");
+            helpProvider.SetShowHelp(addCollectionTextBox, true);
+            helpProvider.SetHelpString(addCollectionTextBox,
+                "Add a new collection and assign it to the current item.");
+
+            toolTip.UseAnimation = true;
         }
 
         private void AddTextBox_MouseHover(object? sender, EventArgs e)
         {
             // Show the tool tip when the mouse hovers over the TextBox
-            toolTip.Show("You can enter negative numbers in this field", adjustTextBox, 0, -30, 2000);
+            toolTip.ToolTipTitle = "Inventory Help";
+            toolTip.Show("You can enter negative numbers in this field",
+                adjustTextBox, 0, -30, 2000);
         }
 
         private void checkItem(object var)
@@ -216,6 +228,33 @@ namespace grace
             {
                 var grace =
                         context.Graces.FirstOrDefault(item => item.Sku == graceRow.Sku);
+
+                if (string.IsNullOrEmpty(addCollectionTextBox.Text) == false)
+                {
+                    var cname = addCollectionTextBox.Text.Trim();
+                    if (DataBase.CheckCollectionExists(cname))
+                    {
+                        MessageBox.Show("Trying to add a new collection" + cname
+                            + " which already exists. Please use the Collections"
+                            + " widget above to choose this collection.",
+                        "Oh Noes!", MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
+                        addCollectionTextBox.Text = string.Empty;
+                        return true;
+                    } else
+                    {
+                        // Row does not exist, so insert a new row
+                        var newRow = new CollectionName
+                        {
+                            GraceId = grace.ID,
+                            Name = cname
+                            // Set other properties as needed
+                        };
+
+                        context.Collections.Add(newRow);
+                        updateGraceRow = true;
+                    }
+                }
 
                 graceId = grace.ID;
                 if (grace.Sku != skuTextBox.Text)
@@ -429,6 +468,25 @@ namespace grace
                 return true;
             }
 
+            bool updateCollection  = false;
+            if (string.IsNullOrEmpty(addCollectionTextBox.Text) == false)
+            {
+                var cName = addCollectionTextBox.Text.Trim();
+                if (DataBase.CheckCollectionExists(cName))
+                {
+                    MessageBox.Show("Trying to add a new collection" + cName
+                        + " which already exists. Please use the Collections"
+                        + " widget above to choose this collection.",
+                    "Oh Noes!", MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+                    addCollectionTextBox.Text = string.Empty;
+                    return true;
+                } else
+                {
+                    updateCollection = true;
+                }
+            }
+
             using (var context = new GraceDbContext())
             {
 
@@ -506,10 +564,16 @@ namespace grace
                 logger.Error(ex);
             }
 
-           
+
             foreach (var selected in newColList)
             {
                 DataBase.AddCollectionRow(graceId, selected);
+            }
+
+            if (updateCollection)
+            {
+                var cName = addCollectionTextBox.Text.Trim();
+                DataBase.AddCollectionRow(graceId, cName);
             }
 
             // Now add the grace row. 
@@ -567,7 +631,7 @@ namespace grace
                 {
                     if (newRow)
                     {
-                        if(newColList.Contains(itemName) == false)
+                        if (newColList.Contains(itemName) == false)
                         {
                             newColList.Add(itemName);
                         }
@@ -616,7 +680,8 @@ namespace grace
 
         private void skuTextBox_TextChanged(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(skuTextBox.Text)) {
+            if (string.IsNullOrEmpty(skuTextBox.Text))
+            {
                 return;
             }
 
@@ -624,6 +689,31 @@ namespace grace
             skuTextBox.Text = skuTextBox.Text.ToUpper(System.Globalization.CultureInfo.CurrentCulture);
             // Set the cursor position at the end of the text
             skuTextBox.SelectionStart = skuTextBox.Text.Length;
+        }
+
+        private void textBox1_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+
+        }
+
+        private void label9_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+
+        }
+
+        private void addCollectionTextBox_MouseHover(object sender, EventArgs e)
+        {
+            toolTip.ToolTipTitle = "Add Collection";
+            toolTip.Show("Add a new collection and assign it to the current item.",
+                addCollectionTextBox, 0, -30, 2000);
+        }
+
+        private void addCollectionLabel_MouseHover(object sender, EventArgs e)
+        {
+            // Show help when mouse hovers over the TextBox
+            toolTip.ToolTipTitle = "Add Collection";
+            toolTip.Show("Add a new collection and assign it to the current item.",
+                addCollectionTextBox, 0, -30, 2000);
         }
     }
 }

@@ -301,5 +301,10 @@ namespace grace
         {
 
         }
+
+        private void adminPage_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
