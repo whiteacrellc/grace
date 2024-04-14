@@ -19,6 +19,7 @@ using grace.data;
 using NLog;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -42,7 +43,10 @@ namespace grace.tabs
         private Button addRowButton;
         private DataGridView dataGridView;
         private BindingSource bindingSource;
+        private ToolStripMenuItem setInventoryFontSizeToolStripMenuItem;
         private bool disposedValue;
+        private TextBox filterBarCodeTextBox;
+
         public DataTab(Vivian v)
         {
             vivian = v;
@@ -54,6 +58,9 @@ namespace grace.tabs
             addRowButton = vivian.addRowButton;
             dataGridView = vivian.dataGridView;
             clearFilterButton = vivian.clearFilterButton;
+            setInventoryFontSizeToolStripMenuItem =
+                vivian.setInventoryFontSizeToolStripMenuItem;
+            filterBarCodeTextBox = vivian.filterBarcodeTextBox;
         }
 
         internal void Load()
@@ -63,14 +70,20 @@ namespace grace.tabs
             dataGridView.CellMouseDoubleClick += dataGridView_CellMouseDoubleClick;
             dataGridView.DataBindingComplete += dataGridView_DataBindingComplete;
             dataGridView.CellFormatting += DataGridView_CellFormatting;
+            dataGridView.ColumnHeaderMouseClick
+                += DataGridView_ColumnHeaderMouseClick;
             dataTabPage.Enter += DataTabPage_Enter;
             addRowButton.Click += addRowButton_Click;
             filterSkuTextBox.TextChanged += filterSkuTextBox_TextChanged;
             clearFilterButton.Click += clearFilterButton_Click;
+            setInventoryFontSizeToolStripMenuItem.Click
+                += setInventoryFontSizeToolStripMenuItem_Click;
+            filterBarCodeTextBox.TextChanged += filterBarCodeTextBox_TextChanged;
 
             // Setup data connection to grid view
             bindingSource = new BindingSource();
-    
+
+
         }
 
         private void DataGridView_CellFormatting1(object? sender, DataGridViewCellFormattingEventArgs e)
@@ -113,6 +126,7 @@ namespace grace.tabs
             Utils.RemoveColumnByName(dataGridView,"Grace");
             Utils.RemoveColumnByName(dataGridView, "GraceId");
             ChangeColumnNames();
+            LoadSavedFont();
         }
 
         private void DataTabPage_Enter(object? sender, EventArgs e)
@@ -121,6 +135,32 @@ namespace grace.tabs
             BindDataSource(true);
         }
 
+        private void DataGridView_ColumnHeaderMouseClick(object? sender,
+            DataGridViewCellMouseEventArgs e)
+        {
+            // Get the clicked column index
+            int columnIndex = e.ColumnIndex;
+
+            // Determine if the clicked column is already the column being sorted
+            DataGridViewColumn newColumn = dataGridView.Columns[columnIndex];
+            DataGridViewColumn oldColumn = dataGridView.SortedColumn;
+            ListSortDirection direction;
+
+            if (oldColumn != null && oldColumn == newColumn
+                && dataGridView.SortOrder == SortOrder.Ascending)
+            {
+                // Change sort direction to Descending if the same column is clicked again
+                direction = ListSortDirection.Descending;
+            }
+            else
+            {
+                // Default sort direction is Ascending
+                direction = ListSortDirection.Ascending;
+            }
+
+            // Perform the sort
+            dataGridView.Sort(newColumn, direction);
+        }
         private void addRowButton_Click(object? sender, EventArgs e)
         {
             using (EditRowForm editRowForm = new EditRowForm(null))
@@ -163,13 +203,23 @@ namespace grace.tabs
         private void clearFilterButton_Click(object? sender, EventArgs e)
         {
             filterSkuTextBox.Clear();
+            filterBarCodeTextBox.Clear();
             BindDataSource();
         }
 
-            internal void filterSkuTextBox_TextChanged(object? sender, EventArgs e)
+        internal void filterSkuTextBox_TextChanged(object? sender, EventArgs e)
         {
             string searchTerm = filterSkuTextBox.Text;
             bindingSource.DataSource = DataGridLoader.getFilteredData(searchTerm);
+            Utils.RemoveColumnByName(dataGridView, "ID");
+            Utils.RemoveColumnByName(dataGridView, "Grace");
+            Utils.RemoveColumnByName(dataGridView, "GraceId");
+        }
+
+        internal void filterBarCodeTextBox_TextChanged(object? sender, EventArgs e)
+        {
+            string searchTerm = filterBarCodeTextBox.Text;
+            bindingSource.DataSource = DataGridLoader.getFilteredBarCode(searchTerm);
             Utils.RemoveColumnByName(dataGridView, "ID");
             Utils.RemoveColumnByName(dataGridView, "Grace");
             Utils.RemoveColumnByName(dataGridView, "GraceId");
@@ -192,6 +242,67 @@ namespace grace.tabs
                     // Set the background color to yellow for cells with negative numbers
                     e.CellStyle.BackColor = Color.Yellow;
                 }
+            }
+        }
+
+        private void SaveSelectedFont(Font font)
+        {
+            try {
+                Properties.Settings.Default.Reload();
+                // Save the font to application settings
+                Properties.Settings.Default.DataGridFont = font;
+                Properties.Settings.Default.Save();
+            }
+            catch (Exception ex)
+            {
+                logger.Warn(ex);
+            }
+        }
+
+        private void LoadSavedFont()
+        {
+            try
+            {
+                // Load the saved font from application settings
+                Font savedFont = Properties.Settings.Default.DataGridFont;
+
+                // If the saved font is null (first run), set a default font
+                if (savedFont != null)
+                {
+                    ApplyFontToDataGridViewRows(savedFont);
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Warn(ex);
+            }
+        }
+
+        private void setInventoryFontSizeToolStripMenuItem_Click(object? sender, EventArgs e)
+        {
+
+            // Create a FontDialog
+            using (FontDialog fontDialog = new FontDialog())
+            {
+                // Show the dialog and get the selected font
+                if (fontDialog.ShowDialog() == DialogResult.OK)
+                {
+                    // Apply the selected font to the rows
+                    // ApplyFontToDataGridViewRows(fontDialog.Font);
+                    dataGridView.RowsDefaultCellStyle.Font = fontDialog.Font;
+
+                    // Save the selected font
+                    SaveSelectedFont(fontDialog.Font);
+                }
+            }
+        }
+
+        private void ApplyFontToDataGridViewRows(Font font)
+        {
+            // Loop through all rows in the DataGridView and set the font
+            foreach (DataGridViewRow row in dataGridView.Rows)
+            {
+                row.DefaultCellStyle.Font = font;
             }
         }
 

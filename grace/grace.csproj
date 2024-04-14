@@ -14,7 +14,7 @@
     <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
     <AnalysisLevel>preview-recommended</AnalysisLevel>
     <ApplicationHighDpiMode>SystemAware</ApplicationHighDpiMode>
-    <!-- <ForceDesignerDpiUnaware>true</ForceDesignerDpiUnaware> -->
+    <ForceDesignerDpiUnaware>true</ForceDesignerDpiUnaware>
     <NeutralLanguage>en-US</NeutralLanguage>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <StartupObject>grace.Program</StartupObject>
@@ -52,11 +52,6 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
-    </Compile>
-    <Compile Update="Settings1.Designer.cs">
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings1.settings</DependentUpon>
     </Compile>
   </ItemGroup>
 
