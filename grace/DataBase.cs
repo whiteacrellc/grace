@@ -662,7 +662,59 @@ namespace grace
         public class ReportGroup
         {
             public string CollectionName { get; set; }
-            public List<GraceRow>GraceRows { get; set; }
+            public List<GraceRow> GraceRows { get; set; }
+        }
+
+        public static List<string> GetCollections()
+        {
+            using (var dbContext = new GraceDbContext())
+            {
+                var distinctNames = dbContext.Collections
+                    .Where(c => c.Name != "Other")
+                    .Select(c => c.Name)
+                    .Distinct()
+                    .OrderBy(name => name).ToList();
+                return distinctNames;
+            }
+        }
+
+        public static List<Grace> getCollectionData(string collectionName)
+        {
+            using (var dbContext = new GraceDbContext())
+            {
+                var graces = dbContext.Graces
+                        .Join(
+                            dbContext.Collections.Where(c => c.Name == collectionName),
+                            graces => graces.ID,
+                            collection => collection.GraceId,
+                            (graces, collection) => new Grace
+                            {
+                                ID = graces.ID,
+                                Sku = graces.Sku,
+                                Description = graces.Description,
+                                Brand = graces.Brand,
+                                Availability = graces.Availability,
+                                BarCode = graces.BarCode
+                            })
+                        .ToList();
+                return graces;
+            }
+        }
+
+        public static void DeleteCollection(string collectionName)
+        {
+            using (var dbContext = new GraceDbContext())
+            {
+                // Find the row to check if it exists
+                var rowToDelete = dbContext.Collections
+                    .SingleOrDefault(c => c.Name == collectionName);
+                if (rowToDelete != null)
+                {
+                    // Row exists, so delete it
+                    dbContext.Collections.Remove(rowToDelete);
+                    dbContext.SaveChanges();
+                }
+            }
         }
 
         public static Dictionary<string, List<Grace>> OrderedCollectionNames()
@@ -729,6 +781,15 @@ namespace grace
             }
         }
 
+        public static bool CheckCollectionExists(string name)
+        {
+            using (var context = new GraceDbContext())
+            {
+                bool rowExists = context.Collections
+                  .Any(c => c.Name == name);
+                return rowExists;
+            }
+        }
 
         public static bool AddCollectionRow(int GraceId, string name)
         {
