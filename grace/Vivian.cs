@@ -296,15 +296,5 @@ namespace grace
                 logger.Error(ex);
             }
         }
-
-        private void loggingTextBox_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void adminPage_Click(object sender, EventArgs e)
-        {
-
-        }
     }
 }

@@ -27,6 +27,7 @@ namespace grace.data
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<Pulled> PulledDb { get; set; }
         public virtual DbSet<Prefs> PrefsDb { get; set; }
+
         public static string ConnectionString { get => connectionString; set => connectionString = value; }
 
         private static string connectionString;
@@ -165,6 +166,7 @@ namespace grace.data
                     .WithMany()
                     .HasForeignKey(e => e.CollectionId); // Choose the appropriate delete behavior
             });
+
 
             base.OnModelCreating(modelBuilder);
 

@@ -241,7 +241,8 @@ namespace grace
                         MessageBoxIcon.Information);
                         addCollectionTextBox.Text = string.Empty;
                         return true;
-                    } else
+                    }
+                    else
                     {
                         // Row does not exist, so insert a new row
                         var newRow = new CollectionName
@@ -468,7 +469,7 @@ namespace grace
                 return true;
             }
 
-            bool updateCollection  = false;
+            bool updateCollection = false;
             if (string.IsNullOrEmpty(addCollectionTextBox.Text) == false)
             {
                 var cName = addCollectionTextBox.Text.Trim();
@@ -481,7 +482,8 @@ namespace grace
                     MessageBoxIcon.Information);
                     addCollectionTextBox.Text = string.Empty;
                     return true;
-                } else
+                }
+                else
                 {
                     updateCollection = true;
                 }
@@ -714,6 +716,11 @@ namespace grace
             toolTip.ToolTipTitle = "Add Collection";
             toolTip.Show("Add a new collection and assign it to the current item.",
                 addCollectionTextBox, 0, -30, 2000);
+        }
+
+        private void adjustInventoryLabel_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -35,6 +35,7 @@ namespace grace
             using (var context = new GraceDbContext())
             {
                 list = context.GraceRows.ToList();
+                list = list.OrderBy(row => row.Sku).ToList();
             }
             return list;
         }
@@ -55,6 +56,28 @@ namespace grace
                 if (graceRow.Sku.Contains(searchTerm,
                     StringComparison.CurrentCultureIgnoreCase) ||
                     graceRow.Description.Contains(searchTerm,
+                    StringComparison.CurrentCultureIgnoreCase))
+                {
+                    result.Add(graceRow);
+                }
+            }
+            return result;
+        }
+
+        public static List<GraceRow> getFilteredBarCode(string searchTerm)
+        {
+            List<GraceRow> result = new List<GraceRow>();
+            var list = getData();
+            if (searchTerm == null || searchTerm == string.Empty)
+            {
+                return list;
+            }
+
+            // Look through the list for either matches in the sku or
+            // description
+            foreach (var graceRow in list)
+            {
+                if (graceRow.BarCode.Contains(searchTerm,
                     StringComparison.CurrentCultureIgnoreCase))
                 {
                     result.Add(graceRow);
