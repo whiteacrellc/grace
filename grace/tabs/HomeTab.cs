@@ -90,6 +90,7 @@ namespace grace.tabs
                 vivian.changePasswordButton.Hide();
                 vivian.comboBoxUsers.Hide();
                 vivian.loginPage.Hide();
+                vivian.loginButton.Hide();
             }
             else
             {
@@ -99,6 +100,7 @@ namespace grace.tabs
                 vivian.changePasswordButton.Show();
                 vivian.comboBoxUsers.Show();
                 vivian.loginPage.Show();
+                vivian.loginButton.Show();
             }
         }
 

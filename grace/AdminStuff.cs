@@ -16,6 +16,7 @@ using NLog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -80,6 +81,79 @@ namespace grace
                 }
             }
             return usernames;
+        }
+
+        public static void DeleteUser(string username)
+        {
+            using (var graceDb = new GraceDbContext())
+            {
+                try
+                {
+                    User u = graceDb.Users.FirstOrDefault(e => e.Username == username);
+                    if (u != null)
+                    {
+                        u.Deleted = true;
+                        graceDb.Users.Update(u);
+                        graceDb.SaveChanges();
+                        logger.Info("deleted user " + username);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Logger.Warn(ex);
+                }
+            }
+        }
+
+        public static bool CreateUser(string username, string password,
+            bool forcePasswordReset, bool isAdmin)
+        {
+            using (var graceDb = new GraceDbContext())
+            {
+                try
+                {
+                    User u = graceDb.Users.FirstOrDefault(e => e.Username == username);
+                    if (u != null)
+                    {
+                        if (u.Deleted)
+                        {
+                            var response = MessageBox.Show("Username " + username +
+                                " already exists but was deleted, do you want to "
+                                + "restore the user?", "User Dialog",
+                            MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+                            if (response == DialogResult.Yes)
+                            {
+                                u.Deleted = false;
+                                graceDb.Users.Update(u);
+                                graceDb.SaveChanges();
+                                logger.Info("undeleted user " + username);
+                                return true;     
+                            }
+                        } else
+                        {
+                            var response = MessageBox.Show("Username " + username +
+                               " already exists.", "User Dialog",
+                               MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            return false;
+                        }
+                    }
+
+                    u = new User();
+                    u.Username = username;
+                    u.Password = password;
+                    u.ResetPassword = forcePasswordReset;
+                    u.Admin = isAdmin;
+                    graceDb.Users.Add(u);
+                    graceDb.SaveChanges();
+                    logger.Info("created user " + username);
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    Logger.Warn(ex);
+                }
+                return false;
+            }
         }
     }
 }

@@ -30,6 +30,7 @@ namespace grace.tabs
         private readonly Vivian vivian;
         private DataGridView checkInDataGrid;
         private int user_id;
+        private int grace_id;
         private BindingSource checkInBindingSource;
         private TabPage checkInTabPage;
         private CheckBox allUsersCheckBox;
@@ -49,6 +50,9 @@ namespace grace.tabs
 
         public void Load()
         {
+            checkInDataGrid.AutoGenerateColumns = true;
+            // Callbacks 
+            checkInDataGrid.CellMouseDoubleClick += checkInDataGrid_CellMouseDoubleClick;
             checkInDataGrid.KeyPress += checkInDataGrid_KeyPress;
             checkInDataGrid.CellBeginEdit += checkInDataGrid_CellBeginEdit;
             checkInDataGrid.DataBindingComplete += checkInDataGrid_DataBindingComplete;
@@ -63,6 +67,7 @@ namespace grace.tabs
         {
             var username = Globals.GetInstance().CurrentUser;
             user_id = DataBase.GetUserIdFromName(username);
+ 
             LoadDataGrid();
         }
 
@@ -93,9 +98,26 @@ namespace grace.tabs
             checkInDataGrid.Columns["UserTotal"].DefaultCellStyle.BackColor = Color.LightGray;
             checkInDataGrid.Columns["BarCode"].DefaultCellStyle.BackColor = Color.LightGray;
             checkInDataGrid.Columns["UserName"].DefaultCellStyle.BackColor = Color.LightGray;
+            checkInDataGrid.Columns["LastUpdated"].DefaultCellStyle.BackColor = Color.LightGray;
+            checkInDataGrid.Columns["GraceId"].DefaultCellStyle.BackColor = Color.LightGray;
             ChangeColumnNames();
-            Utils.RemoveColumnByName(checkInDataGrid, "GraceId");
+            //Utils.RemoveColumnByName(checkInDataGrid, "GraceId");
 
+        }
+        private void checkInDataGrid_CellMouseDoubleClick(object? sender,
+            DataGridViewCellMouseEventArgs e)
+        {
+            int rowIndex = e.RowIndex;
+            DataGridViewRow row = checkInDataGrid.Rows[rowIndex];
+            using (CheckInDialog editRowForm = new CheckInDialog(row))
+            {
+                DialogResult result = editRowForm.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    // we need to reload the grid.
+                    LoadDataGrid();
+                }
+            }
         }
 
         private void ChangeColumnNames()
@@ -103,7 +125,7 @@ namespace grace.tabs
             // Dictionary to map DbContext column names to desired DataGridView column names
             Dictionary<string, string> columnMappings = new Dictionary<string, string>
         {
-            {"CheckIn", "Checked In" },
+            {"UserTotal", "Checked In" },
             {"dateTime", "Date"},
             // Add more mappings as needed
         };
@@ -164,7 +186,7 @@ namespace grace.tabs
                         TimeZoneInfo.ConvertTimeFromUtc(dateTimeValue.ToUniversalTime(),
                         systemTimeZone);
 
-                    e.Value = systemTime.ToString("dd/MM/yyyy HH:mm");
+                    e.Value = systemTime.ToString("dd/MM/yyyy HH:mm:s");
                     e.FormattingApplied = true;
                 }
             }
@@ -184,7 +206,7 @@ namespace grace.tabs
         private void checkInDataGrid_DataBindingComplete(object? sender, EventArgs e)
         {
             // Remove Collection Id Column
-            Utils.RemoveColumnByName(checkInDataGrid, "GraceId");
+            //Utils.RemoveColumnByName(checkInDataGrid, "GraceId");
         }
 
         private void ApplyChangesButton_Click(object? sender, EventArgs e)

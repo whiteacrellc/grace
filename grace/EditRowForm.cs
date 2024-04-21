@@ -37,8 +37,6 @@ namespace grace
         private string Description = string.Empty;
         private List<string> colList = new List<string>();
         private bool newRow;
-        private StringBuilder sb = new StringBuilder();
-        private bool readyForNewCode = true;
         private GraceRow? graceRow;
         private bool updateGraceRow = false;
         private List<string> brandList = new List<string>();
@@ -588,35 +586,33 @@ namespace grace
 
         private void barCodeTextBox_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyData == e.KeyCode)
+
+            if (e.KeyCode == Keys.Enter || e.KeyCode == Keys.Return)
             {
-                if (readyForNewCode)
-                {
-                    barCodeTextBox.Clear();
-                    readyForNewCode = false;
-                    sb.Clear();
-                }
                 TextBox box = (TextBox)sender;
-                sb.Append(box.Text);
-                //textBoxBarcode.Text = sb.ToString();
-            }
-            else if (e.KeyCode == Keys.Enter)
-            {
-                barCodeTextBox.Text = sb.ToString();
-                readyForNewCode = true;
-                // Process the scanned data as needed (e.g., send it to a database, perform actions)
-                // Example: ProcessScannedData(scannedData);
+                var str = box.Text.Trim();
+                if (string.IsNullOrEmpty(str))
+                {
+                    return;
+                }
+                barCodeTextBox.Text = str;
             }
         }
 
         private void deleteButton_Click(object sender, EventArgs e)
         {
 
-            using (var context = new GraceDbContext())
+            DialogResult result = MessageBox.Show(
+                 "Are you sure you want to delete this row", "Question",
+                 MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (result == DialogResult.Yes)
             {
-                var grace = context.Graces.FirstOrDefault(item => item.Sku == graceRow.Sku);
-                context.Graces.Remove(grace);
-                context.SaveChanges();
+                using (var context = new GraceDbContext())
+                {
+                    var grace = context.Graces.FirstOrDefault(item => item.Sku == graceRow.Sku);
+                    context.Graces.Remove(grace);
+                    context.SaveChanges();
+                }
             }
             DialogResult = DialogResult.OK;
             Close();
@@ -705,9 +701,7 @@ namespace grace
 
         private void addCollectionTextBox_MouseHover(object sender, EventArgs e)
         {
-            toolTip.ToolTipTitle = "Add Collection";
-            toolTip.Show("Add a new collection and assign it to the current item.",
-                addCollectionTextBox, 0, -30, 2000);
+
         }
 
         private void addCollectionLabel_MouseHover(object sender, EventArgs e)

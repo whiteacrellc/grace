@@ -56,7 +56,8 @@ namespace grace
                 if (graceRow.Sku.Contains(searchTerm,
                     StringComparison.CurrentCultureIgnoreCase) ||
                     graceRow.Description.Contains(searchTerm,
-                    StringComparison.CurrentCultureIgnoreCase))
+                    StringComparison.CurrentCultureIgnoreCase) ||
+                    graceRow.BarCode.Contains(searchTerm))
                 {
                     result.Add(graceRow);
                 }
