@@ -21,6 +21,7 @@ using System.Data;
 using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
 using System.Linq.Expressions;
 using System.Text;
+using System.Windows.Controls;
 using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
@@ -222,7 +223,8 @@ namespace grace
             SaveFileDialog saveFileDialog = new SaveFileDialog
             {
                 Filter = "Excel Files (*.xlsx)|*.xlsx",
-                FileName = $"report_{DateTime.Now.ToString("yyyyMMdd")}.xlsx"
+                FileName = $"report_{DateTime.Now.ToString("yyyyMMdd")}.xlsx",
+                RestoreDirectory = true
             };
 
             if (saveFileDialog.ShowDialog() == DialogResult.OK)
@@ -232,31 +234,6 @@ namespace grace
                 generateReport();
                 report.WriteReport(filePath);
                 EnableReportButton(true);
-            }
-        }
-
-        private void textBoxBarcode_KeyDown(object sender, KeyEventArgs e)
-        {
-
-            if (e.KeyData == e.KeyCode)
-            {
-                if (readyForNewCode)
-                {
-                    checkOutSearchTextBox.Clear();
-                    readyForNewCode = false;
-                    sb.Clear();
-                }
-                System.Windows.Forms.TextBox box = (System.Windows.Forms.TextBox)sender;
-                sb.Append(box.Text);
-                //textBoxBarcode.Text = sb.ToString();
-            }
-            else
-            if (e.KeyCode == Keys.Enter)
-            {
-                checkOutSearchTextBox.Text = sb.ToString();
-                readyForNewCode = true;
-                // Process the scanned data as needed (e.g., send it to a database, perform actions)
-                // Example: ProcessScannedData(scannedData);
             }
         }
 
@@ -295,6 +272,47 @@ namespace grace
             {
                 logger.Error(ex);
             }
+        }
+
+        private void tabControl_DrawItem(object sender, DrawItemEventArgs e)
+        {
+
+            TabPage page = tabControl.TabPages[e.Index];
+            int currentIndex = tabControl.SelectedIndex;
+            e.Graphics.FillRectangle(new SolidBrush(page.BackColor), e.Bounds);
+
+            Rectangle paddedBounds = e.Bounds;
+            int yOffset = (e.State == DrawItemState.Selected) ? -2 : 1;
+            paddedBounds.Offset(1, yOffset);
+
+            var c = Color.LightBlue;
+            if (e.Index == currentIndex)
+            {
+                c = Color.Black;
+            }
+            TextRenderer.DrawText(e.Graphics, page.Text, e.Font, paddedBounds, c);
+        }
+
+        private void dataPage_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void filterRowsLabel_MouseHover(object sender, EventArgs e)
+        {
+            toolTip.ToolTipTitle = "Row Filter";
+            toolTip.Show("Use this to filter on SKU, Description or Barcode."
+                + " If using the barcode scanner use the Scan Barcode field.",
+                filterRowsLabel, 0, -30, 2000);
+        }
+
+        private void scanBarcodeLabel_MouseHover(object sender, EventArgs e)
+        {
+
+            toolTip.ToolTipTitle = "BarCode Filter";
+            toolTip.Show("Use this to filter using the Barcode Scanner."
+                + " To manually filter on barcodes use the other search box.",
+                scanBarcodeLabel, 0, -30, 2000);
         }
     }
 }

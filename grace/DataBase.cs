@@ -119,6 +119,32 @@ namespace grace
             }
         }
 
+        public static List<CheckOut> GetPulledItem(int pulledId)
+        {
+            using (var dbContext = new GraceDbContext())
+            {
+
+                var result = (
+                    from graces in dbContext.Graces
+                    join total in dbContext.Totals on graces.ID equals total.GraceId
+                    where total.LastUpdated == dbContext.Totals
+                                                  .Where(t => t.GraceId == graces.ID)
+                                                  .Max(t => t.LastUpdated)
+                    orderby graces.Sku ascending
+                    select new CheckOut
+                    {
+                        Sku = graces.Sku,
+                        Description = graces.Description,
+                        Brand = graces.Brand,
+                        BarCode = graces.BarCode,
+                        Total = total.CurrentTotal,
+                        GraceId = graces.ID
+                    }
+                ).ToList();
+                return result;
+            }
+        }
+
         public static List<CheckOut> GetPulledGridFromBarCode(string scannedBarcode)
         {
             var list = GetPulledGrid();
@@ -165,10 +191,10 @@ namespace grace
             public string Description { get; set; }
             public string? BarCode { get; set; }
             public DateTime LastUpdated { get; set; }
+            public int GraceId { get; set; }
             public string Collection { get; set; }
             public int UserTotal { get; set; }
             public string CheckIn { get; set; } = string.Empty;
-            public int GraceId { get; set; }
         }
         public static List<CheckInData> GetCheckedOutGrid(int user_id)
         {
@@ -388,7 +414,7 @@ namespace grace
         public static int AddCollection(string? collection, int graceId)
         {
             int id = 0;
-            if (collection != null)
+            if (string.IsNullOrEmpty(collection) == false)
             {
                 using (var context = new GraceDbContext())
                 {
@@ -406,6 +432,21 @@ namespace grace
                 }
             }
             return id;
+        }
+
+        public static CollectionName? getCollection(string collection, int graceId)
+        {
+            if (string.IsNullOrEmpty(collection) == false)
+            {
+                using (var context = new GraceDbContext())
+                {
+                    CollectionName? c =
+                        context.Collections.FirstOrDefault(e => e.Name == collection
+                        && e.GraceId == graceId);
+                    return c;
+                }
+            }
+            return null;
         }
 
         public static int AddTotal(int total, int graceId)

@@ -16,18 +16,20 @@
  *  
  */
 using grace.utils;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 namespace grace.tabs
 {
     public class AdminTab
     {
-
+        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
 #pragma warning disable CS8618
 #pragma warning disable CS8601
@@ -38,6 +40,8 @@ namespace grace.tabs
         private Button resetPasswordButton;
         private Button restoreDatabaseButton;
         private Button backupButton;
+        private Button deleteUserButton;
+        private Button addUserButton;
 
         public AdminTab(Vivian v) {
             vivian = v;
@@ -46,6 +50,8 @@ namespace grace.tabs
             this.resetPasswordButton = vivian.resetPasswordButton;
             restoreDatabaseButton = vivian.restoreDatabaseButton;
             backupButton = vivian.backupButton;
+            deleteUserButton = vivian.deleteUserButton;
+            addUserButton = vivian.addUserButton;
         }
 
         public void Load()
@@ -54,6 +60,8 @@ namespace grace.tabs
             resetPasswordButton.Click += ResetButton_Click;
             backupButton.Click += BackupButton_Click;
             restoreDatabaseButton.Click += RestoreDatabaseButton_Click;
+            deleteUserButton.Click += DeleteUserButton_Click;
+            addUserButton.Click += AddUserButton_Click;
             InitializeComboBox();
         }
 
@@ -61,6 +69,30 @@ namespace grace.tabs
         {
             var backup = new BackupAndRestore();
             backup.BackupDatabase();
+        }
+        private void DeleteUserButton_Click(object? sender, EventArgs e)
+        {
+            ComboBox resetComboBox = vivian.resetComboBox;
+            string user = resetComboBox.Text;
+            var response = MessageBox.Show("Are you sure you want to delete "
+                + user + "?", "User Delete",
+                  MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (response == DialogResult.Yes)
+            {
+                AdminStuff.DeleteUser(user);
+                InitializeComboBox();
+            }
+        }
+
+        private void AddUserButton_Click(object? sender, EventArgs e)
+        {
+            var addUserDialog = new AddUserDialog();
+            var result = addUserDialog.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                logger.Info("Successfully added user");
+                InitializeComboBox();
+            }
         }
 
         private void RestoreDatabaseButton_Click(object? sender, EventArgs e)

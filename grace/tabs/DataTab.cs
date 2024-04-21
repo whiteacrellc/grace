@@ -78,7 +78,7 @@ namespace grace.tabs
             clearFilterButton.Click += clearFilterButton_Click;
             setInventoryFontSizeToolStripMenuItem.Click
                 += setInventoryFontSizeToolStripMenuItem_Click;
-            filterBarCodeTextBox.TextChanged += filterBarCodeTextBox_TextChanged;
+            filterBarCodeTextBox.KeyDown += filterBarCodeTextBox_KeyDown;
 
             // Setup data connection to grid view
             bindingSource = new BindingSource();
@@ -216,13 +216,23 @@ namespace grace.tabs
             Utils.RemoveColumnByName(dataGridView, "GraceId");
         }
 
-        internal void filterBarCodeTextBox_TextChanged(object? sender, EventArgs e)
+        internal void filterBarCodeTextBox_KeyDown(object? sender, KeyEventArgs e)
         {
-            string searchTerm = filterBarCodeTextBox.Text;
-            bindingSource.DataSource = DataGridLoader.getFilteredBarCode(searchTerm);
-            Utils.RemoveColumnByName(dataGridView, "ID");
-            Utils.RemoveColumnByName(dataGridView, "Grace");
-            Utils.RemoveColumnByName(dataGridView, "GraceId");
+
+            if (e.KeyCode == Keys.Enter || e.KeyCode == Keys.Return)
+            {
+                TextBox box = (TextBox)sender;
+                var str = box.Text.Trim();
+                if (string.IsNullOrEmpty(str))
+                {
+                    return;
+                }
+                filterBarCodeTextBox.Text = str;
+                bindingSource.DataSource = DataGridLoader.getFilteredBarCode(str);
+                Utils.RemoveColumnByName(dataGridView, "ID");
+                Utils.RemoveColumnByName(dataGridView, "Grace");
+                Utils.RemoveColumnByName(dataGridView, "GraceId");
+            }
         }
 
         private void DataGridView_CellFormatting(object? sender, DataGridViewCellFormattingEventArgs e)

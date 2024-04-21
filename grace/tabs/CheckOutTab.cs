@@ -106,6 +106,7 @@ namespace grace.tabs
             Dictionary<string, string> columnMappings = new Dictionary<string, string>
             {
                 {"Total", "Available" },
+                {"UserTotal", "Checked Out" }
                 // Add more mappings as needed
             };
 
