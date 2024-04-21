@@ -176,7 +176,7 @@ namespace grace
             // Show the tool tip when the mouse hovers over the TextBox
             toolTip.ToolTipTitle = "Inventory Help";
             toolTip.Show("You can enter negative numbers in this field",
-                adjustTextBox, 0, -30, 2000);
+                adjustInventoryLabel, 0, -30, 2000);
         }
 
         private void checkItem(object var)

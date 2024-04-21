@@ -205,7 +205,7 @@ namespace grace
             tabControl.Padding = new Point(30, 5);
             tabControl.SelectedIndex = 0;
             tabControl.ShowToolTips = true;
-            tabControl.Size = new Size(1832, 923);
+            tabControl.Size = new Size(1617, 923);
             tabControl.TabIndex = 9;
             tabControl.TabStop = false;
             tabControl.DrawItem += tabControl_DrawItem;
@@ -213,7 +213,7 @@ namespace grace
             // 
             // loginPage
             // 
-            loginPage.BackColor = Color.Transparent;
+            loginPage.BackColor = Color.Lavender;
             loginPage.BorderStyle = BorderStyle.Fixed3D;
             loginPage.Controls.Add(loggedInLabel);
             loginPage.Controls.Add(logoutButton);
@@ -228,11 +228,10 @@ namespace grace
             loginPage.Margin = new Padding(5, 2, 5, 2);
             loginPage.Name = "loginPage";
             loginPage.Padding = new Padding(10, 2, 10, 2);
-            loginPage.Size = new Size(1824, 875);
+            loginPage.Size = new Size(1609, 875);
             loginPage.TabIndex = 0;
             loginPage.Text = "Home";
             loginPage.ToolTipText = "Login Page";
-            loginPage.UseVisualStyleBackColor = true;
             // 
             // loggedInLabel
             // 
@@ -248,9 +247,9 @@ namespace grace
             // 
             logoutButton.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             logoutButton.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            logoutButton.Location = new Point(257, 490);
+            logoutButton.Location = new Point(247, 490);
             logoutButton.Name = "logoutButton";
-            logoutButton.Size = new Size(93, 33);
+            logoutButton.Size = new Size(116, 33);
             logoutButton.TabIndex = 1;
             logoutButton.Text = "Logout";
             logoutButton.UseVisualStyleBackColor = true;
@@ -296,7 +295,7 @@ namespace grace
             // pickUserLabel
             // 
             pickUserLabel.AutoSize = true;
-            pickUserLabel.BackColor = SystemColors.Control;
+            pickUserLabel.BackColor = Color.Transparent;
             pickUserLabel.Location = new Point(254, 245);
             pickUserLabel.Name = "pickUserLabel";
             pickUserLabel.Size = new Size(84, 18);
@@ -318,6 +317,7 @@ namespace grace
             // 
             // dataPage
             // 
+            dataPage.BackColor = Color.Lavender;
             dataPage.Controls.Add(filterBarcodeTextBox);
             dataPage.Controls.Add(scanBarcodeLabel);
             dataPage.Controls.Add(filterRowsLabel);
@@ -328,7 +328,7 @@ namespace grace
             dataPage.Location = new Point(4, 44);
             dataPage.Name = "dataPage";
             dataPage.Padding = new Padding(11, 12, 11, 12);
-            dataPage.Size = new Size(1824, 875);
+            dataPage.Size = new Size(1609, 875);
             dataPage.TabIndex = 1;
             dataPage.Text = "Inventory";
             dataPage.ToolTipText = "Inventory for Patster";
@@ -336,7 +336,7 @@ namespace grace
             // 
             // filterBarcodeTextBox
             // 
-            filterBarcodeTextBox.Location = new Point(672, 19);
+            filterBarcodeTextBox.Location = new Point(730, 13);
             filterBarcodeTextBox.Name = "filterBarcodeTextBox";
             filterBarcodeTextBox.Size = new Size(202, 26);
             filterBarcodeTextBox.TabIndex = 7;
@@ -344,7 +344,7 @@ namespace grace
             // scanBarcodeLabel
             // 
             scanBarcodeLabel.AutoSize = true;
-            scanBarcodeLabel.Location = new Point(514, 18);
+            scanBarcodeLabel.Location = new Point(600, 16);
             scanBarcodeLabel.Margin = new Padding(4, 0, 4, 0);
             scanBarcodeLabel.Name = "scanBarcodeLabel";
             scanBarcodeLabel.Size = new Size(123, 18);
@@ -355,7 +355,7 @@ namespace grace
             // filterRowsLabel
             // 
             filterRowsLabel.AutoSize = true;
-            filterRowsLabel.Location = new Point(-4, 20);
+            filterRowsLabel.Location = new Point(241, 16);
             filterRowsLabel.Margin = new Padding(4, 0, 4, 0);
             filterRowsLabel.Name = "filterRowsLabel";
             filterRowsLabel.Size = new Size(100, 18);
@@ -365,9 +365,9 @@ namespace grace
             // 
             // addRowButton
             // 
-            addRowButton.Location = new Point(994, 20);
+            addRowButton.Location = new Point(41, 8);
             addRowButton.Name = "addRowButton";
-            addRowButton.Size = new Size(109, 25);
+            addRowButton.Size = new Size(118, 35);
             addRowButton.TabIndex = 4;
             addRowButton.Text = "Add Item";
             addRowButton.UseVisualStyleBackColor = true;
@@ -375,34 +375,37 @@ namespace grace
             // dataGridView
             // 
             dataGridView.AllowUserToAddRows = false;
+            dataGridView.AllowUserToDeleteRows = false;
+            dataGridView.AllowUserToResizeRows = false;
             dataGridView.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            dataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.DisplayedCells;
+            dataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
             dataGridView.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.DisplayedCells;
             dataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView.Location = new Point(-19, 67);
+            dataGridView.Location = new Point(0, 51);
             dataGridView.Margin = new Padding(5, 2, 5, 2);
             dataGridView.MultiSelect = false;
             dataGridView.Name = "dataGridView";
             dataGridView.RowHeadersWidth = 82;
             dataGridView.RowTemplate.Height = 41;
+            dataGridView.ScrollBars = ScrollBars.Vertical;
             dataGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dataGridView.Size = new Size(1838, 786);
+            dataGridView.Size = new Size(1623, 875);
             dataGridView.TabIndex = 1;
             // 
             // clearFilterButton
             // 
             clearFilterButton.AutoSize = true;
-            clearFilterButton.Location = new Point(349, 13);
+            clearFilterButton.Location = new Point(973, 11);
             clearFilterButton.Margin = new Padding(4, 6, 4, 6);
             clearFilterButton.Name = "clearFilterButton";
-            clearFilterButton.Size = new Size(147, 28);
+            clearFilterButton.Size = new Size(147, 32);
             clearFilterButton.TabIndex = 5;
             clearFilterButton.Text = "Clear Filter";
             clearFilterButton.UseVisualStyleBackColor = true;
             // 
             // filterSkuTextBox
             // 
-            filterSkuTextBox.Location = new Point(133, 15);
+            filterSkuTextBox.Location = new Point(362, 13);
             filterSkuTextBox.Margin = new Padding(4, 3, 4, 3);
             filterSkuTextBox.Name = "filterSkuTextBox";
             filterSkuTextBox.Size = new Size(217, 26);
@@ -410,6 +413,7 @@ namespace grace
             // 
             // checkoutPage
             // 
+            checkoutPage.BackColor = Color.Lavender;
             checkoutPage.Controls.Add(textBoxBarcode);
             checkoutPage.Controls.Add(checkOutSearchTextBox);
             checkoutPage.Controls.Add(label6);
@@ -420,11 +424,10 @@ namespace grace
             checkoutPage.Location = new Point(4, 44);
             checkoutPage.Margin = new Padding(7);
             checkoutPage.Name = "checkoutPage";
-            checkoutPage.Size = new Size(1824, 875);
+            checkoutPage.Size = new Size(1609, 875);
             checkoutPage.TabIndex = 2;
             checkoutPage.Text = "Check Out";
             checkoutPage.ToolTipText = "Checkout Items";
-            checkoutPage.UseVisualStyleBackColor = true;
             // 
             // textBoxBarcode
             // 
@@ -518,23 +521,23 @@ namespace grace
             // checkinPage
             // 
             checkinPage.AutoScroll = true;
+            checkinPage.BackColor = Color.Lavender;
             checkinPage.Controls.Add(allUsersCheckBox);
             checkinPage.Controls.Add(applyChangesButton);
             checkinPage.Controls.Add(label3);
             checkinPage.Controls.Add(checkInDataGrid);
             checkinPage.Location = new Point(4, 44);
             checkinPage.Name = "checkinPage";
-            checkinPage.Size = new Size(1824, 875);
+            checkinPage.Size = new Size(1609, 875);
             checkinPage.TabIndex = 4;
             checkinPage.Text = "Check In";
             checkinPage.ToolTipText = "Check In Items";
-            checkinPage.UseVisualStyleBackColor = true;
             // 
             // allUsersCheckBox
             // 
             allUsersCheckBox.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             allUsersCheckBox.AutoSize = true;
-            allUsersCheckBox.Location = new Point(1381, 99);
+            allUsersCheckBox.Location = new Point(1381, 145);
             allUsersCheckBox.Name = "allUsersCheckBox";
             allUsersCheckBox.Size = new Size(149, 22);
             allUsersCheckBox.TabIndex = 2;
@@ -545,7 +548,7 @@ namespace grace
             // 
             applyChangesButton.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             applyChangesButton.AutoSize = true;
-            applyChangesButton.Location = new Point(1381, 140);
+            applyChangesButton.Location = new Point(1381, 203);
             applyChangesButton.Name = "applyChangesButton";
             applyChangesButton.Size = new Size(220, 35);
             applyChangesButton.TabIndex = 3;
@@ -577,7 +580,7 @@ namespace grace
             dataGridViewCellStyle3.SelectionForeColor = SystemColors.HighlightText;
             dataGridViewCellStyle3.WrapMode = DataGridViewTriState.False;
             checkInDataGrid.DefaultCellStyle = dataGridViewCellStyle3;
-            checkInDataGrid.Location = new Point(3, 0);
+            checkInDataGrid.Location = new Point(-7, 0);
             checkInDataGrid.Name = "checkInDataGrid";
             checkInDataGrid.RowHeadersWidth = 82;
             checkInDataGrid.RowTemplate.Height = 25;
@@ -588,7 +591,7 @@ namespace grace
             // adminPage
             // 
             adminPage.AutoScroll = true;
-            adminPage.BackColor = SystemColors.Control;
+            adminPage.BackColor = Color.Lavender;
             adminPage.BorderStyle = BorderStyle.Fixed3D;
             adminPage.Controls.Add(label5);
             adminPage.Controls.Add(resetComboBox);
@@ -601,7 +604,7 @@ namespace grace
             adminPage.Controls.Add(backupButton);
             adminPage.Location = new Point(4, 44);
             adminPage.Name = "adminPage";
-            adminPage.Size = new Size(1824, 875);
+            adminPage.Size = new Size(1609, 875);
             adminPage.TabIndex = 3;
             adminPage.Text = "Admin";
             adminPage.ToolTipText = "Admin Settings";
@@ -609,7 +612,7 @@ namespace grace
             // label5
             // 
             label5.AutoSize = true;
-            label5.Location = new Point(49, 97);
+            label5.Location = new Point(137, 98);
             label5.Name = "label5";
             label5.Size = new Size(84, 18);
             label5.TabIndex = 0;
@@ -617,6 +620,7 @@ namespace grace
             // 
             // resetComboBox
             // 
+            resetComboBox.BackColor = Color.Lavender;
             resetComboBox.FormattingEnabled = true;
             resetComboBox.Location = new Point(255, 94);
             resetComboBox.Name = "resetComboBox";
@@ -625,6 +629,7 @@ namespace grace
             // 
             // deleteUserButton
             // 
+            deleteUserButton.FlatStyle = FlatStyle.Popup;
             deleteUserButton.Location = new Point(79, 239);
             deleteUserButton.Name = "deleteUserButton";
             deleteUserButton.Size = new Size(370, 50);
@@ -644,6 +649,7 @@ namespace grace
             // 
             // resetPasswordButton
             // 
+            resetPasswordButton.FlatStyle = FlatStyle.Popup;
             resetPasswordButton.Location = new Point(79, 164);
             resetPasswordButton.Name = "resetPasswordButton";
             resetPasswordButton.Size = new Size(380, 53);
@@ -654,13 +660,15 @@ namespace grace
             // addUserButton
             // 
             addUserButton.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            addUserButton.BackColor = Color.Lavender;
+            addUserButton.FlatStyle = FlatStyle.Popup;
             addUserButton.Location = new Point(79, 318);
             addUserButton.Margin = new Padding(4, 6, 4, 6);
             addUserButton.Name = "addUserButton";
             addUserButton.Size = new Size(370, 57);
             addUserButton.TabIndex = 9;
             addUserButton.Text = "Add User";
-            addUserButton.UseVisualStyleBackColor = true;
+            addUserButton.UseVisualStyleBackColor = false;
             // 
             // loggingTextBox
             // 
@@ -669,7 +677,7 @@ namespace grace
             loggingTextBox.BorderStyle = BorderStyle.FixedSingle;
             loggingTextBox.Font = new Font("Microsoft Sans Serif", 14F, FontStyle.Regular, GraphicsUnit.Pixel);
             loggingTextBox.ForeColor = Color.FromArgb(222, 0, 0, 0);
-            loggingTextBox.Location = new Point(949, 97);
+            loggingTextBox.Location = new Point(734, 97);
             loggingTextBox.Multiline = true;
             loggingTextBox.Name = "loggingTextBox";
             loggingTextBox.ScrollBars = ScrollBars.Vertical;
@@ -679,10 +687,11 @@ namespace grace
             // restoreDatabaseButton
             // 
             restoreDatabaseButton.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            restoreDatabaseButton.FlatStyle = FlatStyle.Popup;
             restoreDatabaseButton.Location = new Point(36, 472);
             restoreDatabaseButton.Margin = new Padding(4, 6, 4, 6);
             restoreDatabaseButton.Name = "restoreDatabaseButton";
-            restoreDatabaseButton.Size = new Size(162, 56);
+            restoreDatabaseButton.Size = new Size(216, 56);
             restoreDatabaseButton.TabIndex = 5;
             restoreDatabaseButton.Text = "Restore Database";
             restoreDatabaseButton.UseVisualStyleBackColor = true;
@@ -690,10 +699,11 @@ namespace grace
             // backupButton
             // 
             backupButton.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            backupButton.Location = new Point(38, 411);
+            backupButton.FlatStyle = FlatStyle.Popup;
+            backupButton.Location = new Point(36, 411);
             backupButton.Margin = new Padding(4, 6, 4, 6);
             backupButton.Name = "backupButton";
-            backupButton.Size = new Size(183, 49);
+            backupButton.Size = new Size(216, 49);
             backupButton.TabIndex = 4;
             backupButton.Text = "Backup Database";
             backupButton.UseVisualStyleBackColor = true;
