@@ -155,6 +155,7 @@ namespace grace.tabs
         public void logoutButton_Click(object? sender, EventArgs e)
         {
             Globals.GetInstance().CurrentUser = string.Empty;
+            InitializeComboBox();
             loginHide(true);
             logoutHide(false);
             passwordTextBox.Text = string.Empty;

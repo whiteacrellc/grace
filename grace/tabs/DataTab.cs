@@ -46,6 +46,7 @@ namespace grace.tabs
         private ToolStripMenuItem setInventoryFontSizeToolStripMenuItem;
         private bool disposedValue;
         private TextBox filterBarCodeTextBox;
+        private VScrollBar vScrollBar;
 
         public DataTab(Vivian v)
         {
@@ -70,8 +71,6 @@ namespace grace.tabs
             dataGridView.CellMouseDoubleClick += dataGridView_CellMouseDoubleClick;
             dataGridView.DataBindingComplete += dataGridView_DataBindingComplete;
             dataGridView.CellFormatting += DataGridView_CellFormatting;
-            dataGridView.ColumnHeaderMouseClick
-                += DataGridView_ColumnHeaderMouseClick;
             dataTabPage.Enter += DataTabPage_Enter;
             addRowButton.Click += addRowButton_Click;
             filterSkuTextBox.TextChanged += filterSkuTextBox_TextChanged;
@@ -79,6 +78,7 @@ namespace grace.tabs
             setInventoryFontSizeToolStripMenuItem.Click
                 += setInventoryFontSizeToolStripMenuItem_Click;
             filterBarCodeTextBox.KeyDown += filterBarCodeTextBox_KeyDown;
+            dataGridView.AllowUserToResizeColumns = true;
 
             // Setup data connection to grid view
             bindingSource = new BindingSource();
@@ -135,32 +135,6 @@ namespace grace.tabs
             BindDataSource(true);
         }
 
-        private void DataGridView_ColumnHeaderMouseClick(object? sender,
-            DataGridViewCellMouseEventArgs e)
-        {
-            // Get the clicked column index
-            int columnIndex = e.ColumnIndex;
-
-            // Determine if the clicked column is already the column being sorted
-            DataGridViewColumn newColumn = dataGridView.Columns[columnIndex];
-            DataGridViewColumn oldColumn = dataGridView.SortedColumn;
-            ListSortDirection direction;
-
-            if (oldColumn != null && oldColumn == newColumn
-                && dataGridView.SortOrder == SortOrder.Ascending)
-            {
-                // Change sort direction to Descending if the same column is clicked again
-                direction = ListSortDirection.Descending;
-            }
-            else
-            {
-                // Default sort direction is Ascending
-                direction = ListSortDirection.Ascending;
-            }
-
-            // Perform the sort
-            dataGridView.Sort(newColumn, direction);
-        }
         private void addRowButton_Click(object? sender, EventArgs e)
         {
             using (EditRowForm editRowForm = new EditRowForm(null))

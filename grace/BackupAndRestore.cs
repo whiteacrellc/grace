@@ -30,10 +30,39 @@ namespace grace
             return saveFileDialog.FileName;
         }
 
-        public void BackupDatabase()
+        public void BackupDatabaseToDocuments()
         {
-            string backupPath = ChooseBackupPath();
+            string documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            string filePath = Path.Combine(documentsPath, "backup.db");
 
+            if (File.Exists(filePath))
+            {
+                // Get the creation time of the file
+                DateTime creationTime = File.GetLastAccessTime(filePath);
+
+                // Calculate the time difference between now and the creation time
+                TimeSpan difference = DateTime.Now - creationTime;
+
+                // Only backup once a day. 
+                if (difference.TotalHours > 24)
+                {
+                    string oldFilePath = Path.Combine(documentsPath, "backup_1.db");
+                    if (File.Exists(oldFilePath))
+                    {
+                        // Attempt to delete the file
+                        File.Delete(oldFilePath);
+                    }
+                    File.Move(filePath, oldFilePath);
+                    BackupDatabaseToFile(filePath);
+                }
+            } else
+            {
+                BackupDatabaseToFile(filePath);
+            }
+        }
+
+        private void BackupDatabaseToFile(string backupPath)
+        {
             if (string.IsNullOrEmpty(backupPath))
             {
                 return;
@@ -70,6 +99,12 @@ namespace grace
             {
                 logger.Error($"An unexpected error occurred: {ex.Message}");
             }
+        }
+
+        public void BackupDatabase()
+        {
+            string backupPath = ChooseBackupPath();
+            BackupDatabaseToFile(backupPath);
         }
 
         public void DeleteCurrentDb()

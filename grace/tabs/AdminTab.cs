@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Copyright (c) 2023 White Acre Software LLC
  * All rights reserved.
  *
@@ -63,6 +63,13 @@ namespace grace.tabs
             deleteUserButton.Click += DeleteUserButton_Click;
             addUserButton.Click += AddUserButton_Click;
             InitializeComboBox();
+            WriteBackupFile();
+        }
+
+        private void WriteBackupFile()
+        {
+            var backup = new BackupAndRestore();
+            backup.BackupDatabaseToDocuments();
         }
 
         private void BackupButton_Click(object? sender, EventArgs e)
@@ -74,6 +81,15 @@ namespace grace.tabs
         {
             ComboBox resetComboBox = vivian.resetComboBox;
             string user = resetComboBox.Text;
+
+            string currentUser = Globals.GetInstance().CurrentUser;
+            if (user.Equals(currentUser))
+            {
+                MessageBox.Show("You can't delete the current user.", "Bad " + currentUser,
+                  MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                return;
+            }
+
             var response = MessageBox.Show("Are you sure you want to delete "
                 + user + "?", "User Delete",
                   MessageBoxButtons.YesNo, MessageBoxIcon.Question);
