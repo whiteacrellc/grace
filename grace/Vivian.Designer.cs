@@ -235,7 +235,6 @@ namespace grace
             // 
             // loggedInLabel
             // 
-            loggedInLabel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             loggedInLabel.AutoSize = true;
             loggedInLabel.Location = new Point(266, 452);
             loggedInLabel.Name = "loggedInLabel";
@@ -245,7 +244,6 @@ namespace grace
             // 
             // logoutButton
             // 
-            logoutButton.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             logoutButton.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             logoutButton.Location = new Point(247, 490);
             logoutButton.Name = "logoutButton";
@@ -264,7 +262,6 @@ namespace grace
             // 
             // loginButton
             // 
-            loginButton.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             loginButton.AutoSize = true;
             loginButton.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             loginButton.Font = new Font("Segoe UI", 14.25F, FontStyle.Bold, GraphicsUnit.Point);
@@ -304,7 +301,6 @@ namespace grace
             // 
             // changePasswordButton
             // 
-            changePasswordButton.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             changePasswordButton.AutoSize = true;
             changePasswordButton.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             changePasswordButton.Font = new Font("Segoe UI", 14.25F, FontStyle.Bold, GraphicsUnit.Point);
