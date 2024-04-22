@@ -314,5 +314,10 @@ namespace grace
                 + " To manually filter on barcodes use the other search box.",
                 scanBarcodeLabel, 0, -30, 2000);
         }
+
+        private void dataPage_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
