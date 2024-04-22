@@ -78,7 +78,6 @@ namespace grace.tabs
             setInventoryFontSizeToolStripMenuItem.Click
                 += setInventoryFontSizeToolStripMenuItem_Click;
             filterBarCodeTextBox.KeyDown += filterBarCodeTextBox_KeyDown;
-            dataGridView.AllowUserToResizeColumns = true;
 
             // Setup data connection to grid view
             bindingSource = new BindingSource();
