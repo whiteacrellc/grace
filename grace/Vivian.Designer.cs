@@ -389,7 +389,7 @@ namespace grace
             dataGridView.RowTemplate.Height = 41;
             dataGridView.ScrollBars = ScrollBars.Vertical;
             dataGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dataGridView.Size = new Size(1623, 875);
+            dataGridView.Size = new Size(1609, 824);
             dataGridView.TabIndex = 1;
             // 
             // clearFilterButton
