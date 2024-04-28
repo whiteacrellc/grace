@@ -224,6 +224,7 @@ namespace grace
             // Update Graces DB
             using (var context = new GraceDbContext())
             {
+                bool hasNewCollection = false;
                 var grace =
                         context.Graces.FirstOrDefault(item => item.Sku == graceRow.Sku);
 
@@ -252,6 +253,7 @@ namespace grace
 
                         context.Collections.Add(newRow);
                         updateGraceRow = true;
+                        hasNewCollection = true;
                     }
                 }
 
@@ -292,12 +294,18 @@ namespace grace
                     }
                     else
                     {
-                        MessageBox.Show("You need to select a brand.",
-                            "Information", MessageBoxButtons.OK,
-                            MessageBoxIcon.Information,
-                            MessageBoxDefaultButton.Button1,
-                            MessageBoxOptions.DefaultDesktopOnly);
-                        return true;
+                        // check to see if we have added a new collection and if
+                        // so we don't need to check in anything has been
+                        // selected in the collection combox box
+                        if (!hasNewCollection)
+                        {
+                            MessageBox.Show("You need to select a brand.",
+                                "Information", MessageBoxButtons.OK,
+                                MessageBoxIcon.Information,
+                                MessageBoxDefaultButton.Button1,
+                                MessageBoxOptions.DefaultDesktopOnly);
+                            return true;
+                        }
                     }
                 }
                 if (grace.Description != descTextBox.Text)
@@ -430,9 +438,11 @@ namespace grace
                 currentTextBox.BackColor = System.Drawing.Color.Yellow;
                 ret = true;
             }
-            if (checkedListBox.CheckedItems.Count == 0)
+            if (checkedListBox.CheckedItems.Count == 0 &&
+                string.IsNullOrEmpty(addCollectionTextBox.Text))
             {
-                MessageBox.Show("You need to select at least one category.",
+                MessageBox.Show("You need to select at least one category," +
+                    "Or enter a new one. ",
                     "Information", MessageBoxButtons.OK,
                     MessageBoxIcon.Information);
                 return true;

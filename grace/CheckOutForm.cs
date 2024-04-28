@@ -160,7 +160,6 @@ namespace grace
                     context.SaveChanges();
                 }
                 // newRow the GraceRow
-                DataBase.UpdateGraceRowTotal(graceId, newTotal);
                 DataBase.UpdateGraceRow(graceId);
             }
             catch (Exception ex)
