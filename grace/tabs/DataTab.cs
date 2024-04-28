@@ -98,6 +98,11 @@ namespace grace.tabs
                 {"Total", "Current Inventory"},
                 {"Col1", "Collection 1"},
                 {"Col2", "Collection 2"},
+                {"Col3", "Collection 3"},
+                {"Col4", "Collection 4"},
+                {"Col5", "Collection 5"},
+                {"Col6", "Collection 6"},
+                {"Reorder Status", "Availability" }
                 // Add more mappings as needed
             };
 
@@ -122,7 +127,7 @@ namespace grace.tabs
             DataGridLoader.LoadBindingTable(refresh);
             bindingSource.DataSource = DataGridLoader.getData();
             Utils.RemoveColumnByName(dataGridView, "ID");
-            Utils.RemoveColumnByName(dataGridView,"Grace");
+            Utils.RemoveColumnByName(dataGridView, "Grace");
             Utils.RemoveColumnByName(dataGridView, "GraceId");
             ChangeColumnNames();
             LoadSavedFont();
@@ -210,7 +215,8 @@ namespace grace.tabs
 
         private void DataGridView_CellFormatting(object? sender, DataGridViewCellFormattingEventArgs e)
         {
-            if (e.ColumnIndex != 11) {
+            if (e.ColumnIndex != 11)
+            {
                 return;
             }
             // Check if the cell contains a numeric value and is in the desired column
@@ -230,7 +236,8 @@ namespace grace.tabs
 
         private void SaveSelectedFont(Font font)
         {
-            try {
+            try
+            {
                 Properties.Settings.Default.Reload();
                 // Save the font to application settings
                 Properties.Settings.Default.DataGridFont = font;

@@ -658,34 +658,6 @@ namespace grace
             }
         }
 
-        public static List<GraceRow> GetGraceRows(List<CollectionName> names)
-        {
-            using (var context = new GraceDbContext())
-            {
-                List<GraceRow> result = new List<GraceRow>();
-                foreach (var name in names)
-                {
-                    var row = context.GraceRows.FirstOrDefault(e => e.GraceId ==
-                        name.GraceId);
-                    if (row != null)
-                    {
-                        result.Add(row);
-                    }
-                }
-                return result;
-            }
-        }
-
-        public static Grace? GetGraceFromSku(string sku)
-        {
-            Grace? row;
-            using (var context = new GraceDbContext())
-            {
-                row = context.Graces.FirstOrDefault(item => item.Sku == sku);
-            }
-            return row;
-        }
-
         public static int GetUserIdFromName(string name)
         {
             int id = 0;
@@ -716,45 +688,6 @@ namespace grace
                     .Distinct()
                     .OrderBy(name => name).ToList();
                 return distinctNames;
-            }
-        }
-
-        public static List<Grace> getCollectionData(string collectionName)
-        {
-            using (var dbContext = new GraceDbContext())
-            {
-                var graces = dbContext.Graces
-                        .Join(
-                            dbContext.Collections.Where(c => c.Name == collectionName),
-                            graces => graces.ID,
-                            collection => collection.GraceId,
-                            (graces, collection) => new Grace
-                            {
-                                ID = graces.ID,
-                                Sku = graces.Sku,
-                                Description = graces.Description,
-                                Brand = graces.Brand,
-                                Availability = graces.Availability,
-                                BarCode = graces.BarCode
-                            })
-                        .ToList();
-                return graces;
-            }
-        }
-
-        public static void DeleteCollection(string collectionName)
-        {
-            using (var dbContext = new GraceDbContext())
-            {
-                // Find the row to check if it exists
-                var rowToDelete = dbContext.Collections
-                    .SingleOrDefault(c => c.Name == collectionName);
-                if (rowToDelete != null)
-                {
-                    // Row exists, so delete it
-                    dbContext.Collections.Remove(rowToDelete);
-                    dbContext.SaveChanges();
-                }
             }
         }
 
@@ -879,19 +812,6 @@ namespace grace
             }
         }
 
-        public static List<String> GetBrands()
-        {
-            using (var context = new GraceDbContext())
-            {
-                var brandList = context.Graces
-                    .Select(c => c.Brand)
-                    .Distinct()
-                    .OrderBy(brand => brand)
-                    .ToList();
-                return brandList;
-            }
-        }
-
         public static int GetTotal(int graceId)
         {
 
@@ -903,79 +823,6 @@ namespace grace
                     .Take(2).ToList();
                 var currentTotal = total[0].CurrentTotal;
                 return currentTotal;
-            }
-        }
-
-        public static void UpdateGraceRowTotal(int graceId, int newTotal)
-        {
-
-            using (var context = new GraceDbContext())
-            {
-                var graceRow = context.GraceRows.FirstOrDefault(e => e.GraceId == graceId);
-                graceRow.Total = newTotal;
-                context.SaveChanges();
-            }
-
-        }
-
-        public static void UpdateGraceRowCollection(int GraceId)
-        {
-
-            using (var context = new GraceDbContext())
-            {
-                // Find the GraceRow entities with the specified GraceId
-                var graceRow = context.GraceRows
-                    .Where(row => row.GraceId == GraceId)
-                    .SingleOrDefault();
-
-                if (graceRow is not null)
-                {
-                    // Set Col1 to Col6 to null
-                    graceRow.Col1 = null;
-                    graceRow.Col2 = null;
-                    graceRow.Col3 = null;
-                    graceRow.Col4 = null;
-                    graceRow.Col5 = null;
-                    graceRow.Col6 = null;
-
-                    var collectionRows = context.Collections.
-                        Where(row => row.GraceId == GraceId && row.Name != "Other")
-                        .ToList();
-                    for (int i = 0; i < collectionRows.Count; i++)
-                    {
-                        var collectionRow = collectionRows[i];
-                        if (collectionRow.Name == "Other")
-                        {
-                            continue;
-                        }
-                        switch (i)
-                        {
-                            case 0:
-                                graceRow.Col1 = collectionRow.Name;
-                                break;
-                            case 1:
-                                graceRow.Col2 = collectionRow.Name;
-                                break;
-                            case 2:
-                                graceRow.Col3 = collectionRow.Name;
-                                break;
-                            case 3:
-                                graceRow.Col4 = collectionRow.Name;
-                                break;
-                            case 4:
-                                graceRow.Col5 = collectionRow.Name;
-                                break;
-                            case 5:
-                                graceRow.Col6 = collectionRow.Name;
-                                break;
-                            default:
-                                logger.Error($"Too many collections for graceId {GraceId}");
-                                break;
-                        }
-                    }
-                    // save changes to the changed row
-                    context.SaveChanges();
-                }
             }
         }
 

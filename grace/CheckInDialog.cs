@@ -77,62 +77,102 @@ namespace grace
 
         private void updateButton_Click(object sender, EventArgs e)
         {
-            var col = collectionComboBox.Text;
-            var rowCol = row.Cells["Collection"].Value.ToString();
-            var newTotal = int.Parse(userTotalTextBox.Text);
-            var originalTotal = int.Parse(row.Cells["UserTotal"].Value.ToString());
-            var user = row.Cells["UserName"].Value.ToString();
-            var graceId = int.Parse(row.Cells["GraceId"].Value.ToString());
-
-            // nothing has changed so bail
-            if (col.Equals(rowCol) && newTotal == originalTotal)
+            try
             {
-                DialogResult = DialogResult.OK;
-                Close();
-            }
-            else
-            {
+                var col = collectionComboBox.Text;
+                var rowCol = row.Cells["Collection"].Value.ToString();
+                var newTotal = int.Parse(userTotalTextBox.Text);
+                var originalTotal = int.Parse(row.Cells["UserTotal"].Value.ToString());
+                var user = row.Cells["UserName"].Value.ToString();
+                var graceId = int.Parse(row.Cells["GraceId"].Value.ToString());
 
-                CollectionName? newCollection = DataBase.getCollection(col.Trim(), graceId);
-                int newCollectionId = 0;
-                if (newCollection == null) {
-                    newCollectionId = DataBase.AddCollection(col.Trim(), graceId);
-                } else
+                // nothing has changed so bail
+                if (col.Equals(rowCol) && newTotal == originalTotal)
                 {
-                    newCollectionId = newCollection.ID;
+                    DialogResult = DialogResult.OK;
+                    Close();
                 }
-                CollectionName? originalCollection = DataBase.getCollection(rowCol.Trim(), graceId);
-                int userId = DataBase.GetUserIdFromName(user);
-
-                using (var context = new GraceDbContext())
+                else
                 {
 
-                    var pulled =
+                    CollectionName? newCollection = DataBase.getCollection(col.Trim(), graceId);
+                    int newCollectionId = 0;
+                    if (newCollection == null)
+                    {
+                        newCollectionId = DataBase.AddCollection(col.Trim(), graceId);
+                    }
+                    else
+                    {
+                        newCollectionId = newCollection.ID;
+                    }
+                    CollectionName? originalCollection = DataBase.getCollection(rowCol.Trim(), graceId);
+                    int userId = DataBase.GetUserIdFromName(user);
+
+
+
+                    using (var context = new GraceDbContext())
+                    {
+
+
+                        var pulled =
                         context.PulledDb.FirstOrDefault(e =>
                             e.Amount == originalTotal
                             && e.CollectionId == originalCollection.ID
                             && e.UserId == userId
                             && e.GraceId == graceId
                             && e.IsCompleted == false);
-                    if (pulled == null)
-                    {
-                        DialogResult = DialogResult.No;
-                        Close();
-                        return;
+                        if (pulled == null)
+                        {
+                            DialogResult = DialogResult.No;
+                            Close();
+                            return;
+                        }
+
+                        int updateDelta = pulled.Amount - newTotal;
+                        int newCurrentTotal = pulled.CurrentTotal += updateDelta;
+                        if (updateDelta != 0)
+                        {
+
+                            pulled.Amount = newTotal;
+                            pulled.CurrentTotal += updateDelta;
+
+
+                            Total total = new Total
+                            {
+                                LastUpdated = DateTime.Now,
+                                GraceId = graceId,
+                                CurrentTotal = newCurrentTotal
+                            };
+                            context.Totals.Add(total);
+
+                        }
+                        if (newCollectionId != originalCollection.ID)
+                        {
+                            pulled.CollectionId = newCollectionId;
+                        }
+                        context.PulledDb.Update(pulled);
+                        context.SaveChanges();
+
+                        // Now we need to update the new 
+
+                        DialogResult = DialogResult.OK;
+
                     }
 
-                    pulled.Amount = newTotal;
-                    if (newCollectionId != originalCollection.ID)
-                    {
-                        pulled.CollectionId = newCollectionId;
-                    }
-                    context.PulledDb.Update(pulled);
-                    context.SaveChanges();
-                    DialogResult = DialogResult.OK;
-                    Close();
-                    return;
+                    // newRow the GraceRow
+                    DataBase.UpdateGraceRow(graceId);
+
                 }
             }
+            catch (Exception ex)
+            {
+                var exString = ex.ToString();
+                MessageBox.Show(this, $"Error Loading file {exString}", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                DialogResult = DialogResult.No;
+            }
+            Close();
+            return;
         }
     }
 }
