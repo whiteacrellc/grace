@@ -205,6 +205,8 @@ namespace grace.tabs
                 {
                     return;
                 }
+
+                str = Utils.RemoveLeadingZero(str);
                 filterBarCodeTextBox.Text = str;
                 bindingSource.DataSource = DataGridLoader.getFilteredBarCode(str);
                 Utils.RemoveColumnByName(dataGridView, "ID");
