@@ -17,5 +17,22 @@ namespace grace
                 dataGridView.Columns.Remove(columnName);
             }  
         }
+
+        public static string RemoveLeadingZero(string str)
+        {
+            if (string.IsNullOrEmpty(str))
+            {
+                return str; // Return empty string if input is null or empty
+            }
+
+            if (str.StartsWith("0") && str.Length > 1)
+            {
+                return str.Substring(1);
+            }
+            else
+            {
+                return str;
+            }
+        }
     }
 }

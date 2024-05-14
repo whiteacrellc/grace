@@ -180,6 +180,7 @@ namespace grace.tabs
                 }
                 else
                 {
+                    scannedBarcode = Utils.RemoveLeadingZero(scannedBarcode);
                     var filteredProducts =
                         DataBase.GetPulledGridFromBarCode(scannedBarcode);
 
