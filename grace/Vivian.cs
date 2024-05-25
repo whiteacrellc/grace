@@ -57,7 +57,7 @@ namespace grace
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = AutoScaleMode.Font;
 
-            EnableReportButton(false);
+            EnableReportMenuItems(false);
 
             // Init the tab page classes
             homeTab = new HomeTab(this);
@@ -116,15 +116,17 @@ namespace grace
             }
         }
 
-        public void EnableReportButton(bool enable)
+        public void EnableReportMenuItems(bool enable)
         {
             if (enable)
             {
                 saveReportToolStripMenuItem.Enabled = true;
+                saveInventoryReportToolStripMenuItem.Enabled= true;
             }
             else
             {
                 saveReportToolStripMenuItem.Enabled = false;
+                saveInventoryReportToolStripMenuItem.Enabled= false;
             }
 
         }
@@ -188,7 +190,7 @@ namespace grace
         private void importInventoryToolStripMenuItem_Click(object sender, EventArgs e)
         {
             openFileDialog.FilterIndex = 1;  // Index of the filter that is selected by default
-            EnableReportButton(false);
+            EnableReportMenuItems(false);
 
 
             try
@@ -230,10 +232,10 @@ namespace grace
             if (saveFileDialog.ShowDialog() == DialogResult.OK)
             {
                 string filePath = saveFileDialog.FileName;
-                EnableReportButton(false);
+                EnableReportMenuItems(false);
                 generateReport();
                 report.WriteReport(filePath);
-                EnableReportButton(true);
+                EnableReportMenuItems(true);
             }
         }
 

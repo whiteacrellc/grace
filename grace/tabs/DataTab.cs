@@ -44,6 +44,7 @@ namespace grace.tabs
         private DataGridView dataGridView;
         private BindingSource bindingSource;
         private ToolStripMenuItem setInventoryFontSizeToolStripMenuItem;
+        private ToolStripMenuItem saveInventoryReportToolStripMenuItem;
         private bool disposedValue;
         private TextBox filterBarCodeTextBox;
         private VScrollBar vScrollBar;
@@ -62,6 +63,8 @@ namespace grace.tabs
             setInventoryFontSizeToolStripMenuItem =
                 vivian.setInventoryFontSizeToolStripMenuItem;
             filterBarCodeTextBox = vivian.filterBarcodeTextBox;
+            saveInventoryReportToolStripMenuItem =
+                vivian.saveInventoryReportToolStripMenuItem;
         }
 
         internal void Load()
@@ -78,6 +81,8 @@ namespace grace.tabs
             setInventoryFontSizeToolStripMenuItem.Click
                 += setInventoryFontSizeToolStripMenuItem_Click;
             filterBarCodeTextBox.KeyDown += filterBarCodeTextBox_KeyDown;
+            saveInventoryReportToolStripMenuItem.Click +=
+                saveInventoryReportToolStripMenuItem_Click;
 
             // Setup data connection to grid view
             bindingSource = new BindingSource();
@@ -296,6 +301,30 @@ namespace grace.tabs
             {
                 row.DefaultCellStyle.Font = font;
             }
+        }
+
+        private void saveInventoryReportToolStripMenuItem_Click(object? sender, EventArgs e)
+        {
+            vivian.EnableReportMenuItems(false);
+
+            using (var saveFileDialog = new SaveFileDialog())
+            {
+                saveFileDialog.FileName = $"inventory_{DateTime.Now.ToString("yyyyMMdd")}.xlsx";
+                saveFileDialog.RestoreDirectory = true;
+                saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+                // saveFileDialog.Multiselect = true;
+                saveFileDialog.Filter = "Excel Files (*.xlsx)|*.xlsx|All Files (*.*)|*.*";  // File filter
+
+
+                if (saveFileDialog.ShowDialog() != DialogResult.OK)
+                    return;
+
+                string filePath = saveFileDialog.FileName;
+                InventoryReport ir = new InventoryReport(dataGridView);
+                ir.writeReport(filePath);
+            }
+
+            vivian.EnableReportMenuItems(true);
         }
 
         // Helper method to check if a value is numeric

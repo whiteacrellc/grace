@@ -255,13 +255,13 @@ namespace grace.tabs
             if (PasswordChecker.IsUserAdmin(username))
             {
                 importInventoryToolStripMenuItem.Enabled = true;
-                vivian.EnableReportButton(true);
+                vivian.EnableReportMenuItems(true);
                 tabControl.SelectedTab = vivian.tabControl.TabPages[1];
             }
             else
             {
                 importInventoryToolStripMenuItem.Enabled = false;
-                vivian.EnableReportButton(false);
+                vivian.EnableReportMenuItems(false);
                 tabControl.SelectedTab = vivian.tabControl.TabPages[2];
             }
         }
