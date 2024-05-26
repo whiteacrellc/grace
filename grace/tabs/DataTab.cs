@@ -16,10 +16,12 @@
  *  
  */
 using grace.data;
+using grace.data.models;
 using NLog;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -48,6 +50,7 @@ namespace grace.tabs
         private bool disposedValue;
         private TextBox filterBarCodeTextBox;
         private VScrollBar vScrollBar;
+        private DataTable dataTable = new DataTable();
 
         public DataTab(Vivian v)
         {
@@ -130,7 +133,9 @@ namespace grace.tabs
             }
             dataGridView.DataSource = bindingSource;
             DataGridLoader.LoadBindingTable(refresh);
-            bindingSource.DataSource = DataGridLoader.getData();
+            List<GraceRow> list = DataGridLoader.getData();
+            dataTable = DataGridLoader.ConvertToDataTable(list);
+            bindingSource.DataSource = dataTable;
             Utils.RemoveColumnByName(dataGridView, "ID");
             Utils.RemoveColumnByName(dataGridView, "Grace");
             Utils.RemoveColumnByName(dataGridView, "GraceId");
@@ -170,6 +175,11 @@ namespace grace.tabs
             DataGridViewCellMouseEventArgs e)
         {
             int rowIndex = e.RowIndex;
+            if (rowIndex < 0)
+            {
+                logger.Warn("Cell mouse double click has index less than zero");
+                return;
+            }
             DataGridViewRow row = dataGridView.Rows[rowIndex];
             using (EditRowForm editRowForm = new EditRowForm(row))
             {
@@ -193,7 +203,14 @@ namespace grace.tabs
         internal void filterSkuTextBox_TextChanged(object? sender, EventArgs e)
         {
             string searchTerm = filterSkuTextBox.Text;
-            bindingSource.DataSource = DataGridLoader.getFilteredData(searchTerm);
+            if (string.IsNullOrEmpty(searchTerm))
+            {
+                bindingSource.DataSource = dataTable;
+            }
+            else
+            {
+                bindingSource.DataSource = DataGridLoader.getFilteredData(dataTable, searchTerm);
+            }
             Utils.RemoveColumnByName(dataGridView, "ID");
             Utils.RemoveColumnByName(dataGridView, "Grace");
             Utils.RemoveColumnByName(dataGridView, "GraceId");
@@ -206,14 +223,18 @@ namespace grace.tabs
             {
                 TextBox box = (TextBox)sender;
                 var str = box.Text.Trim();
+                str = Utils.RemoveLeadingZero(str);
+
                 if (string.IsNullOrEmpty(str))
                 {
-                    return;
+                    bindingSource.DataSource = dataTable;
+
+                }
+                else
+                {
+                    bindingSource.DataSource = DataGridLoader.getFilteredBarCode(dataTable, str);
                 }
 
-                str = Utils.RemoveLeadingZero(str);
-                filterBarCodeTextBox.Text = str;
-                bindingSource.DataSource = DataGridLoader.getFilteredBarCode(str);
                 Utils.RemoveColumnByName(dataGridView, "ID");
                 Utils.RemoveColumnByName(dataGridView, "Grace");
                 Utils.RemoveColumnByName(dataGridView, "GraceId");

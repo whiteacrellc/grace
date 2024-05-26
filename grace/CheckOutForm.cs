@@ -52,7 +52,7 @@ namespace grace
                 }
                 var collections =
                     context.Collections.Where(item => item.GraceId == graceId
-                    && item.Name != "Other").ToList();
+                    && item.Name != "Other").OrderBy(item => item.Name).ToList();
                 if (collections.Any())
                 {
                     collectionComboBox.Items.Clear();

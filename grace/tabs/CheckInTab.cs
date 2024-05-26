@@ -232,7 +232,7 @@ namespace grace.tabs
                     DateTime dateTime = checkInData.LastUpdated;
                     var user_id = DataBase.GetUserIdFromName(username);
                     int col_id = DataBase.GetCollectionId(graceId, collectionName);
-                    int currentTotal = DataBase.GetTotal(graceId);
+                    int currentTotal = DataBase.GetTotal(graceId).CurrentTotal;
                     int newTotal = currentTotal + updatedValue;
 
                     using (var context = new GraceDbContext())

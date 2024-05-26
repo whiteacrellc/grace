@@ -14,6 +14,7 @@ using grace.data;
 using grace.tabs;
 using grace.utils;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualBasic.ApplicationServices;
 using NLog;
 using OfficeOpenXml;
