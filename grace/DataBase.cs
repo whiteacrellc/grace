@@ -68,6 +68,7 @@ namespace grace
             using (var context = new GraceDbContext(ConnectionString))
             {
                 context.Database.EnsureCreated();
+                DbInitializer.EnsureLastUpdatedColumn(context);
             }
         }
 
@@ -79,6 +80,7 @@ namespace grace
             using (var context = new GraceDbContext())
             {
                 context.Database.EnsureCreated();
+                DbInitializer.EnsureLastUpdatedColumn(context);
             }
 
         }
@@ -93,8 +95,19 @@ namespace grace
             public int GraceId { get; set; }
         }
 
-        public static List<CheckOut> GetPulledGrid()
+        public static System.Data.DataTable GetPulledGrid()
         {
+
+            System.Data.DataTable table = new System.Data.DataTable();
+
+            // Define columns
+            table.Columns.Add("Sku", typeof(string));
+            table.Columns.Add("Description", typeof(string));
+            table.Columns.Add("Brand", typeof(string));
+            table.Columns.Add("BarCode", typeof(string));
+            table.Columns.Add("Total", typeof(int));
+            table.Columns.Add("GraceId", typeof(int));
+
             using (var dbContext = new GraceDbContext())
             {
 
@@ -115,7 +128,15 @@ namespace grace
                         GraceId = graces.ID
                     }
                 ).ToList();
-                return result;
+
+                foreach (var checkOut in result)
+                {
+                    table.Rows.Add(checkOut.Sku, checkOut.Description,
+                        checkOut.Brand, checkOut.BarCode, checkOut.Total,
+                        checkOut.GraceId);
+                }
+
+                return table;
             }
         }
 
@@ -145,43 +166,32 @@ namespace grace
             }
         }
 
-        public static List<CheckOut> GetPulledGridFromBarCode(string scannedBarcode)
+        public static DataView GetPulledGridFromBarCode(string scannedBarcode)
         {
-            var list = GetPulledGrid();
+            var dataTable = GetPulledGrid();
             List<CheckOut> result = new List<CheckOut>();
 
             if (scannedBarcode == null || scannedBarcode == string.Empty)
             {
-                return list;
+                return new DataView(dataTable);
             }
 
-            foreach (var checkOut in list)
+            DataView view = new DataView(dataTable)
             {
-                if (checkOut.BarCode != null && checkOut.BarCode.Contains(scannedBarcode))
-                {
-                    result.Add(checkOut);
-                }
-            }
-            return result;
+                RowFilter = "BarCode LIKE '%" + scannedBarcode + "%'"
+            };
+            return view;
+
         }
 
 
-        public static List<CheckOut> GetFilteredPulledGrid(string searchTerm)
+        public static DataView GetFilteredPulledGrid(System.Data.DataTable dataTable, string searchTerm)
         {
-            List<CheckOut> result = new List<CheckOut>();
-            var list = GetPulledGrid();
-            if (searchTerm == null || searchTerm == string.Empty)
+            DataView view = new DataView(dataTable)
             {
-                return list;
-            }
-
-            // Look through the list for either matches in the sku or
-            // description
-            result = list.Where(e => e.Sku.Contains(searchTerm,
-                StringComparison.OrdinalIgnoreCase))
-               .ToList();
-            return result;
-
+                RowFilter = "Sku LIKE '%" + searchTerm + "%'"
+            };
+            return view;
         }
         public class CheckInData
         {
@@ -496,6 +506,7 @@ namespace grace
                             .OrderByDescending(t => t.ID)
                             .First();
                         graceRow.Total = total.CurrentTotal;
+                        graceRow.LastUpdated = total.LastUpdated;
 
                         // Set columns
                         graceRow.Col1 = null;
@@ -572,7 +583,9 @@ namespace grace
                 {
                     return 0;
                 }
-                graceRow.Total = GetTotal(graceId);
+                Total t = GetTotal(graceId);
+                graceRow.Total = t.CurrentTotal;
+                graceRow.LastUpdated = t.LastUpdated;
 
                 // Set columns
                 graceRow.Col1 = null;
@@ -812,7 +825,7 @@ namespace grace
             }
         }
 
-        public static int GetTotal(int graceId)
+        public static Total GetTotal(int graceId)
         {
 
             using (var context = new GraceDbContext())
@@ -821,7 +834,7 @@ namespace grace
                     .Where(t => t.GraceId == graceId)
                     .OrderByDescending(t => t.ID)
                     .Take(2).ToList();
-                var currentTotal = total[0].CurrentTotal;
+                var currentTotal = total[0];
                 return currentTotal;
             }
         }

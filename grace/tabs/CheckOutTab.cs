@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.ComponentModel;
+using System.Data;
 using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
 using System.Linq;
 using System.Text;
@@ -25,6 +26,7 @@ namespace grace.tabs
         private string scannedBarcode = string.Empty;
         private int user_id = 0;
         private TabPage checkOutTabPage;
+        private DataTable dataTable;
 
         internal CheckOutTab(Vivian v)
         {
@@ -85,6 +87,10 @@ namespace grace.tabs
             DataGridViewCellMouseEventArgs e)
         {
             int rowIndex = e.RowIndex;
+            if (rowIndex < 0)
+            {
+                return;
+            }
             DataGridViewRow row = checkOutDataGrid.Rows[rowIndex];
             var sku = row.Cells["Sku"].Value as string;
             using (CheckOutForm editRowForm = new CheckOutForm(sku))
@@ -124,8 +130,8 @@ namespace grace.tabs
 
         internal async void LoadDataGrid()
         {
-            var data = await LoadDataAsync();
-            checkoutBindingSource.DataSource = data;
+            dataTable = await LoadDataAsync();
+            checkoutBindingSource.DataSource = dataTable;
             ChangeColumnNames();
         }
         
@@ -138,7 +144,7 @@ namespace grace.tabs
 
         }
 
-        private async Task<List<DataBase.CheckOut>> LoadDataAsync()
+        private async Task<DataTable> LoadDataAsync()
         {
             // Simulate an asynchronous data retrieval (replace with your actual async data retrieval logic)
             return await Task.Run(() =>
@@ -152,7 +158,7 @@ namespace grace.tabs
             string searchTerm = checkOutSearchTextBox.Text;
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {
-                var data = DataBase.GetFilteredPulledGrid(searchTerm);
+                var data = DataBase.GetFilteredPulledGrid(dataTable, searchTerm) ;
                 checkoutBindingSource.DataSource = data;
             }
             else
@@ -181,32 +187,42 @@ namespace grace.tabs
                 else
                 {
                     scannedBarcode = Utils.RemoveLeadingZero(scannedBarcode);
-                    var filteredProducts =
-                        DataBase.GetPulledGridFromBarCode(scannedBarcode);
+             
 
-                    // Bind the filtered products to the DataGridView
-                    checkoutBindingSource.DataSource = filteredProducts;
-                    ChangeColumnNames();
-                    // Reset the scanned barcode for the next scan
-                    scannedBarcode = string.Empty;
-
-                    // Mark the keypress as handled to prevent it from being processed further
-                    e.Handled = true;
-
-                    if (Globals.GetInstance().BarCodeAutoOpen)
+                    if (scannedBarcode == null | scannedBarcode == string.Empty)
                     {
-                        if (filteredProducts.Count > 0)
+                        LoadDataGrid();
+                    }
+                    else
+                    {
+                        var filteredProducts =
+                            DataBase.GetPulledGridFromBarCode(scannedBarcode);
+                        // Bind the filtered products to the DataGridView
+                        checkoutBindingSource.DataSource = filteredProducts;
+
+
+                        ChangeColumnNames();
+                        // Reset the scanned barcode for the next scan
+                        scannedBarcode = string.Empty;
+
+                        // Mark the keypress as handled to prevent it from being processed further
+                        e.Handled = true;
+
+                        if (Globals.GetInstance().BarCodeAutoOpen)
                         {
-                            var sku = filteredProducts[0].Sku;
-                            using (CheckOutForm editRowForm = new CheckOutForm(sku))
+                            if (filteredProducts.Count > 0)
                             {
-                                DialogResult result = editRowForm.ShowDialog();
-                                if (result == DialogResult.OK)
+                                var sku = filteredProducts[0]["Sku"].ToString();
+                                using (CheckOutForm editRowForm = new CheckOutForm(sku))
                                 {
-                                    // we need to reload the grid.
-                                    LoadDataGrid();
-                                    textBoxBarCode.Clear();
-                                    checkOutSearchTextBox.Clear();
+                                    DialogResult result = editRowForm.ShowDialog();
+                                    if (result == DialogResult.OK)
+                                    {
+                                        // we need to reload the grid.
+                                        LoadDataGrid();
+                                        textBoxBarCode.Clear();
+                                        checkOutSearchTextBox.Clear();
+                                    }
                                 }
                             }
                         }

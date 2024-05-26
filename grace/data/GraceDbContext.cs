@@ -138,6 +138,9 @@ namespace grace.data
                   .WithMany()
                   .HasForeignKey(e => e.GraceId)
                   .OnDelete(DeleteBehavior.Cascade);
+    
+                entity.Property(t => t.LastUpdated).IsRequired();
+                
 
             });
 
@@ -167,14 +170,14 @@ namespace grace.data
                     .HasForeignKey(e => e.CollectionId); // Choose the appropriate delete behavior
             });
 
-
-            base.OnModelCreating(modelBuilder);
-
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlite(ConnectionString).EnableSensitiveDataLogging();
+
+
+
         }
     }
 }

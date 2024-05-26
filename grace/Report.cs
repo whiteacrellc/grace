@@ -23,6 +23,8 @@ using NLog.Config;
 using System.Windows.Forms;
 using System.IO;
 using grace.data.models;
+using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
+using System.Globalization;
 
 
 namespace grace
@@ -99,10 +101,12 @@ namespace grace
 
                 worksheet.Cells[currentRow, 10].Value = row.Availability;
                 var total = DataBase.GetTotal(row.ID);
-                worksheet.Cells[currentRow, 11].Value = total;
+                worksheet.Cells[currentRow, 11].Value = total.CurrentTotal;
+                string formattedDate = total.LastUpdated.ToString("dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture);
+                worksheet.Cells[currentRow, 12].Value = formattedDate;
                 // Highlight any negative totals by making the background
                 // yellow
-                if (total < 0)
+                if (total.CurrentTotal < 0)
                 {
                     worksheet.Cells[currentRow, 11].Style.Fill.PatternType = ExcelFillStyle.Solid;
                     worksheet.Cells[currentRow, 11].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);

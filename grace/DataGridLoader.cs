@@ -40,7 +40,65 @@ namespace grace
             return list;
         }
 
-        public static List<GraceRow> getFilteredData(string searchTerm)
+
+        public static DataSet GetDataSet(List<GraceRow> graceRowsList)
+        {
+
+            // Convert the List<GraceRow> to a DataTable
+            DataTable graceRowsTable = ConvertToDataTable(graceRowsList);
+
+            // Create a new DataSet and add the DataTable to it
+            DataSet dataSet = new DataSet();
+            dataSet.Tables.Add(graceRowsTable);
+            return dataSet;
+        }
+
+        public static DataTable ConvertToDataTable(List<GraceRow> graceRowsList)
+        {
+            DataTable table = new DataTable();
+
+            // Define columns
+            table.Columns.Add("ID", typeof(int));
+            table.Columns.Add("Sku", typeof(string));
+            table.Columns.Add("Description", typeof(string));
+            table.Columns.Add("Brand", typeof(string));
+            table.Columns.Add("Availability", typeof(string));
+            table.Columns.Add("BarCode", typeof(string));
+            table.Columns.Add("Col1", typeof(string));
+            table.Columns.Add("Col2", typeof(string));
+            table.Columns.Add("Col3", typeof(string));
+            table.Columns.Add("Col4", typeof(string));
+            table.Columns.Add("Col5", typeof(string));
+            table.Columns.Add("Col6", typeof(string));
+            table.Columns.Add("Total", typeof(int));
+            table.Columns.Add("LastUpdated", typeof(DateTime));
+            table.Columns.Add("GraceId", typeof(int));
+
+            // Populate rows
+            foreach (var graceRow in graceRowsList)
+            {
+                table.Rows.Add(graceRow.ID, graceRow.Sku, graceRow.Description,
+                    graceRow.Brand, graceRow.Availability, graceRow.BarCode,
+                    graceRow.Col1, graceRow.Col2, graceRow.Col3, graceRow.Col4,
+                    graceRow.Col5, graceRow.Col6, graceRow.Total,
+                    graceRow.LastUpdated, graceRow.GraceId);
+            }
+
+            return table;
+        }
+
+        public static DataView getFilteredData(DataTable table, string searchTerm)
+        {
+            DataView view = new DataView(table)
+            {
+                RowFilter = "Sku LIKE '%" + searchTerm +
+                    "%' OR Description LIKE '%"
+                    + searchTerm + "%'"
+            };
+            return view;
+        }
+
+    public static List<GraceRow> getFilteredData(string searchTerm)
         {
             List<GraceRow> result = new List<GraceRow>();
             var list = getData();
@@ -87,6 +145,15 @@ namespace grace
             return result;
         }
 
+        public static DataView getFilteredBarCode(DataTable table, string searchTerm)
+        {
+            DataView view = new DataView(table)
+            {
+                RowFilter = "Barcode LIKE '%" + searchTerm + "%'"
+            };
+            return view;
+        }
+
         internal static void LoadBindingTable(bool refresh = false)
         {
             using (var context = new GraceDbContext())
@@ -128,6 +195,7 @@ namespace grace
                         .First();
 
                     row.Total = currentTotal.CurrentTotal;
+                    row.LastUpdated = currentTotal.LastUpdated;
 
                     var collectionList = context.Collections.Where(t => t.GraceId == item.ID);
 

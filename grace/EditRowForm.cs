@@ -181,14 +181,15 @@ namespace grace
 
         private void checkItem(object var)
         {
-            if (var != null)
+            if (var == null || var == DBNull.Value )
             {
-                if (checkedListBox.Items.Contains((string)var))
-                {
-                    int i = checkedListBox.Items.IndexOf((string)var);
-                    //checkedListBox.SetItemChecked(i, true);
-                    checkedListBox.SetItemCheckState(i, CheckState.Checked);
-                }
+                return;
+            }
+            if (checkedListBox.Items.Contains((string)var))
+            {
+                int i = checkedListBox.Items.IndexOf((string)var);
+                //checkedListBox.SetItemChecked(i, true);
+                checkedListBox.SetItemCheckState(i, CheckState.Checked);
             }
         }
 
