@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace grace
+namespace grace.utils
 {
     public class Utils
     {
@@ -15,7 +15,7 @@ namespace grace
             if (dataGridView.Columns.Contains(columnName))
             {
                 dataGridView.Columns.Remove(columnName);
-            }  
+            }
         }
 
         public static string RemoveLeadingZero(string str)
