@@ -23,6 +23,7 @@ using NLog.Config;
 using System.Windows.Forms;
 using System.IO;
 using grace.data.models;
+using Microsoft.Office.Interop.Excel;
 
 
 namespace grace
@@ -32,11 +33,27 @@ namespace grace
  
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         private DataGridView dataGridView;
-
+        private int numPageRows = 0;
+        private int currentRow = 0;
+        private int currentPage = 0;
 
         public InventoryReport(DataGridView dataGridView)
         {
             this.dataGridView = dataGridView;
+            this.numPageRows = 30;
+        }
+
+        private void WriteHeader(ExcelWorksheet worksheet, int row)
+        {
+            int numCols = dataGridView.Columns.Count;
+            worksheet.Cells[row, 1, row, numCols + 1].Style.Font.Size = 16;
+            worksheet.Cells[row, 1, row, numCols + 1].Style.Font.Bold = true;
+
+            // Add the headers
+            for (int col = 0; col <numCols; col++)
+            {
+                worksheet.Cells[row, col + 1].Value = dataGridView.Columns[col].HeaderText;
+            }
         }
 
         public void writeReport(string filePath)
@@ -54,23 +71,52 @@ namespace grace
                     ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Report");
 
                     int numCols = dataGridView.Columns.Count;
+                    worksheet.Cells.Style.Font.Size = 14;
 
-                    worksheet.Cells[1, 1, 1, numCols + 1].Style.Font.Size = 16;
-                    worksheet.Cells[1, 1, 1, numCols + 1].Style.Font.Bold = true;
+                    // Set the row height to 10 for all rows
+                    worksheet.DefaultRowHeight = Globals.GetInstance().RowHeight;
 
-                    // Add the headers
-                    for (int col = 0; col < dataGridView.Columns.Count; col++)
+                    currentRow = 1;
+                    currentPage = 1;
+                    WriteHeader(worksheet, 1);
+
+                    for (int columnIndex = 1; columnIndex < 12; columnIndex++)
                     {
-                        worksheet.Cells[1, col + 1].Value = dataGridView.Columns[col].HeaderText;
+                        worksheet.Column(columnIndex).Width = 20;
+
                     }
+
+                    /*
+                    worksheet.Column(1).Width = 25;
+                    worksheet.Column(3).Width = 50;
+                    worksheet.Column(10).Width = 15;
+                    worksheet.Column(11).Width = 15;
+                    */
+
+                    WritePrintHeader(worksheet);
+
+
+
 
                     // Add the data rows
                     for (int row = 0; row < dataGridView.Rows.Count; row++)
                     {
+                        if (currentPage > numPageRows)
+                        {
+                            worksheet.InsertRow(currentRow++, 1);
+                            //currentRow++;
+                            worksheet.Row(currentRow).PageBreak = true;
+                            WriteHeader(worksheet, currentRow++);
+                            currentPage = 0;
+
+                        }
                         for (int col = 0; col < dataGridView.Columns.Count; col++)
                         {
                             worksheet.Cells[row + 2, col + 1].Value = dataGridView.Rows[row].Cells[col].Value;
+                            currentRow++;
+                            currentPage++;
                         }
+
                     }
 
                     // Set column 5 to text format
