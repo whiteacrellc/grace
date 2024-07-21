@@ -122,12 +122,12 @@ namespace grace
             if (enable)
             {
                 saveReportToolStripMenuItem.Enabled = true;
-                saveInventoryReportToolStripMenuItem.Enabled= true;
+                saveInventoryReportToolStripMenuItem.Enabled = true;
             }
             else
             {
                 saveReportToolStripMenuItem.Enabled = false;
-                saveInventoryReportToolStripMenuItem.Enabled= false;
+                saveInventoryReportToolStripMenuItem.Enabled = false;
             }
 
         }
@@ -196,20 +196,30 @@ namespace grace
 
             try
             {
-                using (var openFileDialog = new OpenFileDialog())
+                if (MessageBox.Show(
+                "This will completely erase the database"
+                + " and start the program from scratch. You will lose all"
+                + " stored information. Are you sure you want to do this?",
+                "Danger! Danger!",
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Error) == DialogResult.Yes)
                 {
-                    openFileDialog.CheckFileExists = true;
-                    // openFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.GetCommandLineArgs);
-                    // openFileDialog.Multiselect = true;
-                    openFileDialog.Filter = "Excel Files (*.xlsx)|*.xlsx|All Files (*.*)|*.*";  // File filter
 
 
-                    if (openFileDialog.ShowDialog() != DialogResult.OK)
-                        return;
+                    using (var openFileDialog = new OpenFileDialog())
+                    {
+                        openFileDialog.CheckFileExists = true;
+                        // openFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.GetCommandLineArgs);
+                        // openFileDialog.Multiselect = true;
+                        openFileDialog.Filter = "Excel Files (*.xlsx)|*.xlsx|All Files (*.*)|*.*";  // File filter
 
-                    string filePath = openFileDialog.FileName;
-                    //er.ReadExcelFile(filePath);
-                    DataBase.LoadFromExcel(filePath);
+
+                        if (openFileDialog.ShowDialog() != DialogResult.OK)
+                            return;
+
+                        string filePath = openFileDialog.FileName;
+                        //er.ReadExcelFile(filePath);
+                        DataBase.LoadFromExcel(filePath);
+                    }
                 }
             }
             catch (Exception ex)
