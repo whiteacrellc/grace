@@ -31,6 +31,7 @@ namespace grace.data.models
         public string? Col5 { get; set; }
         public string? Col6 { get; set; }
         public int Total { get; set; }
+        public string Note { get; set; }
         public DateTime LastUpdated { get; set; }
         public int GraceId { get; set; }
         public Grace Grace { get; set; }

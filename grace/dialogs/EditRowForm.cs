@@ -12,19 +12,9 @@
  */
 using grace.data;
 using grace.data.models;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using NLog;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Data.Entity;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+
 
 namespace grace
 {
@@ -32,15 +22,12 @@ namespace grace
     {
         DataGridViewRow? row;
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
-        private string Sku = string.Empty;
-        private string Brand = string.Empty;
-        private string Description = string.Empty;
-        private List<string> colList = new List<string>();
+        private List<string> colList = [];
         private bool newRow;
         private GraceRow? graceRow;
         private bool updateGraceRow = false;
-        private List<string> brandList = new List<string>();
-        private List<string> newColList = new List<string>();
+        private List<string> newColList = [];
+        private bool isReport = false;
 
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
@@ -78,23 +65,21 @@ namespace grace
                 }
             }
 
-            var distintBrandNames = new List<string>();
+            var distinctBrandNames = new List<string>();
             var distinctCollectionNames = new List<string>();
             using (var context = new GraceDbContext())
             {
                 // Fill checkbox list with collection names
-                distinctCollectionNames = context.Collections
+                distinctCollectionNames = [.. context.Collections
                     .Where(e => e.Name != "Other")
                     .Select(e => e.Name)
                     .Distinct()
-                    .OrderBy(name => name)
-                    .ToList();
+                    .OrderBy(name => name)];
                 // Fill in drop down for brand name
-                distintBrandNames = context.Graces
+                distinctBrandNames = [.. context.Graces
                     .Select(c => c.Brand)
                     .Distinct()
-                    .OrderBy(brand => brand)
-                    .ToList();
+                    .OrderBy(brand => brand)];
             }
 
             checkedListBox.Items.Clear();
@@ -105,18 +90,22 @@ namespace grace
             }
 
             brandComboBox.Items.Clear();
-            foreach (var d in distintBrandNames)
+            foreach (var d in distinctBrandNames)
             {
                 brandComboBox.Items.Add(d);
             }
 
-            if (row != null && row.Cells.Count > 11)
+            if (row != null && graceRow != null)
             {
-                if (graceRow != null)
+                if (row.Cells.Count > 11)
                 {
                     skuTextBox.Text = graceRow.Sku;
                     brandComboBox.SelectedItem = graceRow.Brand;
                     descTextBox.Text = graceRow.Description;
+                    if (graceRow.Note != null)
+                    {
+                        noteTextBox.Text = graceRow.Note;
+                    }
                     if (graceRow.Availability != null)
                     {
                         availabilityTextBox.Text = graceRow.Availability;
@@ -126,15 +115,37 @@ namespace grace
                     {
                         barCodeTextBox.Text = obj.ToString();
                     }
-                    checkItem(row.Cells[5].Value);
-                    checkItem(row.Cells[6].Value);
-                    checkItem(row.Cells[7].Value);
-                    checkItem(row.Cells[8].Value);
-                    checkItem(row.Cells[9].Value);
-                    checkItem(row.Cells[10].Value);
+                    CheckItem(row.Cells[5].Value);
+                    CheckItem(row.Cells[6].Value);
+                    CheckItem(row.Cells[7].Value);
+                    CheckItem(row.Cells[8].Value);
+                    CheckItem(row.Cells[9].Value);
+                    CheckItem(row.Cells[10].Value);
 
                     currentTextBox.Text = row.Cells["Total"].Value.ToString();
                     adjustTextBox.Text = "0";
+                }
+                else
+                {
+                    isReport = true;
+                    skuTextBox.Text = graceRow.Sku;
+                    brandComboBox.SelectedItem = graceRow.Brand;
+                    descTextBox.Text = graceRow.Description;
+                    if (graceRow.Note != null)
+                    {
+                        noteTextBox.Text = graceRow.Note;
+                    }
+                    if (graceRow.Availability != null)
+                    {
+                        availabilityTextBox.Text = graceRow.Availability;
+                    }
+                    currentTextBox.Text = row.Cells["Total"].Value.ToString();
+                    adjustTextBox.Text = "0";
+                    noteTextBox.Text = row.Cells["Note"].Value.ToString();
+                    addCollectionLabel.Hide();
+                    addCollectionTextBox.Hide();
+                    checkedListBox.Hide();
+                    collectionLabel.Hide();
                 }
             }
 
@@ -179,7 +190,7 @@ namespace grace
                 adjustInventoryLabel, 0, -30, 2000);
         }
 
-        private void checkItem(object var)
+        private void CheckItem(object var)
         {
             if (var == null || var == DBNull.Value )
             {
@@ -193,7 +204,7 @@ namespace grace
             }
         }
 
-        private void saveButton_Click(object sender, EventArgs e)
+        private void SaveButton_Click(object sender, EventArgs e)
         {
             if (newRow)
             {
@@ -204,7 +215,7 @@ namespace grace
             }
             else
             {
-                if (updateRow())
+                if (UpdateRow())
                 {
                     return;
                 }
@@ -214,10 +225,10 @@ namespace grace
         }
 #pragma warning disable CS8602
 #pragma warning disable CA1305
-        private bool updateRow()
+        private bool UpdateRow()
         {
             bool ret = false;
-            if (checkFields())
+            if (CheckFields(isReport))
             {
                 return true;
             }
@@ -225,36 +236,38 @@ namespace grace
             // Update Graces DB
             using (var context = new GraceDbContext())
             {
-                bool hasNewCollection = false;
                 var grace =
                         context.Graces.FirstOrDefault(item => item.Sku == graceRow.Sku);
 
-                if (string.IsNullOrEmpty(addCollectionTextBox.Text) == false)
+                // Reports don't have collection info
+                if (!isReport)
                 {
-                    var cname = addCollectionTextBox.Text.Trim();
-                    if (DataBase.CheckCollectionExists(cname))
+                    if (string.IsNullOrEmpty(addCollectionTextBox.Text) == false)
                     {
-                        MessageBox.Show("Trying to add a new collection" + cname
-                            + " which already exists. Please use the Collections"
-                            + " widget above to choose this collection.",
-                        "Oh Noes!", MessageBoxButtons.OK,
-                        MessageBoxIcon.Information);
-                        addCollectionTextBox.Text = string.Empty;
-                        return true;
-                    }
-                    else
-                    {
-                        // Row does not exist, so insert a new row
-                        var newRow = new CollectionName
+                        var cname = addCollectionTextBox.Text.Trim();
+                        if (DataBase.CheckCollectionExists(cname))
                         {
-                            GraceId = grace.ID,
-                            Name = cname
-                            // Set other properties as needed
-                        };
+                            MessageBox.Show("Trying to add a new collection" + cname
+                                + " which already exists. Please use the Collections"
+                                + " widget above to choose this collection.",
+                            "Oh Noes!", MessageBoxButtons.OK,
+                            MessageBoxIcon.Information);
+                            addCollectionTextBox.Text = string.Empty;
+                            return true;
+                        }
+                        else
+                        {
+                            // Row does not exist, so insert a new row
+                            var newRow = new CollectionName
+                            {
+                                GraceId = grace.ID,
+                                Name = cname
+                                // Set other properties as needed
+                            };
 
-                        context.Collections.Add(newRow);
-                        updateGraceRow = true;
-                        hasNewCollection = true;
+                            context.Collections.Add(newRow);
+                            updateGraceRow = true;
+                        }
                     }
                 }
 
@@ -295,18 +308,12 @@ namespace grace
                     }
                     else
                     {
-                        // check to see if we have added a new collection and if
-                        // so we don't need to check in anything has been
-                        // selected in the collection combox box
-                        if (!hasNewCollection)
-                        {
-                            MessageBox.Show("You need to select a brand.",
-                                "Information", MessageBoxButtons.OK,
-                                MessageBoxIcon.Information,
-                                MessageBoxDefaultButton.Button1,
-                                MessageBoxOptions.DefaultDesktopOnly);
-                            return true;
-                        }
+                        MessageBox.Show("You need to select a brand.",
+                            "Information", MessageBoxButtons.OK,
+                            MessageBoxIcon.Information,
+                            MessageBoxDefaultButton.Button1,
+                            MessageBoxOptions.DefaultDesktopOnly);
+                        return true;
                     }
                 }
                 if (grace.Description != descTextBox.Text)
@@ -329,30 +336,40 @@ namespace grace
                     grace.Availability = availability;
                     updateGraceRow = true;
                 }
-                if (grace.BarCode != barCodeTextBox.Text)
+                if (!isReport)
                 {
-                    var barcode = barCodeTextBox.Text;
-                    if (!string.IsNullOrEmpty(barcode))
+                    if (grace.BarCode != barCodeTextBox.Text)
                     {
-                        barcode = barcode.Trim();
-                    }
+                        var barcode = barCodeTextBox.Text;
+                        if (!string.IsNullOrEmpty(barcode))
+                        {
+                            barcode = barcode.Trim();
+                        }
 
-                    // Make sure we don't add duplicate barcodes. 
-                    bool barcodeExists = context.Graces.Any(entity => entity.BarCode == barcode);
-                    if (barcodeExists)
-                    {
-                        MessageBox.Show($"Bar Code {barcode} already exists. Please "
-                            + "check your entry and try again.",
-                            "Information", MessageBoxButtons.OK,
-                            MessageBoxIcon.Information,
-                            MessageBoxDefaultButton.Button1,
-                            MessageBoxOptions.DefaultDesktopOnly);
-                        return true;
+                        // Make sure we don't add duplicate barcodes. 
+                        bool barcodeExists = context.Graces.Any(entity => entity.BarCode == barcode);
+                        if (barcodeExists)
+                        {
+                            MessageBox.Show($"Bar Code {barcode} already exists. Please "
+                                + "check your entry and try again.",
+                                "Information", MessageBoxButtons.OK,
+                                MessageBoxIcon.Information,
+                                MessageBoxDefaultButton.Button1,
+                                MessageBoxOptions.DefaultDesktopOnly);
+                            return true;
+                        }
+                        grace.BarCode = barcode;
+                        updateGraceRow = true;
                     }
-                    grace.BarCode = barcode;
+                }
+                if (grace.Note != noteTextBox.Text)
+                {
+                    if (!string.IsNullOrEmpty(noteTextBox.Text))
+                    {
+                        grace.Note = noteTextBox.Text.Trim();
+                    }
                     updateGraceRow = true;
                 }
-
                 if (updateGraceRow)
                 {
                     context.SaveChanges();
@@ -420,7 +437,7 @@ namespace grace
         }
 
 
-        private bool checkFields()
+        private bool CheckFields(bool skipCollectionCheck = false)
         {
             bool ret = false;
 
@@ -439,14 +456,17 @@ namespace grace
                 currentTextBox.BackColor = System.Drawing.Color.Yellow;
                 ret = true;
             }
-            if (checkedListBox.CheckedItems.Count == 0 &&
-                string.IsNullOrEmpty(addCollectionTextBox.Text))
+            if (!skipCollectionCheck)
             {
-                MessageBox.Show("You need to select at least one category," +
-                    "Or enter a new one. ",
-                    "Information", MessageBoxButtons.OK,
-                    MessageBoxIcon.Information);
-                return true;
+                if (checkedListBox.CheckedItems.Count == 0 &&
+                    string.IsNullOrEmpty(addCollectionTextBox.Text))
+                {
+                    MessageBox.Show("You need to select at least one category," +
+                        "Or enter a new one. ",
+                        "Information", MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
+                    return true;
+                }
             }
             return ret;
         }
@@ -454,7 +474,7 @@ namespace grace
         private bool addRow()
         {
             bool ret = false;
-            if (checkFields())
+            if (CheckFields())
             {
                 return true;
             }
@@ -545,6 +565,10 @@ namespace grace
                 else
                 {
                     grace.BarCode = string.Empty;
+                }
+                if (!string.IsNullOrEmpty(noteTextBox.Text))
+                {
+                    grace.Note = noteTextBox.Text;
                 }
                 context.Graces.Add(grace);
                 context.SaveChanges();
@@ -696,7 +720,7 @@ namespace grace
 
             // Convert the text in the TextBox to uppercase
             skuTextBox.Text = skuTextBox.Text.ToUpper(System.Globalization.CultureInfo.CurrentCulture);
-            // Set the cursor position at the end of the text
+            // Set the cursor position at the endDateRange of the text
             skuTextBox.SelectionStart = skuTextBox.Text.Length;
         }
 

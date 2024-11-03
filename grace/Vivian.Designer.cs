@@ -33,15 +33,16 @@ namespace grace
         {
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Vivian));
-            DataGridViewCellStyle dataGridViewCellStyle5 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle6 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle7 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle8 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
             openFileDialog = new OpenFileDialog();
             menuStrip1 = new MenuStrip();
             editToolStripMenuItem = new ToolStripMenuItem();
             settingsToolStripMenuItem = new ToolStripMenuItem();
             importInventoryToolStripMenuItem = new ToolStripMenuItem();
+            saveInventoryReportToolStripMenuItem = new ToolStripMenuItem();
             saveReportToolStripMenuItem = new ToolStripMenuItem();
             exitToolStripMenuItem = new ToolStripMenuItem();
             viewToolStripMenuItem = new ToolStripMenuItem();
@@ -78,6 +79,15 @@ namespace grace
             applyChangesButton = new Button();
             label3 = new Label();
             checkInDataGrid = new DataGridView();
+            reportPage = new TabPage();
+            filterLable = new Label();
+            reportFilterTextBox = new TextBox();
+            refreshButton = new Button();
+            label2 = new Label();
+            label1 = new Label();
+            endTimePicker = new DateTimePicker();
+            startTimePicker = new DateTimePicker();
+            reportGridView = new DataGridView();
             adminPage = new TabPage();
             label5 = new Label();
             resetComboBox = new ComboBox();
@@ -92,7 +102,7 @@ namespace grace
             checkoutBindingSource = new BindingSource(components);
             checkInBindingSource = new BindingSource(components);
             toolTip = new ToolTip(components);
-            saveInventoryReportToolStripMenuItem = new ToolStripMenuItem();
+            showAllButton = new Button();
             menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             tabControl.SuspendLayout();
@@ -103,6 +113,8 @@ namespace grace
             ((System.ComponentModel.ISupportInitialize)checkOutDataGrid).BeginInit();
             checkinPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)checkInDataGrid).BeginInit();
+            reportPage.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)reportGridView).BeginInit();
             adminPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)errorProvider1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)checkoutBindingSource).BeginInit();
@@ -115,7 +127,7 @@ namespace grace
             // 
             // menuStrip1
             // 
-            menuStrip1.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point);
+            menuStrip1.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
             menuStrip1.ImageScalingSize = new Size(32, 32);
             menuStrip1.Items.AddRange(new ToolStripItem[] { editToolStripMenuItem, viewToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
@@ -128,7 +140,7 @@ namespace grace
             // editToolStripMenuItem
             // 
             editToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { settingsToolStripMenuItem, importInventoryToolStripMenuItem, saveInventoryReportToolStripMenuItem, saveReportToolStripMenuItem, exitToolStripMenuItem });
-            editToolStripMenuItem.Font = new Font("Segoe UI", 10.875F, FontStyle.Bold, GraphicsUnit.Point);
+            editToolStripMenuItem.Font = new Font("Segoe UI", 10.875F, FontStyle.Bold);
             editToolStripMenuItem.Name = "editToolStripMenuItem";
             editToolStripMenuItem.Size = new Size(45, 25);
             editToolStripMenuItem.Text = "File";
@@ -146,6 +158,12 @@ namespace grace
             importInventoryToolStripMenuItem.Size = new Size(235, 24);
             importInventoryToolStripMenuItem.Text = "Import Inventory";
             importInventoryToolStripMenuItem.Click += importInventoryToolStripMenuItem_Click;
+            // 
+            // saveInventoryReportToolStripMenuItem
+            // 
+            saveInventoryReportToolStripMenuItem.Name = "saveInventoryReportToolStripMenuItem";
+            saveInventoryReportToolStripMenuItem.Size = new Size(235, 24);
+            saveInventoryReportToolStripMenuItem.Text = "Save Inventory Report";
             // 
             // saveReportToolStripMenuItem
             // 
@@ -196,9 +214,10 @@ namespace grace
             tabControl.Controls.Add(dataPage);
             tabControl.Controls.Add(checkoutPage);
             tabControl.Controls.Add(checkinPage);
+            tabControl.Controls.Add(reportPage);
             tabControl.Controls.Add(adminPage);
             tabControl.DrawMode = TabDrawMode.OwnerDrawFixed;
-            tabControl.Font = new Font("Verdana", 11.25F, FontStyle.Bold, GraphicsUnit.Point);
+            tabControl.Font = new Font("Verdana", 11.25F, FontStyle.Bold);
             tabControl.HotTrack = true;
             tabControl.ItemSize = new Size(200, 40);
             tabControl.Location = new Point(0, 31);
@@ -266,7 +285,7 @@ namespace grace
             // 
             loginButton.AutoSize = true;
             loginButton.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            loginButton.Font = new Font("Segoe UI", 14.25F, FontStyle.Bold, GraphicsUnit.Point);
+            loginButton.Font = new Font("Segoe UI", 14.25F, FontStyle.Bold);
             loginButton.Location = new Point(498, 371);
             loginButton.Name = "loginButton";
             loginButton.Size = new Size(73, 35);
@@ -305,7 +324,7 @@ namespace grace
             // 
             changePasswordButton.AutoSize = true;
             changePasswordButton.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            changePasswordButton.Font = new Font("Segoe UI", 14.25F, FontStyle.Bold, GraphicsUnit.Point);
+            changePasswordButton.Font = new Font("Segoe UI", 14.25F, FontStyle.Bold);
             changePasswordButton.Location = new Point(254, 371);
             changePasswordButton.Name = "changePasswordButton";
             changePasswordButton.Size = new Size(179, 35);
@@ -382,14 +401,14 @@ namespace grace
             dataGridView.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
             dataGridView.BorderStyle = BorderStyle.Fixed3D;
             dataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle5.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle5.BackColor = SystemColors.Window;
-            dataGridViewCellStyle5.Font = new Font("Verdana", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
-            dataGridViewCellStyle5.ForeColor = SystemColors.ControlText;
-            dataGridViewCellStyle5.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle5.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle5.WrapMode = DataGridViewTriState.False;
-            dataGridView.DefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = SystemColors.Window;
+            dataGridViewCellStyle1.Font = new Font("Verdana", 9.75F);
+            dataGridViewCellStyle1.ForeColor = SystemColors.ControlText;
+            dataGridViewCellStyle1.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.False;
+            dataGridView.DefaultCellStyle = dataGridViewCellStyle1;
             dataGridView.Location = new Point(6, 53);
             dataGridView.Margin = new Padding(5, 2, 5, 2);
             dataGridView.MultiSelect = false;
@@ -469,7 +488,7 @@ namespace grace
             label7.AutoSize = true;
             label7.BackColor = Color.Transparent;
             label7.BorderStyle = BorderStyle.FixedSingle;
-            label7.Font = new Font("Verdana", 15.75F, FontStyle.Bold, GraphicsUnit.Point);
+            label7.Font = new Font("Verdana", 15.75F, FontStyle.Bold);
             label7.ForeColor = SystemColors.Highlight;
             label7.Location = new Point(1134, 427);
             label7.Name = "label7";
@@ -506,26 +525,25 @@ namespace grace
             checkOutDataGrid.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
             checkOutDataGrid.BorderStyle = BorderStyle.Fixed3D;
             checkOutDataGrid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle6.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle6.BackColor = Color.FromArgb(224, 224, 224);
-            dataGridViewCellStyle6.Font = new Font("Verdana", 11.25F, FontStyle.Bold, GraphicsUnit.Point);
-            dataGridViewCellStyle6.ForeColor = SystemColors.ControlText;
-            dataGridViewCellStyle6.Padding = new Padding(0, 2, 10, 0);
-            dataGridViewCellStyle6.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle6.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle6.WrapMode = DataGridViewTriState.False;
-            checkOutDataGrid.DefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = Color.FromArgb(224, 224, 224);
+            dataGridViewCellStyle2.Font = new Font("Verdana", 11.25F, FontStyle.Bold);
+            dataGridViewCellStyle2.ForeColor = SystemColors.ControlText;
+            dataGridViewCellStyle2.Padding = new Padding(0, 2, 10, 0);
+            dataGridViewCellStyle2.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.False;
+            checkOutDataGrid.DefaultCellStyle = dataGridViewCellStyle2;
             checkOutDataGrid.Location = new Point(5, 3);
             checkOutDataGrid.MultiSelect = false;
             checkOutDataGrid.Name = "checkOutDataGrid";
             checkOutDataGrid.ReadOnly = true;
             checkOutDataGrid.RowHeadersWidth = 82;
-            dataGridViewCellStyle7.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle7.Padding = new Padding(0, 0, 10, 0);
-            checkOutDataGrid.RowsDefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.Padding = new Padding(0, 0, 10, 0);
+            checkOutDataGrid.RowsDefaultCellStyle = dataGridViewCellStyle3;
             checkOutDataGrid.RowTemplate.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
             checkOutDataGrid.RowTemplate.DefaultCellStyle.Padding = new Padding(0, 0, 10, 0);
-            checkOutDataGrid.RowTemplate.Height = 25;
             checkOutDataGrid.RowTemplate.Resizable = DataGridViewTriState.True;
             checkOutDataGrid.Size = new Size(1090, 736);
             checkOutDataGrid.TabIndex = 4;
@@ -585,21 +603,108 @@ namespace grace
             checkInDataGrid.CellBorderStyle = DataGridViewCellBorderStyle.Sunken;
             checkInDataGrid.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Sunken;
             checkInDataGrid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle8.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle8.BackColor = SystemColors.Window;
-            dataGridViewCellStyle8.Font = new Font("Verdana", 9F, FontStyle.Regular, GraphicsUnit.Point);
-            dataGridViewCellStyle8.ForeColor = SystemColors.ControlText;
-            dataGridViewCellStyle8.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle8.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle8.WrapMode = DataGridViewTriState.False;
-            checkInDataGrid.DefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle4.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = SystemColors.Window;
+            dataGridViewCellStyle4.Font = new Font("Verdana", 9F);
+            dataGridViewCellStyle4.ForeColor = SystemColors.ControlText;
+            dataGridViewCellStyle4.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle4.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle4.WrapMode = DataGridViewTriState.False;
+            checkInDataGrid.DefaultCellStyle = dataGridViewCellStyle4;
             checkInDataGrid.Location = new Point(-7, 0);
             checkInDataGrid.Name = "checkInDataGrid";
             checkInDataGrid.RowHeadersWidth = 82;
-            checkInDataGrid.RowTemplate.Height = 25;
             checkInDataGrid.SelectionMode = DataGridViewSelectionMode.CellSelect;
             checkInDataGrid.Size = new Size(1292, 739);
             checkInDataGrid.TabIndex = 0;
+            // 
+            // reportPage
+            // 
+            reportPage.Controls.Add(showAllButton);
+            reportPage.Controls.Add(filterLable);
+            reportPage.Controls.Add(reportFilterTextBox);
+            reportPage.Controls.Add(refreshButton);
+            reportPage.Controls.Add(label2);
+            reportPage.Controls.Add(label1);
+            reportPage.Controls.Add(endTimePicker);
+            reportPage.Controls.Add(startTimePicker);
+            reportPage.Controls.Add(reportGridView);
+            reportPage.Location = new Point(4, 44);
+            reportPage.Name = "reportPage";
+            reportPage.Size = new Size(1531, 744);
+            reportPage.TabIndex = 5;
+            reportPage.Text = "Report Page";
+            reportPage.UseVisualStyleBackColor = true;
+            // 
+            // filterLable
+            // 
+            filterLable.AutoSize = true;
+            filterLable.Font = new Font("Verdana", 13.875F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            filterLable.Location = new Point(8, 18);
+            filterLable.Name = "filterLable";
+            filterLable.Size = new Size(132, 23);
+            filterLable.TabIndex = 7;
+            filterLable.Text = "Filter Rows";
+            // 
+            // reportFilterTextBox
+            // 
+            reportFilterTextBox.Font = new Font("Verdana", 13.875F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            reportFilterTextBox.Location = new Point(157, 15);
+            reportFilterTextBox.Name = "reportFilterTextBox";
+            reportFilterTextBox.Size = new Size(235, 30);
+            reportFilterTextBox.TabIndex = 6;
+            // 
+            // refreshButton
+            // 
+            refreshButton.Location = new Point(1198, 167);
+            refreshButton.Name = "refreshButton";
+            refreshButton.Size = new Size(97, 30);
+            refreshButton.TabIndex = 5;
+            refreshButton.Text = "Refresh";
+            refreshButton.UseVisualStyleBackColor = true;
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Location = new Point(1191, 90);
+            label2.Name = "label2";
+            label2.Size = new Size(82, 18);
+            label2.TabIndex = 4;
+            label2.Text = "End Date";
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new Point(1191, 50);
+            label1.Name = "label1";
+            label1.Size = new Size(94, 18);
+            label1.TabIndex = 3;
+            label1.Text = "Start Date";
+            // 
+            // endTimePicker
+            // 
+            endTimePicker.Location = new Point(1303, 84);
+            endTimePicker.Name = "endTimePicker";
+            endTimePicker.Size = new Size(200, 26);
+            endTimePicker.TabIndex = 2;
+            // 
+            // startTimePicker
+            // 
+            startTimePicker.Location = new Point(1303, 42);
+            startTimePicker.Name = "startTimePicker";
+            startTimePicker.Size = new Size(200, 26);
+            startTimePicker.TabIndex = 1;
+            // 
+            // reportGridView
+            // 
+            reportGridView.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
+            reportGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+            reportGridView.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
+            reportGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            reportGridView.Location = new Point(0, 60);
+            reportGridView.Name = "reportGridView";
+            reportGridView.Size = new Size(1127, 684);
+            reportGridView.TabIndex = 0;
             // 
             // adminPage
             // 
@@ -653,7 +758,7 @@ namespace grace
             // label9
             // 
             label9.AutoSize = true;
-            label9.Font = new Font("Verdana", 14.25F, FontStyle.Bold, GraphicsUnit.Point);
+            label9.Font = new Font("Verdana", 14.25F, FontStyle.Bold);
             label9.Location = new Point(1089, 34);
             label9.Name = "label9";
             label9.Size = new Size(224, 23);
@@ -730,11 +835,14 @@ namespace grace
             toolTip.IsBalloon = true;
             toolTip.ToolTipIcon = ToolTipIcon.Info;
             // 
-            // saveInventoryReportToolStripMenuItem
+            // showAllButton
             // 
-            saveInventoryReportToolStripMenuItem.Name = "saveInventoryReportToolStripMenuItem";
-            saveInventoryReportToolStripMenuItem.Size = new Size(235, 24);
-            saveInventoryReportToolStripMenuItem.Text = "Save Inventory Report";
+            showAllButton.Location = new Point(1198, 217);
+            showAllButton.Name = "showAllButton";
+            showAllButton.Size = new Size(164, 31);
+            showAllButton.TabIndex = 8;
+            showAllButton.Text = "Show All Dates";
+            showAllButton.UseVisualStyleBackColor = true;
             // 
             // Vivian
             // 
@@ -745,7 +853,7 @@ namespace grace
             ClientSize = new Size(1539, 823);
             Controls.Add(tabControl);
             Controls.Add(menuStrip1);
-            Font = new Font("Segoe UI", 10.125F, FontStyle.Regular, GraphicsUnit.Point);
+            Font = new Font("Segoe UI", 10.125F);
             FormBorderStyle = FormBorderStyle.Fixed3D;
             Icon = (Icon)resources.GetObject("$this.Icon");
             MainMenuStrip = menuStrip1;
@@ -771,6 +879,9 @@ namespace grace
             checkinPage.ResumeLayout(false);
             checkinPage.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)checkInDataGrid).EndInit();
+            reportPage.ResumeLayout(false);
+            reportPage.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)reportGridView).EndInit();
             adminPage.ResumeLayout(false);
             adminPage.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)errorProvider1).EndInit();
@@ -837,5 +948,16 @@ namespace grace
         private ToolTip toolTip;
         internal Button addUserButton;
         internal ToolStripMenuItem saveInventoryReportToolStripMenuItem;
+        private TabPage reportPage;
+        public DataGridView reportGridView;
+        private Label label2;
+        private Label label1;
+        public DateTimePicker endTimePicker;
+        public DateTimePicker startTimePicker;
+        private DateTimePicker dateTimePicker2;
+        public Button refreshButton;
+        private Label filterLable;
+        public TextBox reportFilterTextBox;
+        public Button showAllButton;
     }
 }

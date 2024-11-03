@@ -11,9 +11,8 @@
  * Year: 2023
  */
 using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using grace.data.models;
+
 
 namespace grace.data
 {
@@ -28,20 +27,24 @@ namespace grace.data
         public virtual DbSet<Pulled> PulledDb { get; set; }
         public virtual DbSet<Prefs> PrefsDb { get; set; }
 
+        public virtual DbSet<Inventory> InventoryDb { get; set; }
+
         public static string ConnectionString { get => connectionString; set => connectionString = value; }
 
         private static string connectionString;
 
-        public GraceDbContext(string connectionString)
+        public GraceDbContext(DbContextOptions<GraceDbContext> options)
+            : base(options)
         {
-            GraceDbContext.ConnectionString = connectionString;
         }
+
         public GraceDbContext()
         {
-           if (GraceDbContext.ConnectionString == null)
+            if (GraceDbContext.ConnectionString == null)
             {
                 GraceDbContext.ConnectionString = DataBase.ConnectionString;
             }
+
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -111,7 +114,6 @@ namespace grace.data
 
             });
 
-
             modelBuilder.Entity<CollectionName>(entity =>
             {
                 entity.ToTable("Collections");
@@ -138,9 +140,9 @@ namespace grace.data
                   .WithMany()
                   .HasForeignKey(e => e.GraceId)
                   .OnDelete(DeleteBehavior.Cascade);
-    
+
                 entity.Property(t => t.LastUpdated).IsRequired();
-                
+
 
             });
 
@@ -170,14 +172,28 @@ namespace grace.data
                     .HasForeignKey(e => e.CollectionId); // Choose the appropriate delete behavior
             });
 
+            modelBuilder.Entity<Inventory>(entity =>
+            {
+                // Primary key
+                entity.HasKey(e => e.ID);
+
+                entity.HasOne(e => e.User)
+                .WithMany()
+                .HasForeignKey(e => e.UserId);
+
+                entity.HasOne(e => e.Grace)
+                 .WithMany()
+                 .HasForeignKey(e => e.GraceId)
+                 .OnDelete(DeleteBehavior.Cascade);
+
+            });
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlite(ConnectionString).EnableSensitiveDataLogging();
 
-
-
         }
     }
+
 }
