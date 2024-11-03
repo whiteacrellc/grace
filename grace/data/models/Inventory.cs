@@ -8,29 +8,27 @@
  * with the terms of the license agreement you entered into with
  * White Acre Software LLC.
  *
- * Year: 2023
+ * Year: 2024
  */
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace grace.data.models
 {
-    public partial class Pulled
+    public class Inventory
     {
         public int ID { get; set; }
-        public string Comment { get; set; } = String.Empty;
         public DateTime LastUpdated { get; set; } = DateTime.Now;
-        public int Amount { get; set; } = 0;
-        public int CheckedInAmount { get; set; } = 0;
+        public int PreviousAmount { get; set; } = 0;
+        public int Delta { get; set; } = 0;
         public int CurrentTotal { get; set; } = 0;
         public int UserId { get; set; }
         public User User { get; set; }
         public int GraceId { get; set; }
         public Grace Grace { get; set; }
-        public int CollectionId { get; set; }
-        public CollectionName Collection { get; set; }
-        public bool IsCompleted { get; set; } = false;
+       
     }
 }

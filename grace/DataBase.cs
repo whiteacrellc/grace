@@ -15,26 +15,11 @@ using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using NLog;
 using OfficeOpenXml;
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Data;
-using System.Data.Common;
-using System.Data.SQLite;
-using System.Drawing.Text;
 using System.IO;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Security.Cryptography.Xml;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using grace.data.models;
-using System.Data.Entity;
-using Microsoft.Office.Interop.Excel;
-using System.Xml.Linq;
-using System.Diagnostics;
-using Microsoft.Extensions.Logging;
+
 
 [assembly: InternalsVisibleTo("gracetest")]
 
@@ -44,10 +29,9 @@ namespace grace
 #pragma warning disable CS8619
     public class DataBase
     {
-
+        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         public static string ConnectionString { get => connectionString; set => connectionString = value; }
         public string DbName { get => dbName; set => dbName = value; }
-        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         public static string DbFileName { get; set; }
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
@@ -55,7 +39,6 @@ namespace grace
         private static string connectionString;
 #pragma warning restore CA2211 // Non-constant fields should not be visible
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-
 
         private string dbName = "grace.db";
 
@@ -65,10 +48,20 @@ namespace grace
         {
             DbFileName = string.Empty;
             ConnectionString = CreateDatabaseFile();
-            using (var context = new GraceDbContext(ConnectionString))
+            var optionsBuilder = new DbContextOptionsBuilder<GraceDbContext>();
+            optionsBuilder.UseSqlite(connectionString);
+            using (var context = new GraceDbContext(optionsBuilder.Options))
             {
-                context.Database.EnsureCreated();
-                DbInitializer.EnsureLastUpdatedColumn(context);
+                var created = context.Database.EnsureCreated();
+                if (!created)
+                {
+                    logger.Error("creating database failed");
+                    throw new InvalidOperationException("Create database failed");
+                }
+            }
+            using (var context = new GraceDbContext(optionsBuilder.Options))
+            {
+                DbInitializer.CheckDbSchemaCurrent(context);
             }
         }
 
@@ -77,12 +70,21 @@ namespace grace
             DbName = fileName;
             DbFileName = string.Empty;
             ConnectionString = CreateDatabaseFile();
-            using (var context = new GraceDbContext())
+            var optionsBuilder = new DbContextOptionsBuilder<GraceDbContext>();
+            optionsBuilder.UseSqlite(connectionString);
+            using (var context = new GraceDbContext(optionsBuilder.Options))
             {
-                context.Database.EnsureCreated();
-                DbInitializer.EnsureLastUpdatedColumn(context);
+                var created = context.Database.EnsureCreated();
+                if (!created)
+                {
+                    logger.Error("create database failed");
+                    throw new InvalidOperationException("Create database failed");
+                }
             }
-
+            using (var context = new GraceDbContext(optionsBuilder.Options))
+            {
+                DbInitializer.CheckDbSchemaCurrent(context);
+            }
         }
 
         public class CheckOut
@@ -245,7 +247,7 @@ namespace grace
                     join pulled in dbContext.PulledDb on gr.GraceId equals pulled.GraceId
                     join user in dbContext.Users on pulled.UserId equals user.ID
                     join collection in dbContext.Collections on pulled.CollectionId equals collection.ID
-                    where pulled.IsCompleted == false
+                    where pulled.IsCompleted == false 
                     orderby user.Username ascending, pulled.LastUpdated ascending, pulled.CurrentTotal descending
                     select new CheckInData
                     {
@@ -263,6 +265,62 @@ namespace grace
                 return result;
             }
         }
+
+        public class ReportData
+        {
+            public string Sku { get; set; }
+            public string Brand { get; set; }
+            public string Description { get; set; }
+            public int Total { get; set; }
+
+            public DateTime LastUpdated { get; set; }
+            public string Note { get; set; }
+            public int GraceId { get; set; }
+        }
+
+        public static System.Data.DataTable GetCheckedOutReport(DateTime start, DateTime end)
+        {
+            System.Data.DataTable table = new System.Data.DataTable();
+
+            // Define columns
+            table.Columns.Add("Sku", typeof(string));
+            table.Columns.Add("Brand", typeof (string));
+            table.Columns.Add("Description", typeof(string));
+            table.Columns.Add("Total", typeof(int));
+            table.Columns.Add("LastUpdated", typeof(DateTime));
+            table.Columns.Add("Note", typeof(string));
+
+
+            using (var dbContext = new GraceDbContext())
+            {
+                // Performing the join and projection
+                var result = (
+                    from gr in dbContext.GraceRows
+                    join totals in dbContext.Totals on gr.GraceId equals totals.GraceId
+                    where totals.LastUpdated >= end && totals.LastUpdated <= start
+                    orderby totals.LastUpdated ascending, totals.CurrentTotal descending
+                    select new ReportData
+                    {
+                        Sku = gr.Sku,
+                        Brand = gr.Brand,
+                        Description = gr.Description,
+                        Total = totals.CurrentTotal,
+                        LastUpdated = totals.LastUpdated,
+                        Note = gr.Note,
+                        GraceId = gr.GraceId
+                    }).ToList();
+
+                foreach (var report in result)
+                {
+                    table.Rows.Add(report.Sku, report.Brand,
+                        report.Description, report.Total, report.LastUpdated,
+                        report.Note);
+                }
+                return table;
+
+            }
+        }
+
 
         public string CreateDatabaseFile()
         {
@@ -494,6 +552,7 @@ namespace grace
                             graceRow.Brand = grace.Brand;
                             graceRow.Description = grace.Description;
                             graceRow.Availability = grace.Availability;
+                            graceRow.Note = grace.Note;
                         }
                         else
                         {

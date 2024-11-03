@@ -12,16 +12,7 @@
  */
 using grace.data;
 using grace.data.models;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using System;
-using System.Collections.Generic;
-using System.Drawing.Text;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using static grace.DataBase;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 namespace grace.tabs
 {
@@ -248,7 +239,7 @@ namespace grace.tabs
                         context.Totals.Add(total);
                         context.SaveChanges();
                     }
-                    PulledEntrySetComplete(dateTime, user_id, col_id, graceId);
+                    PulledEntrySetComplete(dateTime, user_id, col_id, graceId, updatedValue);
                 }
             }
             if (changed)
@@ -257,7 +248,7 @@ namespace grace.tabs
             }
         }
         private void PulledEntrySetComplete(DateTime dateTime, int userId,
-            int collectionId, int graceId)
+            int collectionId, int graceId, int updatedValue)
         {
             using (var context = new GraceDbContext())
             {
@@ -267,6 +258,7 @@ namespace grace.tabs
                 if (pulled != null)
                 {
                     pulled.IsCompleted = true;
+                    pulled.CheckedInAmount = updatedValue;
                     context.SaveChanges();
                 }
             }

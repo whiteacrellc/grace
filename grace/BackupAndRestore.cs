@@ -1,9 +1,10 @@
 ﻿using System;
-using System.Data.SQLite;
+
 using System.IO;
 using NLog;
 using grace.data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Data.Sqlite;
 
 namespace grace
 {
@@ -74,19 +75,19 @@ namespace grace
                 File.Delete(backupPath);
             }
 
-            SQLiteConnection.ClearAllPools();
+            SqliteConnection.ClearAllPools();
 
             try
             {
                 logger.Info($"backing up database to {backupPath}");
 
-                using (var sourceConn = new SQLiteConnection(connectionString))
-                using (var backupConn = new SQLiteConnection($"Data Source={backupPath};Version=3;"))
+                using (var sourceConn = new SqliteConnection(connectionString))
+                using (var backupConn = new SqliteConnection($"Data Source={backupPath};Version=3;"))
                 {
                     sourceConn.Open();
                     backupConn.Open();
 
-                    sourceConn.BackupDatabase(backupConn, "main", "main", -1, null, 0);
+                    sourceConn.BackupDatabase(backupConn);
                 }
                 logger.Info("done backing up database");
             }
@@ -117,14 +118,19 @@ namespace grace
             }
             GC.Collect();
             GC.WaitForPendingFinalizers();
-            SQLiteConnection.ClearAllPools();
+            SqliteConnection.ClearAllPools();
 
         }
 
         public void RestoreDatabase()
         {
-            
+
             OpenFileDialog openFileDialog = new OpenFileDialog();
+
+            if (openFileDialog == null)
+            {
+                return;
+            }
 
             // Set properties for the file dialog
             openFileDialog.Title = "Select a .db File";
@@ -144,15 +150,13 @@ namespace grace
                     {
                         logger.Info($"restoring database from {selectedFilePath}");
                         //DeleteCurrentDb();
-                        using (var sourceConn = new SQLiteConnection($"Data Source={selectedFilePath};Version=3;"))
-                        using (var destinationConn = new SQLiteConnection(connectionString))
+                        using (var sourceConn = new SqliteConnection($"Data Source={selectedFilePath};Version=3;"))
+                        using (var destinationConn = new SqliteConnection(connectionString))
                         {
                             sourceConn.Open();
                             destinationConn.Open();
 
-                            sourceConn.BackupDatabase(destinationConn,
-                                destinationConn.Database, sourceConn.Database,
-                                -1, null, 10);
+                            sourceConn.BackupDatabase(destinationConn);
                         }
                         logger.Info("done restoring database");
                         DataGridLoader.LoadBindingTable(true);
@@ -175,8 +179,6 @@ namespace grace
                         MessageBoxIcon.Error);
                 }
             }
-            
-
         }
     }
 }

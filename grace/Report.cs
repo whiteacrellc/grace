@@ -23,7 +23,6 @@ using NLog.Config;
 using System.Windows.Forms;
 using System.IO;
 using grace.data.models;
-using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
 using System.Globalization;
 
 

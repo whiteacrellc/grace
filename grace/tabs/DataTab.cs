@@ -80,8 +80,8 @@ namespace grace.tabs
             dataGridView.CellFormatting += DataGridView_CellFormatting;
             dataTabPage.Enter += DataTabPage_Enter;
             addRowButton.Click += addRowButton_Click;
-            filterSkuTextBox.TextChanged += filterSkuTextBox_TextChanged;
-            clearFilterButton.Click += clearFilterButton_Click;
+            filterSkuTextBox.TextChanged += FilterSkuTextBox_TextChanged;
+            clearFilterButton.Click += ClearFilterButton_Click;
             setInventoryFontSizeToolStripMenuItem.Click
                 += setInventoryFontSizeToolStripMenuItem_Click;
             filterBarCodeTextBox.KeyDown += filterBarCodeTextBox_KeyDown;
@@ -194,14 +194,14 @@ namespace grace.tabs
         }
 
 
-        private void clearFilterButton_Click(object? sender, EventArgs e)
+        private void ClearFilterButton_Click(object? sender, EventArgs e)
         {
             filterSkuTextBox.Clear();
             filterBarCodeTextBox.Clear();
             BindDataSource();
         }
 
-        internal void filterSkuTextBox_TextChanged(object? sender, EventArgs e)
+        internal void FilterSkuTextBox_TextChanged(object? sender, EventArgs e)
         {
             string searchTerm = filterSkuTextBox.Text;
             if (string.IsNullOrEmpty(searchTerm))

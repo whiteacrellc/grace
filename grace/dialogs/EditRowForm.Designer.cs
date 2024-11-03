@@ -34,11 +34,13 @@ namespace grace
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EditRowForm));
             cancelButton = new Button();
             panel1 = new Panel();
+            noteTextBox = new TextBox();
+            label9 = new Label();
             addCollectionLabel = new Label();
             addCollectionTextBox = new TextBox();
             checkedListBox = new CheckedListBox();
             label8 = new Label();
-            label7 = new Label();
+            collectionLabel = new Label();
             brandComboBox = new ComboBox();
             adjustTextBox = new TextBox();
             adjustInventoryLabel = new Label();
@@ -62,8 +64,8 @@ namespace grace
             // 
             // cancelButton
             // 
-            cancelButton.Font = new Font("Segoe UI", 11.25F, FontStyle.Regular, GraphicsUnit.Point);
-            cancelButton.Location = new Point(452, 451);
+            cancelButton.Font = new Font("Segoe UI", 11.25F);
+            cancelButton.Location = new Point(452, 512);
             cancelButton.Margin = new Padding(2, 1, 2, 1);
             cancelButton.Name = "cancelButton";
             cancelButton.Size = new Size(113, 33);
@@ -75,11 +77,13 @@ namespace grace
             // panel1
             // 
             panel1.BorderStyle = BorderStyle.FixedSingle;
+            panel1.Controls.Add(noteTextBox);
+            panel1.Controls.Add(label9);
             panel1.Controls.Add(addCollectionLabel);
             panel1.Controls.Add(addCollectionTextBox);
             panel1.Controls.Add(checkedListBox);
             panel1.Controls.Add(label8);
-            panel1.Controls.Add(label7);
+            panel1.Controls.Add(collectionLabel);
             panel1.Controls.Add(brandComboBox);
             panel1.Controls.Add(adjustTextBox);
             panel1.Controls.Add(adjustInventoryLabel);
@@ -96,14 +100,32 @@ namespace grace
             panel1.Controls.Add(label1);
             panel1.Location = new Point(22, 38);
             panel1.Name = "panel1";
-            panel1.Size = new Size(790, 387);
+            panel1.Size = new Size(790, 457);
             panel1.TabIndex = 1;
+            // 
+            // noteTextBox
+            // 
+            noteTextBox.Location = new Point(146, 294);
+            noteTextBox.Multiline = true;
+            noteTextBox.Name = "noteTextBox";
+            noteTextBox.Size = new Size(269, 67);
+            noteTextBox.TabIndex = 31;
+            // 
+            // label9
+            // 
+            label9.AutoSize = true;
+            label9.Font = new Font("Segoe UI", 9.75F);
+            label9.Location = new Point(26, 295);
+            label9.Name = "label9";
+            label9.Size = new Size(37, 17);
+            label9.TabIndex = 30;
+            label9.Text = "Note";
             // 
             // addCollectionLabel
             // 
             addCollectionLabel.AutoSize = true;
-            addCollectionLabel.Font = new Font("Segoe UI", 10.125F, FontStyle.Regular, GraphicsUnit.Point);
-            addCollectionLabel.Location = new Point(429, 342);
+            addCollectionLabel.Font = new Font("Segoe UI", 10.125F);
+            addCollectionLabel.Location = new Point(433, 336);
             addCollectionLabel.Margin = new Padding(2, 0, 2, 0);
             addCollectionLabel.Name = "addCollectionLabel";
             addCollectionLabel.Size = new Size(144, 19);
@@ -114,8 +136,8 @@ namespace grace
             // 
             // addCollectionTextBox
             // 
-            addCollectionTextBox.Font = new Font("Segoe UI", 10.125F, FontStyle.Regular, GraphicsUnit.Point);
-            addCollectionTextBox.Location = new Point(581, 338);
+            addCollectionTextBox.Font = new Font("Segoe UI", 10.125F);
+            addCollectionTextBox.Location = new Point(581, 336);
             addCollectionTextBox.Margin = new Padding(2, 1, 2, 1);
             addCollectionTextBox.Name = "addCollectionTextBox";
             addCollectionTextBox.Size = new Size(173, 25);
@@ -136,26 +158,26 @@ namespace grace
             // 
             label8.AutoSize = true;
             label8.BorderStyle = BorderStyle.FixedSingle;
-            label8.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point);
-            label8.Location = new Point(102, 299);
+            label8.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            label8.Location = new Point(17, 389);
             label8.Name = "label8";
             label8.Size = new Size(254, 23);
             label8.TabIndex = 27;
             label8.Text = "All bolded fields are mandatory";
             // 
-            // label7
+            // collectionLabel
             // 
-            label7.AutoSize = true;
-            label7.Font = new Font("Segoe UI", 14.25F, FontStyle.Bold, GraphicsUnit.Point);
-            label7.Location = new Point(581, 10);
-            label7.Name = "label7";
-            label7.Size = new Size(109, 25);
-            label7.TabIndex = 26;
-            label7.Text = "Collections";
+            collectionLabel.AutoSize = true;
+            collectionLabel.Font = new Font("Segoe UI", 14.25F, FontStyle.Bold);
+            collectionLabel.Location = new Point(581, 10);
+            collectionLabel.Name = "collectionLabel";
+            collectionLabel.Size = new Size(109, 25);
+            collectionLabel.TabIndex = 26;
+            collectionLabel.Text = "Collections";
             // 
             // brandComboBox
             // 
-            brandComboBox.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
+            brandComboBox.Font = new Font("Segoe UI", 9.75F);
             brandComboBox.FormattingEnabled = true;
             brandComboBox.Location = new Point(267, 52);
             brandComboBox.Name = "brandComboBox";
@@ -164,7 +186,7 @@ namespace grace
             // 
             // adjustTextBox
             // 
-            adjustTextBox.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
+            adjustTextBox.Font = new Font("Segoe UI", 9.75F);
             adjustTextBox.Location = new Point(265, 241);
             adjustTextBox.Name = "adjustTextBox";
             adjustTextBox.Size = new Size(150, 25);
@@ -173,7 +195,7 @@ namespace grace
             // adjustInventoryLabel
             // 
             adjustInventoryLabel.AutoSize = true;
-            adjustInventoryLabel.Font = new Font("Segoe UI", 10.125F, FontStyle.Bold, GraphicsUnit.Point);
+            adjustInventoryLabel.Font = new Font("Segoe UI", 10.125F, FontStyle.Bold);
             adjustInventoryLabel.Location = new Point(17, 247);
             adjustInventoryLabel.Name = "adjustInventoryLabel";
             adjustInventoryLabel.Size = new Size(228, 19);
@@ -183,7 +205,7 @@ namespace grace
             // 
             // currentTextBox
             // 
-            currentTextBox.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
+            currentTextBox.Font = new Font("Segoe UI", 9.75F);
             currentTextBox.Location = new Point(265, 193);
             currentTextBox.Name = "currentTextBox";
             currentTextBox.ReadOnly = true;
@@ -193,7 +215,7 @@ namespace grace
             // label6
             // 
             label6.AutoSize = true;
-            label6.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
+            label6.Font = new Font("Segoe UI", 9.75F);
             label6.Location = new Point(17, 201);
             label6.Name = "label6";
             label6.Size = new Size(108, 17);
@@ -202,7 +224,7 @@ namespace grace
             // 
             // barCodeTextBox
             // 
-            barCodeTextBox.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
+            barCodeTextBox.Font = new Font("Segoe UI", 9.75F);
             barCodeTextBox.Location = new Point(265, 159);
             barCodeTextBox.Name = "barCodeTextBox";
             barCodeTextBox.Size = new Size(150, 25);
@@ -211,7 +233,7 @@ namespace grace
             // 
             // availabilityTextBox
             // 
-            availabilityTextBox.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
+            availabilityTextBox.Font = new Font("Segoe UI", 9.75F);
             availabilityTextBox.Location = new Point(265, 121);
             availabilityTextBox.Name = "availabilityTextBox";
             availabilityTextBox.Size = new Size(150, 25);
@@ -220,7 +242,7 @@ namespace grace
             // label5
             // 
             label5.AutoSize = true;
-            label5.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
+            label5.Font = new Font("Segoe UI", 9.75F);
             label5.Location = new Point(17, 162);
             label5.Name = "label5";
             label5.Size = new Size(62, 17);
@@ -230,7 +252,7 @@ namespace grace
             // label4
             // 
             label4.AutoSize = true;
-            label4.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
+            label4.Font = new Font("Segoe UI", 9.75F);
             label4.Location = new Point(17, 124);
             label4.Name = "label4";
             label4.Size = new Size(95, 17);
@@ -239,7 +261,7 @@ namespace grace
             // 
             // descTextBox
             // 
-            descTextBox.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
+            descTextBox.Font = new Font("Segoe UI", 9.75F);
             descTextBox.Location = new Point(146, 87);
             descTextBox.Name = "descTextBox";
             descTextBox.Size = new Size(269, 25);
@@ -248,7 +270,7 @@ namespace grace
             // label3
             // 
             label3.AutoSize = true;
-            label3.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point);
+            label3.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
             label3.Location = new Point(17, 90);
             label3.Name = "label3";
             label3.Size = new Size(79, 17);
@@ -257,7 +279,7 @@ namespace grace
             // 
             // skuTextBox
             // 
-            skuTextBox.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
+            skuTextBox.Font = new Font("Segoe UI", 9.75F);
             skuTextBox.Location = new Point(265, 15);
             skuTextBox.Name = "skuTextBox";
             skuTextBox.Size = new Size(150, 25);
@@ -267,7 +289,7 @@ namespace grace
             // label2
             // 
             label2.AutoSize = true;
-            label2.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point);
+            label2.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
             label2.Location = new Point(17, 55);
             label2.Name = "label2";
             label2.Size = new Size(44, 17);
@@ -277,7 +299,7 @@ namespace grace
             // label1
             // 
             label1.AutoSize = true;
-            label1.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point);
+            label1.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
             label1.Location = new Point(17, 18);
             label1.Name = "label1";
             label1.Size = new Size(32, 17);
@@ -286,20 +308,20 @@ namespace grace
             // 
             // saveButton
             // 
-            saveButton.Font = new Font("Segoe UI", 11.25F, FontStyle.Regular, GraphicsUnit.Point);
-            saveButton.Location = new Point(40, 451);
+            saveButton.Font = new Font("Segoe UI", 11.25F);
+            saveButton.Location = new Point(40, 512);
             saveButton.Margin = new Padding(2, 1, 2, 1);
             saveButton.Name = "saveButton";
             saveButton.Size = new Size(113, 33);
             saveButton.TabIndex = 9;
             saveButton.Text = "Update";
             saveButton.UseVisualStyleBackColor = true;
-            saveButton.Click += saveButton_Click;
+            saveButton.Click += SaveButton_Click;
             // 
             // deleteButton
             // 
-            deleteButton.Font = new Font("Segoe UI", 11.25F, FontStyle.Regular, GraphicsUnit.Point);
-            deleteButton.Location = new Point(241, 451);
+            deleteButton.Font = new Font("Segoe UI", 11.25F);
+            deleteButton.Location = new Point(241, 512);
             deleteButton.Margin = new Padding(2, 1, 2, 1);
             deleteButton.Name = "deleteButton";
             deleteButton.Size = new Size(113, 33);
@@ -317,7 +339,7 @@ namespace grace
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             CancelButton = cancelButton;
-            ClientSize = new Size(858, 497);
+            ClientSize = new Size(858, 571);
             Controls.Add(deleteButton);
             Controls.Add(saveButton);
             Controls.Add(panel1);
@@ -356,11 +378,13 @@ namespace grace
         private Button deleteButton;
         private ToolTip toolTip;
         private ComboBox brandComboBox;
-        private Label label7;
+        private Label collectionLabel;
         private Label label8;
         private CheckedListBox checkedListBox;
         private Label addCollectionLabel;
         private TextBox addCollectionTextBox;
         private HelpProvider helpProvider;
+        private TextBox noteTextBox;
+        private Label label9;
     }
 }

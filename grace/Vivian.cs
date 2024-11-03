@@ -19,7 +19,6 @@ using Microsoft.VisualBasic.ApplicationServices;
 using NLog;
 using OfficeOpenXml;
 using System.Data;
-using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
 using System.Linq.Expressions;
 using System.Text;
 using System.Windows.Controls;
@@ -37,6 +36,9 @@ namespace grace
         private StringBuilder sb = new StringBuilder();
         private bool readyForNewCode = true;
 
+        public void ConfigureServices(IServiceCollection services)
+    => services.AddDbContext<GraceDbContext>();
+
 
 
         // To keep this file a reasonable size put all tab code and callbacks
@@ -46,6 +48,7 @@ namespace grace
         private DataTab dataTab;
         internal CheckInTab checkInTab { get; set; }
         internal CheckOutTab checkOutTab { get; }
+        internal ReportTab reportTab;
 
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
@@ -66,6 +69,7 @@ namespace grace
             dataTab = new DataTab(this);
             checkOutTab = new CheckOutTab(this);
             checkInTab = new CheckInTab(this);
+            reportTab = new ReportTab(this);
         }
 
         private void InitializeLogger()
@@ -98,7 +102,7 @@ namespace grace
             loggingTextBox.Invoke(new Action(() =>
             {
                 loggingTextBox.AppendText(logMessage + Environment.NewLine);
-                loggingTextBox.ScrollToCaret(); // Scroll to the end to show the latest log entry
+                loggingTextBox.ScrollToCaret(); // Scroll to the endDateRange to show the latest log entry
             }));
         }
 
@@ -179,6 +183,7 @@ namespace grace
             }
             checkInTab.Load();
             checkOutTab.Load();
+            reportTab.Load();
 
         }
 
@@ -198,7 +203,7 @@ namespace grace
             {
                 if (MessageBox.Show(
                 "This will completely erase the database"
-                + " and start the program from scratch. You will lose all"
+                + " and startDateRange the program from scratch. You will lose all"
                 + " stored information. Are you sure you want to do this?",
                 "Danger! Danger!",
                     MessageBoxButtons.YesNo, MessageBoxIcon.Error) == DialogResult.Yes)
@@ -258,7 +263,7 @@ namespace grace
             if (!isAdmin)
             {
 
-                if (tabIndex == 1 || tabIndex == 4)
+                if (tabIndex == 1 || tabIndex == 5)
                 {
                     e.Cancel = true;
                     MessageBox.Show("You can't select this tab.", "Information",
@@ -332,5 +337,6 @@ namespace grace
         {
 
         }
+
     }
 }

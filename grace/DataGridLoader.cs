@@ -17,8 +17,7 @@ using Microsoft.EntityFrameworkCore;
 using NLog;
 using System.ComponentModel.Design;
 using System.Data;
-using System.Data.Entity;
-using System.Data.SQLite;
+using Microsoft.Data.Sqlite;
 using System.Globalization;
 using static grace.DataBase;
 using static OfficeOpenXml.ExcelErrorValue;
@@ -72,6 +71,7 @@ namespace grace
             table.Columns.Add("Col6", typeof(string));
             table.Columns.Add("Total", typeof(int));
             table.Columns.Add("LastUpdated", typeof(DateTime));
+            table.Columns.Add("Note", typeof(string));
             table.Columns.Add("GraceId", typeof(int));
 
             // Populate rows
@@ -81,7 +81,7 @@ namespace grace
                     graceRow.Brand, graceRow.Availability, graceRow.BarCode,
                     graceRow.Col1, graceRow.Col2, graceRow.Col3, graceRow.Col4,
                     graceRow.Col5, graceRow.Col6, graceRow.Total,
-                    graceRow.LastUpdated, graceRow.GraceId);
+                    graceRow.LastUpdated, graceRow.Note, graceRow.GraceId);
             }
 
             return table;
@@ -98,7 +98,7 @@ namespace grace
             return view;
         }
 
-    public static List<GraceRow> getFilteredData(string searchTerm)
+        public static List<GraceRow> getFilteredData(string searchTerm)
         {
             List<GraceRow> result = new List<GraceRow>();
             var list = getData();
@@ -186,6 +186,7 @@ namespace grace
                     row.BarCode = item.BarCode;
                     row.Brand = item.Brand;
                     row.Description = item.Description;
+                    row.Note = item.Note;
 
                     // Lets get the two totals
                     var currentTotal = context.Totals
