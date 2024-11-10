@@ -1,15 +1,19 @@
-﻿using grace.data;
-using grace.data.models;
+﻿/*
+ * Copyright (c) 2024 White Acre Software LLC
+ * All rights reserved.
+ *
+ * This software is the confidential and proprietary information
+ * of White Acre Software LLC. You shall not disclose such
+ * Confidential Information and shall use it only in accordance
+ * with the terms of the license agreement you entered into with
+ * White Acre Software LLC.
+ *
+ * Year: 2024
+ */
 using grace.utils;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using NLog;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Diagnostics;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+
 
 namespace grace.tabs
 {
@@ -18,16 +22,13 @@ namespace grace.tabs
         private readonly Vivian vivian;
         private DataGridView reportGridView;
         private BindingSource bindingSource;
-        private DateTimePicker startTimePicker;
-        private DateTimePicker endTimePicker;
         private Button refreshButton;
-        private Button showAllButton;
+        private Button clearButton;
         private TextBox filterTextBox;
         TabPage reportTabPage;
-        DateTime startDateRange;
-        DateTime endDateRange;
         private DataTable dataTable = new DataTable();
         private bool disposedValue = false;
+        private static Mutex mutex = new Mutex();
 
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
@@ -35,11 +36,9 @@ namespace grace.tabs
         {
             this.vivian = v;
             this.reportGridView = vivian.reportGridView;
-            this.startTimePicker = vivian.startTimePicker;
-            this.endTimePicker = vivian.endTimePicker;
             this.refreshButton = vivian.refreshButton;
             this.filterTextBox = vivian.reportFilterTextBox;
-            this.showAllButton = vivian.showAllButton;
+            this.clearButton = vivian.reportClearButton;
             reportTabPage = vivian.tabControl.TabPages[4];
         }
 
@@ -47,35 +46,18 @@ namespace grace.tabs
         public void Load()
         {
 
-            DateTime? latestTime = GetLatestTotal();
-            if (latestTime != null)
-            {
-                endTimePicker.Value = latestTime.Value;
-                endDateRange = latestTime.Value;
-                startDateRange = latestTime.Value.AddDays(-14);
-            }
-            else
-            {
-                endTimePicker.Value = DateTime.Now;
-                endDateRange = DateTime.Now;
-                startDateRange = DateTime.Now.AddDays(-140);
-            }
-
             reportTabPage.Enter += ReportTabPage_Enter;
 
-            reportGridView.CellMouseDoubleClick += reportGridView_CellMouseDoubleClick;
-            startTimePicker.ValueChanged += StartTimePicker_ValueChanged;
-            endTimePicker.ValueChanged += EndTimePicker_ValueChanged;
+            // reportGridView.CellMouseDoubleClick += ReportGridView_CellMouseDoubleClick;
             refreshButton.Click += RefreshButton_Click;
+            clearButton.Click += RefreshButton_Click;
             filterTextBox.TextChanged += FilterTextBox_TextChanged;
-            showAllButton.Click += ShowAllButton_Click;
 
             // Setup data connection to grid view
             bindingSource = [];
 
 
         }
-
 
         private void ReportTabPage_Enter(object? sender, EventArgs e)
         {
@@ -106,18 +88,27 @@ namespace grace.tabs
 
         internal void BindDataSource(bool refresh = false)
         {
-           
-            startDateRange = startTimePicker.Value;
-            logger.Info(startDateRange.ToString("dd/MM/yyyy"));
-            endDateRange = endTimePicker.Value;
-            logger.Info(endDateRange.ToString("dd/MM/yyyy"));
-            dataTable = DataBase.GetCheckedOutReport(startDateRange, endDateRange);
+            // Show the "working" cursor
+            Cursor.Current = Cursors.WaitCursor;
+
+            RefreshData();
+            UpdateDataGridView();
+
+            // Return the cursor to normal
+            Cursor.Current = Cursors.Default;
+        }
+
+        internal void RefreshData()
+        {
+            dataTable = DataBase.GetCheckedOutReport();
+        }
+        internal void UpdateDataGridView()
+        {
             reportGridView.DataSource = dataTable;
             ChangeColumnNames();
             Utils.RemoveColumnByName(reportGridView, "GraceId");
-            reportGridView.Sort(reportGridView.Columns["LastUpdated"], System.ComponentModel.ListSortDirection.Descending);
+            reportGridView.Sort(reportGridView.Columns["Sku"], System.ComponentModel.ListSortDirection.Ascending);
         }
-
         private void EndTimePicker_ValueChanged(object? sender, EventArgs e)
         {
             filterTextBox.Clear();
@@ -132,20 +123,20 @@ namespace grace.tabs
 
         private void RefreshButton_Click(object? sender, EventArgs e)
         {
-            filterTextBox.Clear();
-            BindDataSource(true);
-        }
+            Button button = (Button)sender;
 
-        private void ShowAllButton_Click(object? sender, EventArgs e)
-        {
-            DateTime? earliest = GetEarliestTotal();
-            if (earliest != null)
-            {
-                startDateRange = (DateTime)earliest;
-                endTimePicker.Value = (DateTime)earliest;
-            }
+
+            // Disable the button to prevent multiple clicks
+            button.Enabled = false;
+
+            // Clear the filter text box
             filterTextBox.Clear();
+
+            // Bind the whole dataset
             BindDataSource(true);
+
+            // Enable the button
+            button.Enabled = false;
         }
 
         internal void FilterTextBox_TextChanged(object? sender, EventArgs e)
@@ -157,12 +148,13 @@ namespace grace.tabs
             }
             else
             {
-                bindingSource.DataSource = getFilteredData(dataTable, searchTerm);
+                bindingSource.DataSource = GetFilteredData(dataTable, searchTerm);
             }
             reportGridView.DataSource = bindingSource;
+            reportGridView.Sort(reportGridView.Columns["Sku"], System.ComponentModel.ListSortDirection.Ascending);
         }
 
-        public static DataView getFilteredData(DataTable table, string searchTerm)
+        public static DataView GetFilteredData(DataTable table, string searchTerm)
         {
             DataView view = new DataView(table)
             {
@@ -173,19 +165,8 @@ namespace grace.tabs
             return view;
         }
 
-       
-        public DateTime? GetEarliestTotal()
-        {
-            using (var context = new GraceDbContext())
-            {
-                var lastTotal = context.Totals
-                    .Min(t => (DateTime?)t.LastUpdated);
-                return lastTotal;
-            }
-        }
 
-        private void reportGridView_CellMouseDoubleClick(object? sender,
-    DataGridViewCellMouseEventArgs e)
+        private void ReportGridView_CellMouseDoubleClick(object? sender, DataGridViewCellMouseEventArgs e)
         {
             int rowIndex = e.RowIndex;
             if (rowIndex < 0)
@@ -205,16 +186,6 @@ namespace grace.tabs
             }
         }
 
-        public  DateTime? GetLatestTotal()
-        {
-            using (var context = new GraceDbContext())
-            {
-                var lastTotal = context.Totals
-                    .Max(t => (DateTime?)t.LastUpdated);
-                return lastTotal;
-            }
-        }
-
         protected virtual void Dispose(bool disposing)
         {
             if (!disposedValue)
@@ -226,7 +197,7 @@ namespace grace.tabs
                 }
 
                 disposedValue = true;
-            }  
+            }
         }
 
         ~ReportTab()

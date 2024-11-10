@@ -15,18 +15,11 @@
  *  in a separate class is by making it static. 
  *  
  */
-using grace.data;
 using grace.data.models;
 using grace.utils;
 using NLog;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+
 
 namespace grace.tabs
 {
@@ -50,7 +43,6 @@ namespace grace.tabs
         private ToolStripMenuItem saveInventoryReportToolStripMenuItem;
         private bool disposedValue;
         private TextBox filterBarCodeTextBox;
-        private VScrollBar vScrollBar;
         private DataTable dataTable = new DataTable();
 
         public DataTab(Vivian v)
@@ -75,28 +67,21 @@ namespace grace.tabs
         {
             dataGridView.AutoGenerateColumns = true;
             // Callbacks 
-            dataGridView.CellMouseDoubleClick += dataGridView_CellMouseDoubleClick;
-            dataGridView.DataBindingComplete += dataGridView_DataBindingComplete;
+            dataGridView.CellMouseDoubleClick += DataGridView_CellMouseDoubleClick;
+            dataGridView.DataBindingComplete += DataGridView_DataBindingComplete;
             dataGridView.CellFormatting += DataGridView_CellFormatting;
             dataTabPage.Enter += DataTabPage_Enter;
-            addRowButton.Click += addRowButton_Click;
+            addRowButton.Click += AddRowButton_Click;
             filterSkuTextBox.TextChanged += FilterSkuTextBox_TextChanged;
             clearFilterButton.Click += ClearFilterButton_Click;
             setInventoryFontSizeToolStripMenuItem.Click
-                += setInventoryFontSizeToolStripMenuItem_Click;
-            filterBarCodeTextBox.KeyDown += filterBarCodeTextBox_KeyDown;
+                += SetInventoryFontSizeToolStripMenuItem_Click;
+            filterBarCodeTextBox.KeyDown += FilterBarCodeTextBox_KeyDown;
             saveInventoryReportToolStripMenuItem.Click +=
-                saveInventoryReportToolStripMenuItem_Click;
+                SaveInventoryReportToolStripMenuItem_Click;
 
             // Setup data connection to grid view
-            bindingSource = new BindingSource();
-
-
-        }
-
-        private void DataGridView_CellFormatting1(object? sender, DataGridViewCellFormattingEventArgs e)
-        {
-            throw new NotImplementedException();
+            bindingSource = [];
         }
 
         private void ChangeColumnNames()
@@ -128,20 +113,21 @@ namespace grace.tabs
         }
         internal void BindDataSource(bool refresh = false)
         {
-            if (bindingSource == null)
-            {
-                bindingSource = new BindingSource();
-            }
+            // Show the "working" cursor
+            Cursor.Current = Cursors.WaitCursor;
+
+            bindingSource ??= [];
             dataGridView.DataSource = bindingSource;
             DataGridLoader.LoadBindingTable(refresh);
             List<GraceRow> list = DataGridLoader.getData();
             dataTable = DataGridLoader.ConvertToDataTable(list);
             bindingSource.DataSource = dataTable;
-            Utils.RemoveColumnByName(dataGridView, "ID");
-            Utils.RemoveColumnByName(dataGridView, "Grace");
-            Utils.RemoveColumnByName(dataGridView, "GraceId");
             ChangeColumnNames();
+            FixColumns();
             LoadSavedFont();
+
+            Cursor.Current = Cursors.Default;
+
         }
 
         private void DataTabPage_Enter(object? sender, EventArgs e)
@@ -150,7 +136,20 @@ namespace grace.tabs
             BindDataSource(true);
         }
 
-        private void addRowButton_Click(object? sender, EventArgs e)
+        internal void FixColumns()
+        {
+            // Make sure this has been initialized before calling. 
+            if (dataGridView.ColumnCount == 0)
+            {
+                return;
+            }
+            Utils.RemoveColumnByName(dataGridView, "ID");
+            Utils.RemoveColumnByName(dataGridView, "Grace");
+            Utils.RemoveColumnByName(dataGridView, "GraceId");
+            dataGridView.Sort(dataGridView.Columns["Sku"], System.ComponentModel.ListSortDirection.Ascending);
+        }
+
+        private void AddRowButton_Click(object? sender, EventArgs e)
         {
             using (EditRowForm editRowForm = new EditRowForm(null))
             {
@@ -164,15 +163,13 @@ namespace grace.tabs
         }
 
         // Callback for data binding complete for dataGridView Widget
-        private void dataGridView_DataBindingComplete(object? sender,
+        private void DataGridView_DataBindingComplete(object? sender,
             DataGridViewBindingCompleteEventArgs e)
         {
-            Utils.RemoveColumnByName(dataGridView, "ID");
-            Utils.RemoveColumnByName(dataGridView, "Grace");
-            Utils.RemoveColumnByName(dataGridView, "GraceId");
+            FixColumns();
         }
 
-        private void dataGridView_CellMouseDoubleClick(object? sender,
+        private void DataGridView_CellMouseDoubleClick(object? sender,
             DataGridViewCellMouseEventArgs e)
         {
             int rowIndex = e.RowIndex;
@@ -196,9 +193,14 @@ namespace grace.tabs
 
         private void ClearFilterButton_Click(object? sender, EventArgs e)
         {
+            Button button = (Button)sender;
+            button.Enabled = false;
+
             filterSkuTextBox.Clear();
             filterBarCodeTextBox.Clear();
             BindDataSource();
+
+            button.Enabled = true;
         }
 
         internal void FilterSkuTextBox_TextChanged(object? sender, EventArgs e)
@@ -212,12 +214,10 @@ namespace grace.tabs
             {
                 bindingSource.DataSource = DataGridLoader.getFilteredData(dataTable, searchTerm);
             }
-            Utils.RemoveColumnByName(dataGridView, "ID");
-            Utils.RemoveColumnByName(dataGridView, "Grace");
-            Utils.RemoveColumnByName(dataGridView, "GraceId");
+            FixColumns();
         }
 
-        internal void filterBarCodeTextBox_KeyDown(object? sender, KeyEventArgs e)
+        internal void FilterBarCodeTextBox_KeyDown(object? sender, KeyEventArgs e)
         {
 
             if (e.KeyCode == Keys.Enter || e.KeyCode == Keys.Return)
@@ -236,9 +236,7 @@ namespace grace.tabs
                     bindingSource.DataSource = DataGridLoader.getFilteredBarCode(dataTable, str);
                 }
 
-                Utils.RemoveColumnByName(dataGridView, "ID");
-                Utils.RemoveColumnByName(dataGridView, "Grace");
-                Utils.RemoveColumnByName(dataGridView, "GraceId");
+                FixColumns();
             }
         }
 
@@ -297,7 +295,7 @@ namespace grace.tabs
             }
         }
 
-        private void setInventoryFontSizeToolStripMenuItem_Click(object? sender, EventArgs e)
+        private void SetInventoryFontSizeToolStripMenuItem_Click(object? sender, EventArgs e)
         {
 
             // Create a FontDialog
@@ -325,7 +323,7 @@ namespace grace.tabs
             }
         }
 
-        private void saveInventoryReportToolStripMenuItem_Click(object? sender, EventArgs e)
+        private void SaveInventoryReportToolStripMenuItem_Click(object? sender, EventArgs e)
         {
             vivian.EnableReportMenuItems(false);
 

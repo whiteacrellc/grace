@@ -33,8 +33,15 @@ namespace grace
 
         public void BackupDatabaseToDocuments()
         {
-            string documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-            string filePath = Path.Combine(documentsPath, "backup.db");
+            string myDocs = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            string documentDir = Path.Combine(myDocs, "gracebackup");
+            if (!Directory.Exists(documentDir))
+            {
+                // If it doesn't, create the directory
+                Directory.CreateDirectory(documentDir);
+            }
+
+            string filePath = Path.Combine(documentDir, "backup.db");
 
             if (File.Exists(filePath))
             {
@@ -47,7 +54,7 @@ namespace grace
                 // Only backup once a day. 
                 if (difference.TotalHours > 24)
                 {
-                    string oldFilePath = Path.Combine(documentsPath, "backup_1.db");
+                    string oldFilePath = Path.Combine(documentDir, "backup_1.db");
                     if (File.Exists(oldFilePath))
                     {
                         // Attempt to delete the file

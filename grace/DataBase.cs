@@ -278,7 +278,7 @@ namespace grace
             public int GraceId { get; set; }
         }
 
-        public static System.Data.DataTable GetCheckedOutReport(DateTime start, DateTime end)
+        public static System.Data.DataTable GetCheckedOutReport()
         {
             System.Data.DataTable table = new System.Data.DataTable();
 
@@ -297,7 +297,6 @@ namespace grace
                 var result = (
                     from gr in dbContext.GraceRows
                     join totals in dbContext.Totals on gr.GraceId equals totals.GraceId
-                    where totals.LastUpdated >= end && totals.LastUpdated <= start
                     orderby totals.LastUpdated ascending, totals.CurrentTotal descending
                     select new ReportData
                     {

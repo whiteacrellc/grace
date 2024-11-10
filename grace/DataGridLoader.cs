@@ -30,11 +30,11 @@ namespace grace
 
         public static List<GraceRow> getData()
         {
-            List<GraceRow> list = new List<GraceRow>();
+            List<GraceRow> list = [];
             using (var context = new GraceDbContext())
             {
-                list = context.GraceRows.ToList();
-                list = list.OrderBy(row => row.Sku).ToList();
+                list = [.. context.GraceRows];
+                list = [.. list.OrderBy(row => row.Sku)];
             }
             return list;
         }

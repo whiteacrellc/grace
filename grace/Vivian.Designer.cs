@@ -80,13 +80,10 @@ namespace grace
             label3 = new Label();
             checkInDataGrid = new DataGridView();
             reportPage = new TabPage();
+            reportClearButton = new Button();
             filterLable = new Label();
             reportFilterTextBox = new TextBox();
             refreshButton = new Button();
-            label2 = new Label();
-            label1 = new Label();
-            endTimePicker = new DateTimePicker();
-            startTimePicker = new DateTimePicker();
             reportGridView = new DataGridView();
             adminPage = new TabPage();
             label5 = new Label();
@@ -102,7 +99,6 @@ namespace grace
             checkoutBindingSource = new BindingSource(components);
             checkInBindingSource = new BindingSource(components);
             toolTip = new ToolTip(components);
-            showAllButton = new Button();
             menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             tabControl.SuspendLayout();
@@ -415,7 +411,6 @@ namespace grace
             dataGridView.Name = "dataGridView";
             dataGridView.RowHeadersWidth = 82;
             dataGridView.RowTemplate.Height = 41;
-            dataGridView.ScrollBars = ScrollBars.Vertical;
             dataGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dataGridView.Size = new Size(1513, 674);
             dataGridView.TabIndex = 1;
@@ -620,14 +615,10 @@ namespace grace
             // 
             // reportPage
             // 
-            reportPage.Controls.Add(showAllButton);
+            reportPage.Controls.Add(reportClearButton);
             reportPage.Controls.Add(filterLable);
             reportPage.Controls.Add(reportFilterTextBox);
             reportPage.Controls.Add(refreshButton);
-            reportPage.Controls.Add(label2);
-            reportPage.Controls.Add(label1);
-            reportPage.Controls.Add(endTimePicker);
-            reportPage.Controls.Add(startTimePicker);
             reportPage.Controls.Add(reportGridView);
             reportPage.Location = new Point(4, 44);
             reportPage.Name = "reportPage";
@@ -635,6 +626,15 @@ namespace grace
             reportPage.TabIndex = 5;
             reportPage.Text = "Report Page";
             reportPage.UseVisualStyleBackColor = true;
+            // 
+            // reportClearButton
+            // 
+            reportClearButton.Location = new Point(442, 15);
+            reportClearButton.Name = "reportClearButton";
+            reportClearButton.Size = new Size(114, 30);
+            reportClearButton.TabIndex = 8;
+            reportClearButton.Text = "Clear";
+            reportClearButton.UseVisualStyleBackColor = true;
             // 
             // filterLable
             // 
@@ -656,44 +656,12 @@ namespace grace
             // 
             // refreshButton
             // 
-            refreshButton.Location = new Point(1198, 167);
+            refreshButton.Location = new Point(1017, 15);
             refreshButton.Name = "refreshButton";
             refreshButton.Size = new Size(97, 30);
             refreshButton.TabIndex = 5;
             refreshButton.Text = "Refresh";
             refreshButton.UseVisualStyleBackColor = true;
-            // 
-            // label2
-            // 
-            label2.AutoSize = true;
-            label2.Location = new Point(1191, 90);
-            label2.Name = "label2";
-            label2.Size = new Size(82, 18);
-            label2.TabIndex = 4;
-            label2.Text = "End Date";
-            // 
-            // label1
-            // 
-            label1.AutoSize = true;
-            label1.Location = new Point(1191, 50);
-            label1.Name = "label1";
-            label1.Size = new Size(94, 18);
-            label1.TabIndex = 3;
-            label1.Text = "Start Date";
-            // 
-            // endTimePicker
-            // 
-            endTimePicker.Location = new Point(1303, 84);
-            endTimePicker.Name = "endTimePicker";
-            endTimePicker.Size = new Size(200, 26);
-            endTimePicker.TabIndex = 2;
-            // 
-            // startTimePicker
-            // 
-            startTimePicker.Location = new Point(1303, 42);
-            startTimePicker.Name = "startTimePicker";
-            startTimePicker.Size = new Size(200, 26);
-            startTimePicker.TabIndex = 1;
             // 
             // reportGridView
             // 
@@ -703,7 +671,7 @@ namespace grace
             reportGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             reportGridView.Location = new Point(0, 60);
             reportGridView.Name = "reportGridView";
-            reportGridView.Size = new Size(1127, 684);
+            reportGridView.Size = new Size(1523, 684);
             reportGridView.TabIndex = 0;
             // 
             // adminPage
@@ -835,15 +803,6 @@ namespace grace
             toolTip.IsBalloon = true;
             toolTip.ToolTipIcon = ToolTipIcon.Info;
             // 
-            // showAllButton
-            // 
-            showAllButton.Location = new Point(1198, 217);
-            showAllButton.Name = "showAllButton";
-            showAllButton.Size = new Size(164, 31);
-            showAllButton.TabIndex = 8;
-            showAllButton.Text = "Show All Dates";
-            showAllButton.UseVisualStyleBackColor = true;
-            // 
             // Vivian
             // 
             AutoScaleDimensions = new SizeF(7F, 17F);
@@ -950,14 +909,10 @@ namespace grace
         internal ToolStripMenuItem saveInventoryReportToolStripMenuItem;
         private TabPage reportPage;
         public DataGridView reportGridView;
-        private Label label2;
-        private Label label1;
-        public DateTimePicker endTimePicker;
-        public DateTimePicker startTimePicker;
         private DateTimePicker dateTimePicker2;
         public Button refreshButton;
         private Label filterLable;
         public TextBox reportFilterTextBox;
-        public Button showAllButton;
+        public Button reportClearButton;
     }
 }

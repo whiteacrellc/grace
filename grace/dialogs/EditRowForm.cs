@@ -368,6 +368,10 @@ namespace grace
                     {
                         grace.Note = noteTextBox.Text.Trim();
                     }
+                    if (grace.Note == null)
+                    {
+                        grace.Note = string.Empty;
+                    }
                     updateGraceRow = true;
                 }
                 if (updateGraceRow)
@@ -499,7 +503,7 @@ namespace grace
             }
 
             bool updateCollection = false;
-            if (string.IsNullOrEmpty(addCollectionTextBox.Text) == false)
+            if (!string.IsNullOrEmpty(addCollectionTextBox.Text))
             {
                 var cName = addCollectionTextBox.Text.Trim();
                 if (DataBase.CheckCollectionExists(cName))
@@ -569,6 +573,9 @@ namespace grace
                 if (!string.IsNullOrEmpty(noteTextBox.Text))
                 {
                     grace.Note = noteTextBox.Text;
+                } else
+                {
+                    grace.Note = string.Empty;
                 }
                 context.Graces.Add(grace);
                 context.SaveChanges();
