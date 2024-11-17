@@ -22,21 +22,21 @@ namespace grace.data
         {
             const string columnName = "LastUpdated";
             const string tableName = "GraceRows";
-            createColumn(columnName, tableName);
+            CreateColumn(columnName, tableName);
         }
 
         private static void EnsureCheckedInColumn(GraceDbContext context)
         {
             const string columnName = "CheckedInAmount";
             const string tableName = "PulledDb";
-            createColumn(columnName, tableName);
+            CreateColumn(columnName, tableName);
         }
 
         private static void EnsureGraceNoteColumn(GraceDbContext context)
         {
             const string columnName = "Note";
             const string tableName = "Graces";
-            createColumnString(columnName, tableName);
+            CreateColumnString(columnName, tableName);
         }
 
         private static void EnsureGraceDbNoteColumn(GraceDbContext context)
@@ -44,10 +44,10 @@ namespace grace.data
             const string columnName = "Note";
             const string tableName = "GraceRows";
 
-            createColumnString(columnName, tableName);
+            CreateColumnString(columnName, tableName);
         }
 
-        private static void createColumn(string columnName, string tableName)
+        private static void CreateColumn(string columnName, string tableName)
         {
             logger.Info("creating column " + columnName + " in " + tableName);
             bool found = false;
@@ -88,7 +88,7 @@ namespace grace.data
             }
         }
 
-        private static void createColumnString(string columnName, string tableName)
+        private static void CreateColumnString(string columnName, string tableName)
         {
             logger.Info("creating column " + columnName + " in " + tableName);
             bool found = false;

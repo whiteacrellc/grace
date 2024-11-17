@@ -12,15 +12,9 @@
  */
 using grace.data;
 using grace.data.models;
-using Microsoft.Data.Sqlite;
-using Microsoft.EntityFrameworkCore;
 using NLog;
-using System.ComponentModel.Design;
 using System.Data;
-using Microsoft.Data.Sqlite;
-using System.Globalization;
-using static grace.DataBase;
-using static OfficeOpenXml.ExcelErrorValue;
+
 
 namespace grace
 {
@@ -28,36 +22,10 @@ namespace grace
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
-        public static List<GraceRow> getData()
+        public static DataTable GetData()
         {
-            List<GraceRow> list = [];
-            using (var context = new GraceDbContext())
-            {
-                list = [.. context.GraceRows];
-                list = [.. list.OrderBy(row => row.Sku)];
-            }
-            return list;
-        }
-
-
-        public static DataSet GetDataSet(List<GraceRow> graceRowsList)
-        {
-
-            // Convert the List<GraceRow> to a DataTable
-            DataTable graceRowsTable = ConvertToDataTable(graceRowsList);
-
-            // Create a new DataSet and add the DataTable to it
-            DataSet dataSet = new DataSet();
-            dataSet.Tables.Add(graceRowsTable);
-            return dataSet;
-        }
-
-        public static DataTable ConvertToDataTable(List<GraceRow> graceRowsList)
-        {
-            DataTable table = new DataTable();
-
-            // Define columns
-            table.Columns.Add("ID", typeof(int));
+            System.Data.DataTable table = new System.Data.DataTable();
+           // table.Columns.Add("ID", typeof(int));
             table.Columns.Add("Sku", typeof(string));
             table.Columns.Add("Description", typeof(string));
             table.Columns.Add("Brand", typeof(string));
@@ -72,22 +40,31 @@ namespace grace
             table.Columns.Add("Total", typeof(int));
             table.Columns.Add("LastUpdated", typeof(DateTime));
             table.Columns.Add("Note", typeof(string));
-            table.Columns.Add("GraceId", typeof(int));
+            // table.Columns.Add("GraceId", typeof(int));
+
+            List<GraceRow> list = [];
+            using (var context = new GraceDbContext())
+            {
+                list = [.. context.GraceRows];
+                list = [.. list.OrderBy(row => row.Sku)];
+            }
 
             // Populate rows
-            foreach (var graceRow in graceRowsList)
+            foreach (var graceRow in list)
             {
-                table.Rows.Add(graceRow.ID, graceRow.Sku, graceRow.Description,
+                table.Rows.Add(graceRow.Sku, graceRow.Description,
                     graceRow.Brand, graceRow.Availability, graceRow.BarCode,
                     graceRow.Col1, graceRow.Col2, graceRow.Col3, graceRow.Col4,
                     graceRow.Col5, graceRow.Col6, graceRow.Total,
-                    graceRow.LastUpdated, graceRow.Note, graceRow.GraceId);
+                    graceRow.LastUpdated, graceRow.Note);
             }
 
             return table;
         }
 
-        public static DataView getFilteredData(DataTable table, string searchTerm)
+
+
+        public static DataView GetFilteredData(DataTable table, string searchTerm)
         {
             DataView view = new DataView(table)
             {
@@ -98,54 +75,8 @@ namespace grace
             return view;
         }
 
-        public static List<GraceRow> getFilteredData(string searchTerm)
-        {
-            List<GraceRow> result = new List<GraceRow>();
-            var list = getData();
-            if (searchTerm == null || searchTerm == string.Empty)
-            {
-                return list;
-            }
 
-            // Look through the list for either matches in the sku or
-            // description
-            foreach (var graceRow in list)
-            {
-                if (graceRow.Sku.Contains(searchTerm,
-                    StringComparison.CurrentCultureIgnoreCase) ||
-                    graceRow.Description.Contains(searchTerm,
-                    StringComparison.CurrentCultureIgnoreCase) ||
-                    graceRow.BarCode.Contains(searchTerm))
-                {
-                    result.Add(graceRow);
-                }
-            }
-            return result;
-        }
-
-        public static List<GraceRow> getFilteredBarCode(string searchTerm)
-        {
-            List<GraceRow> result = new List<GraceRow>();
-            var list = getData();
-            if (searchTerm == null || searchTerm == string.Empty)
-            {
-                return list;
-            }
-
-            // Look through the list for either matches in the sku or
-            // description
-            foreach (var graceRow in list)
-            {
-                if (graceRow.BarCode.Contains(searchTerm,
-                    StringComparison.CurrentCultureIgnoreCase))
-                {
-                    result.Add(graceRow);
-                }
-            }
-            return result;
-        }
-
-        public static DataView getFilteredBarCode(DataTable table, string searchTerm)
+        public static DataView GetFilteredBarCode(DataTable table, string searchTerm)
         {
             DataView view = new DataView(table)
             {

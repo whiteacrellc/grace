@@ -389,8 +389,6 @@ namespace grace
             // 
             // dataGridView
             // 
-            dataGridView.AllowUserToAddRows = false;
-            dataGridView.AllowUserToDeleteRows = false;
             dataGridView.AllowUserToResizeRows = false;
             dataGridView.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             dataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
@@ -405,15 +403,15 @@ namespace grace
             dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
             dataGridViewCellStyle1.WrapMode = DataGridViewTriState.False;
             dataGridView.DefaultCellStyle = dataGridViewCellStyle1;
-            dataGridView.Location = new Point(6, 53);
+            dataGridView.Location = new Point(6, 48);
             dataGridView.Margin = new Padding(5, 2, 5, 2);
-            dataGridView.MultiSelect = false;
             dataGridView.Name = "dataGridView";
             dataGridView.RowHeadersWidth = 82;
             dataGridView.RowTemplate.Height = 41;
             dataGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dataGridView.Size = new Size(1513, 674);
             dataGridView.TabIndex = 1;
+            dataGridView.CellContentClick += dataGridView_CellContentClick;
             // 
             // clearFilterButton
             // 

@@ -263,7 +263,7 @@ namespace grace
             if (!isAdmin)
             {
 
-                if (tabIndex == 1 || tabIndex == 5)
+                if (tabIndex == 1 || tabIndex == 5 || tabIndex == 4)
                 {
                     e.Cancel = true;
                     MessageBox.Show("You can't select this tab.", "Information",
@@ -338,5 +338,9 @@ namespace grace
 
         }
 
+        private void dataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
     }
 }

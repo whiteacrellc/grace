@@ -36,6 +36,10 @@ namespace grace.data
         public GraceDbContext(DbContextOptions<GraceDbContext> options)
             : base(options)
         {
+            if (GraceDbContext.ConnectionString == null)
+            {
+                GraceDbContext.ConnectionString = DataBase.ConnectionString;
+            }
         }
 
         public GraceDbContext()
@@ -67,6 +71,9 @@ namespace grace.data
 
                 entity.Property(e => e.Description)
                     .IsRequired();
+
+                entity.Property(e => e.Note)
+                    .HasDefaultValue("");
             });
 
             modelBuilder.Entity<User>(entity =>
@@ -136,12 +143,13 @@ namespace grace.data
                 // Primary key
                 entity.HasKey(e => e.ID);
 
+                entity.Property(e => e.Note)
+                    .HasDefaultValue("");
+
                 entity.HasOne(e => e.Grace)
                   .WithMany()
                   .HasForeignKey(e => e.GraceId)
                   .OnDelete(DeleteBehavior.Cascade);
-
-                entity.Property(t => t.LastUpdated).IsRequired();
 
 
             });
@@ -156,6 +164,9 @@ namespace grace.data
 
                 entity.Property(e => e.CurrentTotal)
                   .IsRequired();
+
+                entity.Property(e => e.CheckedInAmount)
+                    .HasDefaultValue(0);
 
                 // Relationships
                 entity.HasOne(e => e.User)
