@@ -311,11 +311,6 @@ namespace grace
             TextRenderer.DrawText(e.Graphics, page.Text, e.Font, paddedBounds, c);
         }
 
-        private void dataPage_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
         private void filterRowsLabel_MouseHover(object sender, EventArgs e)
         {
             toolTip.ToolTipTitle = "Row Filter";
@@ -333,14 +328,5 @@ namespace grace
                 scanBarcodeLabel, 0, -30, 2000);
         }
 
-        private void dataPage_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void dataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-
-        }
     }
 }

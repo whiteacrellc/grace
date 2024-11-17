@@ -65,7 +65,7 @@ namespace grace.tabs
 
         internal void Load()
         {
-            dataGridView.AutoGenerateColumns = true;
+            //dataGridView.AutoGenerateColumns = true;
             // Callbacks 
             dataGridView.CellMouseDoubleClick += DataGridView_CellMouseDoubleClick;
             dataGridView.CellFormatting += DataGridView_CellFormatting;

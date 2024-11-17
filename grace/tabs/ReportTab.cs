@@ -23,7 +23,6 @@ namespace grace.tabs
         private DataGridView reportGridView;
         private BindingSource bindingSource;
         private Button refreshButton;
-        private Button clearButton;
         private TextBox filterTextBox;
         TabPage reportTabPage;
         private DataTable dataTable = new DataTable();
@@ -38,7 +37,6 @@ namespace grace.tabs
             this.reportGridView = vivian.reportGridView;
             this.refreshButton = vivian.refreshButton;
             this.filterTextBox = vivian.reportFilterTextBox;
-            this.clearButton = vivian.reportClearButton;
             reportTabPage = vivian.tabControl.TabPages[4];
         }
 
@@ -50,7 +48,6 @@ namespace grace.tabs
 
             // reportGridView.CellMouseDoubleClick += ReportGridView_CellMouseDoubleClick;
             refreshButton.Click += RefreshButton_Click;
-            clearButton.Click += RefreshButton_Click;
             filterTextBox.TextChanged += FilterTextBox_TextChanged;
 
             // Setup data connection to grid view
@@ -136,7 +133,7 @@ namespace grace.tabs
             BindDataSource(true);
 
             // Enable the button
-            button.Enabled = false;
+            button.Enabled = true;
         }
 
         internal void FilterTextBox_TextChanged(object? sender, EventArgs e)

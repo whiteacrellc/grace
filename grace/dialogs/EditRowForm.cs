@@ -368,7 +368,7 @@ namespace grace
                     {
                         grace.Note = noteTextBox.Text.Trim();
                     }
-                    if (grace.Note == null)
+                    else 
                     {
                         grace.Note = string.Empty;
                     }
