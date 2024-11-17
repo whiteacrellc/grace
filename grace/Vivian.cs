@@ -263,7 +263,7 @@ namespace grace
             if (!isAdmin)
             {
 
-                if (tabIndex == 1 || tabIndex == 5)
+                if (tabIndex == 1 || tabIndex == 5 || tabIndex == 4)
                 {
                     e.Cancel = true;
                     MessageBox.Show("You can't select this tab.", "Information",
@@ -311,11 +311,6 @@ namespace grace
             TextRenderer.DrawText(e.Graphics, page.Text, e.Font, paddedBounds, c);
         }
 
-        private void dataPage_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
         private void filterRowsLabel_MouseHover(object sender, EventArgs e)
         {
             toolTip.ToolTipTitle = "Row Filter";
@@ -331,11 +326,6 @@ namespace grace
             toolTip.Show("Use this to filter using the Barcode Scanner."
                 + " To manually filter on barcodes use the other search box.",
                 scanBarcodeLabel, 0, -30, 2000);
-        }
-
-        private void dataPage_Click(object sender, EventArgs e)
-        {
-
         }
 
     }

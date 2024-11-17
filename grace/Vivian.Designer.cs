@@ -36,7 +36,6 @@ namespace grace
             DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
             openFileDialog = new OpenFileDialog();
             menuStrip1 = new MenuStrip();
             editToolStripMenuItem = new ToolStripMenuItem();
@@ -59,11 +58,11 @@ namespace grace
             pickUserLabel = new Label();
             changePasswordButton = new Button();
             dataPage = new TabPage();
+            dataGridView = new DataGridView();
             filterBarcodeTextBox = new TextBox();
             scanBarcodeLabel = new Label();
             filterRowsLabel = new Label();
             addRowButton = new Button();
-            dataGridView = new DataGridView();
             clearFilterButton = new Button();
             filterSkuTextBox = new TextBox();
             checkoutPage = new TabPage();
@@ -80,7 +79,6 @@ namespace grace
             label3 = new Label();
             checkInDataGrid = new DataGridView();
             reportPage = new TabPage();
-            reportClearButton = new Button();
             filterLable = new Label();
             reportFilterTextBox = new TextBox();
             refreshButton = new Button();
@@ -332,11 +330,11 @@ namespace grace
             // 
             dataPage.BackColor = Color.Lavender;
             dataPage.BorderStyle = BorderStyle.Fixed3D;
+            dataPage.Controls.Add(dataGridView);
             dataPage.Controls.Add(filterBarcodeTextBox);
             dataPage.Controls.Add(scanBarcodeLabel);
             dataPage.Controls.Add(filterRowsLabel);
             dataPage.Controls.Add(addRowButton);
-            dataPage.Controls.Add(dataGridView);
             dataPage.Controls.Add(clearFilterButton);
             dataPage.Controls.Add(filterSkuTextBox);
             dataPage.Location = new Point(4, 44);
@@ -346,8 +344,29 @@ namespace grace
             dataPage.TabIndex = 1;
             dataPage.Text = "Inventory";
             dataPage.ToolTipText = "Inventory for Patster";
-            dataPage.Click += dataPage_Click;
-            dataPage.Paint += dataPage_Paint;
+            // 
+            // dataGridView
+            // 
+            dataGridView.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            dataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+            dataGridView.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
+            dataGridView.ClipboardCopyMode = DataGridViewClipboardCopyMode.Disable;
+            dataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = SystemColors.Window;
+            dataGridViewCellStyle1.Font = new Font("Verdana", 9F);
+            dataGridViewCellStyle1.ForeColor = SystemColors.ControlText;
+            dataGridViewCellStyle1.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.False;
+            dataGridView.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridView.EditMode = DataGridViewEditMode.EditProgrammatically;
+            dataGridView.Location = new Point(4, 61);
+            dataGridView.MultiSelect = false;
+            dataGridView.Name = "dataGridView";
+            dataGridView.SelectionMode = DataGridViewSelectionMode.CellSelect;
+            dataGridView.Size = new Size(1517, 675);
+            dataGridView.TabIndex = 8;
             // 
             // filterBarcodeTextBox
             // 
@@ -386,34 +405,6 @@ namespace grace
             addRowButton.TabIndex = 4;
             addRowButton.Text = "Add Item";
             addRowButton.UseVisualStyleBackColor = true;
-            // 
-            // dataGridView
-            // 
-            dataGridView.AllowUserToAddRows = false;
-            dataGridView.AllowUserToDeleteRows = false;
-            dataGridView.AllowUserToResizeRows = false;
-            dataGridView.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            dataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
-            dataGridView.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
-            dataGridView.BorderStyle = BorderStyle.Fixed3D;
-            dataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = SystemColors.Window;
-            dataGridViewCellStyle1.Font = new Font("Verdana", 9.75F);
-            dataGridViewCellStyle1.ForeColor = SystemColors.ControlText;
-            dataGridViewCellStyle1.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.False;
-            dataGridView.DefaultCellStyle = dataGridViewCellStyle1;
-            dataGridView.Location = new Point(6, 53);
-            dataGridView.Margin = new Padding(5, 2, 5, 2);
-            dataGridView.MultiSelect = false;
-            dataGridView.Name = "dataGridView";
-            dataGridView.RowHeadersWidth = 82;
-            dataGridView.RowTemplate.Height = 41;
-            dataGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dataGridView.Size = new Size(1513, 674);
-            dataGridView.TabIndex = 1;
             // 
             // clearFilterButton
             // 
@@ -598,14 +589,7 @@ namespace grace
             checkInDataGrid.CellBorderStyle = DataGridViewCellBorderStyle.Sunken;
             checkInDataGrid.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Sunken;
             checkInDataGrid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle4.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.BackColor = SystemColors.Window;
-            dataGridViewCellStyle4.Font = new Font("Verdana", 9F);
-            dataGridViewCellStyle4.ForeColor = SystemColors.ControlText;
-            dataGridViewCellStyle4.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle4.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle4.WrapMode = DataGridViewTriState.False;
-            checkInDataGrid.DefaultCellStyle = dataGridViewCellStyle4;
+            checkInDataGrid.DefaultCellStyle = dataGridViewCellStyle1;
             checkInDataGrid.Location = new Point(-7, 0);
             checkInDataGrid.Name = "checkInDataGrid";
             checkInDataGrid.RowHeadersWidth = 82;
@@ -615,7 +599,7 @@ namespace grace
             // 
             // reportPage
             // 
-            reportPage.Controls.Add(reportClearButton);
+            reportPage.BackColor = Color.Lavender;
             reportPage.Controls.Add(filterLable);
             reportPage.Controls.Add(reportFilterTextBox);
             reportPage.Controls.Add(refreshButton);
@@ -626,15 +610,6 @@ namespace grace
             reportPage.TabIndex = 5;
             reportPage.Text = "Report Page";
             reportPage.UseVisualStyleBackColor = true;
-            // 
-            // reportClearButton
-            // 
-            reportClearButton.Location = new Point(442, 15);
-            reportClearButton.Name = "reportClearButton";
-            reportClearButton.Size = new Size(114, 30);
-            reportClearButton.TabIndex = 8;
-            reportClearButton.Text = "Clear";
-            reportClearButton.UseVisualStyleBackColor = true;
             // 
             // filterLable
             // 
@@ -656,7 +631,7 @@ namespace grace
             // 
             // refreshButton
             // 
-            refreshButton.Location = new Point(1017, 15);
+            refreshButton.Location = new Point(431, 18);
             refreshButton.Name = "refreshButton";
             refreshButton.Size = new Size(97, 30);
             refreshButton.TabIndex = 5;
@@ -665,13 +640,14 @@ namespace grace
             // 
             // reportGridView
             // 
-            reportGridView.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
+            reportGridView.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             reportGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
             reportGridView.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
             reportGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            reportGridView.Location = new Point(0, 60);
+            reportGridView.DefaultCellStyle = dataGridViewCellStyle1;
+            reportGridView.Location = new Point(8, 60);
             reportGridView.Name = "reportGridView";
-            reportGridView.Size = new Size(1523, 684);
+            reportGridView.Size = new Size(1515, 681);
             reportGridView.TabIndex = 0;
             // 
             // adminPage
@@ -894,7 +870,6 @@ namespace grace
         public Button deleteUserButton;
         private Label label9;
         private Label filterRowsLabel;
-        internal DataGridView dataGridView;
         internal Button addRowButton;
         internal Button clearFilterButton;
         internal TextBox filterSkuTextBox;
@@ -913,6 +888,6 @@ namespace grace
         public Button refreshButton;
         private Label filterLable;
         public TextBox reportFilterTextBox;
-        public Button reportClearButton;
+        public DataGridView dataGridView;
     }
 }

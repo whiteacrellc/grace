@@ -65,10 +65,9 @@ namespace grace.tabs
 
         internal void Load()
         {
-            dataGridView.AutoGenerateColumns = true;
+            //dataGridView.AutoGenerateColumns = true;
             // Callbacks 
             dataGridView.CellMouseDoubleClick += DataGridView_CellMouseDoubleClick;
-            dataGridView.DataBindingComplete += DataGridView_DataBindingComplete;
             dataGridView.CellFormatting += DataGridView_CellFormatting;
             dataTabPage.Enter += DataTabPage_Enter;
             addRowButton.Click += AddRowButton_Click;
@@ -116,24 +115,30 @@ namespace grace.tabs
             // Show the "working" cursor
             Cursor.Current = Cursors.WaitCursor;
 
-            bindingSource ??= [];
-            dataGridView.DataSource = bindingSource;
-            DataGridLoader.LoadBindingTable(refresh);
-            List<GraceRow> list = DataGridLoader.getData();
-            dataTable = DataGridLoader.ConvertToDataTable(list);
-            bindingSource.DataSource = dataTable;
-            ChangeColumnNames();
-            FixColumns();
-            LoadSavedFont();
+
+            RefreshData(refresh);
+            UpdateDataGridView();
 
             Cursor.Current = Cursors.Default;
 
         }
-
         private void DataTabPage_Enter(object? sender, EventArgs e)
         {
             filterSkuTextBox.Clear();
             BindDataSource(true);
+        }
+
+        internal void RefreshData(bool refresh = false)
+        {
+            DataGridLoader.LoadBindingTable(refresh);
+            dataTable = DataGridLoader.GetData();
+            dataGridView.DataSource = dataTable;
+        }
+        internal void UpdateDataGridView()
+        {
+            ChangeColumnNames();
+            FixColumns();
+            LoadSavedFont();
         }
 
         internal void FixColumns()
@@ -144,7 +149,6 @@ namespace grace.tabs
                 return;
             }
             Utils.RemoveColumnByName(dataGridView, "ID");
-            Utils.RemoveColumnByName(dataGridView, "Grace");
             Utils.RemoveColumnByName(dataGridView, "GraceId");
             dataGridView.Sort(dataGridView.Columns["Sku"], System.ComponentModel.ListSortDirection.Ascending);
         }
@@ -212,9 +216,10 @@ namespace grace.tabs
             }
             else
             {
-                bindingSource.DataSource = DataGridLoader.getFilteredData(dataTable, searchTerm);
+                bindingSource.DataSource = DataGridLoader.GetFilteredData(dataTable, searchTerm);
             }
-            FixColumns();
+            dataGridView.DataSource = bindingSource;
+            dataGridView.Sort(dataGridView.Columns["Sku"], System.ComponentModel.ListSortDirection.Ascending);
         }
 
         internal void FilterBarCodeTextBox_KeyDown(object? sender, KeyEventArgs e)
@@ -233,7 +238,7 @@ namespace grace.tabs
                 }
                 else
                 {
-                    bindingSource.DataSource = DataGridLoader.getFilteredBarCode(dataTable, str);
+                    bindingSource.DataSource = DataGridLoader.GetFilteredBarCode(dataTable, str);
                 }
 
                 FixColumns();

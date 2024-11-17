@@ -10,38 +10,48 @@ namespace grace
 {
     internal class BackupAndRestore
     {
-        private string sourcePath;
-        private string connectionString;
+        private readonly string connectionString;
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
 
 
         public BackupAndRestore() {
-            sourcePath = DataBase.DbFileName;
             connectionString = DataBase.ConnectionString;
         }
 
         static string ChooseBackupPath()
         {
-            SaveFileDialog saveFileDialog = new SaveFileDialog();
-            saveFileDialog.Filter = "SQLite Database (*.db)|*.db";
-            saveFileDialog.Title = "Choose Backup Destination";
+            SaveFileDialog saveFileDialog = new SaveFileDialog
+            {
+                Filter = "SQLite Database (*.db)|*.db",
+                Title = "Choose Backup Destination"
+            };
             saveFileDialog.ShowDialog();
 
             return saveFileDialog.FileName;
         }
 
-        public void BackupDatabaseToDocuments()
+        private string CheckBackUpDirectory()
         {
             string myDocs = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-            string documentDir = Path.Combine(myDocs, "gracebackup");
-            if (!Directory.Exists(documentDir))
+            string graceDir = Path.Combine(myDocs, "grace");
+            if (!Directory.Exists(graceDir))
             {
                 // If it doesn't, create the directory
-                Directory.CreateDirectory(documentDir);
+                Directory.CreateDirectory(graceDir);
             }
+            string backupDir = Path.Combine(graceDir, "backup");
+            if (!Directory.Exists(backupDir))
+            {
+                Directory.CreateDirectory(backupDir);
+            }
+            return backupDir;
+        }
 
-            string filePath = Path.Combine(documentDir, "backup.db");
+        public void BackupDatabaseToDocuments()
+        {
+            string backupDir = CheckBackUpDirectory();
+            string filePath = Path.Combine(backupDir, "backup.db");
 
             if (File.Exists(filePath))
             {
@@ -54,13 +64,15 @@ namespace grace
                 // Only backup once a day. 
                 if (difference.TotalHours > 24)
                 {
-                    string oldFilePath = Path.Combine(documentDir, "backup_1.db");
+                    string oldFilePath = Path.Combine(backupDir, "backup_1.db");
                     if (File.Exists(oldFilePath))
                     {
-                        // Attempt to delete the file
                         File.Delete(oldFilePath);
                     }
-                    File.Move(filePath, oldFilePath);
+                    if (File.Exists(filePath))
+                    {
+                        File.Move(filePath, oldFilePath);
+                    }
                     BackupDatabaseToFile(filePath);
                 }
             } else
@@ -76,25 +88,31 @@ namespace grace
                 return;
             }
 
+            SqliteConnection.ClearAllPools();
+
             // Backup the database
             if (File.Exists(backupPath))
             {
                 File.Delete(backupPath);
             }
 
-            SqliteConnection.ClearAllPools();
-
             try
             {
                 logger.Info($"backing up database to {backupPath}");
 
                 using (var sourceConn = new SqliteConnection(connectionString))
-                using (var backupConn = new SqliteConnection($"Data Source={backupPath};Version=3;"))
                 {
                     sourceConn.Open();
-                    backupConn.Open();
+                    using (var backupConn = new SqliteConnection($"Data Source={backupPath};Mode=ReadWriteCreate"))
+                    {
+      
+                        backupConn.Open();
 
-                    sourceConn.BackupDatabase(backupConn);
+                        sourceConn.BackupDatabase(backupConn);
+
+                        backupConn.Close();
+                    }
+                    sourceConn.Close();
                 }
                 logger.Info("done backing up database");
             }
@@ -121,7 +139,6 @@ namespace grace
             {
                 context.Database.EnsureDeleted();
                 context.Database.CloseConnection();
-       
             }
             GC.Collect();
             GC.WaitForPendingFinalizers();
@@ -157,13 +174,14 @@ namespace grace
                     {
                         logger.Info($"restoring database from {selectedFilePath}");
                         //DeleteCurrentDb();
-                        using (var sourceConn = new SqliteConnection($"Data Source={selectedFilePath};Version=3;"))
-                        using (var destinationConn = new SqliteConnection(connectionString))
+                        using (var sourceConn = new SqliteConnection($"Data Source={selectedFilePath};Mode=ReadWriteCreate"))
                         {
                             sourceConn.Open();
-                            destinationConn.Open();
-
-                            sourceConn.BackupDatabase(destinationConn);
+                            using (var destinationConn = new SqliteConnection(connectionString))
+                            {
+                                destinationConn.Open();
+                                sourceConn.BackupDatabase(destinationConn);
+                            }
                         }
                         logger.Info("done restoring database");
                         DataGridLoader.LoadBindingTable(true);

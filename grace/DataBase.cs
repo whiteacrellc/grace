@@ -55,8 +55,7 @@ namespace grace
                 var created = context.Database.EnsureCreated();
                 if (!created)
                 {
-                    logger.Error("creating database failed");
-                    throw new InvalidOperationException("Create database failed");
+                    logger.Info("Database already exists");
                 }
             }
             using (var context = new GraceDbContext(optionsBuilder.Options))
@@ -321,10 +320,28 @@ namespace grace
         }
 
 
+        private string CheckDbDirectory()
+        {
+            string myDocs = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            string graceDir = Path.Combine(myDocs, "grace");
+            if (!Directory.Exists(graceDir))
+            {
+                // If it doesn't, create the directory
+                Directory.CreateDirectory(graceDir);
+            }
+            string dbDir = Path.Combine(graceDir, "live");
+            if (!Directory.Exists(dbDir))
+            {
+                Directory.CreateDirectory(dbDir);
+            }
+            return dbDir;
+        }
+
+
         public string CreateDatabaseFile()
         {
             // Get the program's directory
-            string programDirectory = AppDomain.CurrentDomain.BaseDirectory;
+            string programDirectory = CheckDbDirectory();
 
             // Specify the database file path in the program's directory
             DbFileName = Path.Combine(programDirectory, DbName);
