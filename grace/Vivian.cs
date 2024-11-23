@@ -143,7 +143,7 @@ namespace grace
             logger.Info(message);
         }
 
-        private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
+        private void SettingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             using (var settingsForm = new SettingsForm())
             {
@@ -187,13 +187,13 @@ namespace grace
 
         }
 
-        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ExitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Close the application
             Application.Exit();
         }
 
-        private void importInventoryToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ImportInventoryToolStripMenuItem_Click(object sender, EventArgs e)
         {
             openFileDialog.FilterIndex = 1;  // Index of the filter that is selected by default
             EnableReportMenuItems(false);
@@ -219,7 +219,10 @@ namespace grace
 
 
                         if (openFileDialog.ShowDialog() != DialogResult.OK)
+                        {
+                            EnableReportMenuItems(true);
                             return;
+                        }
 
                         string filePath = openFileDialog.FileName;
                         //er.ReadExcelFile(filePath);
@@ -234,9 +237,10 @@ namespace grace
                     "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             dataTab.BindDataSource();
+            EnableReportMenuItems(true);
         }
 
-        private void saveReportToolStripMenuItem_Click(object sender, EventArgs e)
+        private void SaveReportToolStripMenuItem_Click(object sender, EventArgs e)
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog
             {
@@ -244,15 +248,15 @@ namespace grace
                 FileName = $"report_{DateTime.Now.ToString("yyyyMMdd")}.xlsx",
                 RestoreDirectory = true
             };
+            EnableReportMenuItems(false);
 
             if (saveFileDialog.ShowDialog() == DialogResult.OK)
             {
                 string filePath = saveFileDialog.FileName;
-                EnableReportMenuItems(false);
                 generateReport();
                 report.WriteReport(filePath);
-                EnableReportMenuItems(true);
             }
+            EnableReportMenuItems(true);
         }
 
         private void tabControl_Selecting(object sender, TabControlCancelEventArgs e)

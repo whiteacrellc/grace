@@ -95,7 +95,8 @@ namespace grace.tabs
                 {"Col4", "Collection 4"},
                 {"Col5", "Collection 5"},
                 {"Col6", "Collection 6"},
-                {"Reorder Status", "Availability" }
+                { "Availability", "Reorder Status" },
+                {"Sku", "Item #" },
                 // Add more mappings as needed
             };
 
@@ -302,6 +303,8 @@ namespace grace.tabs
 
         private void SetInventoryFontSizeToolStripMenuItem_Click(object? sender, EventArgs e)
         {
+            Button button = sender as Button;
+            button.Enabled = false;
 
             // Create a FontDialog
             using (FontDialog fontDialog = new FontDialog())
@@ -317,6 +320,8 @@ namespace grace.tabs
                     SaveSelectedFont(fontDialog.Font);
                 }
             }
+
+            button.Enabled = true;
         }
 
         private void ApplyFontToDataGridViewRows(Font font)

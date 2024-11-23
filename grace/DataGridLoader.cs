@@ -118,6 +118,7 @@ namespace grace
                     row.Brand = item.Brand;
                     row.Description = item.Description;
                     row.Note = item.Note;
+                    row.Availability = item.Availability;
 
                     // Lets get the two totals
                     var currentTotal = context.Totals

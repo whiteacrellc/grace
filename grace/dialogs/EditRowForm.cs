@@ -364,13 +364,14 @@ namespace grace
                 }
                 if (grace.Note != noteTextBox.Text)
                 {
-                    if (!string.IsNullOrEmpty(noteTextBox.Text))
+                    if (string.IsNullOrEmpty(noteTextBox.Text))
                     {
                         grace.Note = noteTextBox.Text.Trim();
+                        grace.Note = string.Empty;
                     }
                     else 
                     {
-                        grace.Note = string.Empty;
+                        grace.Note = noteTextBox.Text.Trim();
                     }
                     updateGraceRow = true;
                 }

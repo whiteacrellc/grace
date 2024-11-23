@@ -144,14 +144,14 @@ namespace grace
             settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
             settingsToolStripMenuItem.Size = new Size(235, 24);
             settingsToolStripMenuItem.Text = "Settings";
-            settingsToolStripMenuItem.Click += settingsToolStripMenuItem_Click;
+            settingsToolStripMenuItem.Click += SettingsToolStripMenuItem_Click;
             // 
             // importInventoryToolStripMenuItem
             // 
             importInventoryToolStripMenuItem.Name = "importInventoryToolStripMenuItem";
             importInventoryToolStripMenuItem.Size = new Size(235, 24);
             importInventoryToolStripMenuItem.Text = "Import Inventory";
-            importInventoryToolStripMenuItem.Click += importInventoryToolStripMenuItem_Click;
+            importInventoryToolStripMenuItem.Click += ImportInventoryToolStripMenuItem_Click;
             // 
             // saveInventoryReportToolStripMenuItem
             // 
@@ -164,14 +164,14 @@ namespace grace
             saveReportToolStripMenuItem.Name = "saveReportToolStripMenuItem";
             saveReportToolStripMenuItem.Size = new Size(235, 24);
             saveReportToolStripMenuItem.Text = "Save Collection Report";
-            saveReportToolStripMenuItem.Click += saveReportToolStripMenuItem_Click;
+            saveReportToolStripMenuItem.Click += SaveReportToolStripMenuItem_Click;
             // 
             // exitToolStripMenuItem
             // 
             exitToolStripMenuItem.Name = "exitToolStripMenuItem";
             exitToolStripMenuItem.Size = new Size(235, 24);
             exitToolStripMenuItem.Text = "Exit";
-            exitToolStripMenuItem.Click += exitToolStripMenuItem_Click;
+            exitToolStripMenuItem.Click += ExitToolStripMenuItem_Click;
             // 
             // viewToolStripMenuItem
             // 
@@ -364,7 +364,7 @@ namespace grace
             dataGridView.Location = new Point(4, 61);
             dataGridView.MultiSelect = false;
             dataGridView.Name = "dataGridView";
-            dataGridView.SelectionMode = DataGridViewSelectionMode.CellSelect;
+            dataGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dataGridView.Size = new Size(1517, 675);
             dataGridView.TabIndex = 8;
             // 
@@ -794,7 +794,6 @@ namespace grace
             MainMenuStrip = menuStrip1;
             Margin = new Padding(5, 2, 5, 2);
             MdiChildrenMinimizedAnchorBottom = false;
-            MinimizeBox = false;
             Name = "Vivian";
             SizeGripStyle = SizeGripStyle.Show;
             Text = "VivianGrace";
