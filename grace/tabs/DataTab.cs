@@ -351,7 +351,7 @@ namespace grace.tabs
 
                 string filePath = saveFileDialog.FileName;
                 InventoryReport ir = new InventoryReport(dataGridView);
-                ir.writeReport(filePath);
+                ir.WriteReport(filePath);
             }
 
             vivian.EnableReportMenuItems(true);
