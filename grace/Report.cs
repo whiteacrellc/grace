@@ -44,7 +44,7 @@ namespace grace
 
 
 
-        private int writeCollection(string collection, List<Grace> rows,
+        private int WriteCollection(string collection, List<Grace> rows,
             ExcelWorksheet worksheet)
         {
             int startRow = currentRow;
@@ -101,8 +101,7 @@ namespace grace
                 worksheet.Cells[currentRow, 10].Value = row.Availability;
                 var total = DataBase.GetTotal(row.ID);
                 worksheet.Cells[currentRow, 11].Value = total.CurrentTotal;
-                string formattedDate = total.LastUpdated.ToString("dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture);
-                worksheet.Cells[currentRow, 12].Value = formattedDate;
+
                 // Highlight any negative totals by making the background
                 // yellow
                 if (total.CurrentTotal < 0)
@@ -138,7 +137,7 @@ namespace grace
             // Set the header text in the worksheet
             worksheet.HeaderFooter.OddHeader.CenteredText = headerText;
             worksheet.HeaderFooter.OddHeader.RightAlignedText = currentDate;
-            // Put the page number in the botton right
+            // Put the page number in the bottom right
             worksheet.HeaderFooter.OddFooter.RightAlignedText = "&P"; // "&P" is a placeholder for the page number
 
         }
@@ -156,7 +155,9 @@ namespace grace
             string spanIndex = "D" + row + ":I" + row;
             worksheet.Cells[spanIndex].Merge = true;
             worksheet.Cells[spanIndex].Value = "Collections";
-            worksheet.Cells["J" + row].Value = "Availability";
+            worksheet.Cells["J" + row].Value = "Reorder Status";
+            worksheet.Cells["J" + row].Style.HorizontalAlignment.Equals(HorizontalAlignment.Center);
+            worksheet.Cells["J" + row].Style.WrapText = true;
             worksheet.Cells["K" + row].Value = "Total";
 
             // Set the font size to 14 and make the text bold for the inserted row
@@ -215,7 +216,7 @@ namespace grace
             {
                 var key = group.Key;
                 var groupRows = group.Value;
-                int rowsWritten = writeCollection(key, groupRows, worksheet);
+                int rowsWritten = WriteCollection(key, groupRows, worksheet);
 
                 var rowsPerPage = Globals.GetInstance().RowsPerPage;
                 if (currentPage > rowsPerPage)

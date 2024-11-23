@@ -24,6 +24,8 @@ using System.Windows.Forms;
 using System.IO;
 using grace.data.models;
 using Microsoft.Office.Interop.Excel;
+using System.Data;
+using System.Globalization;
 
 
 namespace grace
@@ -36,27 +38,49 @@ namespace grace
         private int numPageRows = 0;
         private int currentRow = 0;
         private int currentPage = 0;
+        private System.Data.DataTable dataTable;
 
         public InventoryReport(DataGridView dataGridView)
         {
             this.dataGridView = dataGridView;
             this.numPageRows = 30;
+            this.dataTable = DataGridLoader.GetData();
         }
 
         private void WriteHeader(ExcelWorksheet worksheet, int row)
         {
-            int numCols = dataGridView.Columns.Count;
+            // Dictionary to map DbContext column names to desired DataGridView column names
+            Dictionary<string, string> columnMappings = new Dictionary<string, string>
+            {
+                {"Total", "Current Inventory"},
+                {"Col1", "Collection 1"},
+                {"Col2", "Collection 2"},
+                {"Col3", "Collection 3"},
+                {"Col4", "Collection 4"},
+                {"Col5", "Collection 5"},
+                {"Col6", "Collection 6"},
+                {"Availability", "Reorder Status" },
+                {"Sku", "Item #" },
+                // Add more mappings as needed
+            };
+
+            int numCols = dataTable.Columns.Count;
             worksheet.Cells[row, 1, row, numCols + 1].Style.Font.Size = 16;
             worksheet.Cells[row, 1, row, numCols + 1].Style.Font.Bold = true;
 
             // Add the headers
-            for (int col = 0; col <numCols; col++)
+            for (int col = 0; col < numCols; col++)
             {
-                worksheet.Cells[row, col + 1].Value = dataGridView.Columns[col].HeaderText;
+                worksheet.Cells[row, col + 1].Value = dataTable.Columns[col].ColumnName;
+                if (columnMappings.TryGetValue(dataTable.Columns[col].ColumnName, out string? value))
+                {
+                    // Set the HeaderText to the desired name
+                    worksheet.Cells[row, col + 1].Value = value;
+                }
             }
         }
 
-        public void writeReport(string filePath)
+        public void WriteReport(string filePath)
         {
 
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
@@ -74,15 +98,16 @@ namespace grace
                     worksheet.Cells.Style.Font.Size = 14;
 
                     // Set the row height to 10 for all rows
-                    worksheet.DefaultRowHeight = Globals.GetInstance().RowHeight;
+                    // worksheet.DefaultRowHeight = Globals.GetInstance().RowHeight;
 
                     currentRow = 1;
                     currentPage = 1;
                     WriteHeader(worksheet, 1);
 
-                    for (int columnIndex = 1; columnIndex < 12; columnIndex++)
+                    for (int columnIndex = 1; columnIndex < dataTable.Columns.Count + 1; columnIndex++)
                     {
                         worksheet.Column(columnIndex).Width = 20;
+                        worksheet.Column(columnIndex).Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
 
                     }
 
@@ -99,23 +124,35 @@ namespace grace
 
 
                     // Add the data rows
-                    for (int row = 0; row < dataGridView.Rows.Count; row++)
+                    foreach (DataRow dataRow in dataTable.Rows)
                     {
                         if (currentPage > numPageRows)
                         {
+                            currentRow += 2;
                             worksheet.InsertRow(currentRow++, 1);
-                            //currentRow++;
-                            worksheet.Row(currentRow).PageBreak = true;
-                            WriteHeader(worksheet, currentRow++);
+                            worksheet.Row(currentRow++).PageBreak = true;
+                            WriteHeader(worksheet, currentRow);
                             currentPage = 0;
+                        }
 
-                        }
-                        for (int col = 0; col < dataGridView.Columns.Count; col++)
+
+                        for (int col = 0; col < dataTable.Columns.Count; col++)
                         {
-                            worksheet.Cells[row + 2, col + 1].Value = dataGridView.Rows[row].Cells[col].Value;
-                            currentRow++;
-                            currentPage++;
+                            var item = dataRow[col];
+                            if (col == 12)
+                            {
+                                DateTime dateTime = (DateTime)item;
+
+                                string formattedDate = dateTime.ToString("dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture);
+                                worksheet.Cells[currentRow + 1, col + 1].Value = formattedDate;
+                            }
+                            else
+                            {
+                                worksheet.Cells[currentRow + 1, col + 1].Value = item;
+                            }
                         }
+                        currentRow++;
+                        currentPage++;
 
                     }
 
