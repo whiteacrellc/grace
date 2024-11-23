@@ -540,7 +540,7 @@ namespace grace
             {
                 var newTotal = new Total
                 {
-                    LastUpdated = Globals.GetInstance().currentHeaderDate,
+                    LastUpdated = DateTime.Now,
                     CurrentTotal = total,
                     GraceId = graceId
                 };
