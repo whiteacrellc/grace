@@ -60,17 +60,15 @@ namespace grace
             }
         }
 
-        public static List<string>getUserNames()
+        public static List<string> getUserNames()
         {
-            List<string> usernames = new List<string>();
-            using (var graceDb = new GraceDbContext())
+            List<string> usernames = new();
+            using (GraceDbContext graceDb = new())
             {
                 try
                 {
-                    List<User> users = graceDb.Users
-                        .Where(e => e.Deleted == false)
-                        .ToList();
-                    foreach (var user in users)
+                    List<User> users = [.. graceDb.Users.Where(e => !e.Deleted)];
+                    foreach (User user in users)
                     {
                         usernames.Add(user.Username);
                     }
@@ -85,75 +83,74 @@ namespace grace
 
         public static void DeleteUser(string username)
         {
-            using (var graceDb = new GraceDbContext())
+            using GraceDbContext graceDb = new();
+            try
             {
-                try
+                User u = graceDb.Users.FirstOrDefault(e => e.Username == username);
+                if (u != null)
                 {
-                    User u = graceDb.Users.FirstOrDefault(e => e.Username == username);
-                    if (u != null)
-                    {
-                        u.Deleted = true;
-                        graceDb.Users.Update(u);
-                        graceDb.SaveChanges();
-                        logger.Info("deleted user " + username);
-                    }
+                    u.Deleted = true;
+                    graceDb.Users.Update(u);
+                    graceDb.SaveChanges();
+                    logger.Info("deleted user " + username);
                 }
-                catch (Exception ex)
-                {
-                    Logger.Warn(ex);
-                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Warn(ex);
             }
         }
 
         public static bool CreateUser(string username, string password,
             bool forcePasswordReset, bool isAdmin)
         {
-            using (var graceDb = new GraceDbContext())
+            using GraceDbContext graceDb = new();
+            try
             {
-                try
+                User u = graceDb.Users.FirstOrDefault(e => e.Username == username);
+                if (u != null)
                 {
-                    User u = graceDb.Users.FirstOrDefault(e => e.Username == username);
-                    if (u != null)
+                    if (u.Deleted)
                     {
-                        if (u.Deleted)
+                        DialogResult response = MessageBox.Show("Username " + username +
+                            " already exists but was deleted, do you want to "
+                            + "restore the user?", "User Dialog",
+                        MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+                        if (response == DialogResult.Yes)
                         {
-                            var response = MessageBox.Show("Username " + username +
-                                " already exists but was deleted, do you want to "
-                                + "restore the user?", "User Dialog",
-                            MessageBoxButtons.YesNo, MessageBoxIcon.Information);
-                            if (response == DialogResult.Yes)
-                            {
-                                u.Deleted = false;
-                                graceDb.Users.Update(u);
-                                graceDb.SaveChanges();
-                                logger.Info("undeleted user " + username);
-                                return true;     
-                            }
-                        } else
-                        {
-                            var response = MessageBox.Show("Username " + username +
-                               " already exists.", "User Dialog",
-                               MessageBoxButtons.OK, MessageBoxIcon.Information);
-                            return false;
+                            u.Deleted = false;
+                            graceDb.Users.Update(u);
+                            graceDb.SaveChanges();
+                            logger.Info("undeleted user " + username);
+                            return true;
                         }
                     }
+                    else
+                    {
+                        DialogResult response = MessageBox.Show("Username " + username +
+                           " already exists.", "User Dialog",
+                           MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        return false;
+                    }
+                }
 
-                    u = new User();
-                    u.Username = username;
-                    u.Password = password;
-                    u.ResetPassword = forcePasswordReset;
-                    u.Admin = isAdmin;
-                    graceDb.Users.Add(u);
-                    graceDb.SaveChanges();
-                    logger.Info("created user " + username);
-                    return true;
-                }
-                catch (Exception ex)
+                u = new User
                 {
-                    Logger.Warn(ex);
-                }
-                return false;
+                    Username = username,
+                    Password = password,
+                    ResetPassword = forcePasswordReset,
+                    Admin = isAdmin
+                };
+                graceDb.Users.Add(u);
+                graceDb.SaveChanges();
+                logger.Info("created user " + username);
+                return true;
             }
+            catch (Exception ex)
+            {
+                Logger.Warn(ex);
+            }
+            return false;
         }
     }
 }

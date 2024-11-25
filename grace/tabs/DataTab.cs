@@ -86,7 +86,7 @@ namespace grace.tabs
         private void ChangeColumnNames()
         {
             // Dictionary to map DbContext column names to desired DataGridView column names
-            Dictionary<string, string> columnMappings = new Dictionary<string, string>
+            Dictionary<string, string> columnMappings = new()
             {
                 {"Total", "Current Inventory"},
                 {"Col1", "Collection 1"},
@@ -156,14 +156,12 @@ namespace grace.tabs
 
         private void AddRowButton_Click(object? sender, EventArgs e)
         {
-            using (EditRowForm editRowForm = new EditRowForm(null))
+            using EditRowForm editRowForm = new(null);
+            DialogResult dialogResult = editRowForm.ShowDialog();
+            if (dialogResult == DialogResult.OK)
             {
-                DialogResult dialogResult = editRowForm.ShowDialog();
-                if (dialogResult == DialogResult.OK)
-                {
-                    filterSkuTextBox.Clear();
-                    BindDataSource(true);
-                }
+                filterSkuTextBox.Clear();
+                BindDataSource(true);
             }
         }
 
@@ -184,14 +182,12 @@ namespace grace.tabs
                 return;
             }
             DataGridViewRow row = dataGridView.Rows[rowIndex];
-            using (EditRowForm editRowForm = new EditRowForm(row))
+            using EditRowForm editRowForm = new(row);
+            DialogResult result = editRowForm.ShowDialog();
+            if (result == DialogResult.OK)
             {
-                DialogResult result = editRowForm.ShowDialog();
-                if (result == DialogResult.OK)
-                {
-                    // we need to reload the grid.
-                    BindDataSource();
-                }
+                // we need to reload the grid.
+                BindDataSource();
             }
         }
 
@@ -226,10 +222,10 @@ namespace grace.tabs
         internal void FilterBarCodeTextBox_KeyDown(object? sender, KeyEventArgs e)
         {
 
-            if (e.KeyCode == Keys.Enter || e.KeyCode == Keys.Return)
+            if (e.KeyCode is Keys.Enter or Keys.Return)
             {
                 TextBox box = (TextBox)sender;
-                var str = box.Text.Trim();
+                string str = box.Text.Trim();
                 str = Utils.RemoveLeadingZero(str);
 
                 if (string.IsNullOrEmpty(str))

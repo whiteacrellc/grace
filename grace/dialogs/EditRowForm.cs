@@ -22,11 +22,11 @@ namespace grace
     {
         DataGridViewRow? row;
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
-        private List<string> colList = [];
+        private List<string> colList = new List<string>();
         private bool newRow;
         private GraceRow? graceRow;
         private bool updateGraceRow = false;
-        private List<string> newColList = [];
+        private List<string> newColList = new List<string>();
         private bool isReport = false;
 
 
@@ -70,27 +70,29 @@ namespace grace
             using (var context = new GraceDbContext())
             {
                 // Fill checkbox list with collection names
-                distinctCollectionNames = [.. context.Collections
+                distinctCollectionNames = context.Collections
                     .Where(e => e.Name != "Other")
                     .Select(e => e.Name)
                     .Distinct()
-                    .OrderBy(name => name)];
+                    .OrderBy(name => name)
+                    .ToList();
                 // Fill in drop down for brand name
-                distinctBrandNames = [.. context.Graces
+                distinctBrandNames = context.Graces
                     .Select(c => c.Brand)
                     .Distinct()
-                    .OrderBy(brand => brand)];
+                    .OrderBy(brand => brand)
+                    .ToList();
             }
 
             checkedListBox.Items.Clear();
-            foreach (var d in distinctCollectionNames)
+            foreach (string d in distinctCollectionNames)
             {
                 colList.Add(d);
                 checkedListBox.Items.Add(d);
             }
 
             brandComboBox.Items.Clear();
-            foreach (var d in distinctBrandNames)
+            foreach (string d in distinctBrandNames)
             {
                 brandComboBox.Items.Add(d);
             }

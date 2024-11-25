@@ -13,13 +13,14 @@
     <Company>White Acre Software LLC</Company>
     <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
     <AnalysisLevel>preview-recommended</AnalysisLevel>
-    <ApplicationHighDpiMode>SystemAware</ApplicationHighDpiMode>
-    <ForceDesignerDpiUnaware>true</ForceDesignerDpiUnaware>
+    <ApplicationHighDpiMode>PerMonitorV2</ApplicationHighDpiMode>
+   <!-- <ForceDesignerDpiUnaware>true</ForceDesignerDpiUnaware> -->
     <NeutralLanguage>en-US</NeutralLanguage>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <StartupObject>grace.Program</StartupObject>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <SupportedOSPlatformVersion>8.0</SupportedOSPlatformVersion>
+    <ApplicationVisualStyles>true</ApplicationVisualStyles>
   </PropertyGroup>
     
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -31,18 +32,18 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="EPPlus" Version="7.0.6" />
-    <PackageReference Include="Microsoft.Data.Sqlite" Version="7.0.20" />
-    <PackageReference Include="Microsoft.Data.Sqlite.Core" Version="8.0.1" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite.Core" Version="7.0.20" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.20">
+    <PackageReference Include="EPPlus" Version="7.5.1" />
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="9.0.0" />
+    <PackageReference Include="Microsoft.Data.Sqlite.Core" Version="9.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite.Core" Version="9.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Office.Interop.Excel" Version="15.0.4795.1001" />
-    <PackageReference Include="MSTest.TestAdapter" Version="3.1.1" />
-    <PackageReference Include="MSTest.TestFramework" Version="3.1.1" />
-    <PackageReference Include="NLog" Version="5.2.8" />
+    <PackageReference Include="MSTest.TestAdapter" Version="3.6.3" />
+    <PackageReference Include="MSTest.TestFramework" Version="3.6.3" />
+    <PackageReference Include="NLog" Version="5.3.4" />
     <PackageReference Include="System.Collections.NonGeneric" Version="4.3.0" />
     <PackageReference Include="WinForms.DataVisualization" Version="1.9.2" />
   </ItemGroup>
