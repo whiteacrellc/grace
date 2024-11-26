@@ -23,6 +23,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Windows.Controls;
 using System.Windows.Forms;
+using System.Windows.Forms.VisualStyles;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
@@ -33,13 +34,7 @@ namespace grace
         Report? report;
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
-        private StringBuilder sb = new StringBuilder();
-        private bool readyForNewCode = true;
-
-        public void ConfigureServices(IServiceCollection services)
-    => services.AddDbContext<GraceDbContext>();
-
-
+        private StringBuilder sb = new();
 
         // To keep this file a reasonable size put all tab code and callbacks
         // in their own class
@@ -49,12 +44,14 @@ namespace grace
         internal CheckInTab checkInTab { get; set; }
         internal CheckOutTab checkOutTab { get; }
         internal ReportTab reportTab;
+        internal CollectionTab collectionTab;
 
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         public Vivian()
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
+
             InitializeComponent();
 
             this.AutoScaleMode = AutoScaleMode.Dpi;
@@ -70,15 +67,16 @@ namespace grace
             checkOutTab = new CheckOutTab(this);
             checkInTab = new CheckInTab(this);
             reportTab = new ReportTab(this);
+            collectionTab = new CollectionTab(this);
         }
 
         private void InitializeLogger()
         {
             // Set up NLog configuration. This can be done in the NLog.config file as well.
-            var config = new NLog.Config.LoggingConfiguration();
+            NLog.Config.LoggingConfiguration config = new();
 
             // Create targets and rules
-            var textboxTarget = new NLog.Targets.MethodCallTarget("textboxTarget", LogToTextBox);
+            NLog.Targets.MethodCallTarget textboxTarget = new("textboxTarget", LogToTextBox);
             config.AddRule(LogLevel.Info, LogLevel.Fatal, textboxTarget);
 
             // Create file target
@@ -138,20 +136,21 @@ namespace grace
 
         public void DisplayLogMessage(string? message)
         {
-            if (message == null) return;
+            if (message == null)
+            {
+                return;
+            }
             // also log to file
             logger.Info(message);
         }
 
         private void SettingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            using (var settingsForm = new SettingsForm())
+            using SettingsForm settingsForm = new();
+            if (settingsForm.ShowDialog() == DialogResult.OK)
             {
-                if (settingsForm.ShowDialog() == DialogResult.OK)
-                {
-                    // Settings were modified, newRow the MainForm
-                    // UpdateFormWithSettings();
-                }
+                // Settings were modified, newRow the MainForm
+                // UpdateFormWithSettings();
             }
         }
 
@@ -162,7 +161,7 @@ namespace grace
             InitializeLogger();
 
             // Loads the preferences into the globals singleton
-            DataBase data = new DataBase();
+            DataBase data = new();
 
             // Load all the tab classes
             homeTab.Load();
@@ -184,6 +183,7 @@ namespace grace
             checkInTab.Load();
             checkOutTab.Load();
             reportTab.Load();
+            collectionTab.Load();
 
         }
 
@@ -267,7 +267,7 @@ namespace grace
             if (!isAdmin)
             {
 
-                if (tabIndex == 1 || tabIndex == 5 || tabIndex == 4)
+                if (tabIndex is 1 or 6)
                 {
                     e.Cancel = true;
                     MessageBox.Show("You can't select this tab.", "Information",
@@ -284,7 +284,7 @@ namespace grace
             }
         }
 
-        private void checkOutDataGrid_DataError(object sender, DataGridViewDataErrorEventArgs e)
+        private void CheckOutDataGrid_DataError(object sender, DataGridViewDataErrorEventArgs e)
         {
             try
             {
@@ -332,5 +332,22 @@ namespace grace
                 scanBarcodeLabel, 0, -30, 2000);
         }
 
+        private void Vivian_Paint(object sender, PaintEventArgs e)
+        {
+            if (VisualStyleRenderer.IsElementDefined(
+                VisualStyleElement.Window.HorizontalScroll.Normal))
+            {
+                VisualStyleRenderer renderer =
+                     new(VisualStyleElement.Window.HorizontalScroll.Normal);
+                Rectangle rectangle1 = new Rectangle(10, 50, 50, 50);
+                renderer.DrawBackground(e.Graphics, rectangle1);
+                e.Graphics.DrawString("VisualStyleElement.Window.HorizontalScroll.Normal",
+                     this.Font, Brushes.Black, new Point(10, 10));
+            }
+            else
+                e.Graphics.DrawString("This element is not defined in the current visual style.",
+                     this.Font, Brushes.Black, new Point(10, 10));
+        
+        }
     }
 }

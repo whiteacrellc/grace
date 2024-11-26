@@ -16,6 +16,14 @@ namespace grace.data
             EnsureLastUpdatedColumn(context);
             EnsureGraceNoteColumn(context);
             EnsureGraceDbNoteColumn(context);
+            EnsureIsDeletedColumn(context);
+        }
+
+        private static void EnsureIsDeletedColumn(GraceDbContext context)
+        {
+            const string columnName = "IsDeleted";
+            const string tableName = "Collections";
+            CreateColumn(columnName, tableName);
         }
 
         private static void EnsureLastUpdatedColumn(GraceDbContext context)
@@ -127,6 +135,41 @@ namespace grace.data
                 }
                 con.Close();
             }
+        }
+
+        private static void CreateColumnBool(string columnName, string tableName)
+        {
+            logger.Info("creating column " + columnName + " in " + tableName);
+            bool found = false;
+            string connectionString = DataBase.ConnectionString;
+
+            using SqliteConnection con = new(connectionString);
+            using (var cmd = new SqliteCommand("PRAGMA table_info(" + tableName + ");"))
+            {
+                cmd.Connection = con;
+                cmd.Connection.Open();
+
+                using SqliteDataReader reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    string name = reader["name"].ToString();
+                    if (name == columnName)
+                    {
+                        found = true;
+                        break;
+                    }
+                    logger.Info($"name: {name}");
+                }
+            }
+            if (!found)
+            {
+                string sql = $"alter table {tableName} ADD COLUMN {columnName} BOOL DEFAULT FALSE";
+                using SqliteCommand cmd = new(sql);
+                cmd.Connection = con;
+                //cmd.Connection.Open();
+                cmd.ExecuteNonQuery();
+            }
+            con.Close();
         }
 
     }

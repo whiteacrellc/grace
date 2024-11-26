@@ -78,7 +78,7 @@ namespace grace
 
         public static DataView GetFilteredBarCode(DataTable table, string searchTerm)
         {
-            DataView view = new DataView(table)
+            DataView view = new(table)
             {
                 RowFilter = "Barcode LIKE '%" + searchTerm + "%'"
             };
@@ -107,11 +107,11 @@ namespace grace
                     return;
                 }
 
-                List<GraceRow> rows = new List<GraceRow>();
+                List<GraceRow> rows = [];
                 var result = context.Graces.ToList();
                 foreach (var item in result)
                 {
-                    GraceRow row = new GraceRow();
+                    GraceRow row = new();
                     row.GraceId = item.ID;
                     row.Sku = item.Sku;
                     row.BarCode = item.BarCode;
@@ -121,7 +121,7 @@ namespace grace
                     row.Availability = item.Availability;
 
                     // Lets get the two totals
-                    var currentTotal = context.Totals
+                    Total currentTotal = context.Totals
                         .Where(t => t.GraceId == item.ID)
                         .OrderByDescending(t => t.ID)
                         .Take(1)

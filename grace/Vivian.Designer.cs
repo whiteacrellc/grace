@@ -83,6 +83,11 @@ namespace grace
             reportFilterTextBox = new TextBox();
             refreshButton = new Button();
             reportGridView = new DataGridView();
+            collectionPage = new TabPage();
+            clearComboButton = new Button();
+            colLabel1 = new Label();
+            colReportComboBox = new ComboBox();
+            collGridView = new DataGridView();
             adminPage = new TabPage();
             label5 = new Label();
             resetComboBox = new ComboBox();
@@ -109,6 +114,8 @@ namespace grace
             ((System.ComponentModel.ISupportInitialize)checkInDataGrid).BeginInit();
             reportPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)reportGridView).BeginInit();
+            collectionPage.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)collGridView).BeginInit();
             adminPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)errorProvider1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)checkoutBindingSource).BeginInit();
@@ -209,9 +216,10 @@ namespace grace
             tabControl.Controls.Add(checkoutPage);
             tabControl.Controls.Add(checkinPage);
             tabControl.Controls.Add(reportPage);
+            tabControl.Controls.Add(collectionPage);
             tabControl.Controls.Add(adminPage);
             tabControl.DrawMode = TabDrawMode.OwnerDrawFixed;
-            tabControl.Font = new Font("Verdana", 11.25F, FontStyle.Bold);
+            tabControl.Font = new Font("Verdana", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
             tabControl.HotTrack = true;
             tabControl.ItemSize = new Size(200, 40);
             tabControl.Location = new Point(0, 31);
@@ -220,7 +228,7 @@ namespace grace
             tabControl.Padding = new Point(30, 5);
             tabControl.SelectedIndex = 0;
             tabControl.ShowToolTips = true;
-            tabControl.Size = new Size(1539, 792);
+            tabControl.Size = new Size(1525, 781);
             tabControl.TabIndex = 9;
             tabControl.TabStop = false;
             tabControl.DrawItem += tabControl_DrawItem;
@@ -328,6 +336,8 @@ namespace grace
             // 
             // dataPage
             // 
+            dataPage.AutoScroll = true;
+            dataPage.AutoScrollMargin = new Size(5, 5);
             dataPage.BackColor = Color.Lavender;
             dataPage.BorderStyle = BorderStyle.Fixed3D;
             dataPage.Controls.Add(dataGridView);
@@ -533,7 +543,7 @@ namespace grace
             checkOutDataGrid.RowTemplate.Resizable = DataGridViewTriState.True;
             checkOutDataGrid.Size = new Size(1090, 736);
             checkOutDataGrid.TabIndex = 4;
-            checkOutDataGrid.DataError += checkOutDataGrid_DataError;
+            checkOutDataGrid.DataError += CheckOutDataGrid_DataError;
             // 
             // checkinPage
             // 
@@ -545,7 +555,7 @@ namespace grace
             checkinPage.Controls.Add(checkInDataGrid);
             checkinPage.Location = new Point(4, 44);
             checkinPage.Name = "checkinPage";
-            checkinPage.Size = new Size(1531, 744);
+            checkinPage.Size = new Size(1517, 733);
             checkinPage.TabIndex = 4;
             checkinPage.Text = "Check In";
             checkinPage.ToolTipText = "Check In Items";
@@ -554,7 +564,7 @@ namespace grace
             // 
             allUsersCheckBox.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             allUsersCheckBox.AutoSize = true;
-            allUsersCheckBox.Location = new Point(1365, 146);
+            allUsersCheckBox.Location = new Point(1351, 146);
             allUsersCheckBox.Name = "allUsersCheckBox";
             allUsersCheckBox.Size = new Size(149, 22);
             allUsersCheckBox.TabIndex = 2;
@@ -565,7 +575,7 @@ namespace grace
             // 
             applyChangesButton.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             applyChangesButton.AutoSize = true;
-            applyChangesButton.Location = new Point(1308, 202);
+            applyChangesButton.Location = new Point(1294, 202);
             applyChangesButton.Name = "applyChangesButton";
             applyChangesButton.Size = new Size(220, 35);
             applyChangesButton.TabIndex = 3;
@@ -582,19 +592,18 @@ namespace grace
             // 
             // checkInDataGrid
             // 
-            checkInDataGrid.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
+            checkInDataGrid.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             checkInDataGrid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
             checkInDataGrid.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
             checkInDataGrid.BorderStyle = BorderStyle.Fixed3D;
             checkInDataGrid.CellBorderStyle = DataGridViewCellBorderStyle.Sunken;
             checkInDataGrid.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Sunken;
             checkInDataGrid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            checkInDataGrid.DefaultCellStyle = dataGridViewCellStyle1;
             checkInDataGrid.Location = new Point(-7, 0);
             checkInDataGrid.Name = "checkInDataGrid";
             checkInDataGrid.RowHeadersWidth = 82;
             checkInDataGrid.SelectionMode = DataGridViewSelectionMode.CellSelect;
-            checkInDataGrid.Size = new Size(1292, 739);
+            checkInDataGrid.Size = new Size(1292, 728);
             checkInDataGrid.TabIndex = 0;
             // 
             // reportPage
@@ -606,7 +615,7 @@ namespace grace
             reportPage.Controls.Add(reportGridView);
             reportPage.Location = new Point(4, 44);
             reportPage.Name = "reportPage";
-            reportPage.Size = new Size(1531, 744);
+            reportPage.Size = new Size(1517, 733);
             reportPage.TabIndex = 5;
             reportPage.Text = "Report Page";
             reportPage.UseVisualStyleBackColor = true;
@@ -644,11 +653,62 @@ namespace grace
             reportGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
             reportGridView.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
             reportGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            reportGridView.DefaultCellStyle = dataGridViewCellStyle1;
             reportGridView.Location = new Point(8, 60);
             reportGridView.Name = "reportGridView";
-            reportGridView.Size = new Size(1515, 681);
+            reportGridView.Size = new Size(1501, 670);
             reportGridView.TabIndex = 0;
+            // 
+            // collectionPage
+            // 
+            collectionPage.BackColor = Color.Lavender;
+            collectionPage.Controls.Add(clearComboButton);
+            collectionPage.Controls.Add(colLabel1);
+            collectionPage.Controls.Add(colReportComboBox);
+            collectionPage.Controls.Add(collGridView);
+            collectionPage.Location = new Point(4, 44);
+            collectionPage.Name = "collectionPage";
+            collectionPage.Padding = new Padding(3);
+            collectionPage.Size = new Size(1531, 744);
+            collectionPage.TabIndex = 6;
+            collectionPage.Text = "Collection";
+            // 
+            // clearComboButton
+            // 
+            clearComboButton.Location = new Point(436, 32);
+            clearComboButton.Name = "clearComboButton";
+            clearComboButton.Size = new Size(109, 26);
+            clearComboButton.TabIndex = 3;
+            clearComboButton.Text = "Clear";
+            clearComboButton.UseVisualStyleBackColor = true;
+            // 
+            // colLabel1
+            // 
+            colLabel1.AutoSize = true;
+            colLabel1.Location = new Point(34, 35);
+            colLabel1.Name = "colLabel1";
+            colLabel1.Size = new Size(150, 18);
+            colLabel1.TabIndex = 2;
+            colLabel1.Text = "Select Collections";
+            // 
+            // colReportComboBox
+            // 
+            colReportComboBox.FlatStyle = FlatStyle.Popup;
+            colReportComboBox.FormattingEnabled = true;
+            colReportComboBox.Location = new Point(201, 32);
+            colReportComboBox.Name = "colReportComboBox";
+            colReportComboBox.Size = new Size(196, 26);
+            colReportComboBox.TabIndex = 1;
+            // 
+            // collGridView
+            // 
+            collGridView.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            collGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+            collGridView.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
+            collGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            collGridView.Location = new Point(6, 72);
+            collGridView.Name = "collGridView";
+            collGridView.Size = new Size(1519, 666);
+            collGridView.TabIndex = 0;
             // 
             // adminPage
             // 
@@ -664,6 +724,7 @@ namespace grace
             adminPage.Controls.Add(loggingTextBox);
             adminPage.Controls.Add(restoreDatabaseButton);
             adminPage.Controls.Add(backupButton);
+            adminPage.ForeColor = Color.Black;
             adminPage.Location = new Point(4, 44);
             adminPage.Name = "adminPage";
             adminPage.Size = new Size(1531, 744);
@@ -789,7 +850,6 @@ namespace grace
             Controls.Add(tabControl);
             Controls.Add(menuStrip1);
             Font = new Font("Segoe UI", 10.125F);
-            FormBorderStyle = FormBorderStyle.Fixed3D;
             Icon = (Icon)resources.GetObject("$this.Icon");
             MainMenuStrip = menuStrip1;
             Margin = new Padding(5, 2, 5, 2);
@@ -798,6 +858,7 @@ namespace grace
             SizeGripStyle = SizeGripStyle.Show;
             Text = "VivianGrace";
             Load += Vivian_Load;
+            Paint += Vivian_Paint;
             menuStrip1.ResumeLayout(false);
             menuStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
@@ -816,6 +877,9 @@ namespace grace
             reportPage.ResumeLayout(false);
             reportPage.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)reportGridView).EndInit();
+            collectionPage.ResumeLayout(false);
+            collectionPage.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)collGridView).EndInit();
             adminPage.ResumeLayout(false);
             adminPage.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)errorProvider1).EndInit();
@@ -888,5 +952,10 @@ namespace grace
         private Label filterLable;
         public TextBox reportFilterTextBox;
         public DataGridView dataGridView;
+        private TabPage collectionPage;
+        public DataGridView collGridView;
+        private Label colLabel1;
+        public ComboBox colReportComboBox;
+        public Button clearComboButton;
     }
 }

@@ -35,7 +35,6 @@ namespace grace.tabs
 #pragma warning disable CS8601
 #pragma warning disable CS8602
 #pragma warning disable CS8600
-        private TabPage adminTabPage;
         private Vivian vivian;
         private Button resetPasswordButton;
         private Button restoreDatabaseButton;
@@ -46,7 +45,6 @@ namespace grace.tabs
         public AdminTab(Vivian v) {
             vivian = v;
             // Possible null reference assignment.
-            adminTabPage = vivian.tabControl.TabPages[4];
             this.resetPasswordButton = vivian.resetPasswordButton;
             restoreDatabaseButton = vivian.restoreDatabaseButton;
             backupButton = vivian.backupButton;
@@ -68,13 +66,13 @@ namespace grace.tabs
 
         private void WriteBackupFile()
         {
-            var backup = new BackupAndRestore();
+            BackupAndRestore backup = new();
             backup.BackupDatabaseToDocuments();
         }
 
         private void BackupButton_Click(object? sender, EventArgs e)
         {
-            var backup = new BackupAndRestore();
+            BackupAndRestore backup = new();
             backup.BackupDatabase();
         }
         private void DeleteUserButton_Click(object? sender, EventArgs e)
@@ -90,7 +88,7 @@ namespace grace.tabs
                 return;
             }
 
-            var response = MessageBox.Show("Are you sure you want to delete "
+            DialogResult response = MessageBox.Show("Are you sure you want to delete "
                 + user + "?", "User Delete",
                   MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (response == DialogResult.Yes)
@@ -102,8 +100,8 @@ namespace grace.tabs
 
         private void AddUserButton_Click(object? sender, EventArgs e)
         {
-            var addUserDialog = new AddUserDialog();
-            var result = addUserDialog.ShowDialog();
+            AddUserDialog addUserDialog = new();
+            DialogResult result = addUserDialog.ShowDialog();
             if (result == DialogResult.OK)
             {
                 logger.Info("Successfully added user");
@@ -113,7 +111,7 @@ namespace grace.tabs
 
         private void RestoreDatabaseButton_Click(object? sender, EventArgs e)
         {
-            var backup = new BackupAndRestore();
+            BackupAndRestore backup = new();
             backup.RestoreDatabase();
         }
 
@@ -127,7 +125,7 @@ namespace grace.tabs
             AdminStuff.InitUserDB();
 
             List<string> users = AdminStuff.getUserNames();
-            foreach (var user in users)
+            foreach (string user in users)
             {
                 resetComboBox.Items.Add(user);
             }

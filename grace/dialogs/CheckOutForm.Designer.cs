@@ -167,7 +167,7 @@
             collectionComboBox.Name = "collectionComboBox";
             collectionComboBox.Size = new Size(121, 25);
             collectionComboBox.TabIndex = 11;
-            collectionComboBox.ValueMemberChanged += collectionComboBox_ValueMemberChanged;
+            collectionComboBox.ValueMemberChanged += CollectionComboBox_ValueMemberChanged;
             // 
             // saveButton
             // 
@@ -178,7 +178,7 @@
             saveButton.TabIndex = 12;
             saveButton.Text = "Save";
             saveButton.UseVisualStyleBackColor = true;
-            saveButton.Click += saveButton_Click;
+            saveButton.Click += SaveButton_Click;
             // 
             // cancelButton
             // 

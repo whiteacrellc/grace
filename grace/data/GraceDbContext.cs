@@ -29,25 +29,17 @@ namespace grace.data
 
         public virtual DbSet<Inventory> InventoryDb { get; set; }
 
-        public static string ConnectionString { get => connectionString; set => connectionString = value; }
-
-        private static string connectionString;
+        public static string ConnectionString { get; set; }
 
         public GraceDbContext(DbContextOptions<GraceDbContext> options)
             : base(options)
         {
-            if (GraceDbContext.ConnectionString == null)
-            {
-                GraceDbContext.ConnectionString = DataBase.ConnectionString;
-            }
+            GraceDbContext.ConnectionString ??= DataBase.ConnectionString;
         }
 
         public GraceDbContext()
         {
-            if (GraceDbContext.ConnectionString == null)
-            {
-                GraceDbContext.ConnectionString = DataBase.ConnectionString;
-            }
+            GraceDbContext.ConnectionString ??= DataBase.ConnectionString;
 
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)

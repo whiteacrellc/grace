@@ -114,13 +114,13 @@ namespace grace
                     {
 
 
-                        var pulled =
+                        Pulled? pulled =
                         context.PulledDb.FirstOrDefault(e =>
                             e.Amount == originalTotal
                             && e.CollectionId == originalCollection.ID
                             && e.UserId == userId
                             && e.GraceId == graceId
-                            && e.IsCompleted == false);
+                            && !e.IsCompleted);
                         if (pulled == null)
                         {
                             DialogResult = DialogResult.No;
@@ -137,7 +137,7 @@ namespace grace
                             pulled.CurrentTotal += updateDelta;
 
 
-                            Total total = new Total
+                            Total total = new()
                             {
                                 LastUpdated = DateTime.Now,
                                 GraceId = graceId,

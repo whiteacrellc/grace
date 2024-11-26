@@ -12,6 +12,7 @@
  */
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 
 namespace grace.data.models
@@ -19,8 +20,11 @@ namespace grace.data.models
     public partial class Grace
     {
         public int ID { get; set; }
+        [StringLength(50, MinimumLength = 3, ErrorMessage = "Sku must be between 3 and 50 characters.")]
         public string Sku { get; set; }
+        [StringLength(100, MinimumLength = 3, ErrorMessage = "Description must be between 3 and 100 characters.")]
         public string Description { get; set; }
+        [StringLength(50, MinimumLength = 3, ErrorMessage = "Brand must be between 3 and 50 characters.")]
         public string Brand { get; set; }
         public string Availability { get; set; } = string.Empty;
         public string BarCode { get; set; } = string.Empty;
