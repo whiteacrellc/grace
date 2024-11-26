@@ -117,6 +117,7 @@ namespace grace
                     join total in dbContext.Totals on graces.ID equals total.GraceId
                     where total.LastUpdated == dbContext.Totals
                                                   .Where(t => t.GraceId == graces.ID)
+                                                  .OrderByDescending(t => t.ID)
                                                   .Max(t => t.LastUpdated)
                     orderby graces.Sku ascending
                     select new CheckOut
@@ -149,9 +150,9 @@ namespace grace
                 var result = (
                     from graces in dbContext.Graces
                     join total in dbContext.Totals on graces.ID equals total.GraceId
-                    where total.LastUpdated == dbContext.Totals
+                    where total == dbContext.Totals
                                                   .Where(t => t.GraceId == graces.ID)
-                                                  .Max(t => t.LastUpdated)
+                                                  .OrderByDescending(t => t.ID)
                     orderby graces.Sku ascending
                     select new CheckOut
                     {
@@ -217,8 +218,8 @@ namespace grace
                     join pulled in dbContext.PulledDb on gr.GraceId equals pulled.GraceId
                     join user in dbContext.Users on pulled.UserId equals user.ID
                     join collection in dbContext.Collections on pulled.CollectionId equals collection.ID
-                    where pulled.UserId == user_id && pulled.IsCompleted == false
-                    orderby pulled.LastUpdated ascending, pulled.CurrentTotal descending
+                    where pulled.UserId == user_id && !pulled.IsCompleted
+                    orderby pulled.LastUpdated descending, pulled.CurrentTotal descending
                     select new CheckInData
                     {
                         UserName = user.Username,
@@ -246,8 +247,8 @@ namespace grace
                     join pulled in dbContext.PulledDb on gr.GraceId equals pulled.GraceId
                     join user in dbContext.Users on pulled.UserId equals user.ID
                     join collection in dbContext.Collections on pulled.CollectionId equals collection.ID
-                    where pulled.IsCompleted == false 
-                    orderby user.Username ascending, pulled.LastUpdated ascending, pulled.CurrentTotal descending
+                    where !pulled.IsCompleted
+                    orderby user.Username ascending, pulled.LastUpdated descending, pulled.CurrentTotal descending
                     select new CheckInData
                     {
                         UserName = user.Username,
@@ -271,7 +272,6 @@ namespace grace
             public string Brand { get; set; }
             public string Description { get; set; }
             public int Total { get; set; }
-
             public DateTime LastUpdated { get; set; }
             public string Note { get; set; }
             public int GraceId { get; set; }
@@ -279,7 +279,7 @@ namespace grace
 
         public static System.Data.DataTable GetCheckedOutReport()
         {
-            System.Data.DataTable table = new System.Data.DataTable();
+            System.Data.DataTable table = new();
 
             // Define columns
             table.Columns.Add("Sku", typeof(string));
@@ -293,10 +293,10 @@ namespace grace
             using (var dbContext = new GraceDbContext())
             {
                 // Performing the join and projection
-                var result = (
+                List<ReportData> result = [.. (
                     from gr in dbContext.GraceRows
                     join totals in dbContext.Totals on gr.GraceId equals totals.GraceId
-                    orderby totals.LastUpdated ascending, totals.CurrentTotal descending
+                    orderby totals.LastUpdated descending, totals.CurrentTotal descending
                     select new ReportData
                     {
                         Sku = gr.Sku,
@@ -306,9 +306,9 @@ namespace grace
                         LastUpdated = totals.LastUpdated,
                         Note = gr.Note,
                         GraceId = gr.GraceId
-                    }).ToList();
+                    })];
 
-                foreach (var report in result)
+                foreach (ReportData? report in result)
                 {
                     table.Rows.Add(report.Sku, report.Brand,
                         report.Description, report.Total, report.LastUpdated,
@@ -361,11 +361,11 @@ namespace grace
         public static bool HaveData()
         {
             int numrows = 0;
-            using (var context = new GraceDbContext())
+            using (GraceDbContext context = new())
             {
                 numrows = context.Graces.ToList().Count;
             }
-            return (numrows > 0) ? true : false;
+            return numrows > 0;
         }
 
         public static void LoadFromExcel(string filename)
@@ -400,7 +400,7 @@ namespace grace
                             string barcode = checkString(worksheet.Cells[row, 2].Value);
                             string sku = checkString(worksheet.Cells[row, 3].Value);
                             string description = (string)worksheet.Cells[row, 4].Value;
-                            var a = (worksheet.Cells[row, 11].Value);
+                            var a = worksheet.Cells[row, 11].Value;
                             string availability = (a == null) ? string.Empty : a as string;
                             int total = Convert.ToInt32(worksheet.Cells[row, 13].Value);
 
@@ -456,7 +456,7 @@ namespace grace
             using (var context = new GraceDbContext())
             {
                 bool created = context.PrefsDb.Any();
-                if (created == false)
+                if (!created)
                 {
                     Preferences.AddOrUpdateIntPreference(Preferences.Preference.RowHeight, 35);
                     Preferences.AddOrUpdateIntPreference(Preferences.Preference.RowsPerPage, 45);

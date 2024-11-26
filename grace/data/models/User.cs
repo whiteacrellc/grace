@@ -20,7 +20,9 @@ namespace grace.data.models
     public partial class User
     {
         public int ID { get; set; }
+        [StringLength(30, MinimumLength = 3, ErrorMessage = "User Name must be between 3 and 30 characters.")]
         public string Username { get; set; }
+        [StringLength(30, MinimumLength = 3, ErrorMessage = "Password must be between 5 and 30 characters.")]
         public string Password { get; set; }
         public string ResetAnswer { get; set; } = string.Empty;
         public int ResetAnswerIndex { get; set; }

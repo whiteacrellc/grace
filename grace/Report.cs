@@ -12,18 +12,10 @@
  */
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
-using System;
-using System.Collections.Generic;
-using System.Drawing.Design;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using NLog;
-using NLog.Config;
-using System.Windows.Forms;
 using System.IO;
 using grace.data.models;
-using System.Globalization;
+using System.Data;
 
 
 namespace grace
@@ -35,14 +27,87 @@ namespace grace
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         private int endLastBlock;
         private int currentPage;
+        private DataTable dataTable;
 
         public Report()
         {
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             this.package = new ExcelPackage();
+            this.dataTable = new DataTable();
+
+            // Define columns
+            dataTable.Columns.Add("Brand", typeof(string));
+            dataTable.Columns.Add("Sku", typeof(string));
+            dataTable.Columns.Add("Description", typeof(string));
+            dataTable.Columns.Add("Collection", typeof(string));
+            dataTable.Columns.Add("Collections", typeof(List<CollectionName>));
+            dataTable.Columns.Add("Availability", typeof(string));
+            dataTable.Columns.Add("Total", typeof(int));
+            dataTable.Columns.Add("Note", typeof(string));
+
         }
 
 
+        private class ReportRow
+        {
+            public string Brand { get; set; }
+            public string Sku { get; set; }
+            public string Description { get; set; }
+            public string Inventory { get; set; }
+            public string Collection { get; set; }
+            public List<CollectionName> Collections { get; set; } = [];
+            public int GraceId { get; set; }
+        }
+
+
+        private void AddRow(Grace grace, int total, string collection, List<CollectionName>collections)
+        {
+            // Create a new row
+            DataRow newRow = dataTable.NewRow();
+
+            // Populate the row's fields
+            newRow["Brand"] = grace.Brand;
+            newRow["Sku"] = grace.Sku;
+            newRow["Description"] = grace.Description;
+            newRow["Collection"] = collection;
+            newRow["Collections"] = collections;
+            newRow["Availability"] = grace.Availability;
+            newRow["Total"] = total;
+            newRow["Note"] = grace.Note;
+            dataTable.Rows.Add(newRow);
+        }
+
+        public DataTable CreateCollectionTable()
+        {
+
+
+            // get the collections
+            Dictionary<string, List<Grace>> sortedKeys = DataBase.OrderedCollectionNames();
+
+            // Loop through the sorted dictionary and write out the values grouped by key.
+            foreach (KeyValuePair<string, List<Grace>> group in sortedKeys)
+            {
+                string key = group.Key;
+                List<Grace> groupRows = group.Value;
+                Grace[] sortedRows =
+                [.. groupRows.Where(p => !p.Deleted).OrderBy(p => p.Brand).ThenBy(p => p.Sku)];
+
+                foreach (Grace row in sortedRows)
+                {
+                    if (row == null || row.Sku == null)
+                    {
+                        continue;
+                    }
+
+                    Total total = DataBase.GetTotal(row.ID);
+                    List<CollectionName> collections = DataBase.GetCollections(row.ID).FindAll(p => p.Name != key);
+                    AddRow(row, total.CurrentTotal, key, collections);
+                }
+
+            }
+
+            return dataTable;
+        }
 
         private int WriteCollection(string collection, List<Grace> rows,
             ExcelWorksheet worksheet)
@@ -50,14 +115,15 @@ namespace grace
             int startRow = currentRow;
             endLastBlock = currentRow;
             int rowsWritten = 0;
-            var sortedRows =
-                rows.OrderBy(p => p.Brand)
-                    .ThenBy(p => p.Sku)
-                    .ToArray();
+            Grace[] sortedRows =
+                [.. rows.OrderBy(p => p.Brand).ThenBy(p => p.Sku)];
 
-            foreach (var row in sortedRows)
+            foreach (Grace row in sortedRows)
             {
-                if (row == null || row.Sku == null) continue;
+                if (row == null || row.Sku == null)
+                {
+                    continue;
+                }
 
                 worksheet.Cells[currentRow, 1].Value = row.Brand;
                 worksheet.Cells[currentRow, 2].Value = row.Sku;
@@ -67,10 +133,10 @@ namespace grace
                 // Get the collections and fill them in except for the
                 // collection we are sorting on which is in the Col1 col1
                 // column
-                var collections = DataBase.GetCollections(row.ID);
+                List<CollectionName> collections = DataBase.GetCollections(row.ID);
                 int i = 0;
-                foreach (var c in collections) { 
-                    var col = c.Name;
+                foreach (CollectionName c in collections) {
+                    string col = c.Name;
                     // Don't write out the current collection
                     if (col.Equals(collection)) {
                         continue;
@@ -99,7 +165,7 @@ namespace grace
                 }
 
                 worksheet.Cells[currentRow, 10].Value = row.Availability;
-                var total = DataBase.GetTotal(row.ID);
+                Total total = DataBase.GetTotal(row.ID);
                 worksheet.Cells[currentRow, 11].Value = total.CurrentTotal;
 
                 // Highlight any negative totals by making the background
@@ -187,9 +253,9 @@ namespace grace
 
 
             // Sort the keys alphabetically
-            var sortedKeys = DataBase.OrderedCollectionNames();
+            Dictionary<string, List<Grace>> sortedKeys = DataBase.OrderedCollectionNames();
 
-            var worksheet = package.Workbook.Worksheets.Add("Report");
+            ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Report");
             worksheet.Cells.Style.Font.Size = 14;
 
             // Set the row height to 10 for all rows
@@ -212,7 +278,7 @@ namespace grace
             WritePrintHeader(worksheet);
 
             // Loop through the sorted dictionary and write out the values grouped by key.
-            foreach (var group in sortedKeys)
+            foreach (KeyValuePair<string, List<Grace>> group in sortedKeys)
             {
                 var key = group.Key;
                 var groupRows = group.Value;

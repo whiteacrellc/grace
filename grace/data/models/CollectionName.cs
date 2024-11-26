@@ -20,9 +20,11 @@ namespace grace.data.models
     public partial class CollectionName
     {
         public int ID { get; set; }
+        [StringLength(100, MinimumLength = 3, ErrorMessage = "Name must be between 3 and 100 characters.")]
         public string Name { get; set; }
         public int GraceId { get; set; }
         public Grace Grace { get; set; }
+        public bool IsDeleted { get; set; }
 
     }
 }

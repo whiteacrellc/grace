@@ -12,20 +12,21 @@
  */
 using grace.data;
 using grace.data.models;
+using NLog;
 using static grace.DataBase;
 
 namespace grace.tabs
 {
     internal class CheckInTab
     {
+        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         private readonly Vivian vivian;
-        private DataGridView checkInDataGrid;
+        private readonly DataGridView checkInDataGrid;
         private int user_id;
-        private int grace_id;
         private BindingSource checkInBindingSource;
         private TabPage checkInTabPage;
         private CheckBox allUsersCheckBox;
-        private List<CheckInData> checkInDataList = new List<CheckInData>();
+        private List<CheckInData> checkInDataList = [];
         private Button applyChangesButton;
 
         internal CheckInTab(Vivian v)
@@ -45,10 +46,9 @@ namespace grace.tabs
             // Callbacks 
             checkInDataGrid.CellMouseDoubleClick += checkInDataGrid_CellMouseDoubleClick;
             checkInDataGrid.KeyPress += checkInDataGrid_KeyPress;
-            checkInDataGrid.CellBeginEdit += checkInDataGrid_CellBeginEdit;
-            checkInDataGrid.DataBindingComplete += checkInDataGrid_DataBindingComplete;
+            checkInDataGrid.CellBeginEdit += CheckInDataGrid_CellBeginEdit;
             checkInDataGrid.CellFormatting += CheckInDataGrid_CellFormatting;
-            checkInDataGrid.CellEndEdit += checkInDataGrid_CellEndEdit; 
+            checkInDataGrid.CellEndEdit += CheckInDataGrid_CellEndEdit;
             checkInTabPage.Enter += CheckInTabPage_Enter;
             allUsersCheckBox.CheckedChanged += AllUsersCheckBox_CheckedChanged;
             applyChangesButton.Click += ApplyChangesButton_Click;
@@ -58,7 +58,7 @@ namespace grace.tabs
         {
             var username = Globals.GetInstance().CurrentUser;
             user_id = DataBase.GetUserIdFromName(username);
- 
+
             LoadDataGrid();
         }
 
@@ -67,15 +67,15 @@ namespace grace.tabs
             checkInDataGrid.DataSource = checkInBindingSource;
 
             if (allUsersCheckBox.Checked)
-            {    
-                var graceRowsData = DataBase.GetCheckedOutGridAll();
+            {
+                List<CheckInData> graceRowsData = DataBase.GetCheckedOutGridAll();
                 // Bind data to the DataGridView
                 checkInBindingSource.DataSource = graceRowsData;
                 checkInDataList = graceRowsData;
             }
             else
             {
-                var graceRowsData = DataBase.GetCheckedOutGrid(user_id);
+                List<CheckInData> graceRowsData = DataBase.GetCheckedOutGrid(user_id);
                 // Bind data to the DataGridView
                 checkInBindingSource.DataSource = graceRowsData;
                 checkInDataList = graceRowsData;
@@ -150,7 +150,7 @@ namespace grace.tabs
                 e.Handled = true;
             }
         }
-        private void checkInDataGrid_CellBeginEdit(object? sender,
+        private void CheckInDataGrid_CellBeginEdit(object? sender,
             DataGridViewCellCancelEventArgs e)
         {
             // Allow editing only for the "Total" column
@@ -183,21 +183,39 @@ namespace grace.tabs
             }
         }
 
-        private void checkInDataGrid_CellEndEdit(object? sender,
+        private void CheckInDataGrid_CellEndEdit(object? sender,
             DataGridViewCellEventArgs e)
         {
-          
+            // Check if the edited row index is valid
+            if (e.RowIndex >= 0)
+            {
+                // Get the DataGridView instance
+
+                if (sender is DataGridView gridView)
+                {
+                    object newValue = gridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value;
+                    string columnHeader = gridView.Columns[e.ColumnIndex].HeaderText;
+
+                    // Get the row that was edited
+                    DataGridViewRow editedRow = gridView.Rows[e.RowIndex];
+
+                    // Collect values from all cells in the row
+                    List<string> cellValues = [];
+                    foreach (DataGridViewCell cell in editedRow.Cells)
+                    {
+                        cellValues.Add(cell.Value?.ToString() ?? "null"); // Handle null values
+                    }
+
+                    // Display the collected values (or use them in your logic)
+                    logger.Info(string.Join(", ", cellValues), "Row Values");
+                }
+            }
         }
 
         private void AllUsersCheckBox_CheckedChanged(object? sender, EventArgs e)
         {
             // Callback function to handle checkbox state change
             LoadDataGrid();
-        }
-        private void checkInDataGrid_DataBindingComplete(object? sender, EventArgs e)
-        {
-            // Remove Collection Id Column
-            //Utils.RemoveColumnByName(checkInDataGrid, "GraceId");
         }
 
         private void ApplyChangesButton_Click(object? sender, EventArgs e)
@@ -230,7 +248,7 @@ namespace grace.tabs
                     {
 
                         // Add Totals in CurrentTotal db
-                        Total total = new ()
+                        Total total = new()
                         {
                             LastUpdated = DateTime.Now,
                             GraceId = graceId,

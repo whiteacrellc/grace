@@ -64,7 +64,7 @@ namespace grace.tabs
         private void SetDataGridViewStyle()
         {
             // Set the default cell style
-            DataGridViewCellStyle cellStyle = new DataGridViewCellStyle
+            DataGridViewCellStyle cellStyle = new()
             {
                 Font = new Font("Veranda", 12),
                 // Set other style properties if needed
@@ -127,9 +127,9 @@ namespace grace.tabs
             }
         }
 
-        internal async void LoadDataGrid()
+        internal void LoadDataGrid()
         {
-            dataTable = await LoadDataAsync();
+            dataTable = DataBase.GetPulledGrid();
             checkoutBindingSource.DataSource = dataTable;
             ChangeColumnNames();
         }
@@ -141,15 +141,6 @@ namespace grace.tabs
             textBoxBarCode.Clear();
             checkOutSearchTextBox.Clear();
 
-        }
-
-        private async Task<DataTable> LoadDataAsync()
-        {
-            // Simulate an asynchronous data retrieval (replace with your actual async data retrieval logic)
-            return await Task.Run(() =>
-            {
-                return DataBase.GetPulledGrid();
-            });
         }
 
         internal void checkOutSearchTextBox_TextChanged(object? sender, EventArgs e)
@@ -186,7 +177,7 @@ namespace grace.tabs
                 else
                 {
                     scannedBarcode = Utils.RemoveLeadingZero(scannedBarcode);
-             
+
 
                     if (scannedBarcode == null | scannedBarcode == string.Empty)
                     {

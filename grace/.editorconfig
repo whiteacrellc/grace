@@ -6,6 +6,7 @@ end_of_line = crlf
 insert_final_newline = true
 trim_trailing_whitespace = true
 max_line_length = 80
+guidelines = 80, 120
 
 [*.{cs,vb}]
 #### Naming styles ####
@@ -14,6 +15,8 @@ indent_size = 4
 max_line_length = 80
 insert_final_newline = true
 trim_trailing_whitespace = true
+guidelines_style = 2.5px solid 40ff0000
+
 
 # Naming rules
 

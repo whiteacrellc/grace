@@ -69,6 +69,8 @@ namespace grace.tabs
             // Callbacks 
             dataGridView.CellMouseDoubleClick += DataGridView_CellMouseDoubleClick;
             dataGridView.CellFormatting += DataGridView_CellFormatting;
+            dataGridView.CellEndEdit += DataGridView_CellEndEdit;
+            dataGridView.CellBeginEdit += DataGridView_CellBeginEdit;
             dataTabPage.Enter += DataTabPage_Enter;
             addRowButton.Click += AddRowButton_Click;
             filterSkuTextBox.TextChanged += FilterSkuTextBox_TextChanged;
@@ -152,6 +154,46 @@ namespace grace.tabs
             Utils.RemoveColumnByName(dataGridView, "ID");
             Utils.RemoveColumnByName(dataGridView, "GraceId");
             dataGridView.Sort(dataGridView.Columns["Sku"], System.ComponentModel.ListSortDirection.Ascending);
+        }
+
+
+        private void DataGridView_CellBeginEdit(object? sender,
+                                                DataGridViewCellCancelEventArgs e)
+        {
+            // Allow editing only for the "Total" column
+            if (e.ColumnIndex == dataGridView.Columns["Sku"].Index)
+            {
+                e.Cancel = true;
+            }
+        }
+
+        private void DataGridView_CellEndEdit(object? sender,
+                                                 DataGridViewCellEventArgs e)
+        {
+            // Check if the edited row index is valid
+            if (e.RowIndex > 0)
+            {
+                // Get the DataGridView instance
+
+                if (sender is DataGridView gridView)
+                {
+                    object newValue = gridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value;
+                    string columnHeader = gridView.Columns[e.ColumnIndex].HeaderText;
+
+                    // Get the row that was edited
+                    DataGridViewRow editedRow = gridView.Rows[e.RowIndex];
+
+                    // Collect values from all cells in the row
+                    List<string> cellValues = [];
+                    foreach (DataGridViewCell cell in editedRow.Cells)
+                    {
+                        cellValues.Add(cell.Value?.ToString() ?? "null"); // Handle null values
+                    }
+
+                    // Display the collected values (or use them in your logic)
+                    logger.Info(string.Join(", ", cellValues), "Row Values");
+                }
+            }
         }
 
         private void AddRowButton_Click(object? sender, EventArgs e)
@@ -356,7 +398,7 @@ namespace grace.tabs
         // Helper method to check if a value is numeric
         private bool IsNumeric(object value)
         {
-            return value is int || value is double || value is float || value is decimal;
+            return value is int or double or float or decimal;
         }
 
         protected virtual void Dispose(bool disposing)

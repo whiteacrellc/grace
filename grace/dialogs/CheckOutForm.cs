@@ -88,7 +88,7 @@ namespace grace
             Close();
         }
 
-        private void saveButton_Click(object sender, EventArgs e)
+        private void SaveButton_Click(object sender, EventArgs e)
         {
             try
             {
@@ -134,7 +134,7 @@ namespace grace
                 using (var context = new GraceDbContext())
                 {
                     // Add to pulled table
-                    Pulled pulled = new Pulled
+                    Pulled pulled = new()
                     {
 
                         UserId = user_id,
@@ -150,7 +150,7 @@ namespace grace
                     context.PulledDb.Add(pulled);
 
                     // Add Totals in CurrentTotal db
-                    Total total = new Total
+                    Total total = new()
                     {
                         LastUpdated = DateTime.Now,
                         GraceId = graceId,
@@ -189,7 +189,7 @@ namespace grace
 
         }
 
-        private void collectionComboBox_ValueMemberChanged(object sender, EventArgs e)
+        private void CollectionComboBox_ValueMemberChanged(object sender, EventArgs e)
         {
             var comboBox = sender as ComboBox;
             var selectedValue = comboBox.SelectedItem as string;

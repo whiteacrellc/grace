@@ -153,7 +153,7 @@ namespace grace.tabs
 
         public static DataView GetFilteredData(DataTable table, string searchTerm)
         {
-            DataView view = new DataView(table)
+            DataView view = new(table)
             {
                 RowFilter = "Sku LIKE '%" + searchTerm +
                     "%' OR Description LIKE '%"
@@ -172,14 +172,12 @@ namespace grace.tabs
                 return;
             }
             DataGridViewRow row = reportGridView.Rows[rowIndex];
-            using (EditRowForm editRowForm = new EditRowForm(row))
+            using EditRowForm editRowForm = new(row);
+            DialogResult result = editRowForm.ShowDialog();
+            if (result == DialogResult.OK)
             {
-                DialogResult result = editRowForm.ShowDialog();
-                if (result == DialogResult.OK)
-                {
-                    // we need to reload the grid.
-                    BindDataSource();
-                }
+                // we need to reload the grid.
+                BindDataSource();
             }
         }
 
