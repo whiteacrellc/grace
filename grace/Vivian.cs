@@ -347,7 +347,33 @@ namespace grace
             else
                 e.Graphics.DrawString("This element is not defined in the current visual style.",
                      this.Font, Brushes.Black, new Point(10, 10));
-        
+
+        }
+
+        private void ResetComboBox_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            if (e.Index < 0)
+            {
+                return;
+            }
+
+            // Get the item text
+            string username = resetComboBox.Items[e.Index].ToString();
+
+            // Determine if the item should be bold
+            Font itemFont = PasswordChecker.IsUserAdmin(username) ? new Font(e.Font, FontStyle.Bold) : e.Font;
+
+            // Draw the background
+            e.DrawBackground();
+
+            // Draw the item text with the appropriate font
+            using (Brush textBrush = new SolidBrush(e.ForeColor))
+            {
+                e.Graphics.DrawString(username, itemFont, textBrush, e.Bounds);
+            }
+
+            // Draw focus rectangle if the item has focus
+            e.DrawFocusRectangle();
         }
     }
 }

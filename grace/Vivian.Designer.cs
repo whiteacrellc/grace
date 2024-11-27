@@ -33,9 +33,9 @@ namespace grace
         {
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Vivian));
-            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle7 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle8 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle9 = new DataGridViewCellStyle();
             openFileDialog = new OpenFileDialog();
             menuStrip1 = new MenuStrip();
             editToolStripMenuItem = new ToolStripMenuItem();
@@ -84,11 +84,13 @@ namespace grace
             refreshButton = new Button();
             reportGridView = new DataGridView();
             collectionPage = new TabPage();
+            colLabel = new Label();
             clearComboButton = new Button();
             colLabel1 = new Label();
             colReportComboBox = new ComboBox();
             collGridView = new DataGridView();
             adminPage = new TabPage();
+            adminUserLabel = new Label();
             label5 = new Label();
             resetComboBox = new ComboBox();
             deleteUserButton = new Button();
@@ -102,6 +104,7 @@ namespace grace
             checkoutBindingSource = new BindingSource(components);
             checkInBindingSource = new BindingSource(components);
             toolTip = new ToolTip(components);
+            adminCheckBox = new CheckBox();
             menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             tabControl.SuspendLayout();
@@ -251,7 +254,7 @@ namespace grace
             loginPage.Margin = new Padding(5, 2, 5, 2);
             loginPage.Name = "loginPage";
             loginPage.Padding = new Padding(10, 2, 10, 2);
-            loginPage.Size = new Size(1531, 744);
+            loginPage.Size = new Size(1517, 733);
             loginPage.TabIndex = 0;
             loginPage.Text = "Home";
             loginPage.ToolTipText = "Login Page";
@@ -350,7 +353,7 @@ namespace grace
             dataPage.Location = new Point(4, 44);
             dataPage.Name = "dataPage";
             dataPage.Padding = new Padding(1);
-            dataPage.Size = new Size(1531, 744);
+            dataPage.Size = new Size(1517, 733);
             dataPage.TabIndex = 1;
             dataPage.Text = "Inventory";
             dataPage.ToolTipText = "Inventory for Patster";
@@ -362,20 +365,20 @@ namespace grace
             dataGridView.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
             dataGridView.ClipboardCopyMode = DataGridViewClipboardCopyMode.Disable;
             dataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = SystemColors.Window;
-            dataGridViewCellStyle1.Font = new Font("Verdana", 9F);
-            dataGridViewCellStyle1.ForeColor = SystemColors.ControlText;
-            dataGridViewCellStyle1.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.False;
-            dataGridView.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle7.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle7.BackColor = SystemColors.Window;
+            dataGridViewCellStyle7.Font = new Font("Verdana", 9F);
+            dataGridViewCellStyle7.ForeColor = SystemColors.ControlText;
+            dataGridViewCellStyle7.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle7.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle7.WrapMode = DataGridViewTriState.False;
+            dataGridView.DefaultCellStyle = dataGridViewCellStyle7;
             dataGridView.EditMode = DataGridViewEditMode.EditProgrammatically;
             dataGridView.Location = new Point(4, 61);
             dataGridView.MultiSelect = false;
             dataGridView.Name = "dataGridView";
             dataGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dataGridView.Size = new Size(1517, 675);
+            dataGridView.Size = new Size(1503, 664);
             dataGridView.TabIndex = 8;
             // 
             // filterBarcodeTextBox
@@ -448,7 +451,7 @@ namespace grace
             checkoutPage.Location = new Point(4, 44);
             checkoutPage.Margin = new Padding(7);
             checkoutPage.Name = "checkoutPage";
-            checkoutPage.Size = new Size(1531, 744);
+            checkoutPage.Size = new Size(1517, 733);
             checkoutPage.TabIndex = 2;
             checkoutPage.Text = "Check Out";
             checkoutPage.ToolTipText = "Checkout Items";
@@ -521,27 +524,27 @@ namespace grace
             checkOutDataGrid.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
             checkOutDataGrid.BorderStyle = BorderStyle.Fixed3D;
             checkOutDataGrid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = Color.FromArgb(224, 224, 224);
-            dataGridViewCellStyle2.Font = new Font("Verdana", 11.25F, FontStyle.Bold);
-            dataGridViewCellStyle2.ForeColor = SystemColors.ControlText;
-            dataGridViewCellStyle2.Padding = new Padding(0, 2, 10, 0);
-            dataGridViewCellStyle2.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.False;
-            checkOutDataGrid.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle8.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle8.BackColor = Color.FromArgb(224, 224, 224);
+            dataGridViewCellStyle8.Font = new Font("Verdana", 11.25F, FontStyle.Bold);
+            dataGridViewCellStyle8.ForeColor = SystemColors.ControlText;
+            dataGridViewCellStyle8.Padding = new Padding(0, 2, 10, 0);
+            dataGridViewCellStyle8.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle8.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle8.WrapMode = DataGridViewTriState.False;
+            checkOutDataGrid.DefaultCellStyle = dataGridViewCellStyle8;
             checkOutDataGrid.Location = new Point(5, 3);
             checkOutDataGrid.MultiSelect = false;
             checkOutDataGrid.Name = "checkOutDataGrid";
             checkOutDataGrid.ReadOnly = true;
             checkOutDataGrid.RowHeadersWidth = 82;
-            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.Padding = new Padding(0, 0, 10, 0);
-            checkOutDataGrid.RowsDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle9.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle9.Padding = new Padding(0, 0, 10, 0);
+            checkOutDataGrid.RowsDefaultCellStyle = dataGridViewCellStyle9;
             checkOutDataGrid.RowTemplate.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
             checkOutDataGrid.RowTemplate.DefaultCellStyle.Padding = new Padding(0, 0, 10, 0);
             checkOutDataGrid.RowTemplate.Resizable = DataGridViewTriState.True;
-            checkOutDataGrid.Size = new Size(1090, 736);
+            checkOutDataGrid.Size = new Size(1090, 725);
             checkOutDataGrid.TabIndex = 4;
             checkOutDataGrid.DataError += CheckOutDataGrid_DataError;
             // 
@@ -661,6 +664,7 @@ namespace grace
             // collectionPage
             // 
             collectionPage.BackColor = Color.Lavender;
+            collectionPage.Controls.Add(colLabel);
             collectionPage.Controls.Add(clearComboButton);
             collectionPage.Controls.Add(colLabel1);
             collectionPage.Controls.Add(colReportComboBox);
@@ -668,9 +672,19 @@ namespace grace
             collectionPage.Location = new Point(4, 44);
             collectionPage.Name = "collectionPage";
             collectionPage.Padding = new Padding(3);
-            collectionPage.Size = new Size(1531, 744);
+            collectionPage.Size = new Size(1517, 733);
             collectionPage.TabIndex = 6;
             collectionPage.Text = "Collection";
+            // 
+            // colLabel
+            // 
+            colLabel.AutoSize = true;
+            colLabel.Font = new Font("Verdana", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            colLabel.Location = new Point(582, 32);
+            colLabel.Name = "colLabel";
+            colLabel.Size = new Size(566, 23);
+            colLabel.TabIndex = 4;
+            colLabel.Text = "This report is best viewed by selecting a collection.";
             // 
             // clearComboButton
             // 
@@ -707,7 +721,7 @@ namespace grace
             collGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             collGridView.Location = new Point(6, 72);
             collGridView.Name = "collGridView";
-            collGridView.Size = new Size(1519, 666);
+            collGridView.Size = new Size(1505, 655);
             collGridView.TabIndex = 0;
             // 
             // adminPage
@@ -715,6 +729,8 @@ namespace grace
             adminPage.AutoScroll = true;
             adminPage.BackColor = Color.Lavender;
             adminPage.BorderStyle = BorderStyle.Fixed3D;
+            adminPage.Controls.Add(adminCheckBox);
+            adminPage.Controls.Add(adminUserLabel);
             adminPage.Controls.Add(label5);
             adminPage.Controls.Add(resetComboBox);
             adminPage.Controls.Add(deleteUserButton);
@@ -727,10 +743,19 @@ namespace grace
             adminPage.ForeColor = Color.Black;
             adminPage.Location = new Point(4, 44);
             adminPage.Name = "adminPage";
-            adminPage.Size = new Size(1531, 744);
+            adminPage.Size = new Size(1517, 733);
             adminPage.TabIndex = 3;
             adminPage.Text = "Admin";
             adminPage.ToolTipText = "Admin Settings";
+            // 
+            // adminUserLabel
+            // 
+            adminUserLabel.AutoSize = true;
+            adminUserLabel.Location = new Point(256, 58);
+            adminUserLabel.Name = "adminUserLabel";
+            adminUserLabel.Size = new Size(203, 18);
+            adminUserLabel.TabIndex = 10;
+            adminUserLabel.Text = "Admin Users are in Bold";
             // 
             // label5
             // 
@@ -743,12 +768,16 @@ namespace grace
             // 
             // resetComboBox
             // 
-            resetComboBox.BackColor = Color.Lavender;
+            resetComboBox.BackColor = Color.White;
+            resetComboBox.DrawMode = DrawMode.OwnerDrawFixed;
+            resetComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
+            resetComboBox.Font = new Font("Verdana", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
             resetComboBox.FormattingEnabled = true;
             resetComboBox.Location = new Point(255, 94);
             resetComboBox.Name = "resetComboBox";
-            resetComboBox.Size = new Size(194, 26);
+            resetComboBox.Size = new Size(194, 27);
             resetComboBox.TabIndex = 1;
+            resetComboBox.DrawItem += ResetComboBox_DrawItem;
             // 
             // deleteUserButton
             // 
@@ -811,7 +840,7 @@ namespace grace
             // 
             restoreDatabaseButton.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             restoreDatabaseButton.FlatStyle = FlatStyle.Popup;
-            restoreDatabaseButton.Location = new Point(36, 472);
+            restoreDatabaseButton.Location = new Point(36, 516);
             restoreDatabaseButton.Margin = new Padding(4, 6, 4, 6);
             restoreDatabaseButton.Name = "restoreDatabaseButton";
             restoreDatabaseButton.Size = new Size(216, 56);
@@ -823,7 +852,7 @@ namespace grace
             // 
             backupButton.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             backupButton.FlatStyle = FlatStyle.Popup;
-            backupButton.Location = new Point(36, 411);
+            backupButton.Location = new Point(36, 455);
             backupButton.Margin = new Padding(4, 6, 4, 6);
             backupButton.Name = "backupButton";
             backupButton.Size = new Size(216, 49);
@@ -839,6 +868,16 @@ namespace grace
             // 
             toolTip.IsBalloon = true;
             toolTip.ToolTipIcon = ToolTipIcon.Info;
+            // 
+            // adminCheckBox
+            // 
+            adminCheckBox.AutoSize = true;
+            adminCheckBox.Location = new Point(79, 402);
+            adminCheckBox.Name = "adminCheckBox";
+            adminCheckBox.Size = new Size(158, 22);
+            adminCheckBox.TabIndex = 11;
+            adminCheckBox.Text = "    Admin Status";
+            adminCheckBox.UseVisualStyleBackColor = true;
             // 
             // Vivian
             // 
@@ -957,5 +996,8 @@ namespace grace
         private Label colLabel1;
         public ComboBox colReportComboBox;
         public Button clearComboButton;
+        private Label colLabel;
+        private Label adminUserLabel;
+        public CheckBox adminCheckBox;
     }
 }

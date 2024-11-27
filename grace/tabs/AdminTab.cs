@@ -27,7 +27,7 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 namespace grace.tabs
 {
-    public class AdminTab
+    public class AdminTab(Vivian v)
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
@@ -35,22 +35,14 @@ namespace grace.tabs
 #pragma warning disable CS8601
 #pragma warning disable CS8602
 #pragma warning disable CS8600
-        private Vivian vivian;
-        private Button resetPasswordButton;
-        private Button restoreDatabaseButton;
-        private Button backupButton;
-        private Button deleteUserButton;
-        private Button addUserButton;
 
-        public AdminTab(Vivian v) {
-            vivian = v;
-            // Possible null reference assignment.
-            this.resetPasswordButton = vivian.resetPasswordButton;
-            restoreDatabaseButton = vivian.restoreDatabaseButton;
-            backupButton = vivian.backupButton;
-            deleteUserButton = vivian.deleteUserButton;
-            addUserButton = vivian.addUserButton;
-        }
+        private Button resetPasswordButton = v.resetPasswordButton;
+        private Button restoreDatabaseButton = v.restoreDatabaseButton;
+        private Button backupButton = v.backupButton;
+        private Button deleteUserButton = v.deleteUserButton;
+        private Button addUserButton = v.addUserButton;
+        private ComboBox resetComboBox = v.resetComboBox;
+        private CheckBox adminCheckBox = v.adminCheckBox;
 
         public void Load()
         {
@@ -60,8 +52,32 @@ namespace grace.tabs
             restoreDatabaseButton.Click += RestoreDatabaseButton_Click;
             deleteUserButton.Click += DeleteUserButton_Click;
             addUserButton.Click += AddUserButton_Click;
+            resetComboBox.SelectedValueChanged += ResetComboBox_SelectedValueChanged;
             InitializeComboBox();
             WriteBackupFile();
+            string currentUser = Globals.GetInstance().CurrentUser;
+            if (currentUser != null)
+            {
+                adminCheckBox.Checked = PasswordChecker.IsUserAdmin(currentUser);
+            }
+
+        }
+
+
+        private void AreYouSure()
+        {
+
+        }
+
+        private void ResetComboBox_SelectedValueChanged(object? sender, EventArgs e)
+        {
+            string user = resetComboBox.Text;
+            string currentUser = Globals.GetInstance().CurrentUser;
+            if (currentUser == null || user == null)
+            {
+                return;
+            }
+            adminCheckBox.Checked = PasswordChecker.IsUserAdmin(user);
         }
 
         private void WriteBackupFile()
@@ -77,7 +93,7 @@ namespace grace.tabs
         }
         private void DeleteUserButton_Click(object? sender, EventArgs e)
         {
-            ComboBox resetComboBox = vivian.resetComboBox;
+            ComboBox resetComboBox = this.resetComboBox;
             string user = resetComboBox.Text;
 
             string currentUser = Globals.GetInstance().CurrentUser;
@@ -117,7 +133,7 @@ namespace grace.tabs
 
         private void InitializeComboBox()
         {
-            ComboBox resetComboBox = vivian.resetComboBox;
+            ComboBox resetComboBox = this.resetComboBox;
 
 
             // Clear existing items in the ComboBox
@@ -139,13 +155,19 @@ namespace grace.tabs
 
         public void ResetButton_Click(object? sender, EventArgs e)
         {
-            ComboBox resetComboBox = vivian.resetComboBox;
-            string? username = resetComboBox.SelectedItem.ToString();
+            string? username = this.resetComboBox.SelectedItem.ToString();
             if (string.IsNullOrEmpty(username))
             {
                 return;
             }
-            PasswordChecker.SetResetFlag(username);
+            DialogResult response =
+                MessageBox.Show("Are you sure you want to reset "
+                                + username + "'s password?", "Password Reset",
+                                MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (response == DialogResult.Yes)
+            {
+                PasswordChecker.SetResetFlag(username);
+            }
         }
 #pragma warning restore CS8601 // Possible null reference assignment.
 #pragma warning restore CS8602

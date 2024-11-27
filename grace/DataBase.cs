@@ -283,7 +283,7 @@ namespace grace
 
             // Define columns
             table.Columns.Add("Sku", typeof(string));
-            table.Columns.Add("Brand", typeof (string));
+            table.Columns.Add("Brand", typeof(string));
             table.Columns.Add("Description", typeof(string));
             table.Columns.Add("Total", typeof(int));
             table.Columns.Add("LastUpdated", typeof(DateTime));
@@ -397,8 +397,8 @@ namespace grace
                         if (firstCol != null)
                         {
                             string brand = (string)worksheet.Cells[row, 1].Value;
-                            string barcode = checkString(worksheet.Cells[row, 2].Value);
-                            string sku = checkString(worksheet.Cells[row, 3].Value);
+                            string barcode = CheckString(worksheet.Cells[row, 2].Value);
+                            string sku = CheckString(worksheet.Cells[row, 3].Value);
                             string description = (string)worksheet.Cells[row, 4].Value;
                             var a = worksheet.Cells[row, 11].Value;
                             string availability = (a == null) ? string.Empty : a as string;
@@ -714,7 +714,7 @@ namespace grace
         }
 #pragma warning disable CS8600
 #pragma warning disable CA1305
-        private static string? checkString(object n)
+        private static string? CheckString(object n)
         {
             string ret = string.Empty;
             if (n is string)
@@ -740,22 +740,18 @@ namespace grace
 
         public static GraceRow? GetGraceRowFromSku(string sku)
         {
-            using (var context = new GraceDbContext())
-            {
-                return context.GraceRows.FirstOrDefault(item => item.Sku == sku);
-            }
+            using GraceDbContext context = new();
+            return context.GraceRows.FirstOrDefault(item => item.Sku == sku);
         }
 
         public static int GetUserIdFromName(string name)
         {
             int id = 0;
-            using (var context = new GraceDbContext())
+            using GraceDbContext context = new();
+            User? user = context.Users.FirstOrDefault(item => item.Username == name);
+            if (user != null)
             {
-                var user = context.Users.FirstOrDefault(item => item.Username == name);
-                if (user != null)
-                {
-                    id = user.ID;
-                }
+                id = user.ID;
             }
             return id;
         }
@@ -781,18 +777,17 @@ namespace grace
 
         public static Dictionary<string, List<Grace>> OrderedCollectionNames()
         {
-            using (var dbContext = new GraceDbContext())
-            {
-                Dictionary<string, List<Grace>> dict = new Dictionary<string, List<Grace>>();
-                var distinctNames = dbContext.Collections
-                     .Where(c => c.Name != "Other")
-                    .Select(c => c.Name)
-                    .Distinct()
-                    .OrderBy(name => name);
+            using GraceDbContext dbContext = new();
+            Dictionary<string, List<Grace>> dict = new();
+            IOrderedQueryable<string> distinctNames = dbContext.Collections
+                 .Where(c => c.Name != "Other")
+                .Select(c => c.Name)
+                .Distinct()
+                .OrderBy(name => name);
 
-                foreach (var collectionName in distinctNames)
-                {
-                    var graces = dbContext.Graces
+            foreach (string collectionName in distinctNames)
+            {
+                List<Grace> graces = [.. dbContext.Graces
                         .Join(
                             dbContext.Collections.Where(c => c.Name == collectionName),
                             graces => graces.ID,
@@ -805,23 +800,20 @@ namespace grace
                                 Brand = graces.Brand,
                                 Availability = graces.Availability,
                                 BarCode = graces.BarCode
-                            })
-                        .ToList();
+                            })];
 
-                    dict.Add(collectionName, graces);
-                }
-
-                foreach (var kvp in dict)
-                {
-                    logger.Debug($"Collection Name: {kvp.Key}");
-                    foreach (var graceRow in kvp.Value)
-                    {
-                        logger.Debug($"  GraceRow: {graceRow}");
-                    }
-                }
-                return dict;
+                dict.Add(collectionName, graces);
             }
 
+            foreach (KeyValuePair<string, List<Grace>> kvp in dict)
+            {
+                logger.Debug($"Collection Name: {kvp.Key}");
+                foreach (Grace graceRow in kvp.Value)
+                {
+                    logger.Debug($"  GraceRow: {graceRow}");
+                }
+            }
+            return dict;
         }
 
         public static bool DeleteCollectionRow(int GraceId, string name)
@@ -829,7 +821,7 @@ namespace grace
             using (var context = new GraceDbContext())
             {
                 // Find the row to check if it exists
-                var rowToDelete = context.Collections
+                CollectionName? rowToDelete = context.Collections
                     .SingleOrDefault(c => c.GraceId == GraceId && c.Name == name);
 
                 if (rowToDelete != null)
@@ -892,10 +884,9 @@ namespace grace
         {
             using (var context = new GraceDbContext())
             {
-                var collectionRows = context.Collections
+                List<CollectionName> collectionRows = [.. context.Collections
                     .Where(c => c.Name != "Other" && c.GraceId == graceId)
-                    .OrderBy(c => c.Name)
-                    .ToList();
+                    .OrderBy(c => c.Name)];
                 return collectionRows;
             }
         }

@@ -25,9 +25,8 @@ namespace grace.tabs
         private Button refreshButton;
         private TextBox filterTextBox;
         TabPage reportTabPage;
-        private DataTable dataTable = new DataTable();
+        private DataTable dataTable = new();
         private bool disposedValue = false;
-        private static Mutex mutex = new Mutex();
 
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
@@ -64,7 +63,7 @@ namespace grace.tabs
         private void ChangeColumnNames()
         {
             // Dictionary to map DbContext column names to desired DataGridView column names
-            Dictionary<string, string> columnMappings = new Dictionary<string, string>
+            Dictionary<string, string> columnMappings = new()
             {
                // {"LastUpdated", "Total" },
                 {"Sku", "Item #" },
@@ -106,17 +105,6 @@ namespace grace.tabs
             Utils.RemoveColumnByName(reportGridView, "GraceId");
             reportGridView.Sort(reportGridView.Columns["Sku"], System.ComponentModel.ListSortDirection.Ascending);
         }
-        private void EndTimePicker_ValueChanged(object? sender, EventArgs e)
-        {
-            filterTextBox.Clear();
-            BindDataSource(true);
-        }
-
-        private void StartTimePicker_ValueChanged(object? sender, EventArgs e)
-        {
-            filterTextBox.Clear();
-            BindDataSource(true);
-        }
 
         private void RefreshButton_Click(object? sender, EventArgs e)
         {
@@ -139,16 +127,8 @@ namespace grace.tabs
         internal void FilterTextBox_TextChanged(object? sender, EventArgs e)
         {
             string searchTerm = filterTextBox.Text;
-            if (string.IsNullOrEmpty(searchTerm))
-            {
-                bindingSource.DataSource = dataTable;
-            }
-            else
-            {
-                bindingSource.DataSource = GetFilteredData(dataTable, searchTerm);
-            }
-            reportGridView.DataSource = bindingSource;
-            reportGridView.Sort(reportGridView.Columns["Sku"], System.ComponentModel.ListSortDirection.Ascending);
+            reportGridView.DataSource = string.IsNullOrEmpty(searchTerm) ? dataTable : GetFilteredData(dataTable, searchTerm);
+            reportGridView.Sort(reportGridView.Columns["LastUpdated"], System.ComponentModel.ListSortDirection.Ascending);
         }
 
         public static DataView GetFilteredData(DataTable table, string searchTerm)
@@ -157,7 +137,8 @@ namespace grace.tabs
             {
                 RowFilter = "Sku LIKE '%" + searchTerm +
                     "%' OR Description LIKE '%"
-                    + searchTerm + "%'"
+                    + searchTerm + "%'",
+                Sort = "LastUpdated DESC"
             };
             return view;
         }
