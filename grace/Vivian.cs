@@ -161,7 +161,7 @@ namespace grace
             InitializeLogger();
 
             // Loads the preferences into the globals singleton
-            DataBase data = new();
+            _ = new DataBase();
 
             // Load all the tab classes
             homeTab.Load();
@@ -210,24 +210,22 @@ namespace grace
                 {
 
 
-                    using (var openFileDialog = new OpenFileDialog())
+                    using OpenFileDialog openFileDialog = new();
+                    openFileDialog.CheckFileExists = true;
+                    // openFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.GetCommandLineArgs);
+                    // openFileDialog.Multiselect = true;
+                    openFileDialog.Filter = "Excel Files (*.xlsx)|*.xlsx|All Files (*.*)|*.*";  // File filter
+
+
+                    if (openFileDialog.ShowDialog() != DialogResult.OK)
                     {
-                        openFileDialog.CheckFileExists = true;
-                        // openFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.GetCommandLineArgs);
-                        // openFileDialog.Multiselect = true;
-                        openFileDialog.Filter = "Excel Files (*.xlsx)|*.xlsx|All Files (*.*)|*.*";  // File filter
-
-
-                        if (openFileDialog.ShowDialog() != DialogResult.OK)
-                        {
-                            EnableReportMenuItems(true);
-                            return;
-                        }
-
-                        string filePath = openFileDialog.FileName;
-                        //er.ReadExcelFile(filePath);
-                        DataBase.LoadFromExcel(filePath);
+                        EnableReportMenuItems(true);
+                        return;
                     }
+
+                    string filePath = openFileDialog.FileName;
+                    //er.ReadExcelFile(filePath);
+                    DataBase.LoadFromExcel(filePath);
                 }
             }
             catch (Exception ex)
@@ -242,10 +240,10 @@ namespace grace
 
         private void SaveReportToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            SaveFileDialog saveFileDialog = new SaveFileDialog
+            SaveFileDialog saveFileDialog = new()
             {
                 Filter = "Excel Files (*.xlsx)|*.xlsx",
-                FileName = $"report_{DateTime.Now.ToString("yyyyMMdd")}.xlsx",
+                FileName = $"report_{DateTime.Now:yyyyMMdd}.xlsx",
                 RestoreDirectory = true
             };
             EnableReportMenuItems(false);
@@ -259,7 +257,7 @@ namespace grace
             EnableReportMenuItems(true);
         }
 
-        private void tabControl_Selecting(object sender, TabControlCancelEventArgs e)
+        private void TabControl_Selecting(object sender, TabControlCancelEventArgs e)
         {
             string username = Globals.GetInstance().CurrentUser;
             bool isAdmin = PasswordChecker.IsUserAdmin(username);
@@ -296,7 +294,7 @@ namespace grace
             }
         }
 
-        private void tabControl_DrawItem(object sender, DrawItemEventArgs e)
+        private void TabControl_DrawItem(object sender, DrawItemEventArgs e)
         {
 
             TabPage page = tabControl.TabPages[e.Index];
@@ -307,7 +305,7 @@ namespace grace
             int yOffset = (e.State == DrawItemState.Selected) ? -2 : 1;
             paddedBounds.Offset(1, yOffset);
 
-            var c = Color.LightBlue;
+            Color c = Color.LightBlue;
             if (e.Index == currentIndex)
             {
                 c = Color.Black;
@@ -315,7 +313,7 @@ namespace grace
             TextRenderer.DrawText(e.Graphics, page.Text, e.Font, paddedBounds, c);
         }
 
-        private void filterRowsLabel_MouseHover(object sender, EventArgs e)
+        private void FilterRowsLabel_MouseHover(object sender, EventArgs e)
         {
             toolTip.ToolTipTitle = "Row Filter";
             toolTip.Show("Use this to filter on SKU, Description or Barcode."
@@ -323,7 +321,7 @@ namespace grace
                 filterRowsLabel, 0, -30, 2000);
         }
 
-        private void scanBarcodeLabel_MouseHover(object sender, EventArgs e)
+        private void ScanBarcodeLabel_MouseHover(object sender, EventArgs e)
         {
 
             toolTip.ToolTipTitle = "BarCode Filter";
@@ -339,7 +337,7 @@ namespace grace
             {
                 VisualStyleRenderer renderer =
                      new(VisualStyleElement.Window.HorizontalScroll.Normal);
-                Rectangle rectangle1 = new Rectangle(10, 50, 50, 50);
+                Rectangle rectangle1 = new(10, 50, 50, 50);
                 renderer.DrawBackground(e.Graphics, rectangle1);
                 e.Graphics.DrawString("VisualStyleElement.Window.HorizontalScroll.Normal",
                      this.Font, Brushes.Black, new Point(10, 10));

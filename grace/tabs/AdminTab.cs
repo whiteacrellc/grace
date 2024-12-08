@@ -17,13 +17,6 @@
  */
 using grace.utils;
 using NLog;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 namespace grace.tabs
 {
@@ -43,30 +36,33 @@ namespace grace.tabs
         private Button addUserButton = v.addUserButton;
         private ComboBox resetComboBox = v.resetComboBox;
         private CheckBox adminCheckBox = v.adminCheckBox;
+        private TabPage adminTabPage;
+        private readonly Vivian vivian = v;
+
 
         public void Load()
         {
-
+            adminTabPage = vivian.tabControl.TabPages[6];
             resetPasswordButton.Click += ResetButton_Click;
             backupButton.Click += BackupButton_Click;
             restoreDatabaseButton.Click += RestoreDatabaseButton_Click;
             deleteUserButton.Click += DeleteUserButton_Click;
             addUserButton.Click += AddUserButton_Click;
             resetComboBox.SelectedValueChanged += ResetComboBox_SelectedValueChanged;
+            adminTabPage.Enter += AdminTabPage_Enter;
             InitializeComboBox();
             WriteBackupFile();
+
+
+        }
+
+        private void AdminTabPage_Enter(object? sender, EventArgs e)
+        {
             string currentUser = Globals.GetInstance().CurrentUser;
             if (currentUser != null)
             {
                 adminCheckBox.Checked = PasswordChecker.IsUserAdmin(currentUser);
             }
-
-        }
-
-
-        private void AreYouSure()
-        {
-
         }
 
         private void ResetComboBox_SelectedValueChanged(object? sender, EventArgs e)

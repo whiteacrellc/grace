@@ -234,8 +234,8 @@ namespace grace
             tabControl.Size = new Size(1525, 781);
             tabControl.TabIndex = 9;
             tabControl.TabStop = false;
-            tabControl.DrawItem += tabControl_DrawItem;
-            tabControl.Selecting += tabControl_Selecting;
+            tabControl.DrawItem += TabControl_DrawItem;
+            tabControl.Selecting += TabControl_Selecting;
             // 
             // loginPage
             // 
@@ -397,7 +397,7 @@ namespace grace
             scanBarcodeLabel.Size = new Size(123, 18);
             scanBarcodeLabel.TabIndex = 6;
             scanBarcodeLabel.Text = "Scan  Barcode";
-            scanBarcodeLabel.MouseHover += scanBarcodeLabel_MouseHover;
+            scanBarcodeLabel.MouseHover += ScanBarcodeLabel_MouseHover;
             // 
             // filterRowsLabel
             // 
@@ -408,7 +408,7 @@ namespace grace
             filterRowsLabel.Size = new Size(100, 18);
             filterRowsLabel.TabIndex = 3;
             filterRowsLabel.Text = "Filter Rows";
-            filterRowsLabel.MouseHover += filterRowsLabel_MouseHover;
+            filterRowsLabel.MouseHover += FilterRowsLabel_MouseHover;
             // 
             // addRowButton
             // 

@@ -87,7 +87,10 @@ namespace grace.tabs
             // Show the "working" cursor
             Cursor.Current = Cursors.WaitCursor;
 
-            RefreshData();
+            if (refresh)
+            {
+                RefreshData();
+            }
             UpdateDataGridView();
 
             // Return the cursor to normal

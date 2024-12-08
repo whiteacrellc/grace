@@ -15,7 +15,7 @@ namespace grace.tabs
         private Vivian vivian;
         private DataGridView collGridView;
         private DataTable dataTable;
-        private readonly ComboBox colReportComboBox;
+        private ComboBox colReportComboBox;
         private TabPage collectionTab;
         private Report report;
         private Button clearComboButton;
@@ -131,7 +131,7 @@ namespace grace.tabs
             DataView view = new(table)
             {
                 RowFilter = "Collection = '" + collection + "'",
-                Sort = "Collections ASC"
+                Sort = "Sku ASC"
             };
             return view;
         }
@@ -139,15 +139,6 @@ namespace grace.tabs
         internal void RefreshData()
         {
             collGridView.DataSource = dataTable;
-
-            // Create a DataView and sort by "Collections" ascending, then "Brand" ascending
-            DataView dataView = new(dataTable)
-            {
-                Sort = "Collections ASC"
-            };
-
-            // Re-bind the DataGridView to the sorted DataView
-            collGridView.DataSource = dataView;
         }
         internal void UpdateDataGridView()
         {
