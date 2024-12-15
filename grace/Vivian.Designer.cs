@@ -33,9 +33,9 @@ namespace grace
         {
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Vivian));
-            DataGridViewCellStyle dataGridViewCellStyle7 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle8 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle9 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle5 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle6 = new DataGridViewCellStyle();
             openFileDialog = new OpenFileDialog();
             menuStrip1 = new MenuStrip();
             editToolStripMenuItem = new ToolStripMenuItem();
@@ -79,17 +79,18 @@ namespace grace
             label3 = new Label();
             checkInDataGrid = new DataGridView();
             reportPage = new TabPage();
+            reportInfoLabel = new Label();
             filterLable = new Label();
             reportFilterTextBox = new TextBox();
             refreshButton = new Button();
             reportGridView = new DataGridView();
             collectionPage = new TabPage();
-            colLabel = new Label();
             clearComboButton = new Button();
             colLabel1 = new Label();
             colReportComboBox = new ComboBox();
             collGridView = new DataGridView();
             adminPage = new TabPage();
+            adminCheckBox = new CheckBox();
             adminUserLabel = new Label();
             label5 = new Label();
             resetComboBox = new ComboBox();
@@ -103,8 +104,7 @@ namespace grace
             errorProvider1 = new ErrorProvider(components);
             checkoutBindingSource = new BindingSource(components);
             checkInBindingSource = new BindingSource(components);
-            toolTip = new ToolTip(components);
-            adminCheckBox = new CheckBox();
+            reportToolTip = new ToolTip(components);
             menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             tabControl.SuspendLayout();
@@ -365,14 +365,14 @@ namespace grace
             dataGridView.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
             dataGridView.ClipboardCopyMode = DataGridViewClipboardCopyMode.Disable;
             dataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle7.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle7.BackColor = SystemColors.Window;
-            dataGridViewCellStyle7.Font = new Font("Verdana", 9F);
-            dataGridViewCellStyle7.ForeColor = SystemColors.ControlText;
-            dataGridViewCellStyle7.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle7.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle7.WrapMode = DataGridViewTriState.False;
-            dataGridView.DefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle4.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = SystemColors.Window;
+            dataGridViewCellStyle4.Font = new Font("Verdana", 9F);
+            dataGridViewCellStyle4.ForeColor = SystemColors.ControlText;
+            dataGridViewCellStyle4.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle4.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle4.WrapMode = DataGridViewTriState.False;
+            dataGridView.DefaultCellStyle = dataGridViewCellStyle4;
             dataGridView.EditMode = DataGridViewEditMode.EditProgrammatically;
             dataGridView.Location = new Point(4, 61);
             dataGridView.MultiSelect = false;
@@ -524,23 +524,23 @@ namespace grace
             checkOutDataGrid.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
             checkOutDataGrid.BorderStyle = BorderStyle.Fixed3D;
             checkOutDataGrid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle8.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle8.BackColor = Color.FromArgb(224, 224, 224);
-            dataGridViewCellStyle8.Font = new Font("Verdana", 11.25F, FontStyle.Bold);
-            dataGridViewCellStyle8.ForeColor = SystemColors.ControlText;
-            dataGridViewCellStyle8.Padding = new Padding(0, 2, 10, 0);
-            dataGridViewCellStyle8.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle8.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle8.WrapMode = DataGridViewTriState.False;
-            checkOutDataGrid.DefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle5.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle5.BackColor = Color.FromArgb(224, 224, 224);
+            dataGridViewCellStyle5.Font = new Font("Verdana", 11.25F, FontStyle.Bold);
+            dataGridViewCellStyle5.ForeColor = SystemColors.ControlText;
+            dataGridViewCellStyle5.Padding = new Padding(0, 2, 10, 0);
+            dataGridViewCellStyle5.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle5.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle5.WrapMode = DataGridViewTriState.False;
+            checkOutDataGrid.DefaultCellStyle = dataGridViewCellStyle5;
             checkOutDataGrid.Location = new Point(5, 3);
             checkOutDataGrid.MultiSelect = false;
             checkOutDataGrid.Name = "checkOutDataGrid";
             checkOutDataGrid.ReadOnly = true;
             checkOutDataGrid.RowHeadersWidth = 82;
-            dataGridViewCellStyle9.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle9.Padding = new Padding(0, 0, 10, 0);
-            checkOutDataGrid.RowsDefaultCellStyle = dataGridViewCellStyle9;
+            dataGridViewCellStyle6.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle6.Padding = new Padding(0, 0, 10, 0);
+            checkOutDataGrid.RowsDefaultCellStyle = dataGridViewCellStyle6;
             checkOutDataGrid.RowTemplate.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
             checkOutDataGrid.RowTemplate.DefaultCellStyle.Padding = new Padding(0, 0, 10, 0);
             checkOutDataGrid.RowTemplate.Resizable = DataGridViewTriState.True;
@@ -612,6 +612,7 @@ namespace grace
             // reportPage
             // 
             reportPage.BackColor = Color.Lavender;
+            reportPage.Controls.Add(reportInfoLabel);
             reportPage.Controls.Add(filterLable);
             reportPage.Controls.Add(reportFilterTextBox);
             reportPage.Controls.Add(refreshButton);
@@ -622,6 +623,17 @@ namespace grace
             reportPage.TabIndex = 5;
             reportPage.Text = "Report Page";
             reportPage.UseVisualStyleBackColor = true;
+            // 
+            // reportInfoLabel
+            // 
+            reportInfoLabel.AutoSize = true;
+            reportInfoLabel.Font = new Font("Verdana", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            reportInfoLabel.Location = new Point(558, 21);
+            reportInfoLabel.Name = "reportInfoLabel";
+            reportInfoLabel.Size = new Size(582, 23);
+            reportInfoLabel.TabIndex = 8;
+            reportInfoLabel.Text = "This report is best viewed by selecting a single item.";
+            reportInfoLabel.MouseHover += ReportInfoLabel_MouseHover;
             // 
             // filterLable
             // 
@@ -664,7 +676,6 @@ namespace grace
             // collectionPage
             // 
             collectionPage.BackColor = Color.Lavender;
-            collectionPage.Controls.Add(colLabel);
             collectionPage.Controls.Add(clearComboButton);
             collectionPage.Controls.Add(colLabel1);
             collectionPage.Controls.Add(colReportComboBox);
@@ -675,16 +686,6 @@ namespace grace
             collectionPage.Size = new Size(1517, 733);
             collectionPage.TabIndex = 6;
             collectionPage.Text = "Collection";
-            // 
-            // colLabel
-            // 
-            colLabel.AutoSize = true;
-            colLabel.Font = new Font("Verdana", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            colLabel.Location = new Point(582, 32);
-            colLabel.Name = "colLabel";
-            colLabel.Size = new Size(566, 23);
-            colLabel.TabIndex = 4;
-            colLabel.Text = "This report is best viewed by selecting a collection.";
             // 
             // clearComboButton
             // 
@@ -747,6 +748,16 @@ namespace grace
             adminPage.TabIndex = 3;
             adminPage.Text = "Admin";
             adminPage.ToolTipText = "Admin Settings";
+            // 
+            // adminCheckBox
+            // 
+            adminCheckBox.AutoSize = true;
+            adminCheckBox.Location = new Point(79, 402);
+            adminCheckBox.Name = "adminCheckBox";
+            adminCheckBox.Size = new Size(158, 22);
+            adminCheckBox.TabIndex = 11;
+            adminCheckBox.Text = "    Admin Status";
+            adminCheckBox.UseVisualStyleBackColor = true;
             // 
             // adminUserLabel
             // 
@@ -864,20 +875,11 @@ namespace grace
             // 
             errorProvider1.ContainerControl = this;
             // 
-            // toolTip
+            // reportToolTip
             // 
-            toolTip.IsBalloon = true;
-            toolTip.ToolTipIcon = ToolTipIcon.Info;
-            // 
-            // adminCheckBox
-            // 
-            adminCheckBox.AutoSize = true;
-            adminCheckBox.Location = new Point(79, 402);
-            adminCheckBox.Name = "adminCheckBox";
-            adminCheckBox.Size = new Size(158, 22);
-            adminCheckBox.TabIndex = 11;
-            adminCheckBox.Text = "    Admin Status";
-            adminCheckBox.UseVisualStyleBackColor = true;
+            reportToolTip.IsBalloon = true;
+            reportToolTip.ToolTipIcon = ToolTipIcon.Info;
+            reportToolTip.ToolTipTitle = "Report Info";
             // 
             // Vivian
             // 
@@ -981,7 +983,7 @@ namespace grace
         internal ToolStripMenuItem setInventoryFontSizeToolStripMenuItem;
         private Label scanBarcodeLabel;
         internal TextBox filterBarcodeTextBox;
-        private ToolTip toolTip;
+        private ToolTip reportToolTip;
         internal Button addUserButton;
         internal ToolStripMenuItem saveInventoryReportToolStripMenuItem;
         private TabPage reportPage;
@@ -996,8 +998,8 @@ namespace grace
         private Label colLabel1;
         public ComboBox colReportComboBox;
         public Button clearComboButton;
-        private Label colLabel;
         private Label adminUserLabel;
         public CheckBox adminCheckBox;
+        private Label reportInfoLabel;
     }
 }

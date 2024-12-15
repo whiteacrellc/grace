@@ -315,8 +315,8 @@ namespace grace
 
         private void FilterRowsLabel_MouseHover(object sender, EventArgs e)
         {
-            toolTip.ToolTipTitle = "Row Filter";
-            toolTip.Show("Use this to filter on SKU, Description or Barcode."
+            reportToolTip.ToolTipTitle = "Row Filter";
+            reportToolTip.Show("Use this to filter on SKU, Description or Barcode."
                 + " If using the barcode scanner use the Scan Barcode field.",
                 filterRowsLabel, 0, -30, 2000);
         }
@@ -324,8 +324,8 @@ namespace grace
         private void ScanBarcodeLabel_MouseHover(object sender, EventArgs e)
         {
 
-            toolTip.ToolTipTitle = "BarCode Filter";
-            toolTip.Show("Use this to filter using the Barcode Scanner."
+            reportToolTip.ToolTipTitle = "BarCode Filter";
+            reportToolTip.Show("Use this to filter using the Barcode Scanner."
                 + " To manually filter on barcodes use the other search box.",
                 scanBarcodeLabel, 0, -30, 2000);
         }
@@ -372,6 +372,11 @@ namespace grace
 
             // Draw focus rectangle if the item has focus
             e.DrawFocusRectangle();
+        }
+
+        private void ReportInfoLabel_MouseHover(object sender, EventArgs e)
+        {
+            reportToolTip.Show("This report shows a chronological log of inventory changes to an item", reportInfoLabel);
         }
     }
 }
