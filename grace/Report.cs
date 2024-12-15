@@ -48,18 +48,6 @@ namespace grace
         }
 
 
-        private class ReportRow
-        {
-            public string Brand { get; set; }
-            public string Sku { get; set; }
-            public string Description { get; set; }
-            public string Inventory { get; set; }
-            public string Collection { get; set; }
-            public List<CollectionName> Collections { get; set; } = [];
-            public int GraceId { get; set; }
-        }
-
-
         private void AddRow(Grace grace, int total, string collection, List<CollectionName>collections)
         {
             // Create a new row
