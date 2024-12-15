@@ -1,14 +1,17 @@
-using grace.data;
+/*
+ * Copyright (c) 2023 White Acre Software LLC
+ * All rights reserved.
+ *
+ * This software is the confidential and proprietary information
+ * of White Acre Software LLC. You shall not disclose such
+ * Confidential Information and shall use it only in accordance
+ * with the terms of the license agreement you entered into with
+ * White Acre Software LLC.
+ *
+ * Year
+ */
 using grace.utils;
-using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.ComponentModel;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace grace.tabs
 {
@@ -23,7 +26,6 @@ namespace grace.tabs
         private Button coResetButton;
         private CheckBox autoOpenCheckBox;
         private string scannedBarcode = string.Empty;
-        private int user_id = 0;
         private TabPage checkOutTabPage;
         private DataTable dataTable;
 
@@ -32,7 +34,7 @@ namespace grace.tabs
             vivian = v;
             checkOutDataGrid = vivian.checkOutDataGrid;
             checkoutBindingSource = vivian.checkoutBindingSource;
-            checkOutSearchTextBox =  vivian.checkOutSearchTextBox;
+            checkOutSearchTextBox = vivian.checkOutSearchTextBox;
             textBoxBarCode = vivian.textBoxBarcode;
             coResetButton = vivian.coResetButton;
             checkOutTabPage = vivian.tabControl.TabPages[2];
@@ -41,11 +43,11 @@ namespace grace.tabs
         public void Load()
         {
             // Add callbacks
-            checkOutSearchTextBox.TextChanged += checkOutSearchTextBox_TextChanged;
+            checkOutSearchTextBox.TextChanged += CheckOutSearchTextBox_TextChanged;
             checkOutDataGrid.DataBindingComplete += CheckOutDataGrid_DataBindingComplete;
-            textBoxBarCode.KeyPress += textBoxBarcode_KeyPress;
-            coResetButton.Click += coResetButton_Click;
-            checkOutDataGrid.CellMouseDoubleClick += checkOutDataGrid_CellMouseDoubleClick;
+            textBoxBarCode.KeyPress += TextBoxBarcode_KeyPress;
+            coResetButton.Click += CoResetButton_Click;
+            checkOutDataGrid.CellMouseDoubleClick += CheckOutDataGrid_CellMouseDoubleClick;
             //autoOpenCheckBox.CheckedChanged += AutoOpenCheckBox_CheckedChanged;
             //autoOpenCheckBox.Checked = Globals.GetInstance().BarCodeAutoOpen;
             checkOutTabPage.Enter += CheckOutTabPage_Enter;
@@ -55,8 +57,6 @@ namespace grace.tabs
 
         public void InitializeDataGridView()
         {
-            var username = Globals.GetInstance().CurrentUser;
-            user_id = DataBase.GetUserIdFromName(username);
             checkOutDataGrid.DataSource = checkoutBindingSource;
             LoadDataGrid();
         }
@@ -82,7 +82,7 @@ namespace grace.tabs
             InitializeDataGridView();
         }
 
-        private void checkOutDataGrid_CellMouseDoubleClick(object? sender,
+        private void CheckOutDataGrid_CellMouseDoubleClick(object? sender,
             DataGridViewCellMouseEventArgs e)
         {
             int rowIndex = e.RowIndex;
@@ -91,17 +91,15 @@ namespace grace.tabs
                 return;
             }
             DataGridViewRow row = checkOutDataGrid.Rows[rowIndex];
-            var sku = row.Cells["Sku"].Value as string;
-            using (CheckOutForm editRowForm = new CheckOutForm(sku))
+            string? sku = row.Cells["Sku"].Value as string;
+            using CheckOutForm editRowForm = new(sku);
+            DialogResult result = editRowForm.ShowDialog();
+            if (result == DialogResult.OK)
             {
-                DialogResult result = editRowForm.ShowDialog();
-                if (result == DialogResult.OK)
-                {
-                    textBoxBarCode.Clear();
-                    checkOutSearchTextBox.Clear();
-                    // we need to reload the grid.
-                    LoadDataGrid();
-                }
+                textBoxBarCode.Clear();
+                checkOutSearchTextBox.Clear();
+                // we need to reload the grid.
+                LoadDataGrid();
             }
         }
 
@@ -133,8 +131,8 @@ namespace grace.tabs
             checkoutBindingSource.DataSource = dataTable;
             ChangeColumnNames();
         }
-        
-        internal void coResetButton_Click(object? sender, EventArgs e)
+
+        internal void CoResetButton_Click(object? sender, EventArgs e)
         {
 
             LoadDataGrid();
@@ -143,12 +141,12 @@ namespace grace.tabs
 
         }
 
-        internal void checkOutSearchTextBox_TextChanged(object? sender, EventArgs e)
+        internal void CheckOutSearchTextBox_TextChanged(object? sender, EventArgs e)
         {
             string searchTerm = checkOutSearchTextBox.Text;
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {
-                var data = DataBase.GetFilteredPulledGrid(dataTable, searchTerm) ;
+                var data = DataBase.GetFilteredPulledGrid(dataTable, searchTerm);
                 checkoutBindingSource.DataSource = data;
             }
             else
@@ -162,63 +160,64 @@ namespace grace.tabs
             Utils.RemoveColumnByName(checkOutDataGrid, "GraceId");
         }
 
-        private void textBoxBarcode_KeyPress(object? sender, KeyPressEventArgs e)
+        private void TextBoxBarcode_KeyPress(object? sender, KeyPressEventArgs e)
         {
 
             // Check if the pressed key is a number (0-9) or Enter (Carriage Return)
-            if (char.IsDigit(e.KeyChar) || e.KeyChar == (char)Keys.Enter)
+            // Handle the keypress
+            if (char.IsDigit(e.KeyChar))
             {
-                // Handle the keypress
-                if (e.KeyChar != (char)Keys.Enter)
+                // Append the digit to the scanned barcode
+                //textBoxBarCode.Text += e.KeyChar;
+                scannedBarcode += e.KeyChar;
+            }
+            else if (e.KeyChar == (char)Keys.Enter)
+            {
+                scannedBarcode = textBoxBarCode.Text;
+                scannedBarcode = Utils.RemoveLeadingZero(scannedBarcode);
+
+
+                if (scannedBarcode == null | scannedBarcode == string.Empty)
                 {
-                    // Append the digit to the scanned barcode
-                    scannedBarcode += e.KeyChar;
+                    LoadDataGrid();
                 }
                 else
                 {
-                    scannedBarcode = Utils.RemoveLeadingZero(scannedBarcode);
+                    DataView filteredProducts =
+                        DataBase.GetPulledGridFromBarCode(scannedBarcode);
+                    // Bind the filtered products to the DataGridView
+                    checkoutBindingSource.DataSource = filteredProducts;
 
 
-                    if (scannedBarcode == null | scannedBarcode == string.Empty)
+                    ChangeColumnNames();
+                    // Reset the scanned barcode for the next scan
+                    scannedBarcode = string.Empty;
+
+                    // Mark the keypress as handled to prevent it from being processed further
+                    e.Handled = true;
+
+                    if (Globals.GetInstance().BarCodeAutoOpen)
                     {
-                        LoadDataGrid();
-                    }
-                    else
-                    {
-                        var filteredProducts =
-                            DataBase.GetPulledGridFromBarCode(scannedBarcode);
-                        // Bind the filtered products to the DataGridView
-                        checkoutBindingSource.DataSource = filteredProducts;
-
-
-                        ChangeColumnNames();
-                        // Reset the scanned barcode for the next scan
-                        scannedBarcode = string.Empty;
-
-                        // Mark the keypress as handled to prevent it from being processed further
-                        e.Handled = true;
-
-                        if (Globals.GetInstance().BarCodeAutoOpen)
+                        if (filteredProducts.Count > 0)
                         {
-                            if (filteredProducts.Count > 0)
+                            string? sku = filteredProducts[0]["Sku"].ToString();
+                            using CheckOutForm editRowForm = new(sku);
+                            DialogResult result = editRowForm.ShowDialog();
+                            if (result == DialogResult.OK)
                             {
-                                var sku = filteredProducts[0]["Sku"].ToString();
-                                using (CheckOutForm editRowForm = new CheckOutForm(sku))
-                                {
-                                    DialogResult result = editRowForm.ShowDialog();
-                                    if (result == DialogResult.OK)
-                                    {
-                                        // we need to reload the grid.
-                                        LoadDataGrid();
-                                        textBoxBarCode.Clear();
-                                        checkOutSearchTextBox.Clear();
-                                    }
-                                }
+                                // we need to reload the grid.
+                                LoadDataGrid();
+                                textBoxBarCode.Clear();
+                                checkOutSearchTextBox.Clear();
                             }
                         }
                     }
-
                 }
+
+            }
+            else
+            {
+                e.Handled = true;
             }
         }
 

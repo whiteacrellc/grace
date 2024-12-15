@@ -170,15 +170,14 @@ namespace grace
 
         public static DataView GetPulledGridFromBarCode(string scannedBarcode)
         {
-            var dataTable = GetPulledGrid();
-            List<CheckOut> result = new List<CheckOut>();
+            DataTable dataTable = GetPulledGrid();
 
             if (scannedBarcode == null || scannedBarcode == string.Empty)
             {
                 return new DataView(dataTable);
             }
 
-            DataView view = new DataView(dataTable)
+            DataView view = new(dataTable)
             {
                 RowFilter = "BarCode LIKE '%" + scannedBarcode + "%'"
             };
@@ -799,7 +798,8 @@ namespace grace
                                 Description = graces.Description,
                                 Brand = graces.Brand,
                                 Availability = graces.Availability,
-                                BarCode = graces.BarCode
+                                BarCode = graces.BarCode,
+                                Note = graces.Note
                             })];
 
                 dict.Add(collectionName, graces);
