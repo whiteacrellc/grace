@@ -279,7 +279,7 @@ namespace grace.tabs
                 {
                     bindingSource.DataSource = DataGridLoader.GetFilteredBarCode(dataTable, str);
                 }
-
+                dataGridView.DataSource = bindingSource;
                 FixColumns();
             }
         }

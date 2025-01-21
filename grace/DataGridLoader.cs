@@ -78,9 +78,9 @@ namespace grace
 
         public static DataView GetFilteredBarCode(DataTable table, string searchTerm)
         {
-            DataView view = new(table)
+            DataView view = new DataView(table)
             {
-                RowFilter = "Barcode LIKE '%" + searchTerm + "%'"
+                RowFilter = "BarCode LIKE '%" + searchTerm + "%'"
             };
             return view;
         }
