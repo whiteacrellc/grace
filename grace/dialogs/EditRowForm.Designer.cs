@@ -229,7 +229,7 @@ namespace grace
             barCodeTextBox.Name = "barCodeTextBox";
             barCodeTextBox.Size = new Size(150, 25);
             barCodeTextBox.TabIndex = 5;
-            barCodeTextBox.KeyDown += barCodeTextBox_KeyDown;
+            barCodeTextBox.KeyDown += BarCodeTextBox_KeyDown;
             // 
             // availabilityTextBox
             // 
@@ -328,7 +328,7 @@ namespace grace
             deleteButton.TabIndex = 10;
             deleteButton.Text = "Delete";
             deleteButton.UseVisualStyleBackColor = true;
-            deleteButton.Click += deleteButton_Click;
+            deleteButton.Click += DeleteButton_Click;
             // 
             // toolTip
             // 

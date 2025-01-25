@@ -30,10 +30,12 @@ namespace grace
         private Preferences prefs;
 
         public string CurrentUser { get; set; }
+        public bool CollectionDirty { get; set; }
 
         private Globals()
         {
             prefs = new Preferences();
+            CollectionDirty = false;
         }
         public static Globals GetInstance()
         {
@@ -48,25 +50,14 @@ namespace grace
 
         public int RowHeight
         {
-            get {
-                return Preferences.GetIntValue(Preferences.Preference.RowHeight);
-            }
-            set
-            {
-                Preferences.AddOrUpdateIntPreference(Preferences.Preference.RowHeight, value);
-            }
+            get => Preferences.GetIntValue(Preferences.Preference.RowHeight);
+            set => Preferences.AddOrUpdateIntPreference(Preferences.Preference.RowHeight, value);
         }
 
         public int RowsPerPage
         {
-            get
-            {
-                return Preferences.GetIntValue(Preferences.Preference.RowsPerPage);
-            }
-            set
-            {
-                Preferences.AddOrUpdateIntPreference(Preferences.Preference.RowsPerPage, value);
-            }
+            get => Preferences.GetIntValue(Preferences.Preference.RowsPerPage);
+            set => Preferences.AddOrUpdateIntPreference(Preferences.Preference.RowsPerPage, value);
         }
 
         public int HeaderHeight
@@ -93,8 +84,8 @@ namespace grace
             }
         }
 
-        public DateTime currentHeaderDate { get; set; } = DateTime.Now;
-        public DateTime previousHeaderDate { get; set; } = DateTime.Now.AddDays(-14);
+        public DateTime CurrentHeaderDate { get; set; } = DateTime.Now;
+        public DateTime PreviousHeaderDate { get; set; } = DateTime.Now.AddDays(-14);
 
     }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
