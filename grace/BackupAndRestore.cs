@@ -12,7 +12,7 @@ namespace grace
     {
         private readonly string connectionString;
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
-
+        private readonly Mutex _mutex = new Mutex(false, "Backup_Mutex");
 
 
         public BackupAndRestore() {
@@ -50,34 +50,32 @@ namespace grace
 
         public void BackupDatabaseToDocuments()
         {
-            string backupDir = CheckBackUpDirectory();
-            string filePath = Path.Combine(backupDir, "backup.db");
+            // Acquire the mutex
+            _mutex.WaitOne();
 
-            if (File.Exists(filePath))
+            try
             {
-                // Get the creation time of the file
-                DateTime creationTime = File.GetLastAccessTime(filePath);
 
-                // Calculate the time difference between now and the creation time
-                TimeSpan difference = DateTime.Now - creationTime;
+                string backupDir = CheckBackUpDirectory();
+                // Get the current date and time
+                DateTime currentDate = DateTime.Now;
 
-                // Only backup once a day. 
-                if (difference.TotalHours > 24)
+                // Format the date as YYYYMMDD
+                string formattedDate = currentDate.ToString("yyyyMMdd");
+
+                // Create the file name with the date
+                string fileName = $"backup_{formattedDate}.db";
+                string filePath = Path.Combine(backupDir, fileName);
+
+                if (!File.Exists(filePath))
                 {
-                    string oldFilePath = Path.Combine(backupDir, "backup_1.db");
-                    if (File.Exists(oldFilePath))
-                    {
-                        File.Delete(oldFilePath);
-                    }
-                    if (File.Exists(filePath))
-                    {
-                        File.Move(filePath, oldFilePath);
-                    }
                     BackupDatabaseToFile(filePath);
                 }
-            } else
+
+            }
+            finally
             {
-                BackupDatabaseToFile(filePath);
+                _mutex.ReleaseMutex();
             }
         }
 

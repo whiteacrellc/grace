@@ -378,5 +378,12 @@ namespace grace
         {
             reportToolTip.Show("This report shows a chronological log of inventory changes to an item", reportInfoLabel);
         }
+
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using AboutBox aboutBox = new();
+            DialogResult result = aboutBox.ShowDialog();
+            logger.Info("WHat is it all about anyway?");
+        }
     }
 }
