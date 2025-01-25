@@ -38,10 +38,15 @@ namespace grace.tabs
             collectionTab.Enter += CollectionTab_Enter;
             clearComboButton.Click += ClearComboButton_Click;
 
+            BuildCollectionInfo();
+        }
+
+        private void BuildCollectionInfo()
+        {
             using GraceDbContext context = new();
             List<string> distinctCollectionNames = [];
-           // Fill checkbox list with collection names
-           distinctCollectionNames = [.. context.Collections
+            // Fill checkbox list with collection names
+            distinctCollectionNames = [.. context.Collections
                 .Where(e => e.Name != "Other")
                 .Select(e => e.Name)
                 .Distinct()
@@ -57,6 +62,7 @@ namespace grace.tabs
 
         private void ClearComboButton_Click(object? sender, EventArgs e)
         {
+
             colReportComboBox.SelectedIndex = -1;
             BindDataSource();
             UpdateDataGridView();
@@ -64,6 +70,11 @@ namespace grace.tabs
 
         private void CollectionTab_Enter(object? sender, EventArgs e)
         {
+            if (Globals.GetInstance().CollectionDirty)
+            {
+                BuildCollectionInfo();
+                Globals.GetInstance().CollectionDirty = false;
+            }
             colReportComboBox.SelectedIndex = -1;
             RefreshData();
             BindDataSource();

@@ -38,14 +38,7 @@ namespace grace
 
 
             this.row = row;
-            if (row is null)
-            {
-                newRow = true;
-            }
-            else
-            {
-                newRow = false;
-            }
+            newRow = row is null;
         }
 
         private void EditRowForm_Load(object sender, EventArgs e)
@@ -54,7 +47,7 @@ namespace grace
             // We will need this to newRow the database
             if (row != null)
             {
-                var sku = row.Cells["Sku"].Value as string;
+                string? sku = row.Cells["Sku"].Value as string;
                 graceRow = DataBase.GetGraceRowFromSku(sku);
                 if (graceRow == null)
                 {
@@ -65,23 +58,21 @@ namespace grace
                 }
             }
 
-            var distinctBrandNames = new List<string>();
+            List<string> distinctBrandNames = new();
             var distinctCollectionNames = new List<string>();
             using (var context = new GraceDbContext())
             {
                 // Fill checkbox list with collection names
-                distinctCollectionNames = context.Collections
+                distinctCollectionNames = [.. context.Collections
                     .Where(e => e.Name != "Other")
                     .Select(e => e.Name)
                     .Distinct()
-                    .OrderBy(name => name)
-                    .ToList();
+                    .OrderBy(name => name)];
                 // Fill in drop down for brand name
-                distinctBrandNames = context.Graces
+                distinctBrandNames = [.. context.Graces
                     .Select(c => c.Brand)
                     .Distinct()
-                    .OrderBy(brand => brand)
-                    .ToList();
+                    .OrderBy(brand => brand)];
             }
 
             checkedListBox.Items.Clear();
@@ -112,7 +103,7 @@ namespace grace
                     {
                         availabilityTextBox.Text = graceRow.Availability;
                     }
-                    var obj = row.Cells[4].Value;
+                    object obj = row.Cells[4].Value;
                     if (obj != null)
                     {
                         barCodeTextBox.Text = obj.ToString();
@@ -210,7 +201,7 @@ namespace grace
         {
             if (newRow)
             {
-                if (addRow())
+                if (AddRow())
                 {
                     return;
                 }
@@ -260,7 +251,7 @@ namespace grace
                         else
                         {
                             // Row does not exist, so insert a new row
-                            var newRow = new CollectionName
+                            CollectionName newRow = new()
                             {
                                 GraceId = grace.ID,
                                 Name = cname
@@ -269,6 +260,7 @@ namespace grace
 
                             context.Collections.Add(newRow);
                             updateGraceRow = true;
+                            Globals.GetInstance().CollectionDirty = true;
                         }
                     }
                 }
@@ -371,7 +363,7 @@ namespace grace
                         grace.Note = noteTextBox.Text.Trim();
                         grace.Note = string.Empty;
                     }
-                    else 
+                    else
                     {
                         grace.Note = noteTextBox.Text.Trim();
                     }
@@ -419,8 +411,8 @@ namespace grace
                     }
                     DataBase.AddTotal(newTotal, graceRow.GraceId);
 
-                    var sku = skuTextBox.Text.Trim();
-                    using (var context = new GraceDbContext())
+                    string sku = skuTextBox.Text.Trim();
+                    using (GraceDbContext context = new())
                     {
                         graceRow = context.GraceRows.FirstOrDefault(item => item.Sku == sku);
                         graceRow.Total = newTotal;
@@ -478,7 +470,7 @@ namespace grace
             return ret;
         }
 
-        private bool addRow()
+        private bool AddRow()
         {
             bool ret = false;
             if (CheckFields())
@@ -486,11 +478,11 @@ namespace grace
                 return true;
             }
 
-            Grace grace = new Grace();
+            Grace grace = new();
 
             int graceId = 0;
             // Update Graces DB
-            var brand = (string)brandComboBox.SelectedItem;
+            string? brand = (string)brandComboBox.SelectedItem;
             if (!string.IsNullOrEmpty(brand))
             {
                 brand = brand.Trim();
@@ -508,7 +500,7 @@ namespace grace
             bool updateCollection = false;
             if (!string.IsNullOrEmpty(addCollectionTextBox.Text))
             {
-                var cName = addCollectionTextBox.Text.Trim();
+                string cName = addCollectionTextBox.Text.Trim();
                 if (DataBase.CheckCollectionExists(cName))
                 {
                     MessageBox.Show("Trying to add a new collection" + cName
@@ -525,7 +517,7 @@ namespace grace
                 }
             }
 
-            using (var context = new GraceDbContext())
+            using (GraceDbContext context = new())
             {
 
                 grace.Sku = skuTextBox.Text;
@@ -545,14 +537,7 @@ namespace grace
 
                 grace.Brand = brand;
                 grace.Description = descTextBox.Text;
-                if (availabilityTextBox.Text.Length > 0)
-                {
-                    grace.Availability = availabilityTextBox.Text;
-                }
-                else
-                {
-                    grace.Availability = string.Empty;
-                }
+                grace.Availability = availabilityTextBox.Text.Length > 0 ? availabilityTextBox.Text : string.Empty;
                 if (barCodeTextBox.Text.Length > 0)
                 {
                     grace.BarCode = barCodeTextBox.Text;
@@ -573,13 +558,7 @@ namespace grace
                 {
                     grace.BarCode = string.Empty;
                 }
-                if (!string.IsNullOrEmpty(noteTextBox.Text))
-                {
-                    grace.Note = noteTextBox.Text;
-                } else
-                {
-                    grace.Note = string.Empty;
-                }
+                grace.Note = !string.IsNullOrEmpty(noteTextBox.Text) ? noteTextBox.Text : string.Empty;
                 context.Graces.Add(grace);
                 context.SaveChanges();
                 graceId = grace.ID;
@@ -610,15 +589,16 @@ namespace grace
             }
 
 
-            foreach (var selected in newColList)
+            foreach (string selected in newColList)
             {
                 DataBase.AddCollectionRow(graceId, selected);
             }
 
             if (updateCollection)
             {
-                var cName = addCollectionTextBox.Text.Trim();
+                string cName = addCollectionTextBox.Text.Trim();
                 DataBase.AddCollectionRow(graceId, cName);
+                Globals.GetInstance().CollectionDirty = true;
             }
 
             // Now add the grace row. 
@@ -629,13 +609,13 @@ namespace grace
 #pragma warning restore CS8602
 #pragma warning restore CA1305
 
-        private void barCodeTextBox_KeyDown(object sender, KeyEventArgs e)
+        private void BarCodeTextBox_KeyDown(object sender, KeyEventArgs e)
         {
 
-            if (e.KeyCode == Keys.Enter || e.KeyCode == Keys.Return)
+            if (e.KeyCode is Keys.Enter or Keys.Return)
             {
                 TextBox box = (TextBox)sender;
-                var str = box.Text.Trim();
+                string str = box.Text.Trim();
                 if (string.IsNullOrEmpty(str))
                 {
                     return;
@@ -644,7 +624,7 @@ namespace grace
             }
         }
 
-        private void deleteButton_Click(object sender, EventArgs e)
+        private void DeleteButton_Click(object sender, EventArgs e)
         {
 
             DialogResult result = MessageBox.Show(
@@ -652,12 +632,10 @@ namespace grace
                  MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (result == DialogResult.Yes)
             {
-                using (var context = new GraceDbContext())
-                {
-                    var grace = context.Graces.FirstOrDefault(item => item.Sku == graceRow.Sku);
-                    context.Graces.Remove(grace);
-                    context.SaveChanges();
-                }
+                using GraceDbContext context = new();
+                Grace? grace = context.Graces.FirstOrDefault(item => item.Sku == graceRow.Sku);
+                context.Graces.Remove(grace);
+                context.SaveChanges();
             }
             DialogResult = DialogResult.OK;
             Close();

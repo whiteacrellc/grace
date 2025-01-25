@@ -197,9 +197,9 @@ namespace grace
 
                 DateTime dateTime = DateTime.Now;
                 PreviousColumnHeader = parseColumnHeader((string)worksheet.Cells["L1"].Value, -14, out dateTime);
-                Globals.GetInstance().previousHeaderDate = dateTime;
+                Globals.GetInstance().PreviousHeaderDate = dateTime;
                 CurrentColumnHeader = parseColumnHeader((string)worksheet.Cells["M1"].Value, 0, out dateTime);
-                Globals.GetInstance().currentHeaderDate = dateTime;
+                Globals.GetInstance().CurrentHeaderDate = dateTime;
 
                 for (int row = 2; row <= rowCount; row++)
                 {
