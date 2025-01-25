@@ -38,7 +38,7 @@ namespace grace.tabs
         private CheckBox adminCheckBox = v.adminCheckBox;
         private TabPage adminTabPage;
         private readonly Vivian vivian = v;
-
+        DailyBackup dailyBackup;
 
         public void Load()
         {
@@ -51,7 +51,7 @@ namespace grace.tabs
             resetComboBox.SelectedValueChanged += ResetComboBox_SelectedValueChanged;
             adminTabPage.Enter += AdminTabPage_Enter;
             InitializeComboBox();
-            WriteBackupFile();
+            dailyBackup = new DailyBackup(WriteBackupFile);
 
 
         }
