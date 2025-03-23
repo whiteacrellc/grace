@@ -17,6 +17,7 @@ namespace grace.data
             EnsureGraceNoteColumn(context);
             EnsureGraceDbNoteColumn(context);
             EnsureIsDeletedColumn(context);
+            EnsureTotalsUsereColumn(context);
         }
 
         private static void EnsureIsDeletedColumn(GraceDbContext context)
@@ -44,6 +45,13 @@ namespace grace.data
         {
             const string columnName = "Note";
             const string tableName = "Graces";
+            CreateColumnString(columnName, tableName);
+        }
+
+        private static void EnsureTotalsUsereColumn(GraceDbContext context)
+        {
+            const string columnName = "User";
+            const string tableName = "Totals";
             CreateColumnString(columnName, tableName);
         }
 
@@ -97,40 +105,34 @@ namespace grace.data
         private static void CreateColumnString(string columnName, string tableName)
         {
             bool found = false;
-            var connectionString = DataBase.ConnectionString;
+            string connectionString = DataBase.ConnectionString;
 
-            using (var con = new SqliteConnection(connectionString))
+            using SqliteConnection con = new(connectionString);
+            using (SqliteCommand cmd = new("PRAGMA table_info(" + tableName + ");"))
             {
-                using (var cmd = new SqliteCommand("PRAGMA table_info(" + tableName + ");"))
-                {
-                    cmd.Connection = con;
-                    cmd.Connection.Open();
+                cmd.Connection = con;
+                cmd.Connection.Open();
 
-                    using (var reader = cmd.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            string name = reader["name"].ToString();
-                            if (name == columnName)
-                            {
-                                found = true;
-                                break;
-                            }
-                        }
-                    }
-                }
-                if (!found)
+                using SqliteDataReader reader = cmd.ExecuteReader();
+                while (reader.Read())
                 {
-                    var sql = $"alter table {tableName} ADD COLUMN {columnName} TEXT DEFAULT ''";
-                    using (var cmd = new SqliteCommand(sql))
+                    string name = reader["name"].ToString();
+                    if (name == columnName)
                     {
-                        cmd.Connection = con;
-                        //cmd.Connection.Open();
-                        cmd.ExecuteNonQuery();
+                        found = true;
+                        break;
                     }
                 }
-                con.Close();
             }
+            if (!found)
+            {
+                string sql = $"alter table {tableName} ADD COLUMN {columnName} TEXT DEFAULT ''";
+                using SqliteCommand cmd = new(sql);
+                cmd.Connection = con;
+                //cmd.Connection.Open();
+                cmd.ExecuteNonQuery();
+            }
+            con.Close();
         }
 
     }

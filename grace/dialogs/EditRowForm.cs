@@ -28,14 +28,14 @@ namespace grace
         private bool updateGraceRow = false;
         private List<string> newColList = new List<string>();
         private bool isReport = false;
-
+        private String currentUser;
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         public EditRowForm(DataGridViewRow? row)
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
             InitializeComponent();
-
+            this.currentUser = Globals.GetInstance().CurrentUser;
 
             this.row = row;
             newRow = row is null;

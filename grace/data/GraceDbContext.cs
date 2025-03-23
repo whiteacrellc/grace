@@ -110,7 +110,8 @@ namespace grace.data
                   .WithMany()
                   .HasForeignKey(e => e.GraceId)
                   .OnDelete(DeleteBehavior.Cascade);
-
+                entity.Property(e => e.User)
+                   .HasDefaultValue("");
             });
 
             modelBuilder.Entity<CollectionName>(entity =>

@@ -241,7 +241,7 @@ namespace grace
             using (var dbContext = new GraceDbContext())
             {
                 // Performing the join and projection
-                var result = (
+                List<CheckInData> result = (
                     from gr in dbContext.GraceRows
                     join pulled in dbContext.PulledDb on gr.GraceId equals pulled.GraceId
                     join user in dbContext.Users on pulled.UserId equals user.ID
@@ -270,6 +270,7 @@ namespace grace
             public string Sku { get; set; }
             public string Brand { get; set; }
             public string Description { get; set; }
+            public string User {  get; set; }
             public int Total { get; set; }
             public DateTime LastUpdated { get; set; }
             public string Note { get; set; }
@@ -284,15 +285,15 @@ namespace grace
             table.Columns.Add("Sku", typeof(string));
             table.Columns.Add("Brand", typeof(string));
             table.Columns.Add("Description", typeof(string));
+            table.Columns.Add("User", typeof(string));
             table.Columns.Add("Total", typeof(int));
             table.Columns.Add("LastUpdated", typeof(DateTime));
             table.Columns.Add("Note", typeof(string));
 
 
-            using (var dbContext = new GraceDbContext())
-            {
-                // Performing the join and projection
-                List<ReportData> result = [.. (
+            using GraceDbContext dbContext = new();
+            // Performing the join and projection
+            List<ReportData> result = [.. (
                     from gr in dbContext.GraceRows
                     join totals in dbContext.Totals on gr.GraceId equals totals.GraceId
                     orderby totals.LastUpdated descending, totals.CurrentTotal descending
@@ -301,21 +302,20 @@ namespace grace
                         Sku = gr.Sku,
                         Brand = gr.Brand,
                         Description = gr.Description,
+                        User = totals.User,
                         Total = totals.CurrentTotal,
                         LastUpdated = totals.LastUpdated,
                         Note = gr.Note,
                         GraceId = gr.GraceId
                     })];
 
-                foreach (ReportData? report in result)
-                {
-                    table.Rows.Add(report.Sku, report.Brand,
-                        report.Description, report.Total, report.LastUpdated,
-                        report.Note);
-                }
-                return table;
-
+            foreach (ReportData? report in result)
+            {
+                table.Rows.Add(report.Sku, report.Brand,
+                    report.Description, report.User, report.Total, report.LastUpdated,
+                    report.Note);
             }
+            return table;
         }
 
 
@@ -388,7 +388,7 @@ namespace grace
 
                     for (int row = 2; row <= rowCount; row++)
                     {
-                        var rowobj = worksheet.Cells[row, 1, row, worksheet.Dimension.Columns];
+                        ExcelRange rowobj = worksheet.Cells[row, 1, row, worksheet.Dimension.Columns];
 
                         // if the first column is not null we assume we have a
                         // valid row
@@ -535,13 +535,15 @@ namespace grace
         public static int AddTotal(int total, int graceId)
         {
             int id = 0;
-            using (var context = new GraceDbContext())
+            String currentUser = Globals.GetInstance().CurrentUser;
+            using (GraceDbContext context = new())
             {
-                var newTotal = new Total
+                Total newTotal = new Total
                 {
                     LastUpdated = DateTime.Now,
                     CurrentTotal = total,
-                    GraceId = graceId
+                    GraceId = graceId,
+                    User = currentUser
                 };
                 context.Totals.Add(newTotal);
                 context.SaveChanges();
