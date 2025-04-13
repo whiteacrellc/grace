@@ -385,5 +385,10 @@ namespace grace
             DialogResult result = aboutBox.ShowDialog();
             logger.Info("WHat is it all about anyway?");
         }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

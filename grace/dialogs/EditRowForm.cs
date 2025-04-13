@@ -20,31 +20,28 @@ namespace grace
 {
     public partial class EditRowForm : Form
     {
-        DataGridViewRow? row;
+        private readonly DataGridViewRow? row;
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
-        private List<string> colList = new List<string>();
-        private bool newRow;
+        private readonly bool newRow = false;
         private GraceRow? graceRow;
         private bool updateGraceRow = false;
-        private List<string> newColList = new List<string>();
+        private List<string> newColList = [];
         private bool isReport = false;
-        private String currentUser;
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         public EditRowForm(DataGridViewRow? row)
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
             InitializeComponent();
-            this.currentUser = Globals.GetInstance().CurrentUser;
 
             this.row = row;
-            newRow = row is null;
+            this.newRow = row is null;
         }
 
         private void EditRowForm_Load(object sender, EventArgs e)
         {
-
-            // We will need this to newRow the database
+            List<string> colList = new();
+            // We will need this to newCol the database
             if (row != null)
             {
                 string? sku = row.Cells["Sku"].Value as string;
@@ -58,9 +55,9 @@ namespace grace
                 }
             }
 
-            List<string> distinctBrandNames = new();
-            var distinctCollectionNames = new List<string>();
-            using (var context = new GraceDbContext())
+            List<string> distinctBrandNames = [];
+            List<string> distinctCollectionNames = new();
+            using (GraceDbContext context = new GraceDbContext())
             {
                 // Fill checkbox list with collection names
                 distinctCollectionNames = [.. context.Collections
@@ -227,17 +224,17 @@ namespace grace
             }
             int graceId = 0;
             // Update Graces DB
-            using (var context = new GraceDbContext())
+            using (GraceDbContext context = new())
             {
-                var grace =
+                Grace? grace =
                         context.Graces.FirstOrDefault(item => item.Sku == graceRow.Sku);
 
                 // Reports don't have collection info
                 if (!isReport)
                 {
-                    if (string.IsNullOrEmpty(addCollectionTextBox.Text) == false)
+                    if (!string.IsNullOrEmpty(addCollectionTextBox.Text))
                     {
-                        var cname = addCollectionTextBox.Text.Trim();
+                        string cname = addCollectionTextBox.Text.Trim();
                         if (DataBase.CheckCollectionExists(cname))
                         {
                             MessageBox.Show("Trying to add a new collection" + cname
@@ -251,14 +248,14 @@ namespace grace
                         else
                         {
                             // Row does not exist, so insert a new row
-                            CollectionName newRow = new()
+                            CollectionName newCol = new()
                             {
                                 GraceId = grace.ID,
                                 Name = cname
                                 // Set other properties as needed
                             };
 
-                            context.Collections.Add(newRow);
+                            context.Collections.Add(newCol);
                             updateGraceRow = true;
                             Globals.GetInstance().CollectionDirty = true;
                         }
@@ -268,7 +265,7 @@ namespace grace
                 graceId = grace.ID;
                 if (grace.Sku != skuTextBox.Text)
                 {
-                    var sku = skuTextBox.Text;
+                    string sku = skuTextBox.Text;
                     if (string.IsNullOrEmpty(sku))
                     {
                         MessageBox.Show("SKU Must have a Value.",
@@ -293,7 +290,7 @@ namespace grace
                 }
                 if (grace.Brand != (string)brandComboBox.SelectedItem)
                 {
-                    var brand = (string)brandComboBox.SelectedItem;
+                    string? brand = (string)brandComboBox.SelectedItem;
                     if (!string.IsNullOrEmpty(brand))
                     {
                         brand = brand.Trim();
@@ -312,7 +309,7 @@ namespace grace
                 }
                 if (grace.Description != descTextBox.Text)
                 {
-                    var desc = descTextBox.Text;
+                    string desc = descTextBox.Text;
                     if (!string.IsNullOrEmpty(desc))
                     {
                         desc = desc.Trim();
@@ -416,6 +413,7 @@ namespace grace
                     {
                         graceRow = context.GraceRows.FirstOrDefault(item => item.Sku == sku);
                         graceRow.Total = newTotal;
+                        graceRow.PrevTotal = Convert.ToInt32(currentTextBox.Text);
                         context.SaveChanges();
                     }
                     updateGraceRow = true;

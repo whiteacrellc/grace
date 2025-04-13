@@ -146,7 +146,7 @@ namespace grace.tabs
             string searchTerm = checkOutSearchTextBox.Text;
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {
-                var data = DataBase.GetFilteredPulledGrid(dataTable, searchTerm);
+                var data = DataBase.FilterTableBySku(dataTable, searchTerm);
                 checkoutBindingSource.DataSource = data;
             }
             else

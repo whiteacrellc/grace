@@ -99,7 +99,7 @@ namespace grace
         public static System.Data.DataTable GetPulledGrid()
         {
 
-            System.Data.DataTable table = new System.Data.DataTable();
+            System.Data.DataTable table = new();
 
             // Define columns
             table.Columns.Add("Sku", typeof(string));
@@ -131,7 +131,7 @@ namespace grace
                     }
                 ).ToList();
 
-                foreach (var checkOut in result)
+                foreach (CheckOut? checkOut in result)
                 {
                     table.Rows.Add(checkOut.Sku, checkOut.Description,
                         checkOut.Brand, checkOut.BarCode, checkOut.Total,
@@ -186,9 +186,9 @@ namespace grace
         }
 
 
-        public static DataView GetFilteredPulledGrid(System.Data.DataTable dataTable, string searchTerm)
+        public static DataView FilterTableBySku(System.Data.DataTable dataTable, string searchTerm)
         {
-            DataView view = new DataView(dataTable)
+            DataView view = new(dataTable)
             {
                 RowFilter = "Sku LIKE '%" + searchTerm + "%'"
             };
@@ -207,12 +207,25 @@ namespace grace
             public int UserTotal { get; set; }
             public string CheckIn { get; set; } = string.Empty;
         }
-        public static List<CheckInData> GetCheckedOutGrid(int user_id)
+        public static System.Data.DataTable GetCheckedOutGrid(int user_id)
         {
-            using (var dbContext = new GraceDbContext())
-            {
-                // Performing the join and projection
-                var result = (
+            System.Data.DataTable table = new();
+
+            // Define columns
+            table.Columns.Add("UserName", typeof(string));
+            table.Columns.Add("Sku", typeof(string));
+            table.Columns.Add("Brand", typeof(string));
+            table.Columns.Add("Description", typeof(string));
+            table.Columns.Add("BarCode", typeof(string));
+            table.Columns.Add("Collection", typeof(string));
+            table.Columns.Add("LastUpdated", typeof(DateTime));
+            table.Columns.Add("UserTotal", typeof(int));
+            table.Columns.Add("CheckIn", typeof(string));
+            table.Columns.Add("GraceId", typeof(int));
+
+            using GraceDbContext dbContext = new();
+            // Performing the join and projection
+            List<CheckInData> result = [.. (
                     from gr in dbContext.GraceRows
                     join pulled in dbContext.PulledDb on gr.GraceId equals pulled.GraceId
                     join user in dbContext.Users on pulled.UserId equals user.ID
@@ -231,38 +244,66 @@ namespace grace
                         UserTotal = pulled.Amount,
                         CheckIn = string.Empty,
                         GraceId = gr.GraceId
-                    }).ToList();
-                return result;
+                    })];
+
+            foreach (CheckInData data in result)
+            {
+                table.Rows.Add(data.UserName, data.Sku, data.Brand,
+                    data.Description, data.BarCode, data.Collection,
+                    data.LastUpdated, data.UserTotal, data.CheckIn,
+                    data.GraceId);
             }
+
+            return table;
+
         }
 
-        public static List<CheckInData> GetCheckedOutGridAll()
+        public static System.Data.DataTable GetCheckedOutGridAll()
         {
-            using (var dbContext = new GraceDbContext())
+
+            System.Data.DataTable table = new();
+
+            // Define columns
+            table.Columns.Add("UserName", typeof(string));
+            table.Columns.Add("Sku", typeof(string));
+            table.Columns.Add("Brand", typeof(string));
+            table.Columns.Add("Description", typeof(string));
+            table.Columns.Add("BarCode", typeof(string));
+            table.Columns.Add("Collection", typeof(string));
+            table.Columns.Add("LastUpdated", typeof(DateTime));
+            table.Columns.Add("UserTotal", typeof(int));
+            table.Columns.Add("CheckIn", typeof(string));
+            table.Columns.Add("GraceId", typeof(int));
+
+            using GraceDbContext dbContext = new();
+            // Performing the join and projection
+            List<CheckInData> result = [.. (
+                from gr in dbContext.GraceRows
+                join pulled in dbContext.PulledDb on gr.GraceId equals pulled.GraceId
+                join user in dbContext.Users on pulled.UserId equals user.ID
+                join collection in dbContext.Collections on pulled.CollectionId equals collection.ID
+                where !pulled.IsCompleted
+                orderby user.Username ascending, pulled.LastUpdated descending, pulled.CurrentTotal descending
+                select new CheckInData
+                {
+                    UserName = user.Username,
+                    Sku = gr.Sku,
+                    Brand = gr.Brand,
+                    Description = gr.Description,
+                    BarCode = gr.BarCode,
+                    Collection = collection.Name,
+                    LastUpdated = pulled.LastUpdated,
+                    UserTotal = pulled.Amount,
+                    CheckIn = string.Empty,
+                    GraceId = gr.GraceId
+                })];
+
+            foreach (CheckInData data in result)
             {
-                // Performing the join and projection
-                List<CheckInData> result = (
-                    from gr in dbContext.GraceRows
-                    join pulled in dbContext.PulledDb on gr.GraceId equals pulled.GraceId
-                    join user in dbContext.Users on pulled.UserId equals user.ID
-                    join collection in dbContext.Collections on pulled.CollectionId equals collection.ID
-                    where !pulled.IsCompleted
-                    orderby user.Username ascending, pulled.LastUpdated descending, pulled.CurrentTotal descending
-                    select new CheckInData
-                    {
-                        UserName = user.Username,
-                        Sku = gr.Sku,
-                        Brand = gr.Brand,
-                        Description = gr.Description,
-                        BarCode = gr.BarCode,
-                        Collection = collection.Name,
-                        LastUpdated = pulled.LastUpdated,
-                        UserTotal = pulled.Amount,
-                        CheckIn = string.Empty,
-                        GraceId = gr.GraceId
-                    }).ToList();
-                return result;
+                table.Rows.Add(data);
             }
+
+            return table;
         }
 
         public class ReportData
@@ -433,7 +474,7 @@ namespace grace
             }
             catch (Exception ex)
             {
-                var exstring = ex.ToString();
+                string exstring = ex.ToString();
                 MessageBox.Show($"Error Loading file {exstring}", "Error",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
@@ -554,99 +595,12 @@ namespace grace
 
         public static void UpdateGraceRow(int graceId)
         {
-            using (var context = new GraceDbContext())
+            using GraceDbContext context = new();
+            using Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = context.Database.BeginTransaction();
+            try
             {
-                using (var transaction = context.Database.BeginTransaction())
-                {
-                    try
-                    {
-                        var graceRow = context.GraceRows.FirstOrDefault(e => e.GraceId == graceId);
-                        var grace = context.Graces.Find(graceId);
-                        if (grace != null)
-                        {
-                            graceRow.Sku = grace.Sku;
-                            graceRow.BarCode = grace.BarCode;
-                            graceRow.Brand = grace.Brand;
-                            graceRow.Description = grace.Description;
-                            graceRow.Availability = grace.Availability;
-                            graceRow.Note = grace.Note;
-                        }
-                        else
-                        {
-                            logger.Error($"UpdateGraceRow couldn't find {graceId}");
-                            return;
-                        }
-
-                        var total = context.Totals
-                            .Where(t => t.GraceId == graceId)
-                            .OrderByDescending(t => t.ID)
-                            .First();
-                        graceRow.Total = total.CurrentTotal;
-                        graceRow.LastUpdated = total.LastUpdated;
-
-                        // Set columns
-                        graceRow.Col1 = null;
-                        graceRow.Col2 = null;
-                        graceRow.Col3 = null;
-                        graceRow.Col4 = null;
-                        graceRow.Col5 = null;
-                        graceRow.Col6 = null;
-
-                        var collectionRows = context.Collections.
-                            Where(row => row.GraceId == graceId && row.Name != "Other")
-                            .ToList();
-                        for (int i = 0; i < collectionRows.Count; i++)
-                        {
-                            var collectionRow = collectionRows[i];
-                            if (collectionRow.Name == "Other")
-                            {
-                                continue;
-                            }
-                            switch (i)
-                            {
-                                case 0:
-                                    graceRow.Col1 = collectionRow.Name;
-                                    break;
-                                case 1:
-                                    graceRow.Col2 = collectionRow.Name;
-                                    break;
-                                case 2:
-                                    graceRow.Col3 = collectionRow.Name;
-                                    break;
-                                case 3:
-                                    graceRow.Col4 = collectionRow.Name;
-                                    break;
-                                case 4:
-                                    graceRow.Col5 = collectionRow.Name;
-                                    break;
-                                case 5:
-                                    graceRow.Col6 = collectionRow.Name;
-                                    break;
-                                default:
-                                    logger.Error($"Too many collections for graceId {graceId}");
-                                    break;
-                            }
-                        }
-                        context.SaveChanges();
-                        transaction.Commit();
-                    }
-                    catch (Exception ex)
-                    {
-                        transaction.Rollback();
-                        logger.Error(ex);
-                    }
-                }
-            }
-
-        }
-
-        public static int CreateGraceRow(int graceId)
-        {
-            using (var context = new GraceDbContext())
-            {
-                int newGraceId = 0;
-                GraceRow graceRow = new GraceRow();
-                var grace = context.Graces.Find(graceId);
+                GraceRow? graceRow = context.GraceRows.FirstOrDefault(e => e.GraceId == graceId);
+                Grace? grace = context.Graces.Find(graceId);
                 if (grace != null)
                 {
                     graceRow.Sku = grace.Sku;
@@ -654,14 +608,25 @@ namespace grace
                     graceRow.Brand = grace.Brand;
                     graceRow.Description = grace.Description;
                     graceRow.Availability = grace.Availability;
+                    graceRow.Note = grace.Note;
                 }
                 else
                 {
-                    return 0;
+                    logger.Error($"UpdateGraceRow couldn't find {graceId}");
+                    return;
                 }
-                Total t = GetTotal(graceId);
-                graceRow.Total = t.CurrentTotal;
-                graceRow.LastUpdated = t.LastUpdated;
+
+                IQueryable<Total> currentTotal = context.Totals
+                    .Where(t => t.GraceId == graceId)
+                    .OrderByDescending(t => t.ID)
+                    .Take(2);
+
+                Total total1 = currentTotal.FirstOrDefault(); // Get the first result or null if none.
+                Total total2 = currentTotal.Skip(1).FirstOrDefault(); // Get the second result or null if none.
+
+                graceRow.LastUpdated = total1.LastUpdated;
+                graceRow.Total = total1.CurrentTotal;
+                graceRow.PrevTotal = (total2 == null) ? 0 : total2.CurrentTotal;
 
                 // Set columns
                 graceRow.Col1 = null;
@@ -706,12 +671,108 @@ namespace grace
                             break;
                     }
                 }
-                graceRow.GraceId = graceId;
-                context.GraceRows.Add(graceRow);
                 context.SaveChanges();
-                newGraceId = graceRow.ID;
-                return newGraceId;
+                transaction.Commit();
             }
+            catch (Exception ex)
+            {
+                transaction.Rollback();
+                logger.Error(ex);
+            }
+
+        }
+
+        public static int GetGraceIdFromSku(string sku)
+        {
+            using GraceDbContext context = new();
+            int graceId = 0;
+            Grace? grace = context.Graces.FirstOrDefault(item => item.Sku == sku);
+            if (grace != null)
+            {
+                graceId = grace.ID;
+            }
+            return graceId;
+        }
+
+        public static int CreateGraceRow(int graceId)
+        {
+            using GraceDbContext context = new();
+            int newGraceId = 0;
+            GraceRow graceRow = new GraceRow();
+            var grace = context.Graces.Find(graceId);
+            if (grace != null)
+            {
+                graceRow.Sku = grace.Sku;
+                graceRow.BarCode = grace.BarCode;
+                graceRow.Brand = grace.Brand;
+                graceRow.Description = grace.Description;
+                graceRow.Availability = grace.Availability;
+            }
+            else
+            {
+                return 0;
+            }
+
+            IQueryable<Total> currentTotal = context.Totals
+                .Where(t => t.GraceId == graceId)
+                .OrderByDescending(t => t.ID)
+                .Take(2);
+
+            Total total1 = currentTotal.FirstOrDefault(); // Get the first result or null if none.
+            Total total2 = currentTotal.Skip(1).FirstOrDefault(); // Get the second result or null if none.
+
+            graceRow.LastUpdated = total1.LastUpdated;
+            graceRow.Total = total1.CurrentTotal;
+            graceRow.PrevTotal = (total2 == null) ? 0 : total2.CurrentTotal;
+
+            // Set columns
+            graceRow.Col1 = null;
+            graceRow.Col2 = null;
+            graceRow.Col3 = null;
+            graceRow.Col4 = null;
+            graceRow.Col5 = null;
+            graceRow.Col6 = null;
+
+            var collectionRows = context.Collections.
+                Where(row => row.GraceId == graceId && row.Name != "Other")
+                .ToList();
+            for (int i = 0; i < collectionRows.Count; i++)
+            {
+                var collectionRow = collectionRows[i];
+                if (collectionRow.Name == "Other")
+                {
+                    continue;
+                }
+                switch (i)
+                {
+                    case 0:
+                        graceRow.Col1 = collectionRow.Name;
+                        break;
+                    case 1:
+                        graceRow.Col2 = collectionRow.Name;
+                        break;
+                    case 2:
+                        graceRow.Col3 = collectionRow.Name;
+                        break;
+                    case 3:
+                        graceRow.Col4 = collectionRow.Name;
+                        break;
+                    case 4:
+                        graceRow.Col5 = collectionRow.Name;
+                        break;
+                    case 5:
+                        graceRow.Col6 = collectionRow.Name;
+                        break;
+                    default:
+                        logger.Error($"Too many collections for graceId {graceId}");
+                        break;
+                }
+            }
+            graceRow.GraceId = graceId;
+            context.GraceRows.Add(graceRow);
+            context.SaveChanges();
+            newGraceId = graceRow.ID;
+            return newGraceId;
         }
 #pragma warning disable CS8600
 #pragma warning disable CA1305

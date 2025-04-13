@@ -13,7 +13,8 @@
 using grace.data;
 using grace.data.models;
 using NLog;
-using static grace.DataBase;
+using System.Data;
+using grace.utils;
 
 namespace grace.tabs
 {
@@ -21,30 +22,37 @@ namespace grace.tabs
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         private readonly Vivian vivian;
-        private readonly DataGridView checkInDataGrid;
+        private DataGridView checkInDataGrid;
         private int user_id;
         private BindingSource checkInBindingSource;
         private TabPage checkInTabPage;
         private CheckBox allUsersCheckBox;
-        private List<CheckInData> checkInDataList = [];
+        private TextBox skuFilterTextBox;
         private Button applyChangesButton;
+        private DataTable dataTable;
 
         internal CheckInTab(Vivian v)
         {
-            vivian = v;
-            checkInDataGrid = vivian.checkInDataGrid;
-            checkInDataGrid.AutoGenerateColumns = true;
-            checkInBindingSource = vivian.checkInBindingSource;
-            checkInTabPage = vivian.tabControl.TabPages[3];
-            allUsersCheckBox = vivian.allUsersCheckBox;
-            applyChangesButton = vivian.applyChangesButton;
+            this.vivian = v;
+            setup();
+        }
+
+        private void setup()
+        {
+    
+            this.skuFilterTextBox = vivian.skuFilterTextBox;
+            this.checkInDataGrid = vivian.checkInDataGrid;
+            this.checkInTabPage = vivian.tabControl.TabPages[3];
+            this.allUsersCheckBox = vivian.allUsersCheckBox;
+            this.applyChangesButton = vivian.applyChangesButton;
         }
 
         public void Load()
         {
+            checkInBindingSource = vivian.checkInBindingSource;
             checkInDataGrid.AutoGenerateColumns = true;
             // Callbacks 
-            checkInDataGrid.CellMouseDoubleClick += checkInDataGrid_CellMouseDoubleClick;
+            checkInDataGrid.CellMouseDoubleClick += CheckInDataGrid_CellMouseDoubleClick;
             checkInDataGrid.KeyPress += checkInDataGrid_KeyPress;
             checkInDataGrid.CellBeginEdit += CheckInDataGrid_CellBeginEdit;
             checkInDataGrid.CellFormatting += CheckInDataGrid_CellFormatting;
@@ -52,10 +60,12 @@ namespace grace.tabs
             checkInTabPage.Enter += CheckInTabPage_Enter;
             allUsersCheckBox.CheckedChanged += AllUsersCheckBox_CheckedChanged;
             applyChangesButton.Click += ApplyChangesButton_Click;
+            skuFilterTextBox.TextChanged += SkuFilterTextBox_TextChanged;
         }
 
         public void InitializeDataGridView()
         {
+            checkInDataGrid.DataSource = checkInBindingSource;
             var username = Globals.GetInstance().CurrentUser;
             user_id = DataBase.GetUserIdFromName(username);
 
@@ -68,17 +78,15 @@ namespace grace.tabs
 
             if (allUsersCheckBox.Checked)
             {
-                List<CheckInData> graceRowsData = DataBase.GetCheckedOutGridAll();
                 // Bind data to the DataGridView
-                checkInBindingSource.DataSource = graceRowsData;
-                checkInDataList = graceRowsData;
+                dataTable = DataBase.GetCheckedOutGridAll();
+                checkInBindingSource.DataSource = dataTable;
             }
             else
             {
-                List<CheckInData> graceRowsData = DataBase.GetCheckedOutGrid(user_id);
-                // Bind data to the DataGridView
-                checkInBindingSource.DataSource = graceRowsData;
-                checkInDataList = graceRowsData;
+                dataTable = DataBase.GetCheckedOutGrid(user_id);
+                checkInBindingSource.DataSource = dataTable;
+
             }
 
             // Make all but UserTotal column have a gray background. 
@@ -92,10 +100,26 @@ namespace grace.tabs
             checkInDataGrid.Columns["LastUpdated"].DefaultCellStyle.BackColor = Color.LightGray;
             checkInDataGrid.Columns["GraceId"].DefaultCellStyle.BackColor = Color.LightGray;
             ChangeColumnNames();
-            //Utils.RemoveColumnByName(checkInDataGrid, "GraceId");
+            Utils.RemoveColumnByName(checkInDataGrid, "GraceId");
 
         }
-        private void checkInDataGrid_CellMouseDoubleClick(object? sender,
+
+
+        internal void SkuFilterTextBox_TextChanged(object? sender, EventArgs e)
+        {
+            string searchTerm = skuFilterTextBox.Text;
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                DataView data = DataBase.FilterTableBySku(dataTable, searchTerm);
+                checkInBindingSource.DataSource = data;
+            }
+            else
+            {
+                LoadDataGrid();
+            }
+
+        }
+        private void CheckInDataGrid_CellMouseDoubleClick(object? sender,
             DataGridViewCellMouseEventArgs e)
         {
             int rowIndex = e.RowIndex;
@@ -193,8 +217,6 @@ namespace grace.tabs
 
                 if (sender is DataGridView gridView)
                 {
-                    object newValue = gridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value;
-                    string columnHeader = gridView.Columns[e.ColumnIndex].HeaderText;
 
                     // Get the row that was edited
                     DataGridViewRow editedRow = gridView.Rows[e.RowIndex];
@@ -221,32 +243,37 @@ namespace grace.tabs
         private void ApplyChangesButton_Click(object? sender, EventArgs e)
         {
             // Check if the edit is in the "Total" column
-            var numrows = checkInDataGrid.Rows.Count;
+            int numrows = checkInDataGrid.Rows.Count;
             bool changed = false;
             for (int i = 0; i < numrows; i++)
             {
-                var row = checkInDataGrid.Rows[i];
-                var value = row.Cells["CheckIn"].Value as string;
-                if (value != null && value != string.Empty)
+                DataGridViewRow row = checkInDataGrid.Rows[i];
+                if (row.Cells["CheckIn"].Value is string value && value != string.Empty)
                 {
                     changed = true;
                     // Get the updated value
                     int updatedValue = Convert.ToInt32(value);
                     // TODO: need to test if sorting or filtering breaks this.
                     // for now don't allow sorting or filtering
-                    CheckInData checkInData = checkInDataList[i];
-                    int graceId = checkInData.GraceId;
-                    string collectionName = checkInData.Collection;
-                    string username = checkInData.UserName;
-                    DateTime dateTime = checkInData.LastUpdated;
-                    var user_id = DataBase.GetUserIdFromName(username);
+                    string sku = row.Cells["Sku"].Value.ToString();
+                    int graceId = DataBase.GetGraceIdFromSku(sku);
+                    if (graceId == 0)
+                    {
+                        MessageBox.Show("Processing error for SKU " + sku, "Error",
+                             MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        logger.Error("GraceId not found for SKU: " + sku);
+                        continue;
+                    }
+                    string collectionName = row.Cells["Collection"].Value.ToString();
+                    string username = row.Cells["Username"].Value.ToString();
+                    DateTime dateTime = (DateTime)row.Cells["LastUpdated"].Value;
+                    int user_id = DataBase.GetUserIdFromName(username);
                     int col_id = DataBase.GetCollectionId(graceId, collectionName);
                     int currentTotal = DataBase.GetTotal(graceId).CurrentTotal;
                     int newTotal = currentTotal + updatedValue;
 
-                    using (var context = new GraceDbContext())
+                    using (GraceDbContext context = new())
                     {
-
                         // Add Totals in CurrentTotal db
                         Total total = new()
                         {
