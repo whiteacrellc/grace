@@ -33,9 +33,9 @@ namespace grace
         {
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Vivian));
-            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle5 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle6 = new DataGridViewCellStyle();
             openFileDialog = new OpenFileDialog();
             menuStrip1 = new MenuStrip();
             editToolStripMenuItem = new ToolStripMenuItem();
@@ -43,6 +43,7 @@ namespace grace
             importInventoryToolStripMenuItem = new ToolStripMenuItem();
             saveInventoryReportToolStripMenuItem = new ToolStripMenuItem();
             saveReportToolStripMenuItem = new ToolStripMenuItem();
+            aboutToolStripMenuItem = new ToolStripMenuItem();
             exitToolStripMenuItem = new ToolStripMenuItem();
             viewToolStripMenuItem = new ToolStripMenuItem();
             setInventoryFontSizeToolStripMenuItem = new ToolStripMenuItem();
@@ -74,6 +75,8 @@ namespace grace
             coResetButton = new Button();
             checkOutDataGrid = new DataGridView();
             checkinPage = new TabPage();
+            filterSkuLabel = new Label();
+            skuFilterTextBox = new TextBox();
             allUsersCheckBox = new CheckBox();
             applyChangesButton = new Button();
             label3 = new Label();
@@ -105,7 +108,6 @@ namespace grace
             checkoutBindingSource = new BindingSource(components);
             checkInBindingSource = new BindingSource(components);
             reportToolTip = new ToolTip(components);
-            aboutToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             tabControl.SuspendLayout();
@@ -176,6 +178,13 @@ namespace grace
             saveReportToolStripMenuItem.Size = new Size(235, 24);
             saveReportToolStripMenuItem.Text = "Save Collection Report";
             saveReportToolStripMenuItem.Click += SaveReportToolStripMenuItem_Click;
+            // 
+            // aboutToolStripMenuItem
+            // 
+            aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
+            aboutToolStripMenuItem.Size = new Size(235, 24);
+            aboutToolStripMenuItem.Text = "About";
+            aboutToolStripMenuItem.Click += aboutToolStripMenuItem_Click;
             // 
             // exitToolStripMenuItem
             // 
@@ -366,14 +375,14 @@ namespace grace
             dataGridView.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
             dataGridView.ClipboardCopyMode = DataGridViewClipboardCopyMode.Disable;
             dataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = SystemColors.Window;
-            dataGridViewCellStyle1.Font = new Font("Verdana", 9F);
-            dataGridViewCellStyle1.ForeColor = SystemColors.ControlText;
-            dataGridViewCellStyle1.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.False;
-            dataGridView.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle4.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = SystemColors.Window;
+            dataGridViewCellStyle4.Font = new Font("Verdana", 9F);
+            dataGridViewCellStyle4.ForeColor = SystemColors.ControlText;
+            dataGridViewCellStyle4.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle4.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle4.WrapMode = DataGridViewTriState.False;
+            dataGridView.DefaultCellStyle = dataGridViewCellStyle4;
             dataGridView.EditMode = DataGridViewEditMode.EditProgrammatically;
             dataGridView.Location = new Point(4, 61);
             dataGridView.MultiSelect = false;
@@ -525,23 +534,23 @@ namespace grace
             checkOutDataGrid.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
             checkOutDataGrid.BorderStyle = BorderStyle.Fixed3D;
             checkOutDataGrid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = Color.FromArgb(224, 224, 224);
-            dataGridViewCellStyle2.Font = new Font("Verdana", 11.25F, FontStyle.Bold);
-            dataGridViewCellStyle2.ForeColor = SystemColors.ControlText;
-            dataGridViewCellStyle2.Padding = new Padding(0, 2, 10, 0);
-            dataGridViewCellStyle2.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.False;
-            checkOutDataGrid.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle5.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle5.BackColor = Color.FromArgb(224, 224, 224);
+            dataGridViewCellStyle5.Font = new Font("Verdana", 11.25F, FontStyle.Bold);
+            dataGridViewCellStyle5.ForeColor = SystemColors.ControlText;
+            dataGridViewCellStyle5.Padding = new Padding(0, 2, 10, 0);
+            dataGridViewCellStyle5.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle5.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle5.WrapMode = DataGridViewTriState.False;
+            checkOutDataGrid.DefaultCellStyle = dataGridViewCellStyle5;
             checkOutDataGrid.Location = new Point(5, 3);
             checkOutDataGrid.MultiSelect = false;
             checkOutDataGrid.Name = "checkOutDataGrid";
             checkOutDataGrid.ReadOnly = true;
             checkOutDataGrid.RowHeadersWidth = 82;
-            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.Padding = new Padding(0, 0, 10, 0);
-            checkOutDataGrid.RowsDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle6.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle6.Padding = new Padding(0, 0, 10, 0);
+            checkOutDataGrid.RowsDefaultCellStyle = dataGridViewCellStyle6;
             checkOutDataGrid.RowTemplate.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
             checkOutDataGrid.RowTemplate.DefaultCellStyle.Padding = new Padding(0, 0, 10, 0);
             checkOutDataGrid.RowTemplate.Resizable = DataGridViewTriState.True;
@@ -553,6 +562,8 @@ namespace grace
             // 
             checkinPage.AutoScroll = true;
             checkinPage.BackColor = Color.Lavender;
+            checkinPage.Controls.Add(filterSkuLabel);
+            checkinPage.Controls.Add(skuFilterTextBox);
             checkinPage.Controls.Add(allUsersCheckBox);
             checkinPage.Controls.Add(applyChangesButton);
             checkinPage.Controls.Add(label3);
@@ -563,6 +574,25 @@ namespace grace
             checkinPage.TabIndex = 4;
             checkinPage.Text = "Check In";
             checkinPage.ToolTipText = "Check In Items";
+            // 
+            // filterSkuLabel
+            // 
+            filterSkuLabel.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            filterSkuLabel.AutoSize = true;
+            filterSkuLabel.Location = new Point(1306, 48);
+            filterSkuLabel.Name = "filterSkuLabel";
+            filterSkuLabel.Size = new Size(112, 18);
+            filterSkuLabel.TabIndex = 5;
+            filterSkuLabel.Text = "Filter By Sku";
+            filterSkuLabel.Click += label1_Click;
+            // 
+            // skuFilterTextBox
+            // 
+            skuFilterTextBox.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            skuFilterTextBox.Location = new Point(1306, 80);
+            skuFilterTextBox.Name = "skuFilterTextBox";
+            skuFilterTextBox.Size = new Size(194, 26);
+            skuFilterTextBox.TabIndex = 4;
             // 
             // allUsersCheckBox
             // 
@@ -882,13 +912,6 @@ namespace grace
             reportToolTip.ToolTipIcon = ToolTipIcon.Info;
             reportToolTip.ToolTipTitle = "Report Info";
             // 
-            // aboutToolStripMenuItem
-            // 
-            aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            aboutToolStripMenuItem.Size = new Size(235, 24);
-            aboutToolStripMenuItem.Text = "About";
-            aboutToolStripMenuItem.Click += aboutToolStripMenuItem_Click;
-            // 
             // Vivian
             // 
             AutoScaleDimensions = new SizeF(7F, 17F);
@@ -1010,5 +1033,7 @@ namespace grace
         public CheckBox adminCheckBox;
         private Label reportInfoLabel;
         private ToolStripMenuItem aboutToolStripMenuItem;
+        private Label filterSkuLabel;
+        public TextBox skuFilterTextBox;
     }
 }

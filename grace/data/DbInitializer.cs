@@ -18,6 +18,7 @@ namespace grace.data
             EnsureGraceDbNoteColumn(context);
             EnsureIsDeletedColumn(context);
             EnsureTotalsUsereColumn(context);
+            EnsurePrevTotalColumn(context);
         }
 
         private static void EnsureIsDeletedColumn(GraceDbContext context)
@@ -61,6 +62,13 @@ namespace grace.data
             const string tableName = "GraceRows";
 
             CreateColumnString(columnName, tableName);
+        }
+
+        private static void EnsurePrevTotalColumn(GraceDbContext context)
+        {
+            const string columnName = "PrevTotal";
+            const string tableName = "GraceRows";
+            CreateColumn(columnName, tableName);
         }
 
         private static void CreateColumn(string columnName, string tableName)

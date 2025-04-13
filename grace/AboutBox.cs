@@ -1,16 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using System.Reflection;
-
-namespace grace
+﻿/*
+ * Copyright (c) 2024 White Acre Software LLC
+ * All rights reserved.
+ *
+ * This software is the confidential and proprietary information
+ * of White Acre Software LLC. You shall not disclose such
+ * Confidential Information and shall use it only in accordance
+ * with the terms of the license agreement you entered into with
+ * White Acre Software LLC.
+ *
+ */
+ namespace grace
 {
     public partial class AboutBox : Form
     {
@@ -23,11 +22,11 @@ namespace grace
         {
 
             // Format the build date and time as "yyyyMMddHHmm"
-            string versionString = "2.0.6";
+            string versionString = "2.0.8";
             buildLabel.Text = "Version: " + versionString;
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void Button1_Click(object sender, EventArgs e)
         {
             this.Close();
         }

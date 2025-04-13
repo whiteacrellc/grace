@@ -12,7 +12,7 @@ namespace grace
     {
         private readonly string connectionString;
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
-        private readonly Mutex _mutex = new Mutex(false, "Backup_Mutex");
+        private readonly Mutex _mutex = new(false, "Backup_Mutex");
 
 
         public BackupAndRestore() {
