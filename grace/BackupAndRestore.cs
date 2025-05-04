@@ -1,4 +1,14 @@
-﻿using System;
+﻿/*
+ * Copyright (c) 2025 White Acre Software LLC
+ * All rights reserved.
+ *
+ * This software is the confidential and proprietary information
+ * of White Acre Software LLC. You shall not disclose such
+ * Confidential Information and shall use it only in accordance
+ * with the terms of the license agreement you entered into with
+ * White Acre Software LLC.
+ *
+ */
 
 using System.IO;
 using NLog;
@@ -15,13 +25,14 @@ namespace grace
         private readonly Mutex _mutex = new(false, "Backup_Mutex");
 
 
-        public BackupAndRestore() {
+        public BackupAndRestore()
+        {
             connectionString = DataBase.ConnectionString;
         }
 
-        static string ChooseBackupPath()
+        private static string ChooseBackupPath()
         {
-            SaveFileDialog saveFileDialog = new SaveFileDialog
+            SaveFileDialog saveFileDialog = new()
             {
                 Filter = "SQLite Database (*.db)|*.db",
                 Title = "Choose Backup Destination"
@@ -98,12 +109,11 @@ namespace grace
             {
                 logger.Info($"backing up database to {backupPath}");
 
-                using (var sourceConn = new SqliteConnection(connectionString))
+                using (SqliteConnection sourceConn = new(connectionString))
                 {
                     sourceConn.Open();
-                    using (var backupConn = new SqliteConnection($"Data Source={backupPath};Mode=ReadWriteCreate"))
+                    using (SqliteConnection backupConn = new($"Data Source={backupPath};Mode=ReadWriteCreate"))
                     {
-      
                         backupConn.Open();
 
                         sourceConn.BackupDatabase(backupConn);
@@ -133,7 +143,7 @@ namespace grace
 
         public void DeleteCurrentDb()
         {
-            using (var context = new GraceDbContext())
+            using (GraceDbContext context = new())
             {
                 context.Database.EnsureDeleted();
                 context.Database.CloseConnection();
@@ -147,7 +157,7 @@ namespace grace
         public void RestoreDatabase()
         {
 
-            OpenFileDialog openFileDialog = new OpenFileDialog();
+            OpenFileDialog openFileDialog = new();
 
             if (openFileDialog == null)
             {
@@ -172,14 +182,12 @@ namespace grace
                     {
                         logger.Info($"restoring database from {selectedFilePath}");
                         //DeleteCurrentDb();
-                        using (var sourceConn = new SqliteConnection($"Data Source={selectedFilePath};Mode=ReadWriteCreate"))
+                        using (SqliteConnection sourceConn = new($"Data Source={selectedFilePath};Mode=ReadWriteCreate"))
                         {
                             sourceConn.Open();
-                            using (var destinationConn = new SqliteConnection(connectionString))
-                            {
-                                destinationConn.Open();
-                                sourceConn.BackupDatabase(destinationConn);
-                            }
+                            using SqliteConnection destinationConn = new(connectionString);
+                            destinationConn.Open();
+                            sourceConn.BackupDatabase(destinationConn);
                         }
                         logger.Info("done restoring database");
                         DataGridLoader.LoadBindingTable(true);

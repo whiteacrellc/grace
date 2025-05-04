@@ -130,8 +130,8 @@ namespace grace
                 var user_id = DataBase.GetUserIdFromName(username);
                 var collectionName = collectionComboBox.SelectedItem as string;
                 var col_id = DataBase.GetCollectionId(graceId, collectionName);
-
-                using (var context = new GraceDbContext())
+                String currentUser = Globals.GetInstance().CurrentUser;
+                using (GraceDbContext context = new())
                 {
                     // Add to pulled table
                     Pulled pulled = new()
@@ -154,7 +154,8 @@ namespace grace
                     {
                         LastUpdated = DateTime.Now,
                         GraceId = graceId,
-                        CurrentTotal = newTotal
+                        CurrentTotal = newTotal,
+                        User = currentUser
                     };
                     context.Totals.Add(total);
                     context.SaveChanges();

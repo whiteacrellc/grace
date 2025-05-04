@@ -52,7 +52,7 @@
             updateButton.TabIndex = 3;
             updateButton.Text = "Update";
             updateButton.UseVisualStyleBackColor = true;
-            updateButton.Click += updateButton_Click;
+            updateButton.Click += UpdateButton_Click;
             // 
             // deleteButton
             // 
@@ -80,7 +80,6 @@
             label1.Size = new Size(86, 17);
             label1.TabIndex = 14;
             label1.Text = "Checked Out";
-            label1.Click += label1_Click;
             // 
             // label2
             // 
