@@ -133,9 +133,10 @@ namespace grace.tabs
 
         internal void RefreshData(bool refresh = false)
         {
-            DataGridLoader.LoadBindingTable(refresh);
-            dataTable = DataGridLoader.GetData();
-            dataGridView.DataSource = dataTable;
+            // DataGridLoader.LoadBindingTable(refresh);
+            dataTable = DataGridLoader.LoadGraceDataTable();
+            dataGridView.DataSource = bindingSource;
+            bindingSource.DataSource = dataTable;
         }
         internal void UpdateDataGridView()
         {
@@ -151,8 +152,8 @@ namespace grace.tabs
             {
                 return;
             }
-            Utils.RemoveColumnByName(dataGridView, "ID");
-            Utils.RemoveColumnByName(dataGridView, "GraceId");
+            // Utils.RemoveColumnByName(dataGridView, "ID");
+            // Utils.RemoveColumnByName(dataGridView, "GraceId");
             dataGridView.Sort(dataGridView.Columns["Sku"], System.ComponentModel.ListSortDirection.Ascending);
         }
 

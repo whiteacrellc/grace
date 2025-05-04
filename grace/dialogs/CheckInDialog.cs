@@ -28,11 +28,6 @@ namespace grace
             InitializeComponent();
         }
 
-        private void label1_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void CheckInDialog_Load(object sender, EventArgs e)
         {
 
@@ -75,7 +70,7 @@ namespace grace
             return ftDateTime;
         }
 
-        private void updateButton_Click(object sender, EventArgs e)
+        private void UpdateButton_Click(object sender, EventArgs e)
         {
             try
             {
@@ -135,13 +130,14 @@ namespace grace
 
                             pulled.Amount = newTotal;
                             pulled.CurrentTotal += updateDelta;
-
+                            String currentUser = Globals.GetInstance().CurrentUser;
 
                             Total total = new()
                             {
                                 LastUpdated = DateTime.Now,
                                 GraceId = graceId,
-                                CurrentTotal = newCurrentTotal
+                                CurrentTotal = newCurrentTotal,
+                                User = currentUser
                             };
                             context.Totals.Add(total);
 
@@ -160,7 +156,7 @@ namespace grace
                     }
 
                     // newRow the GraceRow
-                    DataBase.UpdateGraceRow(graceId);
+                    // DataBase.UpdateGraceRow(graceId);
 
                 }
             }

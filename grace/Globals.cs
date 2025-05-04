@@ -62,26 +62,12 @@ namespace grace
 
         public int HeaderHeight
         {
-            get
-            {
-                return Preferences.GetIntValue(Preferences.Preference.HeaderHeight);
-            }
-            set
-            {
-                Preferences.AddOrUpdateIntPreference(Preferences.Preference.HeaderHeight, value);
-            }
+            get => Preferences.GetIntValue(Preferences.Preference.HeaderHeight); set => Preferences.AddOrUpdateIntPreference(Preferences.Preference.HeaderHeight, value);
         }
 
         public bool BarCodeAutoOpen
         {
-            get
-            {
-                return Preferences.GetBooleanValue(Preferences.Preference.BarCodeAutoOpen);
-            }
-            set
-            {
-                Preferences.AddOrUpdateBooleanPreference(Preferences.Preference.BarCodeAutoOpen, value);
-            }
+            get => Preferences.GetBooleanValue(Preferences.Preference.BarCodeAutoOpen); set => Preferences.AddOrUpdateBooleanPreference(Preferences.Preference.BarCodeAutoOpen, value);
         }
 
         public DateTime CurrentHeaderDate { get; set; } = DateTime.Now;

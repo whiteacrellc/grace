@@ -29,50 +29,62 @@ namespace grace
         private void CheckoutForm_Load(object sender, EventArgs e)
         {
             numCheckOutTextBox.Text = "0";
-            using (var context = new GraceDbContext())
+            using GraceDbContext context = new();
+            // Fetch data from the DbContext
+            Grace? graceData =
+                context.Graces.FirstOrDefault(item => item.Sku == sku);
+            if (graceData != null)
             {
-                // Fetch data from the DbContext
-                var graceRowsData =
-                    context.GraceRows.FirstOrDefault(item => item.Sku == sku);
-                if (graceRowsData != null)
+                skuLabel.Text = graceData.Sku;
+                brandLabel.Text = graceData.Brand;
+                descriptionLabel.Text = graceData.Description;
+                graceId = graceData.ID;
+
+                Total? total = context.Totals
+                    .Where(t => t.GraceId == graceData.ID)
+                    .OrderByDescending(t => t.ID)
+                    .FirstOrDefault();
+                if (total != null)
                 {
-                    skuLabel.Text = graceRowsData.Sku;
-                    brandLabel.Text = graceRowsData.Brand;
-                    descriptionLabel.Text = graceRowsData.Description;
-                    totalLabel.Text = graceRowsData.Total.ToString();
-                    currentTotal = graceRowsData.Total;
-                    graceId = graceRowsData.GraceId;
+                    currentTotal = total.CurrentTotal;
+                    totalLabel.Text = total.CurrentTotal.ToString();
                 }
                 else
                 {
-                    MessageBox.Show("There was a problem",
+                    MessageBox.Show("There was a problem getting the current total",
                         "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     DialogResult = DialogResult.Abort;
                     this.Close();
                 }
-                var collections =
-                    context.Collections.Where(item => item.GraceId == graceId
-                    && item.Name != "Other").OrderBy(item => item.Name).ToList();
-                if (collections.Any())
+            }
+            else
+            {
+                MessageBox.Show("There was a problem",
+                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                DialogResult = DialogResult.Abort;
+                this.Close();
+            }
+            List<CollectionName> collections =
+                context.Collections.Where(item => item.GraceId == graceId
+                && item.Name != "Other").OrderBy(item => item.Name).ToList();
+            if (collections.Any())
+            {
+                collectionComboBox.Items.Clear();
+                // Use the retrieved rows (collections) as needed
+                foreach (CollectionName? collection in collections)
                 {
-                    collectionComboBox.Items.Clear();
-                    // Use the retrieved rows (collections) as needed
-                    foreach (var collection in collections)
-                    {
-                        collectionComboBox.Items.Add(collection.Name);
-                    }
-                    collectionComboBox.Items.Add("Other");
-                    if (collectionComboBox.Items.Count > 0)
-                    {
-                        collectionComboBox.SelectedIndex = 0;
-                    }
+                    collectionComboBox.Items.Add(collection.Name);
                 }
-
+                collectionComboBox.Items.Add("Other");
+                if (collectionComboBox.Items.Count > 0)
+                {
+                    collectionComboBox.SelectedIndex = 0;
+                }
             }
         }
 
         // Only allow positive integers in the text box
-        private void numCheckOutTextBox_KeyPress(object sender, KeyPressEventArgs e)
+        private void NumCheckOutTextBox_KeyPress(object sender, KeyPressEventArgs e)
         {
             // Allow digits (0-9) and control keys
             if (!char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar))
@@ -82,7 +94,7 @@ namespace grace
             }
         }
 
-        private void cancelButton_Click(object sender, EventArgs e)
+        private void CancelButton_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.Cancel;
             Close();
@@ -99,7 +111,7 @@ namespace grace
                     Close();
                 }
 
-                var commentText = commentBox.Text;
+                string commentText = commentBox.Text;
 
                 if (numCheckOutTextBox.Text is null)
                 {
@@ -127,40 +139,31 @@ namespace grace
                 }
 
                 // Get fkeys for PulledDB 
-                var user_id = DataBase.GetUserIdFromName(username);
-                var collectionName = collectionComboBox.SelectedItem as string;
-                var col_id = DataBase.GetCollectionId(graceId, collectionName);
+                int user_id = DataBase.GetUserIdFromName(username);
+                string? collectionName = collectionComboBox.SelectedItem as string;
+                int col_id = DataBase.GetCollectionId(graceId, collectionName);
 
-                using (var context = new GraceDbContext())
+                using GraceDbContext context = new();
+                // Add to pulled table
+                Pulled pulled = new()
                 {
-                    // Add to pulled table
-                    Pulled pulled = new()
-                    {
 
-                        UserId = user_id,
-                        GraceId = graceId,
-                        CollectionId = col_id,
-                        Amount = checkoutTotal,
-                        CurrentTotal = newTotal,
-                    };
-                    if (commentBox.Text is not null)
-                    {
-                        pulled.Comment = commentBox.Text;
-                    }
-                    context.PulledDb.Add(pulled);
-
-                    // Add Totals in CurrentTotal db
-                    Total total = new()
-                    {
-                        LastUpdated = DateTime.Now,
-                        GraceId = graceId,
-                        CurrentTotal = newTotal
-                    };
-                    context.Totals.Add(total);
-                    context.SaveChanges();
+                    UserId = user_id,
+                    GraceId = graceId,
+                    CollectionId = col_id,
+                    Amount = checkoutTotal,
+                    CurrentTotal = newTotal,
+                };
+                if (commentBox.Text is not null)
+                {
+                    pulled.Comment = commentBox.Text;
                 }
+                context.PulledDb.Add(pulled);
+                context.SaveChanges();
+
+                DataBase.AddTotal(newTotal, graceId);
                 // newRow the GraceRow
-                DataBase.UpdateGraceRow(graceId);
+                // DataBase.UpdateGraceRow(graceId);
             }
             catch (Exception ex)
             {
@@ -189,11 +192,5 @@ namespace grace
 
         }
 
-        private void CollectionComboBox_ValueMemberChanged(object sender, EventArgs e)
-        {
-            var comboBox = sender as ComboBox;
-            var selectedValue = comboBox.SelectedItem as string;
-            logger.Debug($"value is {selectedValue}");
-        }
     }
 }

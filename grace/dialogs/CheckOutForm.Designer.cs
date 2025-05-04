@@ -157,7 +157,7 @@
             numCheckOutTextBox.Name = "numCheckOutTextBox";
             numCheckOutTextBox.Size = new Size(121, 25);
             numCheckOutTextBox.TabIndex = 10;
-            numCheckOutTextBox.KeyPress += numCheckOutTextBox_KeyPress;
+            numCheckOutTextBox.KeyPress += NumCheckOutTextBox_KeyPress;
             // 
             // collectionComboBox
             // 
@@ -167,7 +167,6 @@
             collectionComboBox.Name = "collectionComboBox";
             collectionComboBox.Size = new Size(121, 25);
             collectionComboBox.TabIndex = 11;
-            collectionComboBox.ValueMemberChanged += CollectionComboBox_ValueMemberChanged;
             // 
             // saveButton
             // 
@@ -189,7 +188,7 @@
             cancelButton.TabIndex = 13;
             cancelButton.Text = "Cancel";
             cancelButton.UseVisualStyleBackColor = true;
-            cancelButton.Click += cancelButton_Click;
+            cancelButton.Click += CancelButton_Click;
             // 
             // commentBox
             // 

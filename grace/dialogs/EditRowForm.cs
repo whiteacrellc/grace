@@ -23,7 +23,7 @@ namespace grace
         private readonly DataGridViewRow? row;
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         private readonly bool newRow = false;
-        private GraceRow? graceRow;
+        private Grace? graceRow;
         private bool updateGraceRow = false;
         private List<string> newColList = [];
         private bool isReport = false;
@@ -40,12 +40,12 @@ namespace grace
 
         private void EditRowForm_Load(object sender, EventArgs e)
         {
-            List<string> colList = new();
+            List<string> colList = [];
             // We will need this to newCol the database
             if (row != null)
             {
                 string? sku = row.Cells["Sku"].Value as string;
-                graceRow = DataBase.GetGraceRowFromSku(sku);
+                graceRow = DataBase.GetGraceFromSku(sku);
                 if (graceRow == null)
                 {
                     MessageBox.Show("There was a problem loading the row.", "Error",
@@ -56,8 +56,8 @@ namespace grace
             }
 
             List<string> distinctBrandNames = [];
-            List<string> distinctCollectionNames = new();
-            using (GraceDbContext context = new GraceDbContext())
+            List<string> distinctCollectionNames = [];
+            using (GraceDbContext context = new())
             {
                 // Fill checkbox list with collection names
                 distinctCollectionNames = [.. context.Collections
@@ -406,9 +406,10 @@ namespace grace
                         }
 
                     }
-                    DataBase.AddTotal(newTotal, graceRow.GraceId);
+                    DataBase.AddTotal(newTotal, graceRow.ID);
 
                     string sku = skuTextBox.Text.Trim();
+                    /*
                     using (GraceDbContext context = new())
                     {
                         graceRow = context.GraceRows.FirstOrDefault(item => item.Sku == sku);
@@ -416,6 +417,7 @@ namespace grace
                         graceRow.PrevTotal = Convert.ToInt32(currentTextBox.Text);
                         context.SaveChanges();
                     }
+                    */
                     updateGraceRow = true;
                 }
             }
@@ -425,10 +427,12 @@ namespace grace
                 ret = true;
             }
 
+            /*
             if (!ret && updateGraceRow)
             {
                 DataBase.UpdateGraceRow(graceId);
             }
+            */
 
             return ret;
         }
@@ -600,7 +604,7 @@ namespace grace
             }
 
             // Now add the grace row. 
-            DataBase.CreateGraceRow(graceId);
+            // DataBase.CreateGraceRow(graceId);
 
             return ret;
         }
@@ -657,7 +661,7 @@ namespace grace
                     }
                     else
                     {
-                        updateGraceRow = DataBase.AddCollectionRow(graceRow.GraceId, itemName);
+                        updateGraceRow = DataBase.AddCollectionRow(graceRow.ID, itemName);
 
                     }
                 }
@@ -669,7 +673,7 @@ namespace grace
                     }
                     else
                     {
-                        updateGraceRow = DataBase.DeleteCollectionRow(graceRow.GraceId, itemName);
+                        updateGraceRow = DataBase.DeleteCollectionRow(graceRow.ID, itemName);
                     }
                 }
                 // Make sure the grace row is updated when the save button is

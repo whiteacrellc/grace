@@ -30,17 +30,15 @@ namespace grace
     public class DataBase
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
-        public static string ConnectionString { get => connectionString; set => connectionString = value; }
-        public string DbName { get => dbName; set => dbName = value; }
+        public static string ConnectionString { get; set; }
+        public string DbName { get; set; } = "grace.db";
         public static string DbFileName { get; set; }
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 #pragma warning disable CA2211 // Non-constant fields should not be visible
-        private static string connectionString;
 #pragma warning restore CA2211 // Non-constant fields should not be visible
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
-        private string dbName = "grace.db";
 
 
         public DataBase()
@@ -48,17 +46,17 @@ namespace grace
         {
             DbFileName = string.Empty;
             ConnectionString = CreateDatabaseFile();
-            var optionsBuilder = new DbContextOptionsBuilder<GraceDbContext>();
-            optionsBuilder.UseSqlite(connectionString);
-            using (var context = new GraceDbContext(optionsBuilder.Options))
+            DbContextOptionsBuilder<GraceDbContext> optionsBuilder = new();
+            optionsBuilder.UseSqlite(ConnectionString);
+            using (GraceDbContext context = new(optionsBuilder.Options))
             {
-                var created = context.Database.EnsureCreated();
+                bool created = context.Database.EnsureCreated();
                 if (!created)
                 {
                     logger.Info("Database already exists");
                 }
             }
-            using (var context = new GraceDbContext(optionsBuilder.Options))
+            using (GraceDbContext context = new(optionsBuilder.Options))
             {
                 DbInitializer.CheckDbSchemaCurrent(context);
             }
@@ -70,7 +68,7 @@ namespace grace
             DbFileName = string.Empty;
             ConnectionString = CreateDatabaseFile();
             var optionsBuilder = new DbContextOptionsBuilder<GraceDbContext>();
-            optionsBuilder.UseSqlite(connectionString);
+            optionsBuilder.UseSqlite(ConnectionString);
             using (var context = new GraceDbContext(optionsBuilder.Options))
             {
                 var created = context.Database.EnsureCreated();
@@ -109,63 +107,35 @@ namespace grace
             table.Columns.Add("Total", typeof(int));
             table.Columns.Add("GraceId", typeof(int));
 
-            using (var dbContext = new GraceDbContext())
-            {
+            using var dbContext = new GraceDbContext();
 
-                var result = (
-                    from graces in dbContext.Graces
-                    join total in dbContext.Totals on graces.ID equals total.GraceId
-                    where total.LastUpdated == dbContext.Totals
-                                                  .Where(t => t.GraceId == graces.ID)
-                                                  .OrderByDescending(t => t.ID)
-                                                  .Max(t => t.LastUpdated)
-                    orderby graces.Sku ascending
-                    select new CheckOut
-                    {
-                        Sku = graces.Sku,
-                        Description = graces.Description,
-                        Brand = graces.Brand,
-                        BarCode = graces.BarCode,
-                        Total = total.CurrentTotal,
-                        GraceId = graces.ID
-                    }
-                ).ToList();
-
-                foreach (CheckOut? checkOut in result)
+            var result = (
+                from graces in dbContext.Graces
+                join total in dbContext.Totals on graces.ID equals total.GraceId
+                where total.LastUpdated == dbContext.Totals
+                                              .Where(t => t.GraceId == graces.ID)
+                                              .OrderByDescending(t => t.ID)
+                                              .Max(t => t.LastUpdated)
+                orderby graces.Sku ascending
+                select new CheckOut
                 {
-                    table.Rows.Add(checkOut.Sku, checkOut.Description,
-                        checkOut.Brand, checkOut.BarCode, checkOut.Total,
-                        checkOut.GraceId);
+                    Sku = graces.Sku,
+                    Description = graces.Description,
+                    Brand = graces.Brand,
+                    BarCode = graces.BarCode,
+                    Total = total.CurrentTotal,
+                    GraceId = graces.ID
                 }
+            ).ToList();
 
-                return table;
-            }
-        }
-
-        public static List<CheckOut> GetPulledItem(int pulledId)
-        {
-            using (var dbContext = new GraceDbContext())
+            foreach (CheckOut? checkOut in result)
             {
-
-                var result = (
-                    from graces in dbContext.Graces
-                    join total in dbContext.Totals on graces.ID equals total.GraceId
-                    where total == dbContext.Totals
-                                                  .Where(t => t.GraceId == graces.ID)
-                                                  .OrderByDescending(t => t.ID)
-                    orderby graces.Sku ascending
-                    select new CheckOut
-                    {
-                        Sku = graces.Sku,
-                        Description = graces.Description,
-                        Brand = graces.Brand,
-                        BarCode = graces.BarCode,
-                        Total = total.CurrentTotal,
-                        GraceId = graces.ID
-                    }
-                ).ToList();
-                return result;
+                table.Rows.Add(checkOut.Sku, checkOut.Description,
+                    checkOut.Brand, checkOut.BarCode, checkOut.Total,
+                    checkOut.GraceId);
             }
+
+            return table;
         }
 
         public static DataView GetPulledGridFromBarCode(string scannedBarcode)
@@ -207,6 +177,7 @@ namespace grace
             public int UserTotal { get; set; }
             public string CheckIn { get; set; } = string.Empty;
         }
+
         public static System.Data.DataTable GetCheckedOutGrid(int user_id)
         {
             System.Data.DataTable table = new();
@@ -226,8 +197,8 @@ namespace grace
             using GraceDbContext dbContext = new();
             // Performing the join and projection
             List<CheckInData> result = [.. (
-                    from gr in dbContext.GraceRows
-                    join pulled in dbContext.PulledDb on gr.GraceId equals pulled.GraceId
+                    from gr in dbContext.Graces
+                    join pulled in dbContext.PulledDb on gr.ID equals pulled.GraceId
                     join user in dbContext.Users on pulled.UserId equals user.ID
                     join collection in dbContext.Collections on pulled.CollectionId equals collection.ID
                     where pulled.UserId == user_id && !pulled.IsCompleted
@@ -243,7 +214,7 @@ namespace grace
                         LastUpdated = pulled.LastUpdated,
                         UserTotal = pulled.Amount,
                         CheckIn = string.Empty,
-                        GraceId = gr.GraceId
+                        GraceId = gr.ID
                     })];
 
             foreach (CheckInData data in result)
@@ -278,8 +249,8 @@ namespace grace
             using GraceDbContext dbContext = new();
             // Performing the join and projection
             List<CheckInData> result = [.. (
-                from gr in dbContext.GraceRows
-                join pulled in dbContext.PulledDb on gr.GraceId equals pulled.GraceId
+                from gr in dbContext.Graces
+                join pulled in dbContext.PulledDb on gr.ID equals pulled.GraceId
                 join user in dbContext.Users on pulled.UserId equals user.ID
                 join collection in dbContext.Collections on pulled.CollectionId equals collection.ID
                 where !pulled.IsCompleted
@@ -295,7 +266,7 @@ namespace grace
                     LastUpdated = pulled.LastUpdated,
                     UserTotal = pulled.Amount,
                     CheckIn = string.Empty,
-                    GraceId = gr.GraceId
+                    GraceId = gr.ID
                 })];
 
             foreach (CheckInData data in result)
@@ -335,8 +306,8 @@ namespace grace
             using GraceDbContext dbContext = new();
             // Performing the join and projection
             List<ReportData> result = [.. (
-                    from gr in dbContext.GraceRows
-                    join totals in dbContext.Totals on gr.GraceId equals totals.GraceId
+                    from gr in dbContext.Graces
+                    join totals in dbContext.Totals on gr.ID equals totals.GraceId
                     orderby totals.LastUpdated descending, totals.CurrentTotal descending
                     select new ReportData
                     {
@@ -347,7 +318,7 @@ namespace grace
                         Total = totals.CurrentTotal,
                         LastUpdated = totals.LastUpdated,
                         Note = gr.Note,
-                        GraceId = gr.GraceId
+                        GraceId = gr.ID
                     })];
 
             foreach (ReportData? report in result)
@@ -482,7 +453,7 @@ namespace grace
 
         public static void InitializeDatabase()
         {
-            using (var context = new GraceDbContext())
+            using (GraceDbContext context = new GraceDbContext())
             {
                 context.Database.EnsureCreated();
                 context.Database.ExecuteSqlRaw("DELETE FROM Graces");
@@ -515,7 +486,7 @@ namespace grace
             {
 
                 // Create a new Grace object to insert
-                var newGrace = new Grace
+                Grace newGrace = new Grace
                 {
                     Sku = sku.Trim(),
                     Description = description.Trim(),
@@ -535,6 +506,7 @@ namespace grace
             return insertId;
 
         }
+
         public static int AddCollection(string? collection, int graceId)
         {
             int id = 0;
@@ -579,7 +551,7 @@ namespace grace
             String currentUser = Globals.GetInstance().CurrentUser;
             using (GraceDbContext context = new())
             {
-                Total newTotal = new Total
+                Total newTotal = new()
                 {
                     LastUpdated = DateTime.Now,
                     CurrentTotal = total,
@@ -593,93 +565,11 @@ namespace grace
             return id;
         }
 
-        public static void UpdateGraceRow(int graceId)
+        public static List<Grace> GetGraces()
         {
             using GraceDbContext context = new();
-            using Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction = context.Database.BeginTransaction();
-            try
-            {
-                GraceRow? graceRow = context.GraceRows.FirstOrDefault(e => e.GraceId == graceId);
-                Grace? grace = context.Graces.Find(graceId);
-                if (grace != null)
-                {
-                    graceRow.Sku = grace.Sku;
-                    graceRow.BarCode = grace.BarCode;
-                    graceRow.Brand = grace.Brand;
-                    graceRow.Description = grace.Description;
-                    graceRow.Availability = grace.Availability;
-                    graceRow.Note = grace.Note;
-                }
-                else
-                {
-                    logger.Error($"UpdateGraceRow couldn't find {graceId}");
-                    return;
-                }
-
-                IQueryable<Total> currentTotal = context.Totals
-                    .Where(t => t.GraceId == graceId)
-                    .OrderByDescending(t => t.ID)
-                    .Take(2);
-
-                Total total1 = currentTotal.FirstOrDefault(); // Get the first result or null if none.
-                Total total2 = currentTotal.Skip(1).FirstOrDefault(); // Get the second result or null if none.
-
-                graceRow.LastUpdated = total1.LastUpdated;
-                graceRow.Total = total1.CurrentTotal;
-                graceRow.PrevTotal = (total2 == null) ? 0 : total2.CurrentTotal;
-
-                // Set columns
-                graceRow.Col1 = null;
-                graceRow.Col2 = null;
-                graceRow.Col3 = null;
-                graceRow.Col4 = null;
-                graceRow.Col5 = null;
-                graceRow.Col6 = null;
-
-                var collectionRows = context.Collections.
-                    Where(row => row.GraceId == graceId && row.Name != "Other")
-                    .ToList();
-                for (int i = 0; i < collectionRows.Count; i++)
-                {
-                    var collectionRow = collectionRows[i];
-                    if (collectionRow.Name == "Other")
-                    {
-                        continue;
-                    }
-                    switch (i)
-                    {
-                        case 0:
-                            graceRow.Col1 = collectionRow.Name;
-                            break;
-                        case 1:
-                            graceRow.Col2 = collectionRow.Name;
-                            break;
-                        case 2:
-                            graceRow.Col3 = collectionRow.Name;
-                            break;
-                        case 3:
-                            graceRow.Col4 = collectionRow.Name;
-                            break;
-                        case 4:
-                            graceRow.Col5 = collectionRow.Name;
-                            break;
-                        case 5:
-                            graceRow.Col6 = collectionRow.Name;
-                            break;
-                        default:
-                            logger.Error($"Too many collections for graceId {graceId}");
-                            break;
-                    }
-                }
-                context.SaveChanges();
-                transaction.Commit();
-            }
-            catch (Exception ex)
-            {
-                transaction.Rollback();
-                logger.Error(ex);
-            }
-
+            List<Grace> graces = [.. context.Graces.ToList()];
+            return graces;
         }
 
         public static int GetGraceIdFromSku(string sku)
@@ -694,86 +584,14 @@ namespace grace
             return graceId;
         }
 
-        public static int CreateGraceRow(int graceId)
+        public static Grace? GetGraceFromSku(string sku)
         {
             using GraceDbContext context = new();
-            int newGraceId = 0;
-            GraceRow graceRow = new GraceRow();
-            var grace = context.Graces.Find(graceId);
-            if (grace != null)
-            {
-                graceRow.Sku = grace.Sku;
-                graceRow.BarCode = grace.BarCode;
-                graceRow.Brand = grace.Brand;
-                graceRow.Description = grace.Description;
-                graceRow.Availability = grace.Availability;
-            }
-            else
-            {
-                return 0;
-            }
-
-            IQueryable<Total> currentTotal = context.Totals
-                .Where(t => t.GraceId == graceId)
-                .OrderByDescending(t => t.ID)
-                .Take(2);
-
-            Total total1 = currentTotal.FirstOrDefault(); // Get the first result or null if none.
-            Total total2 = currentTotal.Skip(1).FirstOrDefault(); // Get the second result or null if none.
-
-            graceRow.LastUpdated = total1.LastUpdated;
-            graceRow.Total = total1.CurrentTotal;
-            graceRow.PrevTotal = (total2 == null) ? 0 : total2.CurrentTotal;
-
-            // Set columns
-            graceRow.Col1 = null;
-            graceRow.Col2 = null;
-            graceRow.Col3 = null;
-            graceRow.Col4 = null;
-            graceRow.Col5 = null;
-            graceRow.Col6 = null;
-
-            var collectionRows = context.Collections.
-                Where(row => row.GraceId == graceId && row.Name != "Other")
-                .ToList();
-            for (int i = 0; i < collectionRows.Count; i++)
-            {
-                var collectionRow = collectionRows[i];
-                if (collectionRow.Name == "Other")
-                {
-                    continue;
-                }
-                switch (i)
-                {
-                    case 0:
-                        graceRow.Col1 = collectionRow.Name;
-                        break;
-                    case 1:
-                        graceRow.Col2 = collectionRow.Name;
-                        break;
-                    case 2:
-                        graceRow.Col3 = collectionRow.Name;
-                        break;
-                    case 3:
-                        graceRow.Col4 = collectionRow.Name;
-                        break;
-                    case 4:
-                        graceRow.Col5 = collectionRow.Name;
-                        break;
-                    case 5:
-                        graceRow.Col6 = collectionRow.Name;
-                        break;
-                    default:
-                        logger.Error($"Too many collections for graceId {graceId}");
-                        break;
-                }
-            }
-            graceRow.GraceId = graceId;
-            context.GraceRows.Add(graceRow);
-            context.SaveChanges();
-            newGraceId = graceRow.ID;
-            return newGraceId;
+            Grace? grace = context.Graces.FirstOrDefault(item => item.Sku == sku);
+            return grace;
         }
+
+
 #pragma warning disable CS8600
 #pragma warning disable CA1305
         private static string? CheckString(object n)
@@ -799,12 +617,6 @@ namespace grace
         }
 #pragma warning restore CS8600
 #pragma warning restore CA1305
-
-        public static GraceRow? GetGraceRowFromSku(string sku)
-        {
-            using GraceDbContext context = new();
-            return context.GraceRows.FirstOrDefault(item => item.Sku == sku);
-        }
 
         public static int GetUserIdFromName(string name)
         {

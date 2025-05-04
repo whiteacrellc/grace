@@ -1,8 +1,4 @@
-﻿using System;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
-
+﻿
 
 namespace grace
 {
@@ -13,10 +9,10 @@ namespace grace
 
         public DailyBackup(Action action)
         {
-            _timer = new System.Threading.Timer(async _ => await ExecuteActionAsync(action), null, TimeSpan.Zero, _interval);
+            _timer = new System.Threading.Timer(_ => ExecuteAction(action), null, TimeSpan.Zero, _interval);
         }
 
-        private async Task ExecuteActionAsync(Action action)
+        private void ExecuteAction(Action action)
         {
             try
             {

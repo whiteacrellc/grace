@@ -30,27 +30,20 @@ using System.Globalization;
 
 namespace grace
 {
-    public class InventoryReport
+    public class InventoryReport(DataGridView dataGridView)
     {
  
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
-        private DataGridView dataGridView;
-        private int numPageRows = 0;
+        private DataGridView dataGridView = dataGridView;
+        private int numPageRows = 30;
         private int currentRow = 0;
         private int currentPage = 0;
-        private System.Data.DataTable dataTable;
-
-        public InventoryReport(DataGridView dataGridView)
-        {
-            this.dataGridView = dataGridView;
-            this.numPageRows = 30;
-            this.dataTable = DataGridLoader.GetData();
-        }
+        private System.Data.DataTable dataTable = DataGridLoader.GetInventoryData();
 
         private void WriteHeader(ExcelWorksheet worksheet, int row)
         {
             // Dictionary to map DbContext column names to desired DataGridView column names
-            Dictionary<string, string> columnMappings = new Dictionary<string, string>
+            Dictionary<string, string> columnMappings = new()
             {
                 {"Total", "Current Inventory"},
                 {"Col1", "Collection 1"},
@@ -172,7 +165,6 @@ namespace grace
             }
         }
 
-      
         private static void WritePrintHeader(ExcelWorksheet worksheet)
         {
             // Get the current date and format it as desired
