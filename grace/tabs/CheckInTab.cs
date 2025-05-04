@@ -34,10 +34,10 @@ namespace grace.tabs
         internal CheckInTab(Vivian v)
         {
             this.vivian = v;
-            setup();
+            Setup();
         }
 
-        private void setup()
+        private void Setup()
         {
     
             this.skuFilterTextBox = vivian.skuFilterTextBox;
@@ -240,11 +240,13 @@ namespace grace.tabs
             LoadDataGrid();
         }
 
+
         private void ApplyChangesButton_Click(object? sender, EventArgs e)
         {
             // Check if the edit is in the "Total" column
             int numrows = checkInDataGrid.Rows.Count;
             bool changed = false;
+            String currentUser = Globals.GetInstance().CurrentUser;
             for (int i = 0; i < numrows; i++)
             {
                 DataGridViewRow row = checkInDataGrid.Rows[i];
@@ -279,7 +281,8 @@ namespace grace.tabs
                         {
                             LastUpdated = DateTime.Now,
                             GraceId = graceId,
-                            CurrentTotal = newTotal
+                            CurrentTotal = newTotal,
+                            User = currentUser,
                         };
                         context.Totals.Add(total);
                         context.SaveChanges();
@@ -297,7 +300,7 @@ namespace grace.tabs
         {
             using (var context = new GraceDbContext())
             {
-                var pulled = context.PulledDb.SingleOrDefault(e => e.UserId
+                Pulled? pulled = context.PulledDb.SingleOrDefault(e => e.UserId
                     == userId && e.CollectionId == collectionId
                     && e.GraceId == graceId && e.LastUpdated == dateTime);
                 if (pulled != null)

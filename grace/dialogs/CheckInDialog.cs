@@ -28,11 +28,6 @@ namespace grace
             InitializeComponent();
         }
 
-        private void label1_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void CheckInDialog_Load(object sender, EventArgs e)
         {
 
@@ -43,8 +38,7 @@ namespace grace
             // Put total in text box
             userTotalTextBox.Text = row.Cells["UserTotal"].Value.ToString();
             // create combo box with collection names
-            var collections = DataBase.GetCollections();
-            var selectedCollection = row.Cells["Collection"].Value.ToString();
+            List<string> collections = DataBase.GetCollections();
             foreach (var collection in collections)
             {
                 collectionComboBox.Items.Add(collection);
@@ -53,38 +47,16 @@ namespace grace
             collectionComboBox.Text = row.Cells["Collection"].Value.ToString();
         }
 
-        private DateTime? ConvertBackToUTC(string ft)
-        {
-            DateTime ftDateTime;
-            if (DateTime.TryParseExact(ft, "M/d/yyyy h:mm:ss tt", null, System.Globalization.DateTimeStyles.None, out ftDateTime))
-            {
-                // Assuming systemTimeZone is your target time zone
-                TimeZoneInfo systemTimeZone = TimeZoneInfo.Local; // Example: Local time zone
-
-                // Convert the local time to UTC
-                DateTime utcTime = TimeZoneInfo.ConvertTimeToUtc(ftDateTime, systemTimeZone);
-
-                // Now, utcTime contains the UTC equivalent of ftDateTime
-                logger.Info("UTC Time: " + utcTime.ToString("dd/MM/yyyy HH:mm"));
-            }
-            else
-            {
-               logger.Info("Invalid date format " + ft);
-                return null;
-            }
-            return ftDateTime;
-        }
-
-        private void updateButton_Click(object sender, EventArgs e)
+        private void UpdateButton_Click(object sender, EventArgs e)
         {
             try
             {
-                var col = collectionComboBox.Text;
-                var rowCol = row.Cells["Collection"].Value.ToString();
-                var newTotal = int.Parse(userTotalTextBox.Text);
-                var originalTotal = int.Parse(row.Cells["UserTotal"].Value.ToString());
-                var user = row.Cells["UserName"].Value.ToString();
-                var graceId = int.Parse(row.Cells["GraceId"].Value.ToString());
+                string col = collectionComboBox.Text;
+                string? rowCol = row.Cells["Collection"].Value.ToString();
+                int newTotal = int.Parse(userTotalTextBox.Text);
+                int originalTotal = int.Parse(row.Cells["UserTotal"].Value.ToString());
+                string? user = row.Cells["UserName"].Value.ToString();
+                int graceId = int.Parse(row.Cells["GraceId"].Value.ToString());
 
                 // nothing has changed so bail
                 if (col.Equals(rowCol) && newTotal == originalTotal)
@@ -109,8 +81,8 @@ namespace grace
                     int userId = DataBase.GetUserIdFromName(user);
 
 
-
-                    using (var context = new GraceDbContext())
+                    String currentUser = Globals.GetInstance().CurrentUser;
+                    using (GraceDbContext context = new())
                     {
 
 
@@ -141,7 +113,8 @@ namespace grace
                             {
                                 LastUpdated = DateTime.Now,
                                 GraceId = graceId,
-                                CurrentTotal = newCurrentTotal
+                                CurrentTotal = newCurrentTotal,
+                                User = currentUser,
                             };
                             context.Totals.Add(total);
 

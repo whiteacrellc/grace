@@ -106,7 +106,7 @@ namespace grace.tabs
             reportGridView.DataSource = dataTable;
             ChangeColumnNames();
             Utils.RemoveColumnByName(reportGridView, "GraceId");
-            reportGridView.Sort(reportGridView.Columns["Sku"], System.ComponentModel.ListSortDirection.Ascending);
+            reportGridView.Sort(reportGridView.Columns["LastUpdated"], System.ComponentModel.ListSortDirection.Descending);
         }
 
         private void RefreshButton_Click(object? sender, EventArgs e)

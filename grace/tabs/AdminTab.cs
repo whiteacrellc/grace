@@ -20,7 +20,7 @@ using NLog;
 
 namespace grace.tabs
 {
-    public class AdminTab(Vivian v)
+    public class AdminTab
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
@@ -29,16 +29,28 @@ namespace grace.tabs
 #pragma warning disable CS8602
 #pragma warning disable CS8600
 
-        private Button resetPasswordButton = v.resetPasswordButton;
-        private Button restoreDatabaseButton = v.restoreDatabaseButton;
-        private Button backupButton = v.backupButton;
-        private Button deleteUserButton = v.deleteUserButton;
-        private Button addUserButton = v.addUserButton;
-        private ComboBox resetComboBox = v.resetComboBox;
-        private CheckBox adminCheckBox = v.adminCheckBox;
+        private Button resetPasswordButton;
+        private Button restoreDatabaseButton;
+        private Button backupButton;
+        private Button deleteUserButton;
+        private Button addUserButton;
+        private ComboBox resetComboBox;
+        private CheckBox adminCheckBox;
         private TabPage adminTabPage;
-        private readonly Vivian vivian = v;
-        DailyBackup dailyBackup;
+        private Vivian vivian;
+
+        internal AdminTab(Vivian v)
+        {
+            this.vivian = v;
+            this.resetPasswordButton = v.resetPasswordButton;
+            this.restoreDatabaseButton = v.restoreDatabaseButton;
+            this.backupButton = v.backupButton;
+            this.deleteUserButton = v.deleteUserButton;
+            this.addUserButton = v.addUserButton;
+            this.resetComboBox = v.resetComboBox;
+            this.adminCheckBox = v.adminCheckBox;
+        }
+
 
         public void Load()
         {
@@ -51,9 +63,7 @@ namespace grace.tabs
             resetComboBox.SelectedValueChanged += ResetComboBox_SelectedValueChanged;
             adminTabPage.Enter += AdminTabPage_Enter;
             InitializeComboBox();
-            dailyBackup = new DailyBackup(WriteBackupFile);
-
-
+            WriteBackupFile();
         }
 
         private void AdminTabPage_Enter(object? sender, EventArgs e)
@@ -76,7 +86,7 @@ namespace grace.tabs
             adminCheckBox.Checked = PasswordChecker.IsUserAdmin(user);
         }
 
-        private void WriteBackupFile()
+        private static void WriteBackupFile()
         {
             BackupAndRestore backup = new();
             backup.BackupDatabaseToDocuments();
