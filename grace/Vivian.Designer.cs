@@ -65,9 +65,9 @@ namespace grace
             exitToolStripMenuItem = new ToolStripMenuItem();
             viewToolStripMenuItem = new ToolStripMenuItem();
             setInventoryFontSizeToolStripMenuItem = new ToolStripMenuItem();
-            pictureBox1 = new PictureBox();
             tabControl = new TabControl();
             loginPage = new TabPage();
+            pictureBox1 = new PictureBox();
             loggedInLabel = new Label();
             logoutButton = new Button();
             passwordTextBox = new TextBox();
@@ -127,9 +127,9 @@ namespace grace
             checkInBindingSource = new BindingSource(components);
             reportToolTip = new ToolTip(components);
             menuStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             tabControl.SuspendLayout();
             loginPage.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             dataPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridView).BeginInit();
             checkoutPage.SuspendLayout();
@@ -152,102 +152,88 @@ namespace grace
             // 
             // menuStrip1
             // 
-            menuStrip1.BackColor = System.Drawing.ColorTranslator.FromHtml("#F5F5F5");
-            menuStrip1.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            menuStrip1.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
+            menuStrip1.BackColor = Color.FromArgb(245, 245, 245);
+            menuStrip1.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            menuStrip1.ForeColor = Color.FromArgb(54, 69, 79);
             menuStrip1.ImageScalingSize = new Size(32, 32);
             menuStrip1.Items.AddRange(new ToolStripItem[] { editToolStripMenuItem, viewToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
             menuStrip1.Padding = new Padding(7, 2, 0, 2);
-            menuStrip1.Size = new Size(1539, 29);
+            menuStrip1.Size = new Size(1539, 27);
             menuStrip1.TabIndex = 4;
             menuStrip1.Text = "menuStrip1";
             // 
             // editToolStripMenuItem
             // 
             editToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { settingsToolStripMenuItem, importInventoryToolStripMenuItem, saveInventoryReportToolStripMenuItem, saveReportToolStripMenuItem, aboutToolStripMenuItem, exitToolStripMenuItem });
-            editToolStripMenuItem.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            editToolStripMenuItem.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
+            editToolStripMenuItem.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            editToolStripMenuItem.ForeColor = Color.FromArgb(54, 69, 79);
             editToolStripMenuItem.Name = "editToolStripMenuItem";
-            editToolStripMenuItem.Size = new Size(45, 25);
+            editToolStripMenuItem.Size = new Size(44, 23);
             editToolStripMenuItem.Text = "File";
             // 
             // settingsToolStripMenuItem
             // 
-            settingsToolStripMenuItem.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
+            settingsToolStripMenuItem.ForeColor = Color.FromArgb(54, 69, 79);
             settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
-            settingsToolStripMenuItem.Size = new Size(235, 24);
+            settingsToolStripMenuItem.Size = new Size(231, 24);
             settingsToolStripMenuItem.Text = "Settings";
             settingsToolStripMenuItem.Click += SettingsToolStripMenuItem_Click;
             // 
             // importInventoryToolStripMenuItem
             // 
-            importInventoryToolStripMenuItem.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
+            importInventoryToolStripMenuItem.ForeColor = Color.FromArgb(54, 69, 79);
             importInventoryToolStripMenuItem.Name = "importInventoryToolStripMenuItem";
-            importInventoryToolStripMenuItem.Size = new Size(235, 24);
+            importInventoryToolStripMenuItem.Size = new Size(231, 24);
             importInventoryToolStripMenuItem.Text = "Import Inventory";
             importInventoryToolStripMenuItem.Click += ImportInventoryToolStripMenuItem_Click;
             // 
             // saveInventoryReportToolStripMenuItem
             // 
-            saveInventoryReportToolStripMenuItem.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
+            saveInventoryReportToolStripMenuItem.ForeColor = Color.FromArgb(54, 69, 79);
             saveInventoryReportToolStripMenuItem.Name = "saveInventoryReportToolStripMenuItem";
-            saveInventoryReportToolStripMenuItem.Size = new Size(235, 24);
+            saveInventoryReportToolStripMenuItem.Size = new Size(231, 24);
             saveInventoryReportToolStripMenuItem.Text = "Save Inventory Report";
             // 
             // saveReportToolStripMenuItem
             // 
-            saveReportToolStripMenuItem.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
+            saveReportToolStripMenuItem.ForeColor = Color.FromArgb(54, 69, 79);
             saveReportToolStripMenuItem.Name = "saveReportToolStripMenuItem";
-            saveReportToolStripMenuItem.Size = new Size(235, 24);
+            saveReportToolStripMenuItem.Size = new Size(231, 24);
             saveReportToolStripMenuItem.Text = "Save Collection Report";
             saveReportToolStripMenuItem.Click += SaveReportToolStripMenuItem_Click;
             // 
             // aboutToolStripMenuItem
             // 
-            aboutToolStripMenuItem.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
+            aboutToolStripMenuItem.ForeColor = Color.FromArgb(54, 69, 79);
             aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            aboutToolStripMenuItem.Size = new Size(235, 24);
+            aboutToolStripMenuItem.Size = new Size(231, 24);
             aboutToolStripMenuItem.Text = "About";
             aboutToolStripMenuItem.Click += aboutToolStripMenuItem_Click;
             // 
             // exitToolStripMenuItem
             // 
-            exitToolStripMenuItem.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
+            exitToolStripMenuItem.ForeColor = Color.FromArgb(54, 69, 79);
             exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            exitToolStripMenuItem.Size = new Size(235, 24);
+            exitToolStripMenuItem.Size = new Size(231, 24);
             exitToolStripMenuItem.Text = "Exit";
             exitToolStripMenuItem.Click += ExitToolStripMenuItem_Click;
             // 
             // viewToolStripMenuItem
             // 
             viewToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { setInventoryFontSizeToolStripMenuItem });
-            viewToolStripMenuItem.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
+            viewToolStripMenuItem.ForeColor = Color.FromArgb(54, 69, 79);
             viewToolStripMenuItem.Name = "viewToolStripMenuItem";
-            viewToolStripMenuItem.Size = new Size(60, 25);
+            viewToolStripMenuItem.Size = new Size(53, 23);
             viewToolStripMenuItem.Text = "View";
             // 
             // setInventoryFontSizeToolStripMenuItem
             // 
-            setInventoryFontSizeToolStripMenuItem.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
+            setInventoryFontSizeToolStripMenuItem.ForeColor = Color.FromArgb(54, 69, 79);
             setInventoryFontSizeToolStripMenuItem.Name = "setInventoryFontSizeToolStripMenuItem";
-            setInventoryFontSizeToolStripMenuItem.Size = new Size(256, 26);
+            setInventoryFontSizeToolStripMenuItem.Size = new Size(232, 24);
             setInventoryFontSizeToolStripMenuItem.Text = "Set Inventory Font Size";
-            // 
-            // pictureBox1
-            // 
-            pictureBox1.AccessibleDescription = "Logo";
-            pictureBox1.AccessibleName = "Logo";
-            pictureBox1.BackColor = SystemColors.ControlLight;
-            pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
-            pictureBox1.Location = new Point(15, 17);
-            pictureBox1.Margin = new Padding(5, 2, 5, 2);
-            pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(348, 123);
-            pictureBox1.SizeMode = PictureBoxSizeMode.AutoSize;
-            pictureBox1.TabIndex = 1;
-            pictureBox1.TabStop = false;
             // 
             // tabControl
             // 
@@ -261,7 +247,7 @@ namespace grace
             tabControl.Controls.Add(collectionPage);
             tabControl.Controls.Add(adminPage);
             tabControl.DrawMode = TabDrawMode.OwnerDrawFixed;
-            tabControl.Font = new System.Drawing.Font("Georgia", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            tabControl.Font = new Font("Georgia", 11F, FontStyle.Bold, GraphicsUnit.Point, 0);
             tabControl.HotTrack = true;
             tabControl.ItemSize = new Size(200, 40);
             tabControl.Location = new Point(0, 31);
@@ -278,15 +264,15 @@ namespace grace
             // 
             // loginPage
             // 
-            loginPage.BackColor = System.Drawing.ColorTranslator.FromHtml("#FFF5EE");
+            loginPage.BackColor = Color.FromArgb(255, 245, 238);
             loginPage.BorderStyle = BorderStyle.Fixed3D;
+            loginPage.Controls.Add(pictureBox1);
             loginPage.Controls.Add(loggedInLabel);
             loginPage.Controls.Add(logoutButton);
             loginPage.Controls.Add(passwordTextBox);
             loginPage.Controls.Add(loginButton);
             loginPage.Controls.Add(comboBoxUsers);
             loginPage.Controls.Add(passwordLabel);
-            loginPage.Controls.Add(pictureBox1);
             loginPage.Controls.Add(pickUserLabel);
             loginPage.Controls.Add(changePasswordButton);
             loginPage.Location = new Point(4, 44);
@@ -298,27 +284,35 @@ namespace grace
             loginPage.Text = "Home";
             loginPage.ToolTipText = "Login Page";
             // 
+            // pictureBox1
+            // 
+            pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
+            pictureBox1.Location = new Point(34, 29);
+            pictureBox1.Name = "pictureBox1";
+            pictureBox1.Size = new Size(277, 95);
+            pictureBox1.TabIndex = 24;
+            pictureBox1.TabStop = false;
+            // 
             // loggedInLabel
             // 
             loggedInLabel.AutoSize = true;
-            loggedInLabel.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            loggedInLabel.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
-            loggedInLabel.Location = new Point(266, 452);
+            loggedInLabel.Font = new Font("Segoe UI", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            loggedInLabel.ForeColor = Color.FromArgb(54, 69, 79);
+            loggedInLabel.Location = new Point(343, 29);
             loggedInLabel.Name = "loggedInLabel";
-            loggedInLabel.Size = new Size(57, 18);
+            loggedInLabel.Size = new Size(65, 25);
             loggedInLabel.TabIndex = 0;
             loggedInLabel.Text = "label5";
             // 
             // logoutButton
             // 
             logoutButton.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            logoutButton.BackColor = System.Drawing.ColorTranslator.FromHtml("#F5F5F5");
-            logoutButton.FlatAppearance.BorderColor = System.Drawing.ColorTranslator.FromHtml("#CFB53B");
-            logoutButton.FlatAppearance.BorderSize = 1;
-            logoutButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            logoutButton.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            logoutButton.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
-            logoutButton.Location = new Point(247, 490);
+            logoutButton.BackColor = Color.FromArgb(245, 245, 245);
+            logoutButton.FlatAppearance.BorderColor = Color.FromArgb(207, 181, 59);
+            logoutButton.FlatStyle = FlatStyle.Flat;
+            logoutButton.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            logoutButton.ForeColor = Color.FromArgb(54, 69, 79);
+            logoutButton.Location = new Point(343, 70);
             logoutButton.Name = "logoutButton";
             logoutButton.Size = new Size(116, 33);
             logoutButton.TabIndex = 1;
@@ -327,81 +321,79 @@ namespace grace
             // 
             // passwordTextBox
             // 
-            passwordTextBox.BackColor = System.Drawing.ColorTranslator.FromHtml("#FFFAF0");
-            passwordTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            passwordTextBox.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            passwordTextBox.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
-            passwordTextBox.Location = new Point(448, 301);
+            passwordTextBox.BackColor = Color.FromArgb(255, 250, 240);
+            passwordTextBox.BorderStyle = BorderStyle.FixedSingle;
+            passwordTextBox.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            passwordTextBox.ForeColor = Color.FromArgb(54, 69, 79);
+            passwordTextBox.Location = new Point(235, 234);
             passwordTextBox.Name = "passwordTextBox";
             passwordTextBox.PasswordChar = '*';
-            passwordTextBox.Size = new Size(230, 26);
+            passwordTextBox.Size = new Size(230, 25);
             passwordTextBox.TabIndex = 18;
             // 
             // loginButton
             // 
             loginButton.AutoSize = true;
             loginButton.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            loginButton.BackColor = System.Drawing.ColorTranslator.FromHtml("#F5F5F5");
-            loginButton.FlatAppearance.BorderColor = System.Drawing.ColorTranslator.FromHtml("#CFB53B");
-            loginButton.FlatAppearance.BorderSize = 1;
-            loginButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            loginButton.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            loginButton.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
-            loginButton.Location = new Point(498, 371);
+            loginButton.BackColor = Color.FromArgb(245, 245, 245);
+            loginButton.FlatAppearance.BorderColor = Color.FromArgb(207, 181, 59);
+            loginButton.FlatStyle = FlatStyle.Flat;
+            loginButton.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            loginButton.ForeColor = Color.FromArgb(54, 69, 79);
+            loginButton.Location = new Point(235, 304);
             loginButton.Name = "loginButton";
-            loginButton.Size = new Size(73, 35);
+            loginButton.Size = new Size(58, 31);
             loginButton.TabIndex = 19;
             loginButton.Text = "Login";
             loginButton.UseVisualStyleBackColor = false;
             // 
             // comboBoxUsers
             // 
-            comboBoxUsers.BackColor = System.Drawing.ColorTranslator.FromHtml("#FFFAF0");
-            comboBoxUsers.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            comboBoxUsers.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            comboBoxUsers.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
+            comboBoxUsers.BackColor = Color.FromArgb(255, 250, 240);
+            comboBoxUsers.FlatStyle = FlatStyle.Flat;
+            comboBoxUsers.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            comboBoxUsers.ForeColor = Color.FromArgb(54, 69, 79);
             comboBoxUsers.FormattingEnabled = true;
-            comboBoxUsers.Location = new Point(448, 242);
+            comboBoxUsers.Location = new Point(235, 175);
             comboBoxUsers.Name = "comboBoxUsers";
-            comboBoxUsers.Size = new Size(230, 26);
+            comboBoxUsers.Size = new Size(230, 25);
             comboBoxUsers.TabIndex = 17;
             // 
             // passwordLabel
             // 
             passwordLabel.AutoSize = true;
-            passwordLabel.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            passwordLabel.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
-            passwordLabel.Location = new Point(254, 309);
+            passwordLabel.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            passwordLabel.ForeColor = Color.FromArgb(54, 69, 79);
+            passwordLabel.Location = new Point(121, 238);
             passwordLabel.Name = "passwordLabel";
-            passwordLabel.Size = new Size(88, 18);
+            passwordLabel.Size = new Size(82, 21);
             passwordLabel.TabIndex = 23;
             passwordLabel.Text = "Password";
             // 
             // pickUserLabel
             // 
             pickUserLabel.AutoSize = true;
-            pickUserLabel.BackColor = System.Drawing.Color.Transparent;
-            pickUserLabel.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            pickUserLabel.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
-            pickUserLabel.Location = new Point(254, 245);
+            pickUserLabel.BackColor = Color.Transparent;
+            pickUserLabel.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            pickUserLabel.ForeColor = Color.FromArgb(54, 69, 79);
+            pickUserLabel.Location = new Point(121, 179);
             pickUserLabel.Name = "pickUserLabel";
-            pickUserLabel.Size = new Size(84, 18);
+            pickUserLabel.Size = new Size(87, 21);
             pickUserLabel.TabIndex = 16;
-            pickUserLabel.Text = "Pick User";
+            pickUserLabel.Text = "Username";
             // 
             // changePasswordButton
             // 
             changePasswordButton.AutoSize = true;
             changePasswordButton.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            changePasswordButton.BackColor = System.Drawing.ColorTranslator.FromHtml("#F5F5F5");
-            changePasswordButton.FlatAppearance.BorderColor = System.Drawing.ColorTranslator.FromHtml("#CFB53B");
-            changePasswordButton.FlatAppearance.BorderSize = 1;
-            changePasswordButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            changePasswordButton.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            changePasswordButton.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
-            changePasswordButton.Location = new Point(254, 371);
+            changePasswordButton.BackColor = Color.FromArgb(245, 245, 245);
+            changePasswordButton.FlatAppearance.BorderColor = Color.FromArgb(207, 181, 59);
+            changePasswordButton.FlatStyle = FlatStyle.Flat;
+            changePasswordButton.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            changePasswordButton.ForeColor = Color.FromArgb(54, 69, 79);
+            changePasswordButton.Location = new Point(326, 304);
             changePasswordButton.Name = "changePasswordButton";
-            changePasswordButton.Size = new Size(179, 35);
+            changePasswordButton.Size = new Size(139, 31);
             changePasswordButton.TabIndex = 22;
             changePasswordButton.Text = "Change Password";
             changePasswordButton.UseVisualStyleBackColor = false;
@@ -410,7 +402,7 @@ namespace grace
             // 
             dataPage.AutoScroll = true;
             dataPage.AutoScrollMargin = new Size(5, 5);
-            dataPage.BackColor = System.Drawing.ColorTranslator.FromHtml("#FFF5EE");
+            dataPage.BackColor = Color.FromArgb(255, 245, 238);
             dataPage.BorderStyle = BorderStyle.Fixed3D;
             dataPage.Controls.Add(dataGridView);
             dataPage.Controls.Add(filterBarcodeTextBox);
@@ -426,255 +418,75 @@ namespace grace
             dataPage.TabIndex = 1;
             dataPage.Text = "Inventory";
             dataPage.ToolTipText = "Inventory for Patster";
-            // dataGridViewCellStyle1
-            //
-            dataGridViewCellStyle1.BackColor = System.Drawing.ColorTranslator.FromHtml("#F8F0E3");
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Segoe UI", 10F);
-            dataGridViewCellStyle1.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.ColorTranslator.FromHtml("#E0C97F");
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
-            //
-            // dataGridViewCellStyle2
-            //
-            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.ColorTranslator.FromHtml("#EADDCA");
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
-            dataGridViewCellStyle2.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.ColorTranslator.FromHtml("#EADDCA");
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
-            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.True;
-            dataGridViewCellStyle2.BorderStyle = DataGridViewHeaderBorderStyle.Single;
-            //
-            // dataGridViewCellStyle3
-            //
-            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.ColorTranslator.FromHtml("#EADDCA");
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
-            dataGridViewCellStyle3.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.ColorTranslator.FromHtml("#E0C97F");
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
-            dataGridViewCellStyle3.WrapMode = DataGridViewTriState.True;
-            //
-            // dataGridViewCellStyle4
-            //
-            dataGridViewCellStyle4.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.BackColor = System.Drawing.ColorTranslator.FromHtml("#FFFAF0");
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Segoe UI", 10F);
-            dataGridViewCellStyle4.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
-            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.ColorTranslator.FromHtml("#E0C97F");
-            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
-            dataGridViewCellStyle4.WrapMode = DataGridViewTriState.False;
-            //
-            // dataGridViewCellStyle5
-            //
-            dataGridViewCellStyle5.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle5.BackColor = System.Drawing.ColorTranslator.FromHtml("#FFFAF0");
-            dataGridViewCellStyle5.Font = new System.Drawing.Font("Segoe UI", 10F);
-            dataGridViewCellStyle5.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
-            dataGridViewCellStyle5.Padding = new Padding(0, 2, 10, 0); // Keep existing padding
-            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.ColorTranslator.FromHtml("#E0C97F");
-            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
-            dataGridViewCellStyle5.WrapMode = DataGridViewTriState.False;
-            //
-            // dataGridViewCellStyle6
-            //
-            dataGridViewCellStyle6.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle6.BackColor = System.Drawing.ColorTranslator.FromHtml("#FFFAF0");
-            dataGridViewCellStyle6.Font = new System.Drawing.Font("Segoe UI", 10F);
-            dataGridViewCellStyle6.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
-            dataGridViewCellStyle6.Padding = new Padding(0, 0, 10, 0); // Keep existing padding
-            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.ColorTranslator.FromHtml("#E0C97F");
-            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
-            //
-            // dataGridViewCellStyle7
-            //
-            dataGridViewCellStyle7.BackColor = System.Drawing.ColorTranslator.FromHtml("#F8F0E3");
-            dataGridViewCellStyle7.Font = new System.Drawing.Font("Segoe UI", 10F);
-            dataGridViewCellStyle7.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
-            dataGridViewCellStyle7.SelectionBackColor = System.Drawing.ColorTranslator.FromHtml("#E0C97F");
-            dataGridViewCellStyle7.SelectionForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
-            //
-            // dataGridViewCellStyle8
-            //
-            dataGridViewCellStyle8.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle8.BackColor = System.Drawing.ColorTranslator.FromHtml("#EADDCA");
-            dataGridViewCellStyle8.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
-            dataGridViewCellStyle8.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
-            dataGridViewCellStyle8.SelectionBackColor = System.Drawing.ColorTranslator.FromHtml("#EADDCA");
-            dataGridViewCellStyle8.SelectionForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
-            dataGridViewCellStyle8.WrapMode = DataGridViewTriState.True;
-            dataGridViewCellStyle8.BorderStyle = DataGridViewHeaderBorderStyle.Single;
-            //
-            // dataGridViewCellStyle9
-            //
-            dataGridViewCellStyle9.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle9.BackColor = System.Drawing.ColorTranslator.FromHtml("#EADDCA");
-            dataGridViewCellStyle9.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
-            dataGridViewCellStyle9.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
-            dataGridViewCellStyle9.SelectionBackColor = System.Drawing.ColorTranslator.FromHtml("#E0C97F");
-            dataGridViewCellStyle9.SelectionForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
-            dataGridViewCellStyle9.WrapMode = DataGridViewTriState.True;
-            //
-            // dataGridViewCellStyle10
-            //
-            dataGridViewCellStyle10.BackColor = System.Drawing.ColorTranslator.FromHtml("#F8F0E3");
-            dataGridViewCellStyle10.Font = new System.Drawing.Font("Segoe UI", 10F);
-            dataGridViewCellStyle10.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
-            dataGridViewCellStyle10.SelectionBackColor = System.Drawing.ColorTranslator.FromHtml("#E0C97F");
-            dataGridViewCellStyle10.SelectionForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
-            //
-            // dataGridViewCellStyle11
-            //
-            dataGridViewCellStyle11.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle11.BackColor = System.Drawing.ColorTranslator.FromHtml("#EADDCA");
-            dataGridViewCellStyle11.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
-            dataGridViewCellStyle11.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
-            dataGridViewCellStyle11.SelectionBackColor = System.Drawing.ColorTranslator.FromHtml("#EADDCA");
-            dataGridViewCellStyle11.SelectionForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
-            dataGridViewCellStyle11.WrapMode = DataGridViewTriState.True;
-            dataGridViewCellStyle11.BorderStyle = DataGridViewHeaderBorderStyle.Single; // Apply consistent border
-            //
-            // dataGridViewCellStyle12
-            //
-            dataGridViewCellStyle12.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle12.BackColor = System.Drawing.ColorTranslator.FromHtml("#FFFAF0");
-            dataGridViewCellStyle12.Font = new System.Drawing.Font("Segoe UI", 10F);
-            dataGridViewCellStyle12.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
-            dataGridViewCellStyle12.SelectionBackColor = System.Drawing.ColorTranslator.FromHtml("#E0C97F");
-            dataGridViewCellStyle12.SelectionForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
-            dataGridViewCellStyle12.WrapMode = DataGridViewTriState.False;
-            //
-            // dataGridViewCellStyle13
-            //
-            dataGridViewCellStyle13.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle13.BackColor = System.Drawing.ColorTranslator.FromHtml("#EADDCA");
-            dataGridViewCellStyle13.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
-            dataGridViewCellStyle13.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
-            dataGridViewCellStyle13.SelectionBackColor = System.Drawing.ColorTranslator.FromHtml("#E0C97F");
-            dataGridViewCellStyle13.SelectionForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
-            dataGridViewCellStyle13.WrapMode = DataGridViewTriState.True;
-            //
-            // dataGridViewCellStyle14
-            //
-            dataGridViewCellStyle14.BackColor = System.Drawing.ColorTranslator.FromHtml("#F8F0E3");
-            dataGridViewCellStyle14.Font = new System.Drawing.Font("Segoe UI", 10F);
-            dataGridViewCellStyle14.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
-            dataGridViewCellStyle14.SelectionBackColor = System.Drawing.ColorTranslator.FromHtml("#E0C97F");
-            dataGridViewCellStyle14.SelectionForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
-            //
-            // dataGridViewCellStyle15
-            //
-            dataGridViewCellStyle15.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle15.BackColor = System.Drawing.ColorTranslator.FromHtml("#EADDCA");
-            dataGridViewCellStyle15.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
-            dataGridViewCellStyle15.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
-            dataGridViewCellStyle15.SelectionBackColor = System.Drawing.ColorTranslator.FromHtml("#EADDCA");
-            dataGridViewCellStyle15.SelectionForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
-            dataGridViewCellStyle15.WrapMode = DataGridViewTriState.True;
-            dataGridViewCellStyle15.BorderStyle = DataGridViewHeaderBorderStyle.Single; // Apply consistent border
-            //
-            // dataGridViewCellStyle16
-            //
-            dataGridViewCellStyle16.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle16.BackColor = System.Drawing.ColorTranslator.FromHtml("#FFFAF0");
-            dataGridViewCellStyle16.Font = new System.Drawing.Font("Segoe UI", 10F);
-            dataGridViewCellStyle16.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
-            dataGridViewCellStyle16.SelectionBackColor = System.Drawing.ColorTranslator.FromHtml("#E0C97F");
-            dataGridViewCellStyle16.SelectionForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
-            dataGridViewCellStyle16.WrapMode = DataGridViewTriState.False;
-            //
-            // dataGridViewCellStyle17
-            //
-            dataGridViewCellStyle17.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle17.BackColor = System.Drawing.ColorTranslator.FromHtml("#EADDCA");
-            dataGridViewCellStyle17.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
-            dataGridViewCellStyle17.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
-            dataGridViewCellStyle17.SelectionBackColor = System.Drawing.ColorTranslator.FromHtml("#E0C97F");
-            dataGridViewCellStyle17.SelectionForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
-            dataGridViewCellStyle17.WrapMode = DataGridViewTriState.True;
-            //
-            // dataGridViewCellStyle18
-            //
-            dataGridViewCellStyle18.BackColor = System.Drawing.ColorTranslator.FromHtml("#F8F0E3");
-            dataGridViewCellStyle18.Font = new System.Drawing.Font("Segoe UI", 10F);
-            dataGridViewCellStyle18.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
-            dataGridViewCellStyle18.SelectionBackColor = System.Drawing.ColorTranslator.FromHtml("#E0C97F");
-            dataGridViewCellStyle18.SelectionForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
-            //
-            // dataGridViewCellStyle19
-            //
-            dataGridViewCellStyle19.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle19.BackColor = System.Drawing.ColorTranslator.FromHtml("#EADDCA");
-            dataGridViewCellStyle19.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
-            dataGridViewCellStyle19.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
-            dataGridViewCellStyle19.SelectionBackColor = System.Drawing.ColorTranslator.FromHtml("#EADDCA");
-            dataGridViewCellStyle19.SelectionForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
-            dataGridViewCellStyle19.WrapMode = DataGridViewTriState.True;
-            dataGridViewCellStyle19.BorderStyle = DataGridViewHeaderBorderStyle.Single; // Apply consistent border
-            //
-            // dataGridViewCellStyle20
-            //
-            dataGridViewCellStyle20.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle20.BackColor = System.Drawing.ColorTranslator.FromHtml("#FFFAF0");
-            dataGridViewCellStyle20.Font = new System.Drawing.Font("Segoe UI", 10F);
-            dataGridViewCellStyle20.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
-            dataGridViewCellStyle20.SelectionBackColor = System.Drawing.ColorTranslator.FromHtml("#E0C97F");
-            dataGridViewCellStyle20.SelectionForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
-            dataGridViewCellStyle20.WrapMode = DataGridViewTriState.False;
-            //
-            // dataGridViewCellStyle21
-            //
-            dataGridViewCellStyle21.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle21.BackColor = System.Drawing.ColorTranslator.FromHtml("#EADDCA");
-            dataGridViewCellStyle21.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
-            dataGridViewCellStyle21.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
-            dataGridViewCellStyle21.SelectionBackColor = System.Drawing.ColorTranslator.FromHtml("#E0C97F");
-            dataGridViewCellStyle21.SelectionForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
-            dataGridViewCellStyle21.WrapMode = DataGridViewTriState.True;
             // 
             // dataGridView
             // 
+            dataGridViewCellStyle1.BackColor = Color.FromArgb(248, 240, 227);
+            dataGridViewCellStyle1.Font = new Font("Segoe UI", 10F);
+            dataGridViewCellStyle1.ForeColor = Color.FromArgb(54, 69, 79);
+            dataGridViewCellStyle1.SelectionBackColor = Color.FromArgb(224, 201, 127);
+            dataGridViewCellStyle1.SelectionForeColor = Color.FromArgb(54, 69, 79);
             dataGridView.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
             dataGridView.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             dataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
             dataGridView.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
-            dataGridView.BackgroundColor = System.Drawing.ColorTranslator.FromHtml("#FFF5EE");
-            dataGridView.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            dataGridView.BackgroundColor = Color.FromArgb(255, 245, 238);
             dataGridView.ClipboardCopyMode = DataGridViewClipboardCopyMode.Disable;
+            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = Color.FromArgb(234, 221, 202);
+            dataGridViewCellStyle2.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            dataGridViewCellStyle2.ForeColor = Color.FromArgb(54, 69, 79);
+            dataGridViewCellStyle2.SelectionBackColor = Color.FromArgb(234, 221, 202);
+            dataGridViewCellStyle2.SelectionForeColor = Color.FromArgb(54, 69, 79);
+            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.True;
             dataGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
             dataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = Color.FromArgb(255, 250, 240);
+            dataGridViewCellStyle3.Font = new Font("Segoe UI", 10F);
+            dataGridViewCellStyle3.ForeColor = Color.FromArgb(54, 69, 79);
+            dataGridViewCellStyle3.SelectionBackColor = Color.FromArgb(224, 201, 127);
+            dataGridViewCellStyle3.SelectionForeColor = Color.FromArgb(54, 69, 79);
+            dataGridViewCellStyle3.WrapMode = DataGridViewTriState.False;
+            dataGridView.DefaultCellStyle = dataGridViewCellStyle3;
             dataGridView.EditMode = DataGridViewEditMode.EditProgrammatically;
             dataGridView.EnableHeadersVisualStyles = false;
-            dataGridView.GridColor = System.Drawing.ColorTranslator.FromHtml("#D3C0B1");
+            dataGridView.GridColor = Color.FromArgb(211, 192, 177);
             dataGridView.Location = new Point(4, 61);
             dataGridView.MultiSelect = false;
             dataGridView.Name = "dataGridView";
-            dataGridView.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle4.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = Color.FromArgb(234, 221, 202);
+            dataGridViewCellStyle4.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            dataGridViewCellStyle4.ForeColor = Color.FromArgb(54, 69, 79);
+            dataGridViewCellStyle4.SelectionBackColor = Color.FromArgb(224, 201, 127);
+            dataGridViewCellStyle4.SelectionForeColor = Color.FromArgb(54, 69, 79);
+            dataGridViewCellStyle4.WrapMode = DataGridViewTriState.True;
+            dataGridView.RowHeadersDefaultCellStyle = dataGridViewCellStyle4;
             dataGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dataGridView.Size = new Size(1503, 664);
             dataGridView.TabIndex = 8;
             // 
             // filterBarcodeTextBox
             // 
-            filterBarcodeTextBox.BackColor = System.Drawing.ColorTranslator.FromHtml("#FFFAF0");
-            filterBarcodeTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            filterBarcodeTextBox.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            filterBarcodeTextBox.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
+            filterBarcodeTextBox.BackColor = Color.FromArgb(255, 250, 240);
+            filterBarcodeTextBox.BorderStyle = BorderStyle.FixedSingle;
+            filterBarcodeTextBox.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            filterBarcodeTextBox.ForeColor = Color.FromArgb(54, 69, 79);
             filterBarcodeTextBox.Location = new Point(730, 13);
             filterBarcodeTextBox.Name = "filterBarcodeTextBox";
-            filterBarcodeTextBox.Size = new Size(202, 26);
+            filterBarcodeTextBox.Size = new Size(202, 25);
             filterBarcodeTextBox.TabIndex = 7;
             // 
             // scanBarcodeLabel
             // 
             scanBarcodeLabel.AutoSize = true;
-            scanBarcodeLabel.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            scanBarcodeLabel.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
+            scanBarcodeLabel.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            scanBarcodeLabel.ForeColor = Color.FromArgb(54, 69, 79);
             scanBarcodeLabel.Location = new Point(600, 16);
             scanBarcodeLabel.Margin = new Padding(4, 0, 4, 0);
             scanBarcodeLabel.Name = "scanBarcodeLabel";
-            scanBarcodeLabel.Size = new Size(123, 18);
+            scanBarcodeLabel.Size = new Size(94, 19);
             scanBarcodeLabel.TabIndex = 6;
             scanBarcodeLabel.Text = "Scan  Barcode";
             scanBarcodeLabel.MouseHover += ScanBarcodeLabel_MouseHover;
@@ -682,24 +494,23 @@ namespace grace
             // filterRowsLabel
             // 
             filterRowsLabel.AutoSize = true;
-            filterRowsLabel.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            filterRowsLabel.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
+            filterRowsLabel.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            filterRowsLabel.ForeColor = Color.FromArgb(54, 69, 79);
             filterRowsLabel.Location = new Point(206, 13);
             filterRowsLabel.Margin = new Padding(4, 0, 4, 0);
             filterRowsLabel.Name = "filterRowsLabel";
-            filterRowsLabel.Size = new Size(100, 18);
+            filterRowsLabel.Size = new Size(75, 19);
             filterRowsLabel.TabIndex = 3;
             filterRowsLabel.Text = "Filter Rows";
             filterRowsLabel.MouseHover += FilterRowsLabel_MouseHover;
             // 
             // addRowButton
             // 
-            addRowButton.BackColor = System.Drawing.ColorTranslator.FromHtml("#F5F5F5");
-            addRowButton.FlatAppearance.BorderColor = System.Drawing.ColorTranslator.FromHtml("#CFB53B");
-            addRowButton.FlatAppearance.BorderSize = 1;
-            addRowButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            addRowButton.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            addRowButton.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
+            addRowButton.BackColor = Color.FromArgb(245, 245, 245);
+            addRowButton.FlatAppearance.BorderColor = Color.FromArgb(207, 181, 59);
+            addRowButton.FlatStyle = FlatStyle.Flat;
+            addRowButton.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            addRowButton.ForeColor = Color.FromArgb(54, 69, 79);
             addRowButton.Location = new Point(41, 8);
             addRowButton.Name = "addRowButton";
             addRowButton.Size = new Size(118, 35);
@@ -710,12 +521,11 @@ namespace grace
             // clearFilterButton
             // 
             clearFilterButton.AutoSize = true;
-            clearFilterButton.BackColor = System.Drawing.ColorTranslator.FromHtml("#F5F5F5");
-            clearFilterButton.FlatAppearance.BorderColor = System.Drawing.ColorTranslator.FromHtml("#CFB53B");
-            clearFilterButton.FlatAppearance.BorderSize = 1;
-            clearFilterButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            clearFilterButton.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            clearFilterButton.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
+            clearFilterButton.BackColor = Color.FromArgb(245, 245, 245);
+            clearFilterButton.FlatAppearance.BorderColor = Color.FromArgb(207, 181, 59);
+            clearFilterButton.FlatStyle = FlatStyle.Flat;
+            clearFilterButton.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            clearFilterButton.ForeColor = Color.FromArgb(54, 69, 79);
             clearFilterButton.Location = new Point(959, 8);
             clearFilterButton.Margin = new Padding(4, 6, 4, 6);
             clearFilterButton.Name = "clearFilterButton";
@@ -726,19 +536,19 @@ namespace grace
             // 
             // filterSkuTextBox
             // 
-            filterSkuTextBox.BackColor = System.Drawing.ColorTranslator.FromHtml("#FFFAF0");
-            filterSkuTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            filterSkuTextBox.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            filterSkuTextBox.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
+            filterSkuTextBox.BackColor = Color.FromArgb(255, 250, 240);
+            filterSkuTextBox.BorderStyle = BorderStyle.FixedSingle;
+            filterSkuTextBox.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            filterSkuTextBox.ForeColor = Color.FromArgb(54, 69, 79);
             filterSkuTextBox.Location = new Point(362, 13);
             filterSkuTextBox.Margin = new Padding(4, 3, 4, 3);
             filterSkuTextBox.Name = "filterSkuTextBox";
-            filterSkuTextBox.Size = new Size(217, 26);
+            filterSkuTextBox.Size = new Size(217, 25);
             filterSkuTextBox.TabIndex = 2;
             // 
             // checkoutPage
             // 
-            checkoutPage.BackColor = System.Drawing.ColorTranslator.FromHtml("#FFF5EE");
+            checkoutPage.BackColor = Color.FromArgb(255, 245, 238);
             checkoutPage.Controls.Add(textBoxBarcode);
             checkoutPage.Controls.Add(checkOutSearchTextBox);
             checkoutPage.Controls.Add(label6);
@@ -757,35 +567,35 @@ namespace grace
             // textBoxBarcode
             // 
             textBoxBarcode.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            textBoxBarcode.BackColor = System.Drawing.ColorTranslator.FromHtml("#FFFAF0");
-            textBoxBarcode.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            textBoxBarcode.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            textBoxBarcode.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
+            textBoxBarcode.BackColor = Color.FromArgb(255, 250, 240);
+            textBoxBarcode.BorderStyle = BorderStyle.FixedSingle;
+            textBoxBarcode.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            textBoxBarcode.ForeColor = Color.FromArgb(54, 69, 79);
             textBoxBarcode.Location = new Point(1259, 144);
             textBoxBarcode.Name = "textBoxBarcode";
-            textBoxBarcode.Size = new Size(246, 26);
+            textBoxBarcode.Size = new Size(246, 25);
             textBoxBarcode.TabIndex = 13;
             // 
             // checkOutSearchTextBox
             // 
             checkOutSearchTextBox.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            checkOutSearchTextBox.BackColor = System.Drawing.ColorTranslator.FromHtml("#FFFAF0");
-            checkOutSearchTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            checkOutSearchTextBox.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            checkOutSearchTextBox.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
+            checkOutSearchTextBox.BackColor = Color.FromArgb(255, 250, 240);
+            checkOutSearchTextBox.BorderStyle = BorderStyle.FixedSingle;
+            checkOutSearchTextBox.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            checkOutSearchTextBox.ForeColor = Color.FromArgb(54, 69, 79);
             checkOutSearchTextBox.Location = new Point(1246, 190);
             checkOutSearchTextBox.Name = "checkOutSearchTextBox";
-            checkOutSearchTextBox.Size = new Size(259, 26);
+            checkOutSearchTextBox.Size = new Size(259, 25);
             checkOutSearchTextBox.TabIndex = 14;
             // 
             // label6
             // 
             label6.AutoSize = true;
-            label6.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            label6.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
+            label6.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label6.ForeColor = Color.FromArgb(54, 69, 79);
             label6.Location = new Point(1132, 152);
             label6.Name = "label6";
-            label6.Size = new Size(118, 18);
+            label6.Size = new Size(90, 19);
             label6.TabIndex = 11;
             label6.Text = "Scan Barcode";
             // 
@@ -793,24 +603,24 @@ namespace grace
             // 
             label7.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             label7.AutoSize = true;
-            label7.BackColor = Color.Transparent; // Potentially keep transparent or match page bg
+            label7.BackColor = Color.Transparent;
             label7.BorderStyle = BorderStyle.FixedSingle;
-            label7.Font = new System.Drawing.Font("Georgia", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0))); // Heading Font
-            label7.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F"); // Charcoal Text
+            label7.Font = new Font("Georgia", 11F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label7.ForeColor = Color.FromArgb(54, 69, 79);
             label7.Location = new Point(1108, 429);
             label7.Name = "label7";
-            label7.Size = new Size(397, 77);
+            label7.Size = new Size(251, 56);
             label7.TabIndex = 9;
             label7.Text = "Please go to the Check In screen\r\n to see a list of what you have \r\nchecked out.";
             // 
             // label8
             // 
             label8.AutoSize = true;
-            label8.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            label8.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
+            label8.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label8.ForeColor = Color.FromArgb(54, 69, 79);
             label8.Location = new Point(1131, 198);
             label8.Name = "label8";
-            label8.Size = new Size(104, 18);
+            label8.Size = new Size(78, 19);
             label8.TabIndex = 12;
             label8.Text = "Search SKU";
             // 
@@ -818,12 +628,11 @@ namespace grace
             // 
             coResetButton.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             coResetButton.AutoSize = true;
-            coResetButton.BackColor = System.Drawing.ColorTranslator.FromHtml("#F5F5F5");
-            coResetButton.FlatAppearance.BorderColor = System.Drawing.ColorTranslator.FromHtml("#CFB53B");
-            coResetButton.FlatAppearance.BorderSize = 1;
-            coResetButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            coResetButton.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            coResetButton.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
+            coResetButton.BackColor = Color.FromArgb(245, 245, 245);
+            coResetButton.FlatAppearance.BorderColor = Color.FromArgb(207, 181, 59);
+            coResetButton.FlatStyle = FlatStyle.Flat;
+            coResetButton.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            coResetButton.ForeColor = Color.FromArgb(54, 69, 79);
             coResetButton.Location = new Point(1246, 274);
             coResetButton.Name = "coResetButton";
             coResetButton.Size = new Size(259, 46);
@@ -835,24 +644,57 @@ namespace grace
             // 
             checkOutDataGrid.AllowUserToAddRows = false;
             checkOutDataGrid.AllowUserToDeleteRows = false;
-            checkOutDataGrid.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle5.BackColor = Color.FromArgb(248, 240, 227);
+            dataGridViewCellStyle5.Font = new Font("Segoe UI", 10F);
+            dataGridViewCellStyle5.ForeColor = Color.FromArgb(54, 69, 79);
+            dataGridViewCellStyle5.SelectionBackColor = Color.FromArgb(224, 201, 127);
+            dataGridViewCellStyle5.SelectionForeColor = Color.FromArgb(54, 69, 79);
+            checkOutDataGrid.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle5;
             checkOutDataGrid.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
             checkOutDataGrid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
             checkOutDataGrid.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
-            checkOutDataGrid.BackgroundColor = System.Drawing.ColorTranslator.FromHtml("#FFF5EE");
-            checkOutDataGrid.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            checkOutDataGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle8;
+            checkOutDataGrid.BackgroundColor = Color.FromArgb(255, 245, 238);
+            dataGridViewCellStyle6.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle6.BackColor = Color.FromArgb(234, 221, 202);
+            dataGridViewCellStyle6.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            dataGridViewCellStyle6.ForeColor = Color.FromArgb(54, 69, 79);
+            dataGridViewCellStyle6.SelectionBackColor = Color.FromArgb(234, 221, 202);
+            dataGridViewCellStyle6.SelectionForeColor = Color.FromArgb(54, 69, 79);
+            dataGridViewCellStyle6.WrapMode = DataGridViewTriState.True;
+            checkOutDataGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle6;
             checkOutDataGrid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            checkOutDataGrid.DefaultCellStyle = dataGridViewCellStyle5; // Will be updated
+            dataGridViewCellStyle7.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle7.BackColor = Color.FromArgb(255, 250, 240);
+            dataGridViewCellStyle7.Font = new Font("Segoe UI", 10F);
+            dataGridViewCellStyle7.ForeColor = Color.FromArgb(54, 69, 79);
+            dataGridViewCellStyle7.Padding = new Padding(0, 2, 10, 0);
+            dataGridViewCellStyle7.SelectionBackColor = Color.FromArgb(224, 201, 127);
+            dataGridViewCellStyle7.SelectionForeColor = Color.FromArgb(54, 69, 79);
+            dataGridViewCellStyle7.WrapMode = DataGridViewTriState.False;
+            checkOutDataGrid.DefaultCellStyle = dataGridViewCellStyle7;
             checkOutDataGrid.EnableHeadersVisualStyles = false;
-            checkOutDataGrid.GridColor = System.Drawing.ColorTranslator.FromHtml("#D3C0B1");
+            checkOutDataGrid.GridColor = Color.FromArgb(211, 192, 177);
             checkOutDataGrid.Location = new Point(5, 3);
             checkOutDataGrid.MultiSelect = false;
             checkOutDataGrid.Name = "checkOutDataGrid";
             checkOutDataGrid.ReadOnly = true;
-            checkOutDataGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle9;
+            dataGridViewCellStyle8.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle8.BackColor = Color.FromArgb(234, 221, 202);
+            dataGridViewCellStyle8.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            dataGridViewCellStyle8.ForeColor = Color.FromArgb(54, 69, 79);
+            dataGridViewCellStyle8.SelectionBackColor = Color.FromArgb(224, 201, 127);
+            dataGridViewCellStyle8.SelectionForeColor = Color.FromArgb(54, 69, 79);
+            dataGridViewCellStyle8.WrapMode = DataGridViewTriState.True;
+            checkOutDataGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle8;
             checkOutDataGrid.RowHeadersWidth = 82;
-            checkOutDataGrid.RowsDefaultCellStyle = dataGridViewCellStyle6; // Will be updated
+            dataGridViewCellStyle9.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle9.BackColor = Color.FromArgb(255, 250, 240);
+            dataGridViewCellStyle9.Font = new Font("Segoe UI", 10F);
+            dataGridViewCellStyle9.ForeColor = Color.FromArgb(54, 69, 79);
+            dataGridViewCellStyle9.Padding = new Padding(0, 0, 10, 0);
+            dataGridViewCellStyle9.SelectionBackColor = Color.FromArgb(224, 201, 127);
+            dataGridViewCellStyle9.SelectionForeColor = Color.FromArgb(54, 69, 79);
+            checkOutDataGrid.RowsDefaultCellStyle = dataGridViewCellStyle9;
             checkOutDataGrid.RowTemplate.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
             checkOutDataGrid.RowTemplate.DefaultCellStyle.Padding = new Padding(0, 0, 10, 0);
             checkOutDataGrid.RowTemplate.Resizable = DataGridViewTriState.True;
@@ -863,7 +705,7 @@ namespace grace
             // checkinPage
             // 
             checkinPage.AutoScroll = true;
-            checkinPage.BackColor = System.Drawing.ColorTranslator.FromHtml("#FFF5EE");
+            checkinPage.BackColor = Color.FromArgb(255, 245, 238);
             checkinPage.Controls.Add(filterSkuLabel);
             checkinPage.Controls.Add(skuFilterTextBox);
             checkinPage.Controls.Add(allUsersCheckBox);
@@ -881,11 +723,11 @@ namespace grace
             // 
             filterSkuLabel.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             filterSkuLabel.AutoSize = true;
-            filterSkuLabel.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            filterSkuLabel.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
+            filterSkuLabel.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            filterSkuLabel.ForeColor = Color.FromArgb(54, 69, 79);
             filterSkuLabel.Location = new Point(1306, 48);
             filterSkuLabel.Name = "filterSkuLabel";
-            filterSkuLabel.Size = new Size(112, 18);
+            filterSkuLabel.Size = new Size(84, 19);
             filterSkuLabel.TabIndex = 5;
             filterSkuLabel.Text = "Filter By Sku";
             filterSkuLabel.Click += label1_Click;
@@ -893,24 +735,24 @@ namespace grace
             // skuFilterTextBox
             // 
             skuFilterTextBox.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            skuFilterTextBox.BackColor = System.Drawing.ColorTranslator.FromHtml("#FFFAF0");
-            skuFilterTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            skuFilterTextBox.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            skuFilterTextBox.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
+            skuFilterTextBox.BackColor = Color.FromArgb(255, 250, 240);
+            skuFilterTextBox.BorderStyle = BorderStyle.FixedSingle;
+            skuFilterTextBox.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            skuFilterTextBox.ForeColor = Color.FromArgb(54, 69, 79);
             skuFilterTextBox.Location = new Point(1306, 80);
             skuFilterTextBox.Name = "skuFilterTextBox";
-            skuFilterTextBox.Size = new Size(194, 26);
+            skuFilterTextBox.Size = new Size(194, 25);
             skuFilterTextBox.TabIndex = 4;
             // 
             // allUsersCheckBox
             // 
             allUsersCheckBox.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             allUsersCheckBox.AutoSize = true;
-            allUsersCheckBox.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            allUsersCheckBox.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
-            allUsersCheckBox.Location = new Point(1351, 146);
+            allUsersCheckBox.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            allUsersCheckBox.ForeColor = Color.FromArgb(54, 69, 79);
+            allUsersCheckBox.Location = new Point(1382, 146);
             allUsersCheckBox.Name = "allUsersCheckBox";
-            allUsersCheckBox.Size = new Size(149, 22);
+            allUsersCheckBox.Size = new Size(118, 23);
             allUsersCheckBox.TabIndex = 2;
             allUsersCheckBox.Text = "Show All Users";
             allUsersCheckBox.UseVisualStyleBackColor = true;
@@ -919,12 +761,11 @@ namespace grace
             // 
             applyChangesButton.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             applyChangesButton.AutoSize = true;
-            applyChangesButton.BackColor = System.Drawing.ColorTranslator.FromHtml("#F5F5F5");
-            applyChangesButton.FlatAppearance.BorderColor = System.Drawing.ColorTranslator.FromHtml("#CFB53B");
-            applyChangesButton.FlatAppearance.BorderSize = 1;
-            applyChangesButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            applyChangesButton.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            applyChangesButton.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
+            applyChangesButton.BackColor = Color.FromArgb(245, 245, 245);
+            applyChangesButton.FlatAppearance.BorderColor = Color.FromArgb(207, 181, 59);
+            applyChangesButton.FlatStyle = FlatStyle.Flat;
+            applyChangesButton.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            applyChangesButton.ForeColor = Color.FromArgb(54, 69, 79);
             applyChangesButton.Location = new Point(1294, 202);
             applyChangesButton.Name = "applyChangesButton";
             applyChangesButton.Size = new Size(220, 35);
@@ -935,30 +776,55 @@ namespace grace
             // label3
             // 
             label3.AutoSize = true;
-            label3.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            label3.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
+            label3.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label3.ForeColor = Color.FromArgb(54, 69, 79);
             label3.Location = new Point(1034, 38);
             label3.Name = "label3";
-            label3.Size = new Size(0, 18);
+            label3.Size = new Size(0, 19);
             label3.TabIndex = 1;
             // 
             // checkInDataGrid
             // 
+            dataGridViewCellStyle10.BackColor = Color.FromArgb(248, 240, 227);
+            dataGridViewCellStyle10.Font = new Font("Segoe UI", 10F);
+            dataGridViewCellStyle10.ForeColor = Color.FromArgb(54, 69, 79);
+            dataGridViewCellStyle10.SelectionBackColor = Color.FromArgb(224, 201, 127);
+            dataGridViewCellStyle10.SelectionForeColor = Color.FromArgb(54, 69, 79);
             checkInDataGrid.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle10;
             checkInDataGrid.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             checkInDataGrid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
             checkInDataGrid.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
-            checkInDataGrid.BackgroundColor = System.Drawing.ColorTranslator.FromHtml("#FFF5EE");
-            checkInDataGrid.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            checkInDataGrid.CellBorderStyle = DataGridViewCellBorderStyle.Sunken; // Keep or change to Single? For now, keep.
-            checkInDataGrid.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Sunken; // Keep or change to Single? For now, keep.
+            checkInDataGrid.BackgroundColor = Color.FromArgb(255, 245, 238);
+            checkInDataGrid.CellBorderStyle = DataGridViewCellBorderStyle.Sunken;
+            checkInDataGrid.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Sunken;
+            dataGridViewCellStyle11.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle11.BackColor = Color.FromArgb(234, 221, 202);
+            dataGridViewCellStyle11.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            dataGridViewCellStyle11.ForeColor = Color.FromArgb(54, 69, 79);
+            dataGridViewCellStyle11.SelectionBackColor = Color.FromArgb(234, 221, 202);
+            dataGridViewCellStyle11.SelectionForeColor = Color.FromArgb(54, 69, 79);
+            dataGridViewCellStyle11.WrapMode = DataGridViewTriState.True;
             checkInDataGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle11;
             checkInDataGrid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            checkInDataGrid.DefaultCellStyle = dataGridViewCellStyle12; // New style
+            dataGridViewCellStyle12.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle12.BackColor = Color.FromArgb(255, 250, 240);
+            dataGridViewCellStyle12.Font = new Font("Segoe UI", 10F);
+            dataGridViewCellStyle12.ForeColor = Color.FromArgb(54, 69, 79);
+            dataGridViewCellStyle12.SelectionBackColor = Color.FromArgb(224, 201, 127);
+            dataGridViewCellStyle12.SelectionForeColor = Color.FromArgb(54, 69, 79);
+            dataGridViewCellStyle12.WrapMode = DataGridViewTriState.False;
+            checkInDataGrid.DefaultCellStyle = dataGridViewCellStyle12;
             checkInDataGrid.EnableHeadersVisualStyles = false;
-            checkInDataGrid.GridColor = System.Drawing.ColorTranslator.FromHtml("#D3C0B1");
+            checkInDataGrid.GridColor = Color.FromArgb(211, 192, 177);
             checkInDataGrid.Location = new Point(-7, 0);
             checkInDataGrid.Name = "checkInDataGrid";
+            dataGridViewCellStyle13.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle13.BackColor = Color.FromArgb(234, 221, 202);
+            dataGridViewCellStyle13.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            dataGridViewCellStyle13.ForeColor = Color.FromArgb(54, 69, 79);
+            dataGridViewCellStyle13.SelectionBackColor = Color.FromArgb(224, 201, 127);
+            dataGridViewCellStyle13.SelectionForeColor = Color.FromArgb(54, 69, 79);
+            dataGridViewCellStyle13.WrapMode = DataGridViewTriState.True;
             checkInDataGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle13;
             checkInDataGrid.RowHeadersWidth = 82;
             checkInDataGrid.SelectionMode = DataGridViewSelectionMode.CellSelect;
@@ -967,7 +833,7 @@ namespace grace
             // 
             // reportPage
             // 
-            reportPage.BackColor = System.Drawing.ColorTranslator.FromHtml("#FFF5EE");
+            reportPage.BackColor = Color.FromArgb(255, 245, 238);
             reportPage.Controls.Add(reportInfoLabel);
             reportPage.Controls.Add(filterLable);
             reportPage.Controls.Add(reportFilterTextBox);
@@ -983,11 +849,11 @@ namespace grace
             // reportInfoLabel
             // 
             reportInfoLabel.AutoSize = true;
-            reportInfoLabel.Font = new System.Drawing.Font("Georgia", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0))); // Heading Font
-            reportInfoLabel.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
+            reportInfoLabel.Font = new Font("Georgia", 11F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            reportInfoLabel.ForeColor = Color.FromArgb(54, 69, 79);
             reportInfoLabel.Location = new Point(558, 21);
             reportInfoLabel.Name = "reportInfoLabel";
-            reportInfoLabel.Size = new Size(582, 23);
+            reportInfoLabel.Size = new Size(397, 18);
             reportInfoLabel.TabIndex = 8;
             reportInfoLabel.Text = "This report is best viewed by selecting a single item.";
             reportInfoLabel.MouseHover += ReportInfoLabel_MouseHover;
@@ -995,33 +861,32 @@ namespace grace
             // filterLable
             // 
             filterLable.AutoSize = true;
-            filterLable.Font = new System.Drawing.Font("Georgia", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0))); // Heading Font
-            filterLable.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
+            filterLable.Font = new Font("Georgia", 11F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            filterLable.ForeColor = Color.FromArgb(54, 69, 79);
             filterLable.Location = new Point(8, 18);
             filterLable.Name = "filterLable";
-            filterLable.Size = new Size(132, 23);
+            filterLable.Size = new Size(95, 18);
             filterLable.TabIndex = 7;
             filterLable.Text = "Filter Rows";
             // 
             // reportFilterTextBox
             // 
-            reportFilterTextBox.BackColor = System.Drawing.ColorTranslator.FromHtml("#FFFAF0");
-            reportFilterTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            reportFilterTextBox.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            reportFilterTextBox.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
+            reportFilterTextBox.BackColor = Color.FromArgb(255, 250, 240);
+            reportFilterTextBox.BorderStyle = BorderStyle.FixedSingle;
+            reportFilterTextBox.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            reportFilterTextBox.ForeColor = Color.FromArgb(54, 69, 79);
             reportFilterTextBox.Location = new Point(157, 15);
             reportFilterTextBox.Name = "reportFilterTextBox";
-            reportFilterTextBox.Size = new Size(235, 30);
+            reportFilterTextBox.Size = new Size(235, 25);
             reportFilterTextBox.TabIndex = 6;
             // 
             // refreshButton
             // 
-            refreshButton.BackColor = System.Drawing.ColorTranslator.FromHtml("#F5F5F5");
-            refreshButton.FlatAppearance.BorderColor = System.Drawing.ColorTranslator.FromHtml("#CFB53B");
-            refreshButton.FlatAppearance.BorderSize = 1;
-            refreshButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            refreshButton.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            refreshButton.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
+            refreshButton.BackColor = Color.FromArgb(245, 245, 245);
+            refreshButton.FlatAppearance.BorderColor = Color.FromArgb(207, 181, 59);
+            refreshButton.FlatStyle = FlatStyle.Flat;
+            refreshButton.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            refreshButton.ForeColor = Color.FromArgb(54, 69, 79);
             refreshButton.Location = new Point(431, 18);
             refreshButton.Name = "refreshButton";
             refreshButton.Size = new Size(97, 30);
@@ -1031,26 +896,51 @@ namespace grace
             // 
             // reportGridView
             // 
+            dataGridViewCellStyle14.BackColor = Color.FromArgb(248, 240, 227);
+            dataGridViewCellStyle14.Font = new Font("Segoe UI", 10F);
+            dataGridViewCellStyle14.ForeColor = Color.FromArgb(54, 69, 79);
+            dataGridViewCellStyle14.SelectionBackColor = Color.FromArgb(224, 201, 127);
+            dataGridViewCellStyle14.SelectionForeColor = Color.FromArgb(54, 69, 79);
             reportGridView.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle14;
             reportGridView.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             reportGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
             reportGridView.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
-            reportGridView.BackgroundColor = System.Drawing.ColorTranslator.FromHtml("#FFF5EE");
-            reportGridView.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            reportGridView.BackgroundColor = Color.FromArgb(255, 245, 238);
+            dataGridViewCellStyle15.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle15.BackColor = Color.FromArgb(234, 221, 202);
+            dataGridViewCellStyle15.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            dataGridViewCellStyle15.ForeColor = Color.FromArgb(54, 69, 79);
+            dataGridViewCellStyle15.SelectionBackColor = Color.FromArgb(234, 221, 202);
+            dataGridViewCellStyle15.SelectionForeColor = Color.FromArgb(54, 69, 79);
+            dataGridViewCellStyle15.WrapMode = DataGridViewTriState.True;
             reportGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle15;
             reportGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridViewCellStyle16.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle16.BackColor = Color.FromArgb(255, 250, 240);
+            dataGridViewCellStyle16.Font = new Font("Segoe UI", 10F);
+            dataGridViewCellStyle16.ForeColor = Color.FromArgb(54, 69, 79);
+            dataGridViewCellStyle16.SelectionBackColor = Color.FromArgb(224, 201, 127);
+            dataGridViewCellStyle16.SelectionForeColor = Color.FromArgb(54, 69, 79);
+            dataGridViewCellStyle16.WrapMode = DataGridViewTriState.False;
             reportGridView.DefaultCellStyle = dataGridViewCellStyle16;
             reportGridView.EnableHeadersVisualStyles = false;
-            reportGridView.GridColor = System.Drawing.ColorTranslator.FromHtml("#D3C0B1");
+            reportGridView.GridColor = Color.FromArgb(211, 192, 177);
             reportGridView.Location = new Point(8, 60);
             reportGridView.Name = "reportGridView";
+            dataGridViewCellStyle17.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle17.BackColor = Color.FromArgb(234, 221, 202);
+            dataGridViewCellStyle17.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            dataGridViewCellStyle17.ForeColor = Color.FromArgb(54, 69, 79);
+            dataGridViewCellStyle17.SelectionBackColor = Color.FromArgb(224, 201, 127);
+            dataGridViewCellStyle17.SelectionForeColor = Color.FromArgb(54, 69, 79);
+            dataGridViewCellStyle17.WrapMode = DataGridViewTriState.True;
             reportGridView.RowHeadersDefaultCellStyle = dataGridViewCellStyle17;
             reportGridView.Size = new Size(1501, 670);
             reportGridView.TabIndex = 0;
             // 
             // collectionPage
             // 
-            collectionPage.BackColor = System.Drawing.ColorTranslator.FromHtml("#FFF5EE");
+            collectionPage.BackColor = Color.FromArgb(255, 245, 238);
             collectionPage.Controls.Add(clearComboButton);
             collectionPage.Controls.Add(colLabel1);
             collectionPage.Controls.Add(colReportComboBox);
@@ -1064,12 +954,11 @@ namespace grace
             // 
             // clearComboButton
             // 
-            clearComboButton.BackColor = System.Drawing.ColorTranslator.FromHtml("#F5F5F5");
-            clearComboButton.FlatAppearance.BorderColor = System.Drawing.ColorTranslator.FromHtml("#CFB53B");
-            clearComboButton.FlatAppearance.BorderSize = 1;
-            clearComboButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            clearComboButton.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            clearComboButton.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
+            clearComboButton.BackColor = Color.FromArgb(245, 245, 245);
+            clearComboButton.FlatAppearance.BorderColor = Color.FromArgb(207, 181, 59);
+            clearComboButton.FlatStyle = FlatStyle.Flat;
+            clearComboButton.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            clearComboButton.ForeColor = Color.FromArgb(54, 69, 79);
             clearComboButton.Location = new Point(436, 32);
             clearComboButton.Name = "clearComboButton";
             clearComboButton.Size = new Size(109, 26);
@@ -1080,41 +969,66 @@ namespace grace
             // colLabel1
             // 
             colLabel1.AutoSize = true;
-            colLabel1.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            colLabel1.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
+            colLabel1.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            colLabel1.ForeColor = Color.FromArgb(54, 69, 79);
             colLabel1.Location = new Point(34, 35);
             colLabel1.Name = "colLabel1";
-            colLabel1.Size = new Size(150, 18);
+            colLabel1.Size = new Size(114, 19);
             colLabel1.TabIndex = 2;
             colLabel1.Text = "Select Collections";
             // 
             // colReportComboBox
             // 
-            colReportComboBox.BackColor = System.Drawing.ColorTranslator.FromHtml("#FFFAF0");
-            colReportComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            colReportComboBox.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            colReportComboBox.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
+            colReportComboBox.BackColor = Color.FromArgb(255, 250, 240);
+            colReportComboBox.FlatStyle = FlatStyle.Flat;
+            colReportComboBox.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            colReportComboBox.ForeColor = Color.FromArgb(54, 69, 79);
             colReportComboBox.FormattingEnabled = true;
             colReportComboBox.Location = new Point(201, 32);
             colReportComboBox.Name = "colReportComboBox";
-            colReportComboBox.Size = new Size(196, 26);
+            colReportComboBox.Size = new Size(196, 25);
             colReportComboBox.TabIndex = 1;
             // 
             // collGridView
             // 
+            dataGridViewCellStyle18.BackColor = Color.FromArgb(248, 240, 227);
+            dataGridViewCellStyle18.Font = new Font("Segoe UI", 10F);
+            dataGridViewCellStyle18.ForeColor = Color.FromArgb(54, 69, 79);
+            dataGridViewCellStyle18.SelectionBackColor = Color.FromArgb(224, 201, 127);
+            dataGridViewCellStyle18.SelectionForeColor = Color.FromArgb(54, 69, 79);
             collGridView.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle18;
             collGridView.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             collGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
             collGridView.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
-            collGridView.BackgroundColor = System.Drawing.ColorTranslator.FromHtml("#FFF5EE");
-            collGridView.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            collGridView.BackgroundColor = Color.FromArgb(255, 245, 238);
+            dataGridViewCellStyle19.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle19.BackColor = Color.FromArgb(234, 221, 202);
+            dataGridViewCellStyle19.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            dataGridViewCellStyle19.ForeColor = Color.FromArgb(54, 69, 79);
+            dataGridViewCellStyle19.SelectionBackColor = Color.FromArgb(234, 221, 202);
+            dataGridViewCellStyle19.SelectionForeColor = Color.FromArgb(54, 69, 79);
+            dataGridViewCellStyle19.WrapMode = DataGridViewTriState.True;
             collGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle19;
             collGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridViewCellStyle20.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle20.BackColor = Color.FromArgb(255, 250, 240);
+            dataGridViewCellStyle20.Font = new Font("Segoe UI", 10F);
+            dataGridViewCellStyle20.ForeColor = Color.FromArgb(54, 69, 79);
+            dataGridViewCellStyle20.SelectionBackColor = Color.FromArgb(224, 201, 127);
+            dataGridViewCellStyle20.SelectionForeColor = Color.FromArgb(54, 69, 79);
+            dataGridViewCellStyle20.WrapMode = DataGridViewTriState.False;
             collGridView.DefaultCellStyle = dataGridViewCellStyle20;
             collGridView.EnableHeadersVisualStyles = false;
-            collGridView.GridColor = System.Drawing.ColorTranslator.FromHtml("#D3C0B1");
+            collGridView.GridColor = Color.FromArgb(211, 192, 177);
             collGridView.Location = new Point(6, 72);
             collGridView.Name = "collGridView";
+            dataGridViewCellStyle21.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle21.BackColor = Color.FromArgb(234, 221, 202);
+            dataGridViewCellStyle21.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            dataGridViewCellStyle21.ForeColor = Color.FromArgb(54, 69, 79);
+            dataGridViewCellStyle21.SelectionBackColor = Color.FromArgb(224, 201, 127);
+            dataGridViewCellStyle21.SelectionForeColor = Color.FromArgb(54, 69, 79);
+            dataGridViewCellStyle21.WrapMode = DataGridViewTriState.True;
             collGridView.RowHeadersDefaultCellStyle = dataGridViewCellStyle21;
             collGridView.Size = new Size(1505, 655);
             collGridView.TabIndex = 0;
@@ -1122,7 +1036,7 @@ namespace grace
             // adminPage
             // 
             adminPage.AutoScroll = true;
-            adminPage.BackColor = System.Drawing.ColorTranslator.FromHtml("#FFF5EE");
+            adminPage.BackColor = Color.FromArgb(255, 245, 238);
             adminPage.BorderStyle = BorderStyle.Fixed3D;
             adminPage.Controls.Add(adminCheckBox);
             adminPage.Controls.Add(adminUserLabel);
@@ -1146,11 +1060,11 @@ namespace grace
             // adminCheckBox
             // 
             adminCheckBox.AutoSize = true;
-            adminCheckBox.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            adminCheckBox.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
+            adminCheckBox.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            adminCheckBox.ForeColor = Color.FromArgb(54, 69, 79);
             adminCheckBox.Location = new Point(79, 402);
             adminCheckBox.Name = "adminCheckBox";
-            adminCheckBox.Size = new Size(158, 22);
+            adminCheckBox.Size = new Size(126, 23);
             adminCheckBox.TabIndex = 11;
             adminCheckBox.Text = "    Admin Status";
             adminCheckBox.UseVisualStyleBackColor = true;
@@ -1158,90 +1072,87 @@ namespace grace
             // adminUserLabel
             // 
             adminUserLabel.AutoSize = true;
-            adminUserLabel.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            adminUserLabel.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
+            adminUserLabel.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            adminUserLabel.ForeColor = Color.FromArgb(54, 69, 79);
             adminUserLabel.Location = new Point(256, 58);
             adminUserLabel.Name = "adminUserLabel";
-            adminUserLabel.Size = new Size(203, 18);
+            adminUserLabel.Size = new Size(156, 19);
             adminUserLabel.TabIndex = 10;
             adminUserLabel.Text = "Admin Users are in Bold";
             // 
             // label5
             // 
             label5.AutoSize = true;
-            label5.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            label5.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
+            label5.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label5.ForeColor = Color.FromArgb(54, 69, 79);
             label5.Location = new Point(137, 98);
             label5.Name = "label5";
-            label5.Size = new Size(84, 18);
+            label5.Size = new Size(65, 19);
             label5.TabIndex = 0;
             label5.Text = "Pick User";
             // 
             // resetComboBox
             // 
-            resetComboBox.BackColor = System.Drawing.ColorTranslator.FromHtml("#FFFAF0");
+            resetComboBox.BackColor = Color.FromArgb(255, 250, 240);
             resetComboBox.DrawMode = DrawMode.OwnerDrawFixed;
             resetComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
-            resetComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            resetComboBox.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            resetComboBox.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
+            resetComboBox.FlatStyle = FlatStyle.Flat;
+            resetComboBox.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            resetComboBox.ForeColor = Color.FromArgb(54, 69, 79);
             resetComboBox.FormattingEnabled = true;
             resetComboBox.Location = new Point(255, 94);
             resetComboBox.Name = "resetComboBox";
-            resetComboBox.Size = new Size(194, 27);
+            resetComboBox.Size = new Size(194, 26);
             resetComboBox.TabIndex = 1;
             resetComboBox.DrawItem += ResetComboBox_DrawItem;
             // 
             // deleteUserButton
             // 
-            deleteUserButton.BackColor = System.Drawing.ColorTranslator.FromHtml("#F5F5F5");
-            deleteUserButton.FlatAppearance.BorderColor = System.Drawing.ColorTranslator.FromHtml("#CFB53B");
-            deleteUserButton.FlatAppearance.BorderSize = 1;
-            deleteUserButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat; // Changed from Popup
-            deleteUserButton.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            deleteUserButton.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
+            deleteUserButton.BackColor = Color.FromArgb(245, 245, 245);
+            deleteUserButton.FlatAppearance.BorderColor = Color.FromArgb(207, 181, 59);
+            deleteUserButton.FlatStyle = FlatStyle.Flat;
+            deleteUserButton.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            deleteUserButton.ForeColor = Color.FromArgb(54, 69, 79);
             deleteUserButton.Location = new Point(79, 239);
             deleteUserButton.Name = "deleteUserButton";
             deleteUserButton.Size = new Size(370, 50);
             deleteUserButton.TabIndex = 8;
             deleteUserButton.Text = "Delete User";
-            deleteUserButton.UseVisualStyleBackColor = false; // Changed from true
+            deleteUserButton.UseVisualStyleBackColor = false;
             // 
             // label9
             // 
             label9.AutoSize = true;
-            label9.Font = new System.Drawing.Font("Georgia", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0))); // Heading Font
-            label9.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
+            label9.Font = new Font("Georgia", 11F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label9.ForeColor = Color.FromArgb(54, 69, 79);
             label9.Location = new Point(1089, 34);
             label9.Name = "label9";
-            label9.Size = new Size(224, 23);
+            label9.Size = new Size(159, 18);
             label9.TabIndex = 9;
             label9.Text = "Application Logging";
             // 
             // resetPasswordButton
             // 
-            resetPasswordButton.BackColor = System.Drawing.ColorTranslator.FromHtml("#F5F5F5");
-            resetPasswordButton.FlatAppearance.BorderColor = System.Drawing.ColorTranslator.FromHtml("#CFB53B");
-            resetPasswordButton.FlatAppearance.BorderSize = 1;
-            resetPasswordButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat; // Changed from Popup
-            resetPasswordButton.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            resetPasswordButton.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
+            resetPasswordButton.BackColor = Color.FromArgb(245, 245, 245);
+            resetPasswordButton.FlatAppearance.BorderColor = Color.FromArgb(207, 181, 59);
+            resetPasswordButton.FlatStyle = FlatStyle.Flat;
+            resetPasswordButton.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            resetPasswordButton.ForeColor = Color.FromArgb(54, 69, 79);
             resetPasswordButton.Location = new Point(79, 164);
             resetPasswordButton.Name = "resetPasswordButton";
             resetPasswordButton.Size = new Size(380, 53);
             resetPasswordButton.TabIndex = 2;
             resetPasswordButton.Text = "Reset Password";
-            resetPasswordButton.UseVisualStyleBackColor = false; // Changed from true
+            resetPasswordButton.UseVisualStyleBackColor = false;
             // 
             // addUserButton
             // 
             addUserButton.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            addUserButton.BackColor = System.Drawing.ColorTranslator.FromHtml("#F5F5F5"); // Changed from Lavender
-            addUserButton.FlatAppearance.BorderColor = System.Drawing.ColorTranslator.FromHtml("#CFB53B");
-            addUserButton.FlatAppearance.BorderSize = 1;
-            addUserButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat; // Changed from Popup
-            addUserButton.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            addUserButton.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
+            addUserButton.BackColor = Color.FromArgb(245, 245, 245);
+            addUserButton.FlatAppearance.BorderColor = Color.FromArgb(207, 181, 59);
+            addUserButton.FlatStyle = FlatStyle.Flat;
+            addUserButton.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            addUserButton.ForeColor = Color.FromArgb(54, 69, 79);
             addUserButton.Location = new Point(79, 318);
             addUserButton.Margin = new Padding(4, 6, 4, 6);
             addUserButton.Name = "addUserButton";
@@ -1253,10 +1164,10 @@ namespace grace
             // loggingTextBox
             // 
             loggingTextBox.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
-            loggingTextBox.BackColor = System.Drawing.ColorTranslator.FromHtml("#FFFAF0"); // FloralWhite
-            loggingTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            loggingTextBox.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            loggingTextBox.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F"); // Charcoal
+            loggingTextBox.BackColor = Color.FromArgb(255, 250, 240);
+            loggingTextBox.BorderStyle = BorderStyle.FixedSingle;
+            loggingTextBox.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            loggingTextBox.ForeColor = Color.FromArgb(54, 69, 79);
             loggingTextBox.Location = new Point(647, 97);
             loggingTextBox.Multiline = true;
             loggingTextBox.Name = "loggingTextBox";
@@ -1267,36 +1178,34 @@ namespace grace
             // restoreDatabaseButton
             // 
             restoreDatabaseButton.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            restoreDatabaseButton.BackColor = System.Drawing.ColorTranslator.FromHtml("#F5F5F5");
-            restoreDatabaseButton.FlatAppearance.BorderColor = System.Drawing.ColorTranslator.FromHtml("#CFB53B");
-            restoreDatabaseButton.FlatAppearance.BorderSize = 1;
-            restoreDatabaseButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat; // Changed from Popup
-            restoreDatabaseButton.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            restoreDatabaseButton.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
+            restoreDatabaseButton.BackColor = Color.FromArgb(245, 245, 245);
+            restoreDatabaseButton.FlatAppearance.BorderColor = Color.FromArgb(207, 181, 59);
+            restoreDatabaseButton.FlatStyle = FlatStyle.Flat;
+            restoreDatabaseButton.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            restoreDatabaseButton.ForeColor = Color.FromArgb(54, 69, 79);
             restoreDatabaseButton.Location = new Point(36, 516);
             restoreDatabaseButton.Margin = new Padding(4, 6, 4, 6);
             restoreDatabaseButton.Name = "restoreDatabaseButton";
             restoreDatabaseButton.Size = new Size(216, 56);
             restoreDatabaseButton.TabIndex = 5;
             restoreDatabaseButton.Text = "Restore Database";
-            restoreDatabaseButton.UseVisualStyleBackColor = false; // Changed from true
+            restoreDatabaseButton.UseVisualStyleBackColor = false;
             // 
             // backupButton
             // 
             backupButton.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            backupButton.BackColor = System.Drawing.ColorTranslator.FromHtml("#F5F5F5");
-            backupButton.FlatAppearance.BorderColor = System.Drawing.ColorTranslator.FromHtml("#CFB53B");
-            backupButton.FlatAppearance.BorderSize = 1;
-            backupButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat; // Changed from Popup
-            backupButton.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            backupButton.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
+            backupButton.BackColor = Color.FromArgb(245, 245, 245);
+            backupButton.FlatAppearance.BorderColor = Color.FromArgb(207, 181, 59);
+            backupButton.FlatStyle = FlatStyle.Flat;
+            backupButton.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            backupButton.ForeColor = Color.FromArgb(54, 69, 79);
             backupButton.Location = new Point(36, 455);
             backupButton.Margin = new Padding(4, 6, 4, 6);
             backupButton.Name = "backupButton";
             backupButton.Size = new Size(216, 49);
             backupButton.TabIndex = 4;
             backupButton.Text = "Backup Database";
-            backupButton.UseVisualStyleBackColor = false; // Changed from true
+            backupButton.UseVisualStyleBackColor = false;
             // 
             // errorProvider1
             // 
@@ -1313,11 +1222,11 @@ namespace grace
             AutoScaleDimensions = new SizeF(7F, 17F);
             AutoScaleMode = AutoScaleMode.Font;
             AutoScroll = true;
-            BackColor = System.Drawing.ColorTranslator.FromHtml("#FFF5EE");
+            BackColor = Color.FromArgb(255, 245, 238);
             ClientSize = new Size(1539, 823);
             Controls.Add(tabControl);
             Controls.Add(menuStrip1);
-            Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point, 0);
             Icon = (Icon)resources.GetObject("$this.Icon");
             MainMenuStrip = menuStrip1;
             Margin = new Padding(5, 2, 5, 2);
@@ -1329,10 +1238,10 @@ namespace grace
             Paint += Vivian_Paint;
             menuStrip1.ResumeLayout(false);
             menuStrip1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             tabControl.ResumeLayout(false);
             loginPage.ResumeLayout(false);
             loginPage.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             dataPage.ResumeLayout(false);
             dataPage.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridView).EndInit();
@@ -1364,7 +1273,6 @@ namespace grace
         private ToolStripMenuItem settingsToolStripMenuItem;
         private ToolStripMenuItem exitToolStripMenuItem;
         private ToolStripMenuItem saveReportToolStripMenuItem;
-        private PictureBox pictureBox1;
         private TabPage dataPage;
         private TabPage checkoutPage;
         private TabPage adminPage;
@@ -1431,5 +1339,6 @@ namespace grace
         private ToolStripMenuItem aboutToolStripMenuItem;
         private Label filterSkuLabel;
         public TextBox skuFilterTextBox;
+        private PictureBox pictureBox1;
     }
 }
