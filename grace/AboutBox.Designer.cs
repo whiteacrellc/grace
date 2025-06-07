@@ -84,12 +84,27 @@
             button1.UseVisualStyleBackColor = false;
             button1.Click += Button1_Click;
             // 
+            // linkLabelReleases
+            //
+            this.linkLabelReleases = new System.Windows.Forms.LinkLabel();
+            this.linkLabelReleases.AutoSize = true;
+            this.linkLabelReleases.Font = new System.Drawing.Font("Segoe UI", 10F); // Match buildLabel font
+            this.linkLabelReleases.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F"); // Match buildLabel color
+            this.linkLabelReleases.Location = new System.Drawing.Point(238, 171); // Position below buildLabel
+            this.linkLabelReleases.Name = "linkLabelReleases";
+            this.linkLabelReleases.Size = new System.Drawing.Size(150, 21); // Approximate size, AutoSize will adjust
+            this.linkLabelReleases.TabIndex = 4; // Next available tab index
+            this.linkLabelReleases.Text = "View Release Notes";
+            this.linkLabelReleases.TabStop = true; // Ensure it's a tab stop
+            this.linkLabelReleases.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelReleases_LinkClicked);
+            //
             // AboutBox
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
             BackColor = System.Drawing.ColorTranslator.FromHtml("#FFF5EE");
-            ClientSize = new Size(520, 200);
+            ClientSize = new Size(520, 240);
+            Controls.Add(this.linkLabelReleases);
             Controls.Add(button1);
             Controls.Add(buildLabel);
             Controls.Add(authorLabel);
@@ -112,5 +127,6 @@
         private Label authorLabel;
         private Label buildLabel;
         private Button button1;
+        private System.Windows.Forms.LinkLabel linkLabelReleases;
     }
 }
