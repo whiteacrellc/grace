@@ -10,6 +10,7 @@
  *
  * Year: 2023
  */
+using System.Drawing;
 using grace.data;
 using grace.tabs;
 using grace.utils;
@@ -56,7 +57,7 @@ namespace grace
 
             this.AutoScaleMode = AutoScaleMode.Dpi;
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            this.AutoScaleMode = AutoScaleMode.Font;
+            // this.AutoScaleMode = AutoScaleMode.Font; // Removed to keep Dpi scaling
 
             EnableReportMenuItems(false);
 
@@ -299,18 +300,35 @@ namespace grace
 
             TabPage page = tabControl.TabPages[e.Index];
             int currentIndex = tabControl.SelectedIndex;
-            e.Graphics.FillRectangle(new SolidBrush(page.BackColor), e.Bounds);
+
+            // Set page backcolor - might be redundant if already set in Designer, but ensures consistency
+            page.BackColor = System.Drawing.ColorTranslator.FromHtml("#FFF5EE");
+
+            // Background of the tab itself
+            using (SolidBrush backBrush = new SolidBrush(System.Drawing.ColorTranslator.FromHtml("#FFF5EE")))
+            {
+                e.Graphics.FillRectangle(backBrush, e.Bounds);
+            }
 
             Rectangle paddedBounds = e.Bounds;
-            int yOffset = (e.State == DrawItemState.Selected) ? -2 : 1;
+            int yOffset = (e.State == DrawItemState.Selected) ? -2 : 1; // Keep existing yOffset logic
             paddedBounds.Offset(1, yOffset);
 
-            Color c = Color.LightBlue;
-            if (e.Index == currentIndex)
+            Color textColor;
+            if (e.Index == currentIndex) // Selected tab
             {
-                c = Color.Black;
+                textColor = System.Drawing.ColorTranslator.FromHtml("#B76E79"); // Rose Gold
+                // Optionally, draw a selection indicator (e.g., an underline or different background for the tab header)
+                // For example, a simple underline:
+                // e.Graphics.DrawLine(new Pen(System.Drawing.ColorTranslator.FromHtml("#CFB53B"), 2), e.Bounds.Left, e.Bounds.Bottom -1, e.Bounds.Right, e.Bounds.Bottom-1);
             }
-            TextRenderer.DrawText(e.Graphics, page.Text, e.Font, paddedBounds, c);
+            else // Unselected tab
+            {
+                textColor = System.Drawing.ColorTranslator.FromHtml("#36454F"); // Charcoal
+            }
+
+            // Draw tab text
+            TextRenderer.DrawText(e.Graphics, page.Text, e.Font, paddedBounds, textColor, TextFormatFlags.Left | TextFormatFlags.VerticalCenter);
         }
 
         private void FilterRowsLabel_MouseHover(object sender, EventArgs e)
@@ -332,19 +350,19 @@ namespace grace
 
         private void Vivian_Paint(object sender, PaintEventArgs e)
         {
-            if (VisualStyleRenderer.IsElementDefined(
-                VisualStyleElement.Window.HorizontalScroll.Normal))
-            {
-                VisualStyleRenderer renderer =
-                     new(VisualStyleElement.Window.HorizontalScroll.Normal);
-                Rectangle rectangle1 = new(10, 50, 50, 50);
-                renderer.DrawBackground(e.Graphics, rectangle1);
-                e.Graphics.DrawString("VisualStyleElement.Window.HorizontalScroll.Normal",
-                     this.Font, Brushes.Black, new Point(10, 10));
-            }
-            else
-                e.Graphics.DrawString("This element is not defined in the current visual style.",
-                     this.Font, Brushes.Black, new Point(10, 10));
+            //if (VisualStyleRenderer.IsElementDefined(
+            //    VisualStyleElement.Window.HorizontalScroll.Normal))
+            //{
+            //    VisualStyleRenderer renderer =
+            //         new(VisualStyleElement.Window.HorizontalScroll.Normal);
+            //    Rectangle rectangle1 = new(10, 50, 50, 50);
+            //    renderer.DrawBackground(e.Graphics, rectangle1);
+            //    e.Graphics.DrawString("VisualStyleElement.Window.HorizontalScroll.Normal",
+            //         this.Font, Brushes.Black, new Point(10, 10));
+            //}
+            //else
+            //    e.Graphics.DrawString("This element is not defined in the current visual style.",
+            //         this.Font, Brushes.Black, new Point(10, 10));
 
         }
 
@@ -358,16 +376,47 @@ namespace grace
             // Get the item text
             string username = resetComboBox.Items[e.Index].ToString();
 
-            // Determine if the item should be bold
-            Font itemFont = PasswordChecker.IsUserAdmin(username) ? new Font(e.Font, FontStyle.Bold) : e.Font;
+            // Determine font and colors based on selection state and admin status
+            Font itemFont;
+            Brush textBrush;
+            Brush backgroundBrush;
+
+            bool isAdmin = PasswordChecker.IsUserAdmin(username);
+
+            if (isAdmin)
+            {
+                itemFont = new Font("Segoe UI", 10f, FontStyle.Bold);
+            }
+            else
+            {
+                itemFont = new Font("Segoe UI", 10f, FontStyle.Regular);
+            }
+
+            if ((e.State & DrawItemState.Selected) == DrawItemState.Selected)
+            {
+                // Selected item
+                backgroundBrush = new SolidBrush(System.Drawing.ColorTranslator.FromHtml("#E0C97F")); // Lighter Gold
+                textBrush = new SolidBrush(System.Drawing.ColorTranslator.FromHtml("#36454F"));       // Charcoal
+            }
+            else
+            {
+                // Unselected item
+                backgroundBrush = new SolidBrush(System.Drawing.ColorTranslator.FromHtml("#FFFAF0")); // FloralWhite (ComboBox item background)
+                textBrush = new SolidBrush(System.Drawing.ColorTranslator.FromHtml("#36454F"));       // Charcoal
+            }
 
             // Draw the background
-            e.DrawBackground();
+            e.Graphics.FillRectangle(backgroundBrush, e.Bounds);
 
-            // Draw the item text with the appropriate font
-            using (Brush textBrush = new SolidBrush(e.ForeColor))
+            // Draw the item text
+            e.Graphics.DrawString(username, itemFont, textBrush, e.Bounds.X, e.Bounds.Y + (e.Bounds.Height - itemFont.Height) / 2); // Centered vertically
+
+            // Dispose of brushes and font if created
+            textBrush.Dispose();
+            backgroundBrush.Dispose();
+            if (itemFont.Name != e.Font.Name || itemFont.Style != e.Font.Style) // Dispose only if new font was created
             {
-                e.Graphics.DrawString(username, itemFont, textBrush, e.Bounds);
+                itemFont.Dispose();
             }
 
             // Draw focus rectangle if the item has focus

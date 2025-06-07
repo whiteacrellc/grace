@@ -45,27 +45,43 @@
             // 
             // updateButton
             // 
-            updateButton.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point);
+            updateButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            updateButton.BackColor = System.Drawing.ColorTranslator.FromHtml("#F5F5F5");
+            updateButton.FlatAppearance.BorderColor = System.Drawing.ColorTranslator.FromHtml("#CFB53B");
+            updateButton.FlatAppearance.BorderSize = 1;
+            updateButton.FlatStyle = FlatStyle.Flat;
+            updateButton.Font = new System.Drawing.Font("Segoe UI", 10F, FontStyle.Bold);
+            updateButton.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
             updateButton.Location = new Point(19, 246);
             updateButton.Name = "updateButton";
             updateButton.Size = new Size(95, 34);
             updateButton.TabIndex = 3;
             updateButton.Text = "Update";
-            updateButton.UseVisualStyleBackColor = true;
+            updateButton.UseVisualStyleBackColor = false;
             updateButton.Click += UpdateButton_Click;
             // 
             // deleteButton
             // 
-            deleteButton.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point);
+            deleteButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            deleteButton.BackColor = System.Drawing.ColorTranslator.FromHtml("#F5F5F5");
+            deleteButton.FlatAppearance.BorderColor = System.Drawing.ColorTranslator.FromHtml("#CFB53B");
+            deleteButton.FlatAppearance.BorderSize = 1;
+            deleteButton.FlatStyle = FlatStyle.Flat;
+            deleteButton.Font = new System.Drawing.Font("Segoe UI", 10F, FontStyle.Bold);
+            deleteButton.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
             deleteButton.Location = new Point(135, 246);
             deleteButton.Name = "deleteButton";
             deleteButton.Size = new Size(95, 34);
             deleteButton.TabIndex = 4;
             deleteButton.Text = "Delete";
-            deleteButton.UseVisualStyleBackColor = true;
+            deleteButton.UseVisualStyleBackColor = false;
             // 
             // userTotalTextBox
             // 
+            userTotalTextBox.BackColor = System.Drawing.ColorTranslator.FromHtml("#FFFAF0");
+            userTotalTextBox.BorderStyle = BorderStyle.FixedSingle;
+            userTotalTextBox.Font = new System.Drawing.Font("Segoe UI", 10F);
+            userTotalTextBox.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
             userTotalTextBox.Location = new Point(135, 172);
             userTotalTextBox.Name = "userTotalTextBox";
             userTotalTextBox.Size = new Size(198, 23);
@@ -74,7 +90,8 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point);
+            label1.Font = new System.Drawing.Font("Segoe UI", 10F);
+            label1.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
             label1.Location = new Point(28, 175);
             label1.Name = "label1";
             label1.Size = new Size(86, 17);
@@ -84,7 +101,8 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point);
+            label2.Font = new System.Drawing.Font("Segoe UI", 10F);
+            label2.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
             label2.Location = new Point(44, 136);
             label2.Name = "label2";
             label2.Size = new Size(70, 17);
@@ -93,6 +111,10 @@
             // 
             // collectionComboBox
             // 
+            collectionComboBox.BackColor = System.Drawing.ColorTranslator.FromHtml("#FFFAF0");
+            collectionComboBox.FlatStyle = FlatStyle.Flat;
+            collectionComboBox.Font = new System.Drawing.Font("Segoe UI", 10F);
+            collectionComboBox.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
             collectionComboBox.FormattingEnabled = true;
             collectionComboBox.Location = new Point(135, 135);
             collectionComboBox.Name = "collectionComboBox";
@@ -102,7 +124,8 @@
             // label3
             // 
             label3.AutoSize = true;
-            label3.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point);
+            label3.Font = new System.Drawing.Font("Segoe UI", 10F);
+            label3.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
             label3.Location = new Point(82, 29);
             label3.Name = "label3";
             label3.Size = new Size(32, 17);
@@ -112,7 +135,8 @@
             // skuLabel
             // 
             skuLabel.AutoSize = true;
-            skuLabel.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point);
+            skuLabel.Font = new System.Drawing.Font("Segoe UI", 10F);
+            skuLabel.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
             skuLabel.Location = new Point(135, 29);
             skuLabel.Name = "skuLabel";
             skuLabel.Size = new Size(32, 17);
@@ -122,7 +146,8 @@
             // descriptionLabel
             // 
             descriptionLabel.AutoSize = true;
-            descriptionLabel.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point);
+            descriptionLabel.Font = new System.Drawing.Font("Segoe UI", 10F);
+            descriptionLabel.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
             descriptionLabel.Location = new Point(135, 85);
             descriptionLabel.Name = "descriptionLabel";
             descriptionLabel.Size = new Size(32, 17);
@@ -132,7 +157,8 @@
             // label5
             // 
             label5.AutoSize = true;
-            label5.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point);
+            label5.Font = new System.Drawing.Font("Segoe UI", 10F);
+            label5.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
             label5.Location = new Point(35, 85);
             label5.Name = "label5";
             label5.Size = new Size(79, 17);
@@ -142,7 +168,8 @@
             // brandLabel
             // 
             brandLabel.AutoSize = true;
-            brandLabel.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point);
+            brandLabel.Font = new System.Drawing.Font("Segoe UI", 10F);
+            brandLabel.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
             brandLabel.Location = new Point(135, 58);
             brandLabel.Name = "brandLabel";
             brandLabel.Size = new Size(32, 17);
@@ -152,7 +179,8 @@
             // label7
             // 
             label7.AutoSize = true;
-            label7.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point);
+            label7.Font = new System.Drawing.Font("Segoe UI", 10F);
+            label7.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
             label7.Location = new Point(70, 58);
             label7.Name = "label7";
             label7.Size = new Size(44, 17);
@@ -161,18 +189,25 @@
             // 
             // cancelButton
             // 
-            cancelButton.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point);
-            cancelButton.Location = new Point(254, 246);
+            cancelButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            cancelButton.BackColor = System.Drawing.ColorTranslator.FromHtml("#F5F5F5");
+            cancelButton.FlatAppearance.BorderColor = System.Drawing.ColorTranslator.FromHtml("#CFB53B");
+            cancelButton.FlatAppearance.BorderSize = 1;
+            cancelButton.FlatStyle = FlatStyle.Flat;
+            cancelButton.Font = new System.Drawing.Font("Segoe UI", 10F, FontStyle.Bold);
+            cancelButton.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
+            cancelButton.Location = new Point(297, 246); // Adjusted X for Right anchor
             cancelButton.Name = "cancelButton";
             cancelButton.Size = new Size(95, 34);
             cancelButton.TabIndex = 5;
             cancelButton.Text = "Cancel";
-            cancelButton.UseVisualStyleBackColor = true;
+            cancelButton.UseVisualStyleBackColor = false;
             // 
             // CheckInDialog
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
-            AutoScaleMode = AutoScaleMode.Font;
+            AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
+            BackColor = System.Drawing.ColorTranslator.FromHtml("#FFF5EE");
             CancelButton = cancelButton;
             ClientSize = new Size(404, 323);
             Controls.Add(cancelButton);
@@ -188,6 +223,8 @@
             Controls.Add(userTotalTextBox);
             Controls.Add(deleteButton);
             Controls.Add(updateButton);
+            Font = new System.Drawing.Font("Segoe UI", 10F);
+            ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
             Name = "CheckInDialog";
             ShowIcon = false;
             ShowInTaskbar = false;
