@@ -9,7 +9,10 @@
  * White Acre Software LLC.
  *
  */
- namespace grace
+using System.Diagnostics;
+using System.Windows.Forms;
+
+namespace grace
 {
     public partial class AboutBox : Form
     {
@@ -29,6 +32,25 @@
         private void Button1_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void linkLabelReleases_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            try
+            {
+                // Navigate to the URL.
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+                {
+                    FileName = "https://github.com/whiteacrellc/grace/releases",
+                    UseShellExecute = true // Important for opening URLs in the default browser
+                });
+            }
+            catch (System.Exception ex)
+            {
+                // Optionally, handle any exceptions that might occur when trying to open the link
+                // For example, log the error or show a message to the user
+                // System.Windows.Forms.MessageBox.Show($"Unable to open link: {ex.Message}");
+            }
         }
     }
 }
