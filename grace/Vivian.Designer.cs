@@ -247,7 +247,7 @@ namespace grace
             tabControl.Controls.Add(collectionPage);
             tabControl.Controls.Add(adminPage);
             tabControl.DrawMode = TabDrawMode.OwnerDrawFixed;
-            tabControl.Font = new Font("Georgia", 11F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            tabControl.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             tabControl.HotTrack = true;
             tabControl.ItemSize = new Size(200, 40);
             tabControl.Location = new Point(0, 31);
@@ -296,7 +296,7 @@ namespace grace
             // loggedInLabel
             // 
             loggedInLabel.AutoSize = true;
-            loggedInLabel.Font = new Font("Segoe UI", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            loggedInLabel.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             loggedInLabel.ForeColor = Color.FromArgb(54, 69, 79);
             loggedInLabel.Location = new Point(343, 29);
             loggedInLabel.Name = "loggedInLabel";
@@ -362,7 +362,7 @@ namespace grace
             // passwordLabel
             // 
             passwordLabel.AutoSize = true;
-            passwordLabel.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            passwordLabel.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             passwordLabel.ForeColor = Color.FromArgb(54, 69, 79);
             passwordLabel.Location = new Point(121, 238);
             passwordLabel.Name = "passwordLabel";
@@ -374,7 +374,7 @@ namespace grace
             // 
             pickUserLabel.AutoSize = true;
             pickUserLabel.BackColor = Color.Transparent;
-            pickUserLabel.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            pickUserLabel.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             pickUserLabel.ForeColor = Color.FromArgb(54, 69, 79);
             pickUserLabel.Location = new Point(121, 179);
             pickUserLabel.Name = "pickUserLabel";
@@ -605,7 +605,7 @@ namespace grace
             label7.AutoSize = true;
             label7.BackColor = Color.Transparent;
             label7.BorderStyle = BorderStyle.FixedSingle;
-            label7.Font = new Font("Georgia", 11F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label7.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             label7.ForeColor = Color.FromArgb(54, 69, 79);
             label7.Location = new Point(1108, 429);
             label7.Name = "label7";
@@ -849,7 +849,7 @@ namespace grace
             // reportInfoLabel
             // 
             reportInfoLabel.AutoSize = true;
-            reportInfoLabel.Font = new Font("Georgia", 11F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            reportInfoLabel.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             reportInfoLabel.ForeColor = Color.FromArgb(54, 69, 79);
             reportInfoLabel.Location = new Point(558, 21);
             reportInfoLabel.Name = "reportInfoLabel";
@@ -861,7 +861,7 @@ namespace grace
             // filterLable
             // 
             filterLable.AutoSize = true;
-            filterLable.Font = new Font("Georgia", 11F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            filterLable.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             filterLable.ForeColor = Color.FromArgb(54, 69, 79);
             filterLable.Location = new Point(8, 18);
             filterLable.Name = "filterLable";
@@ -1123,7 +1123,7 @@ namespace grace
             // label9
             // 
             label9.AutoSize = true;
-            label9.Font = new Font("Georgia", 11F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label9.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             label9.ForeColor = Color.FromArgb(54, 69, 79);
             label9.Location = new Point(1089, 34);
             label9.Name = "label9";
