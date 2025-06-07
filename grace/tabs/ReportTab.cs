@@ -67,6 +67,9 @@ namespace grace.tabs
             {
                // {"LastUpdated", "Total" },
                 {"Sku", "Item #" },
+                {"PrevTotal", "Previous Total" },
+                {"Total", "Current Total" },
+                {"LastUpdated", "Last Updated" },
                 // Add more mappings as needed
             };
 
