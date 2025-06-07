@@ -22,7 +22,7 @@
         {
 
             // Format the build date and time as "yyyyMMddHHmm"
-            string versionString = "2.0.8";
+            string versionString = "2.0.11";
             buildLabel.Text = "Version: " + versionString;
         }
 

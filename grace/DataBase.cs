@@ -313,6 +313,7 @@ namespace grace
             public string Description { get; set; }
             public string User {  get; set; }
             public int Total { get; set; }
+            public int PrevTotal { get; set; } = 0;
             public DateTime LastUpdated { get; set; }
             public string Note { get; set; }
             public int GraceId { get; set; }
@@ -328,11 +329,36 @@ namespace grace
             table.Columns.Add("Description", typeof(string));
             table.Columns.Add("User", typeof(string));
             table.Columns.Add("Total", typeof(int));
+            table.Columns.Add("PrevTotal", typeof(int));
             table.Columns.Add("LastUpdated", typeof(DateTime));
             table.Columns.Add("Note", typeof(string));
 
 
             using GraceDbContext dbContext = new();
+            List<ReportData> result = [.. (
+                from gr in dbContext.GraceRows
+                join totals in dbContext.Totals on gr.GraceId equals totals.GraceId
+                let prevTotal = dbContext.Totals
+                    .Where(t => t.GraceId == gr.GraceId)
+                    .OrderByDescending(t => t.LastUpdated)
+                    .Skip(1)
+                    .Select(t => t.CurrentTotal)
+                    .FirstOrDefault()
+                orderby totals.LastUpdated descending, totals.CurrentTotal descending
+                select new ReportData
+                {
+                    Sku = gr.Sku,
+                    Brand = gr.Brand,
+                    Description = gr.Description,
+                    User = totals.User,
+                    Total = totals.CurrentTotal,
+                    PrevTotal = prevTotal,
+                    LastUpdated = totals.LastUpdated,
+                    Note = gr.Note,
+                    GraceId = gr.GraceId
+            })];
+
+            /*
             // Performing the join and projection
             List<ReportData> result = [.. (
                     from gr in dbContext.GraceRows
@@ -349,12 +375,13 @@ namespace grace
                         Note = gr.Note,
                         GraceId = gr.GraceId
                     })];
+            */
 
             foreach (ReportData? report in result)
             {
                 table.Rows.Add(report.Sku, report.Brand,
-                    report.Description, report.User, report.Total, report.LastUpdated,
-                    report.Note);
+                    report.Description, report.User, report.Total, report.PrevTotal,
+                    report.LastUpdated, report.Note);
             }
             return table;
         }
@@ -826,7 +853,7 @@ namespace grace
 
         public static List<string> GetCollections()
         {
-            using (var dbContext = new GraceDbContext())
+            using (GraceDbContext dbContext = new GraceDbContext())
             {
                 var distinctNames = dbContext.Collections
                     .Where(c => c.Name != "Other")
