@@ -108,7 +108,7 @@ namespace grace
             }
 
             List<GraceRow> rows = [];
-            List<Grace> result = context.Graces.ToList();
+            List<Grace> result = [.. context.Graces];
             foreach (Grace item in result)
             {
                 GraceRow row = new()

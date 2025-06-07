@@ -124,7 +124,7 @@ namespace grace.tabs
             filterTextBox.Clear();
 
             // Bind the whole dataset
-            BindDataSource(true);
+            BindDataSource(false);
 
             // Enable the button
             button.Enabled = true;
@@ -134,7 +134,7 @@ namespace grace.tabs
         {
             string searchTerm = filterTextBox.Text;
             reportGridView.DataSource = string.IsNullOrEmpty(searchTerm) ? dataTable : GetFilteredData(dataTable, searchTerm);
-            reportGridView.Sort(reportGridView.Columns["LastUpdated"], System.ComponentModel.ListSortDirection.Ascending);
+            reportGridView.Sort(reportGridView.Columns["LastUpdated"], System.ComponentModel.ListSortDirection.Descending);
         }
 
         public static DataView GetFilteredData(DataTable table, string searchTerm)
