@@ -64,18 +64,26 @@ namespace grace
             // 
             // cancelButton
             // 
-            cancelButton.Font = new Font("Segoe UI", 11.25F);
-            cancelButton.Location = new Point(452, 512);
+            cancelButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            cancelButton.BackColor = System.Drawing.ColorTranslator.FromHtml("#F5F5F5");
+            cancelButton.FlatAppearance.BorderColor = System.Drawing.ColorTranslator.FromHtml("#CFB53B");
+            cancelButton.FlatAppearance.BorderSize = 1;
+            cancelButton.FlatStyle = FlatStyle.Flat;
+            cancelButton.Font = new System.Drawing.Font("Segoe UI", 10F, FontStyle.Bold);
+            cancelButton.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
+            cancelButton.Location = new Point(699, 512); // Adjusted X for Right anchor (858 - 113 - approx 40 for padding)
             cancelButton.Margin = new Padding(2, 1, 2, 1);
             cancelButton.Name = "cancelButton";
             cancelButton.Size = new Size(113, 33);
             cancelButton.TabIndex = 11;
             cancelButton.Text = "Cancel";
-            cancelButton.UseVisualStyleBackColor = true;
+            cancelButton.UseVisualStyleBackColor = false;
             cancelButton.Click += cancelButton_Click;
             // 
             // panel1
             // 
+            panel1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            panel1.BackColor = System.Drawing.ColorTranslator.FromHtml("#FFF5EE"); // Blend with form
             panel1.BorderStyle = BorderStyle.FixedSingle;
             panel1.Controls.Add(noteTextBox);
             panel1.Controls.Add(label9);
@@ -105,16 +113,22 @@ namespace grace
             // 
             // noteTextBox
             // 
+            noteTextBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            noteTextBox.BackColor = System.Drawing.ColorTranslator.FromHtml("#FFFAF0");
+            noteTextBox.BorderStyle = BorderStyle.FixedSingle;
+            noteTextBox.Font = new System.Drawing.Font("Segoe UI", 10F);
+            noteTextBox.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
             noteTextBox.Location = new Point(146, 294);
             noteTextBox.Multiline = true;
             noteTextBox.Name = "noteTextBox";
-            noteTextBox.Size = new Size(269, 67);
+            noteTextBox.Size = new Size(269, 67); // Width will be adjusted by anchor
             noteTextBox.TabIndex = 31;
             // 
             // label9
             // 
             label9.AutoSize = true;
-            label9.Font = new Font("Segoe UI", 9.75F);
+            label9.Font = new System.Drawing.Font("Segoe UI", 10F);
+            label9.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
             label9.Location = new Point(26, 295);
             label9.Name = "label9";
             label9.Size = new Size(37, 17);
@@ -124,7 +138,8 @@ namespace grace
             // addCollectionLabel
             // 
             addCollectionLabel.AutoSize = true;
-            addCollectionLabel.Font = new Font("Segoe UI", 10.125F);
+            addCollectionLabel.Font = new System.Drawing.Font("Segoe UI", 10F);
+            addCollectionLabel.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
             addCollectionLabel.Location = new Point(433, 336);
             addCollectionLabel.Margin = new Padding(2, 0, 2, 0);
             addCollectionLabel.Name = "addCollectionLabel";
@@ -136,7 +151,11 @@ namespace grace
             // 
             // addCollectionTextBox
             // 
-            addCollectionTextBox.Font = new Font("Segoe UI", 10.125F);
+            addCollectionTextBox.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            addCollectionTextBox.BackColor = System.Drawing.ColorTranslator.FromHtml("#FFFAF0");
+            addCollectionTextBox.BorderStyle = BorderStyle.FixedSingle;
+            addCollectionTextBox.Font = new System.Drawing.Font("Segoe UI", 10F);
+            addCollectionTextBox.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
             addCollectionTextBox.Location = new Point(581, 336);
             addCollectionTextBox.Margin = new Padding(2, 1, 2, 1);
             addCollectionTextBox.Name = "addCollectionTextBox";
@@ -147,6 +166,11 @@ namespace grace
             // 
             // checkedListBox
             // 
+            checkedListBox.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
+            checkedListBox.BackColor = System.Drawing.ColorTranslator.FromHtml("#FFFAF0");
+            checkedListBox.BorderStyle = BorderStyle.FixedSingle;
+            checkedListBox.Font = new System.Drawing.Font("Segoe UI", 10F);
+            checkedListBox.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
             checkedListBox.FormattingEnabled = true;
             checkedListBox.Location = new Point(581, 38);
             checkedListBox.Name = "checkedListBox";
@@ -156,9 +180,11 @@ namespace grace
             // 
             // label8
             // 
+            label8.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             label8.AutoSize = true;
             label8.BorderStyle = BorderStyle.FixedSingle;
-            label8.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            label8.Font = new System.Drawing.Font("Segoe UI", 10F, FontStyle.Bold);
+            label8.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
             label8.Location = new Point(17, 389);
             label8.Name = "label8";
             label8.Size = new Size(254, 23);
@@ -168,7 +194,8 @@ namespace grace
             // collectionLabel
             // 
             collectionLabel.AutoSize = true;
-            collectionLabel.Font = new Font("Segoe UI", 14.25F, FontStyle.Bold);
+            collectionLabel.Font = new System.Drawing.Font("Georgia", 11F, FontStyle.Bold);
+            collectionLabel.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
             collectionLabel.Location = new Point(581, 10);
             collectionLabel.Name = "collectionLabel";
             collectionLabel.Size = new Size(109, 25);
@@ -177,7 +204,10 @@ namespace grace
             // 
             // brandComboBox
             // 
-            brandComboBox.Font = new Font("Segoe UI", 9.75F);
+            brandComboBox.BackColor = System.Drawing.ColorTranslator.FromHtml("#FFFAF0");
+            brandComboBox.FlatStyle = FlatStyle.Flat;
+            brandComboBox.Font = new System.Drawing.Font("Segoe UI", 10F);
+            brandComboBox.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
             brandComboBox.FormattingEnabled = true;
             brandComboBox.Location = new Point(267, 52);
             brandComboBox.Name = "brandComboBox";
@@ -186,7 +216,10 @@ namespace grace
             // 
             // adjustTextBox
             // 
-            adjustTextBox.Font = new Font("Segoe UI", 9.75F);
+            adjustTextBox.BackColor = System.Drawing.ColorTranslator.FromHtml("#FFFAF0");
+            adjustTextBox.BorderStyle = BorderStyle.FixedSingle;
+            adjustTextBox.Font = new System.Drawing.Font("Segoe UI", 10F);
+            adjustTextBox.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
             adjustTextBox.Location = new Point(265, 241);
             adjustTextBox.Name = "adjustTextBox";
             adjustTextBox.Size = new Size(150, 25);
@@ -195,7 +228,8 @@ namespace grace
             // adjustInventoryLabel
             // 
             adjustInventoryLabel.AutoSize = true;
-            adjustInventoryLabel.Font = new Font("Segoe UI", 10.125F, FontStyle.Bold);
+            adjustInventoryLabel.Font = new System.Drawing.Font("Segoe UI", 10F, FontStyle.Bold);
+            adjustInventoryLabel.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
             adjustInventoryLabel.Location = new Point(17, 247);
             adjustInventoryLabel.Name = "adjustInventoryLabel";
             adjustInventoryLabel.Size = new Size(228, 19);
@@ -205,7 +239,10 @@ namespace grace
             // 
             // currentTextBox
             // 
-            currentTextBox.Font = new Font("Segoe UI", 9.75F);
+            currentTextBox.BackColor = System.Drawing.ColorTranslator.FromHtml("#FFFAF0");
+            currentTextBox.BorderStyle = BorderStyle.FixedSingle;
+            currentTextBox.Font = new System.Drawing.Font("Segoe UI", 10F);
+            currentTextBox.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
             currentTextBox.Location = new Point(265, 193);
             currentTextBox.Name = "currentTextBox";
             currentTextBox.ReadOnly = true;
@@ -215,7 +252,8 @@ namespace grace
             // label6
             // 
             label6.AutoSize = true;
-            label6.Font = new Font("Segoe UI", 9.75F);
+            label6.Font = new System.Drawing.Font("Segoe UI", 10F);
+            label6.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
             label6.Location = new Point(17, 201);
             label6.Name = "label6";
             label6.Size = new Size(108, 17);
@@ -224,7 +262,10 @@ namespace grace
             // 
             // barCodeTextBox
             // 
-            barCodeTextBox.Font = new Font("Segoe UI", 9.75F);
+            barCodeTextBox.BackColor = System.Drawing.ColorTranslator.FromHtml("#FFFAF0");
+            barCodeTextBox.BorderStyle = BorderStyle.FixedSingle;
+            barCodeTextBox.Font = new System.Drawing.Font("Segoe UI", 10F);
+            barCodeTextBox.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
             barCodeTextBox.Location = new Point(265, 159);
             barCodeTextBox.Name = "barCodeTextBox";
             barCodeTextBox.Size = new Size(150, 25);
@@ -233,7 +274,10 @@ namespace grace
             // 
             // availabilityTextBox
             // 
-            availabilityTextBox.Font = new Font("Segoe UI", 9.75F);
+            availabilityTextBox.BackColor = System.Drawing.ColorTranslator.FromHtml("#FFFAF0");
+            availabilityTextBox.BorderStyle = BorderStyle.FixedSingle;
+            availabilityTextBox.Font = new System.Drawing.Font("Segoe UI", 10F);
+            availabilityTextBox.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
             availabilityTextBox.Location = new Point(265, 121);
             availabilityTextBox.Name = "availabilityTextBox";
             availabilityTextBox.Size = new Size(150, 25);
@@ -242,7 +286,8 @@ namespace grace
             // label5
             // 
             label5.AutoSize = true;
-            label5.Font = new Font("Segoe UI", 9.75F);
+            label5.Font = new System.Drawing.Font("Segoe UI", 10F);
+            label5.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
             label5.Location = new Point(17, 162);
             label5.Name = "label5";
             label5.Size = new Size(62, 17);
@@ -252,7 +297,8 @@ namespace grace
             // label4
             // 
             label4.AutoSize = true;
-            label4.Font = new Font("Segoe UI", 9.75F);
+            label4.Font = new System.Drawing.Font("Segoe UI", 10F);
+            label4.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
             label4.Location = new Point(17, 124);
             label4.Name = "label4";
             label4.Size = new Size(95, 17);
@@ -261,7 +307,10 @@ namespace grace
             // 
             // descTextBox
             // 
-            descTextBox.Font = new Font("Segoe UI", 9.75F);
+            descTextBox.BackColor = System.Drawing.ColorTranslator.FromHtml("#FFFAF0");
+            descTextBox.BorderStyle = BorderStyle.FixedSingle;
+            descTextBox.Font = new System.Drawing.Font("Segoe UI", 10F);
+            descTextBox.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
             descTextBox.Location = new Point(146, 87);
             descTextBox.Name = "descTextBox";
             descTextBox.Size = new Size(269, 25);
@@ -270,7 +319,8 @@ namespace grace
             // label3
             // 
             label3.AutoSize = true;
-            label3.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
+            label3.Font = new System.Drawing.Font("Segoe UI", 10F, FontStyle.Bold);
+            label3.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
             label3.Location = new Point(17, 90);
             label3.Name = "label3";
             label3.Size = new Size(79, 17);
@@ -279,7 +329,10 @@ namespace grace
             // 
             // skuTextBox
             // 
-            skuTextBox.Font = new Font("Segoe UI", 9.75F);
+            skuTextBox.BackColor = System.Drawing.ColorTranslator.FromHtml("#FFFAF0");
+            skuTextBox.BorderStyle = BorderStyle.FixedSingle;
+            skuTextBox.Font = new System.Drawing.Font("Segoe UI", 10F);
+            skuTextBox.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
             skuTextBox.Location = new Point(265, 15);
             skuTextBox.Name = "skuTextBox";
             skuTextBox.Size = new Size(150, 25);
@@ -289,7 +342,8 @@ namespace grace
             // label2
             // 
             label2.AutoSize = true;
-            label2.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
+            label2.Font = new System.Drawing.Font("Segoe UI", 10F, FontStyle.Bold);
+            label2.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
             label2.Location = new Point(17, 55);
             label2.Name = "label2";
             label2.Size = new Size(44, 17);
@@ -299,7 +353,8 @@ namespace grace
             // label1
             // 
             label1.AutoSize = true;
-            label1.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
+            label1.Font = new System.Drawing.Font("Segoe UI", 10F, FontStyle.Bold);
+            label1.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
             label1.Location = new Point(17, 18);
             label1.Name = "label1";
             label1.Size = new Size(32, 17);
@@ -308,26 +363,38 @@ namespace grace
             // 
             // saveButton
             // 
-            saveButton.Font = new Font("Segoe UI", 11.25F);
+            saveButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            saveButton.BackColor = System.Drawing.ColorTranslator.FromHtml("#F5F5F5");
+            saveButton.FlatAppearance.BorderColor = System.Drawing.ColorTranslator.FromHtml("#CFB53B");
+            saveButton.FlatAppearance.BorderSize = 1;
+            saveButton.FlatStyle = FlatStyle.Flat;
+            saveButton.Font = new System.Drawing.Font("Segoe UI", 10F, FontStyle.Bold);
+            saveButton.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
             saveButton.Location = new Point(40, 512);
             saveButton.Margin = new Padding(2, 1, 2, 1);
             saveButton.Name = "saveButton";
             saveButton.Size = new Size(113, 33);
             saveButton.TabIndex = 9;
             saveButton.Text = "Update";
-            saveButton.UseVisualStyleBackColor = true;
+            saveButton.UseVisualStyleBackColor = false;
             saveButton.Click += SaveButton_Click;
             // 
             // deleteButton
             // 
-            deleteButton.Font = new Font("Segoe UI", 11.25F);
+            deleteButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            deleteButton.BackColor = System.Drawing.ColorTranslator.FromHtml("#F5F5F5");
+            deleteButton.FlatAppearance.BorderColor = System.Drawing.ColorTranslator.FromHtml("#CFB53B");
+            deleteButton.FlatAppearance.BorderSize = 1;
+            deleteButton.FlatStyle = FlatStyle.Flat;
+            deleteButton.Font = new System.Drawing.Font("Segoe UI", 10F, FontStyle.Bold);
+            deleteButton.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
             deleteButton.Location = new Point(241, 512);
             deleteButton.Margin = new Padding(2, 1, 2, 1);
             deleteButton.Name = "deleteButton";
             deleteButton.Size = new Size(113, 33);
             deleteButton.TabIndex = 10;
             deleteButton.Text = "Delete";
-            deleteButton.UseVisualStyleBackColor = true;
+            deleteButton.UseVisualStyleBackColor = false;
             deleteButton.Click += DeleteButton_Click;
             // 
             // toolTip
@@ -336,8 +403,9 @@ namespace grace
             // 
             // EditRowForm
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
-            AutoScaleMode = AutoScaleMode.Font;
+            AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
+            BackColor = System.Drawing.ColorTranslator.FromHtml("#FFF5EE");
             CancelButton = cancelButton;
             ClientSize = new Size(858, 571);
             Controls.Add(deleteButton);

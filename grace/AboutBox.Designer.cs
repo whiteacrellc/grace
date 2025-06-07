@@ -37,7 +37,8 @@
             // programLabel
             // 
             programLabel.AutoSize = true;
-            programLabel.Font = new Font("Segoe UI", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            programLabel.Font = new System.Drawing.Font("Georgia", 11F, FontStyle.Bold);
+            programLabel.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
             programLabel.Location = new Point(69, 31);
             programLabel.Name = "programLabel";
             programLabel.Size = new Size(231, 25);
@@ -47,7 +48,8 @@
             // authorLabel
             // 
             authorLabel.AutoSize = true;
-            authorLabel.Font = new Font("Segoe UI", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            authorLabel.Font = new System.Drawing.Font("Georgia", 11F, FontStyle.Bold);
+            authorLabel.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
             authorLabel.Location = new Point(69, 80);
             authorLabel.Name = "authorLabel";
             authorLabel.Size = new Size(337, 25);
@@ -57,7 +59,8 @@
             // buildLabel
             // 
             buildLabel.AutoSize = true;
-            buildLabel.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            buildLabel.Font = new System.Drawing.Font("Segoe UI", 10F);
+            buildLabel.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
             buildLabel.Location = new Point(238, 146);
             buildLabel.Name = "buildLabel";
             buildLabel.Size = new Size(265, 21);
@@ -66,24 +69,33 @@
             // 
             // button1
             // 
-            button1.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            button1.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            button1.BackColor = System.Drawing.ColorTranslator.FromHtml("#F5F5F5");
+            button1.FlatAppearance.BorderColor = System.Drawing.ColorTranslator.FromHtml("#CFB53B");
+            button1.FlatAppearance.BorderSize = 1;
+            button1.FlatStyle = FlatStyle.Flat;
+            button1.Font = new System.Drawing.Font("Segoe UI", 10F, FontStyle.Bold);
+            button1.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
             button1.Location = new Point(69, 146);
             button1.Name = "button1";
             button1.Size = new Size(86, 42);
             button1.TabIndex = 3;
             button1.Text = "Close";
-            button1.UseVisualStyleBackColor = true;
+            button1.UseVisualStyleBackColor = false;
             button1.Click += Button1_Click;
             // 
             // AboutBox
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
-            AutoScaleMode = AutoScaleMode.Font;
+            AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
+            BackColor = System.Drawing.ColorTranslator.FromHtml("#FFF5EE");
             ClientSize = new Size(520, 200);
             Controls.Add(button1);
             Controls.Add(buildLabel);
             Controls.Add(authorLabel);
             Controls.Add(programLabel);
+            Font = new System.Drawing.Font("Segoe UI", 10F);
+            ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
             Name = "AboutBox";
             ShowIcon = false;
             ShowInTaskbar = false;

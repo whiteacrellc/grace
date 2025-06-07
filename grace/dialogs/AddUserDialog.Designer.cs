@@ -40,18 +40,27 @@
             // 
             // saveButton
             // 
-            saveButton.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point);
+            saveButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            saveButton.BackColor = System.Drawing.ColorTranslator.FromHtml("#F5F5F5");
+            saveButton.FlatAppearance.BorderColor = System.Drawing.ColorTranslator.FromHtml("#CFB53B");
+            saveButton.FlatAppearance.BorderSize = 1;
+            saveButton.FlatStyle = FlatStyle.Flat;
+            saveButton.Font = new System.Drawing.Font("Segoe UI", 10F, FontStyle.Bold);
+            saveButton.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
             saveButton.Location = new Point(48, 235);
             saveButton.Name = "saveButton";
             saveButton.Size = new Size(75, 28);
             saveButton.TabIndex = 0;
             saveButton.Text = "Save";
-            saveButton.UseVisualStyleBackColor = true;
+            saveButton.UseVisualStyleBackColor = false;
             saveButton.Click += saveButton_Click;
             // 
             // usernameTextBox
             // 
-            usernameTextBox.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
+            usernameTextBox.BackColor = System.Drawing.ColorTranslator.FromHtml("#FFFAF0");
+            usernameTextBox.BorderStyle = BorderStyle.FixedSingle;
+            usernameTextBox.Font = new System.Drawing.Font("Segoe UI", 10F);
+            usernameTextBox.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
             usernameTextBox.Location = new Point(149, 46);
             usernameTextBox.Name = "usernameTextBox";
             usernameTextBox.Size = new Size(140, 25);
@@ -60,7 +69,8 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point);
+            label1.Font = new System.Drawing.Font("Segoe UI", 10F);
+            label1.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
             label1.Location = new Point(54, 47);
             label1.Name = "label1";
             label1.Size = new Size(69, 17);
@@ -72,6 +82,8 @@
             forcePasswordUpdateCheckBox.AutoSize = true;
             forcePasswordUpdateCheckBox.Checked = true;
             forcePasswordUpdateCheckBox.CheckState = CheckState.Checked;
+            forcePasswordUpdateCheckBox.Font = new System.Drawing.Font("Segoe UI", 10F);
+            forcePasswordUpdateCheckBox.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
             forcePasswordUpdateCheckBox.Location = new Point(54, 146);
             forcePasswordUpdateCheckBox.Name = "forcePasswordUpdateCheckBox";
             forcePasswordUpdateCheckBox.Size = new Size(178, 19);
@@ -82,7 +94,8 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point);
+            label2.Font = new System.Drawing.Font("Segoe UI", 10F);
+            label2.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
             label2.Location = new Point(54, 91);
             label2.Name = "label2";
             label2.Size = new Size(66, 17);
@@ -91,7 +104,10 @@
             // 
             // passwordTextBox
             // 
-            passwordTextBox.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
+            passwordTextBox.BackColor = System.Drawing.ColorTranslator.FromHtml("#FFFAF0");
+            passwordTextBox.BorderStyle = BorderStyle.FixedSingle;
+            passwordTextBox.Font = new System.Drawing.Font("Segoe UI", 10F);
+            passwordTextBox.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
             passwordTextBox.Location = new Point(149, 90);
             passwordTextBox.Name = "passwordTextBox";
             passwordTextBox.Size = new Size(140, 25);
@@ -101,6 +117,8 @@
             // adminCheckBox
             // 
             adminCheckBox.AutoSize = true;
+            adminCheckBox.Font = new System.Drawing.Font("Segoe UI", 10F);
+            adminCheckBox.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
             adminCheckBox.Location = new Point(54, 182);
             adminCheckBox.Name = "adminCheckBox";
             adminCheckBox.Size = new Size(120, 19);
@@ -110,18 +128,25 @@
             // 
             // cancelButton
             // 
-            cancelButton.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point);
-            cancelButton.Location = new Point(170, 235);
+            cancelButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            cancelButton.BackColor = System.Drawing.ColorTranslator.FromHtml("#F5F5F5");
+            cancelButton.FlatAppearance.BorderColor = System.Drawing.ColorTranslator.FromHtml("#CFB53B");
+            cancelButton.FlatAppearance.BorderSize = 1;
+            cancelButton.FlatStyle = FlatStyle.Flat;
+            cancelButton.Font = new System.Drawing.Font("Segoe UI", 10F, FontStyle.Bold);
+            cancelButton.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
+            cancelButton.Location = new Point(310, 235); // Adjusted X for Right anchor
             cancelButton.Name = "cancelButton";
             cancelButton.Size = new Size(75, 28);
             cancelButton.TabIndex = 7;
             cancelButton.Text = "Cancel";
-            cancelButton.UseVisualStyleBackColor = true;
+            cancelButton.UseVisualStyleBackColor = false;
             // 
             // AddUserDialog
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
-            AutoScaleMode = AutoScaleMode.Font;
+            AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
+            BackColor = System.Drawing.ColorTranslator.FromHtml("#FFF5EE");
             CancelButton = cancelButton;
             ClientSize = new Size(432, 309);
             Controls.Add(cancelButton);
@@ -132,6 +157,8 @@
             Controls.Add(label1);
             Controls.Add(usernameTextBox);
             Controls.Add(saveButton);
+            Font = new System.Drawing.Font("Segoe UI", 10F);
+            ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
             Name = "AddUserDialog";
             ShowIcon = false;
             ShowInTaskbar = false;

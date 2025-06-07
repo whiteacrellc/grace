@@ -52,7 +52,8 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point);
+            label1.Font = new System.Drawing.Font("Segoe UI", 10F);
+            label1.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
             label1.Location = new Point(94, 95);
             label1.Name = "label1";
             label1.Size = new Size(44, 17);
@@ -62,7 +63,8 @@
             // brandLabel
             // 
             brandLabel.AutoSize = true;
-            brandLabel.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
+            brandLabel.Font = new System.Drawing.Font("Segoe UI", 10F);
+            brandLabel.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
             brandLabel.Location = new Point(148, 95);
             brandLabel.Name = "brandLabel";
             brandLabel.Size = new Size(29, 17);
@@ -72,7 +74,8 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point);
+            label2.Font = new System.Drawing.Font("Segoe UI", 10F);
+            label2.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
             label2.Location = new Point(48, 141);
             label2.Name = "label2";
             label2.Size = new Size(90, 17);
@@ -82,7 +85,8 @@
             // skuLabel
             // 
             skuLabel.AutoSize = true;
-            skuLabel.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
+            skuLabel.Font = new System.Drawing.Font("Segoe UI", 10F);
+            skuLabel.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
             skuLabel.Location = new Point(148, 141);
             skuLabel.Name = "skuLabel";
             skuLabel.Size = new Size(29, 17);
@@ -92,7 +96,8 @@
             // descriptionLabel
             // 
             descriptionLabel.AutoSize = true;
-            descriptionLabel.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
+            descriptionLabel.Font = new System.Drawing.Font("Segoe UI", 10F);
+            descriptionLabel.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
             descriptionLabel.Location = new Point(148, 193);
             descriptionLabel.Name = "descriptionLabel";
             descriptionLabel.Size = new Size(29, 17);
@@ -102,7 +107,8 @@
             // label4
             // 
             label4.AutoSize = true;
-            label4.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point);
+            label4.Font = new System.Drawing.Font("Segoe UI", 10F);
+            label4.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
             label4.Location = new Point(59, 193);
             label4.Name = "label4";
             label4.Size = new Size(79, 17);
@@ -112,7 +118,8 @@
             // totalLabel
             // 
             totalLabel.AutoSize = true;
-            totalLabel.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
+            totalLabel.Font = new System.Drawing.Font("Segoe UI", 10F);
+            totalLabel.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
             totalLabel.Location = new Point(148, 241);
             totalLabel.Name = "totalLabel";
             totalLabel.Size = new Size(29, 17);
@@ -122,7 +129,8 @@
             // label5
             // 
             label5.AutoSize = true;
-            label5.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point);
+            label5.Font = new System.Drawing.Font("Segoe UI", 10F);
+            label5.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
             label5.Location = new Point(12, 241);
             label5.Name = "label5";
             label5.Size = new Size(126, 17);
@@ -132,7 +140,8 @@
             // label3
             // 
             label3.AutoSize = true;
-            label3.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point);
+            label3.Font = new System.Drawing.Font("Segoe UI", 10F);
+            label3.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
             label3.Location = new Point(310, 97);
             label3.Name = "label3";
             label3.Size = new Size(138, 17);
@@ -142,7 +151,8 @@
             // label6
             // 
             label6.AutoSize = true;
-            label6.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point);
+            label6.Font = new System.Drawing.Font("Segoe UI", 10F);
+            label6.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
             label6.Location = new Point(342, 149);
             label6.Name = "label6";
             label6.Size = new Size(106, 17);
@@ -152,7 +162,11 @@
             // 
             // numCheckOutTextBox
             // 
-            numCheckOutTextBox.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
+            numCheckOutTextBox.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            numCheckOutTextBox.BackColor = System.Drawing.ColorTranslator.FromHtml("#FFFAF0");
+            numCheckOutTextBox.BorderStyle = BorderStyle.FixedSingle;
+            numCheckOutTextBox.Font = new System.Drawing.Font("Segoe UI", 10F);
+            numCheckOutTextBox.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
             numCheckOutTextBox.Location = new Point(489, 87);
             numCheckOutTextBox.Name = "numCheckOutTextBox";
             numCheckOutTextBox.Size = new Size(121, 25);
@@ -161,7 +175,11 @@
             // 
             // collectionComboBox
             // 
-            collectionComboBox.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
+            collectionComboBox.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            collectionComboBox.BackColor = System.Drawing.ColorTranslator.FromHtml("#FFFAF0");
+            collectionComboBox.FlatStyle = FlatStyle.Flat;
+            collectionComboBox.Font = new System.Drawing.Font("Segoe UI", 10F);
+            collectionComboBox.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
             collectionComboBox.FormattingEnabled = true;
             collectionComboBox.Location = new Point(489, 141);
             collectionComboBox.Name = "collectionComboBox";
@@ -171,30 +189,46 @@
             // 
             // saveButton
             // 
-            saveButton.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point);
+            saveButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            saveButton.BackColor = System.Drawing.ColorTranslator.FromHtml("#F5F5F5");
+            saveButton.FlatAppearance.BorderColor = System.Drawing.ColorTranslator.FromHtml("#CFB53B");
+            saveButton.FlatAppearance.BorderSize = 1;
+            saveButton.FlatStyle = FlatStyle.Flat;
+            saveButton.Font = new System.Drawing.Font("Segoe UI", 10F, FontStyle.Bold);
+            saveButton.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
             saveButton.Location = new Point(133, 308);
             saveButton.Name = "saveButton";
             saveButton.Size = new Size(90, 43);
             saveButton.TabIndex = 12;
             saveButton.Text = "Save";
-            saveButton.UseVisualStyleBackColor = true;
+            saveButton.UseVisualStyleBackColor = false;
             saveButton.Click += SaveButton_Click;
             // 
             // cancelButton
             // 
-            cancelButton.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point);
-            cancelButton.Location = new Point(269, 308);
+            cancelButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            cancelButton.BackColor = System.Drawing.ColorTranslator.FromHtml("#F5F5F5");
+            cancelButton.FlatAppearance.BorderColor = System.Drawing.ColorTranslator.FromHtml("#CFB53B");
+            cancelButton.FlatAppearance.BorderSize = 1;
+            cancelButton.FlatStyle = FlatStyle.Flat;
+            cancelButton.Font = new System.Drawing.Font("Segoe UI", 10F, FontStyle.Bold);
+            cancelButton.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
+            cancelButton.Location = new Point(520, 308); // Adjusted X for Right anchor
             cancelButton.Name = "cancelButton";
             cancelButton.Size = new Size(90, 43);
             cancelButton.TabIndex = 13;
             cancelButton.Text = "Cancel";
-            cancelButton.UseVisualStyleBackColor = true;
+            cancelButton.UseVisualStyleBackColor = false;
             cancelButton.Click += cancelButton_Click;
             // 
             // commentBox
             // 
             commentBox.AcceptsReturn = true;
-            commentBox.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
+            commentBox.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            commentBox.BackColor = System.Drawing.ColorTranslator.FromHtml("#FFFAF0");
+            commentBox.BorderStyle = BorderStyle.FixedSingle;
+            commentBox.Font = new System.Drawing.Font("Segoe UI", 10F);
+            commentBox.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
             commentBox.Location = new Point(489, 210);
             commentBox.Multiline = true;
             commentBox.Name = "commentBox";
@@ -204,7 +238,8 @@
             // label7
             // 
             label7.AutoSize = true;
-            label7.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point);
+            label7.Font = new System.Drawing.Font("Segoe UI", 10F);
+            label7.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
             label7.Location = new Point(389, 210);
             label7.Name = "label7";
             label7.Size = new Size(68, 17);
@@ -213,8 +248,9 @@
             // 
             // CheckOutForm
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
-            AutoScaleMode = AutoScaleMode.Font;
+            AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
+            BackColor = System.Drawing.ColorTranslator.FromHtml("#FFF5EE");
             ClientSize = new Size(658, 377);
             Controls.Add(label7);
             Controls.Add(commentBox);
@@ -232,6 +268,8 @@
             Controls.Add(label2);
             Controls.Add(brandLabel);
             Controls.Add(label1);
+            Font = new System.Drawing.Font("Segoe UI", 10F);
+            ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
             Name = "CheckOutForm";
             ShowIcon = false;
             ShowInTaskbar = false;
