@@ -189,7 +189,6 @@ namespace grace
                 catch (Exception ex)
                 {
                     logger.Error(ex);
-                    DataBase.InitializeDatabase();
                 }
             }
 
@@ -198,6 +197,10 @@ namespace grace
 
         private void ExitToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            // Backup the database on exit
+            BackupAndRestore backup = new();
+            backup.BackupDatabaseToDocuments();
+
             // Close the application
             Application.Exit();
         }

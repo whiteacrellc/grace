@@ -514,7 +514,7 @@ namespace grace
 
         public static void CloseDatabase()
         {
-            using var context = new GraceDbContext();
+            using GraceDbContext context = new();
             context.Database.CloseConnection();
         }
 
