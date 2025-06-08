@@ -206,7 +206,7 @@ namespace grace
             toolStripMenuItem2.Name = "toolStripMenuItem2";
             toolStripMenuItem2.Size = new Size(231, 24);
             toolStripMenuItem2.Text = "Logout";
-            toolStripMenuItem2.Click += ToolStripMenuItem2_Click;
+            toolStripMenuItem2.Click += LogoutToolStripMenuItem_Click;
             // 
             // exitToolStripMenuItem
             // 

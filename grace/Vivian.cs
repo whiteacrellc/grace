@@ -475,7 +475,7 @@ namespace grace
 
         }
 
-        private void ToolStripMenuItem2_Click(object sender, EventArgs e)
+        private void LogoutToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Globals.GetInstance().CurrentUser = null;
             config.RemoveTarget("textboxTarget");
