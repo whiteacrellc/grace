@@ -162,12 +162,11 @@ namespace grace
 
             InitializeLogger();
 
-            // Loads the preferences into the globals singleton
-            //_ = new DataBase();
-
-            // Load all the tab classes
-            // homeTab.Load(); // Removed
-            adminTab.Load(); // This might cause an error if AdminTab.cs hardcodes TabPages[6]
+            adminTab.Load();
+            checkInTab.Load();
+            checkOutTab.Load();
+            reportTab.Load();
+            collectionTab.Load();
 
             string? currentUser = Globals.GetInstance().CurrentUser;
             if (string.IsNullOrEmpty(currentUser))
@@ -180,33 +179,16 @@ namespace grace
             bool isAdmin = PasswordChecker.IsUserAdmin(currentUser);
             if (isAdmin)
             {
-                this.importInventoryToolStripMenuItem.Enabled = true;
-                this.EnableReportMenuItems(true);
+                importInventoryToolStripMenuItem.Enabled = true;
+                EnableReportMenuItems(true);
+                tabControl.SelectedTab = tabControl.TabPages[0];
             }
             else
             {
-                this.importInventoryToolStripMenuItem.Enabled = false;
-                this.EnableReportMenuItems(false);
+                importInventoryToolStripMenuItem.Enabled = false;
+                EnableReportMenuItems(false);
+                tabControl.SelectedTab = tabControl.TabPages[1];
             }
-
-            // Ensure dataPage is selected. It should be the first tab (index 0)
-            // after loginPage is removed.
-            if (this.tabControl.TabPages.Count > 0 && this.tabControl.TabPages[0] == this.dataPage)
-            {
-                this.tabControl.SelectedTab = this.dataPage;
-            }
-            else if (this.tabControl.TabPages.Contains(this.dataPage))
-            {
-                // Fallback if dataPage is not at index 0 for some reason
-                this.tabControl.SelectedTab = this.dataPage;
-            }
-            else if (this.tabControl.TabPages.Count > 0)
-            {
-                // Fallback: select the first available tab if dataPage is missing
-                this.tabControl.SelectedIndex = 0;
-                DisplayLogMessage($"Warning: dataPage not found. Defaulted to first available tab: {this.tabControl.SelectedTab.Name}");
-            }
-            // If no tab pages, nothing to select, which would be an error state handled by other checks.
 
 
             if (DataBase.HaveData())
@@ -222,10 +204,7 @@ namespace grace
                     DataBase.InitializeDatabase();
                 }
             }
-            checkInTab.Load();
-            checkOutTab.Load();
-            reportTab.Load();
-            collectionTab.Load();
+
 
         }
 
