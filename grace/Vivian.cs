@@ -475,5 +475,12 @@ namespace grace
         {
 
         }
+
+        private void LogoutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Globals.GetInstance().CurrentUser = null;
+            this.Close();
+            // The Program.cs logic will handle showing the login form.
+        }
     }
 }

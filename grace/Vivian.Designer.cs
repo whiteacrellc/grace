@@ -222,7 +222,7 @@ namespace grace
             // 
             // viewToolStripMenuItem
             // 
-            viewToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { setInventoryFontSizeToolStripMenuItem });
+            viewToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { setInventoryFontSizeToolStripMenuItem, logoutToolStripMenuItem });
             viewToolStripMenuItem.ForeColor = Color.FromArgb(54, 69, 79);
             viewToolStripMenuItem.Name = "viewToolStripMenuItem";
             viewToolStripMenuItem.Size = new Size(53, 23);
@@ -235,6 +235,14 @@ namespace grace
             setInventoryFontSizeToolStripMenuItem.Size = new Size(232, 24);
             setInventoryFontSizeToolStripMenuItem.Text = "Set Inventory Font Size";
             // 
+            // logoutToolStripMenuItem
+            //
+            logoutToolStripMenuItem.ForeColor = Color.FromArgb(54, 69, 79);
+            logoutToolStripMenuItem.Name = "logoutToolStripMenuItem";
+            logoutToolStripMenuItem.Size = new Size(232, 24);
+            logoutToolStripMenuItem.Text = "Logout";
+            logoutToolStripMenuItem.Click += new System.EventHandler(this.LogoutToolStripMenuItem_Click);
+            //
             // tabControl
             // 
             tabControl.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
@@ -1201,6 +1209,7 @@ namespace grace
         // internal Label pickUserLabel; // Removed
         private ToolStripMenuItem viewToolStripMenuItem;
         internal ToolStripMenuItem setInventoryFontSizeToolStripMenuItem;
+        private ToolStripMenuItem logoutToolStripMenuItem;
         private Label scanBarcodeLabel;
         internal TextBox filterBarcodeTextBox;
         private ToolTip reportToolTip;
