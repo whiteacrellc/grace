@@ -15,7 +15,6 @@
  *  in a separate class is by making it static. 
  *  
  */
-using grace.data.models;
 using grace.utils;
 using NLog;
 using System.Data;
@@ -43,7 +42,7 @@ namespace grace.tabs
         private ToolStripMenuItem saveInventoryReportToolStripMenuItem;
         private bool disposedValue;
         private TextBox filterBarCodeTextBox;
-        private DataTable dataTable = new DataTable();
+        private DataTable dataTable = new();
 
         public DataTab(Vivian v)
         {
@@ -345,7 +344,7 @@ namespace grace.tabs
             button.Enabled = false;
 
             // Create a FontDialog
-            using (FontDialog fontDialog = new FontDialog())
+            using (FontDialog fontDialog = new())
             {
                 // Show the dialog and get the selected font
                 if (fontDialog.ShowDialog() == DialogResult.OK)
@@ -388,7 +387,7 @@ namespace grace.tabs
                     return;
 
                 string filePath = saveFileDialog.FileName;
-                InventoryReport ir = new InventoryReport(dataGridView);
+                InventoryReport ir = new(dataGridView);
                 ir.WriteReport(filePath);
             }
 

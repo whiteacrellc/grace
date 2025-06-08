@@ -12,13 +12,6 @@
  */
 using grace.data;
 using grace.data.models;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace grace.utils
 {
@@ -61,113 +54,101 @@ namespace grace.utils
 
         public static bool CheckPassword(string username, string password)
         {
-            using (var dbContext = new GraceDbContext())
+            using var dbContext = new GraceDbContext();
+            // Retrieve the user from the database
+            User? user = dbContext.Users
+                .FirstOrDefault(u => u.Username == username);
+
+            if (user == null)
             {
-                // Retrieve the user from the database
-                User? user = dbContext.Users
-                    .FirstOrDefault(u => u.Username == username);
-
-                if (user == null)
-                {
-                    return false;
-                }
-
-                return user.Password == password;
+                return false;
             }
+
+            return user.Password == password;
 
         }
 
         public static bool IsUserAdmin(string username)
         {
-            using (var dbContext = new GraceDbContext())
+            using var dbContext = new GraceDbContext();
+            // Retrieve the user from the database
+            User? user = dbContext.Users
+                .FirstOrDefault(u => u.Username == username);
+
+            if (user == null)
             {
-                // Retrieve the user from the database
-                User? user = dbContext.Users
-                    .FirstOrDefault(u => u.Username == username);
-
-                if (user == null)
-                {
-                    return false;
-                }
-
-                return user.Admin;
+                return false;
             }
+
+            return user.Admin;
 
         }
 
         public static bool ResetPassword(string username)
         {
-            using (var dbContext = new GraceDbContext())
+            using var dbContext = new GraceDbContext();
+            // Retrieve the user from the database
+            User? user = dbContext.Users
+                .FirstOrDefault(u => u.Username == username);
+
+            if (user == null)
             {
-                // Retrieve the user from the database
-                User? user = dbContext.Users
-                    .FirstOrDefault(u => u.Username == username);
-
-                if (user == null)
-                {
-                    return false;
-                }
-
-                return user.ResetPassword;
+                return false;
             }
+
+            return user.ResetPassword;
         }
 
         public static bool SetResetFlag(string username)
         {
-            using (var dbContext = new GraceDbContext())
+            using var dbContext = new GraceDbContext();
+            // Retrieve the user from the database
+            User? user = dbContext.Users
+                .FirstOrDefault(u => u.Username == username);
+
+            if (user == null)
             {
-                // Retrieve the user from the database
-                User? user = dbContext.Users
-                    .FirstOrDefault(u => u.Username == username);
-
-                if (user == null)
-                {
-                    return false;
-                }
-
-                user.ResetPassword = true;
-                dbContext.SaveChanges();
-                return true;
+                return false;
             }
+
+            user.ResetPassword = true;
+            dbContext.SaveChanges();
+            return true;
 
         }
 
         public static int ResetIndex(string username)
         {
-            using (var dbContext = new GraceDbContext())
+            using var dbContext = new GraceDbContext();
+            // Retrieve the user from the database
+            User? user = dbContext.Users
+                .FirstOrDefault(u => u.Username == username);
+
+            if (user == null)
             {
-                // Retrieve the user from the database
-                User? user = dbContext.Users
-                    .FirstOrDefault(u => u.Username == username);
-
-                if (user == null)
-                {
-                    return -1;
-                }
-
-                return user.ResetAnswerIndex;
+                return -1;
             }
+
+            return user.ResetAnswerIndex;
 
         }
 
         public static bool UpdateResetAnswer(string username, int index, string answer)
         {
-            using (var dbContext = new GraceDbContext())
+            using var dbContext = new GraceDbContext();
+            // Retrieve the user from the database
+            User? user = dbContext.Users
+                .FirstOrDefault(u => u.Username == username);
+            if (user == null)
             {
-                // Retrieve the user from the database
-                User? user = dbContext.Users
-                    .FirstOrDefault(u => u.Username == username);
-                if (user == null)
-                {
-                    return false;
-                }
-                else
-                {
-                    user.ResetAnswer = answer;
-                    user.ResetAnswerIndex = index;
-                    dbContext.SaveChanges();
-                    return true;
-                }
+                return false;
+            }
+            else
+            {
+                user.ResetAnswer = answer;
+                user.ResetAnswerIndex = index;
+                dbContext.SaveChanges();
+                return true;
             }
 
         }

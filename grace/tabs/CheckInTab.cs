@@ -12,9 +12,9 @@
  */
 using grace.data;
 using grace.data.models;
+using grace.utils;
 using NLog;
 using System.Data;
-using grace.utils;
 
 namespace grace.tabs
 {
@@ -39,7 +39,7 @@ namespace grace.tabs
 
         private void Setup()
         {
-    
+
             this.skuFilterTextBox = vivian.skuFilterTextBox;
             this.checkInDataGrid = vivian.checkInDataGrid;
             this.checkInTabPage = vivian.tabControl.TabPages[2];
@@ -124,22 +124,20 @@ namespace grace.tabs
         {
             int rowIndex = e.RowIndex;
             DataGridViewRow row = checkInDataGrid.Rows[rowIndex];
-            using (CheckInDialog editRowForm = new CheckInDialog(row))
+            using CheckInDialog editRowForm = new(row);
+            DialogResult result = editRowForm.ShowDialog();
+            if (result == DialogResult.OK)
             {
-                DialogResult result = editRowForm.ShowDialog();
-                if (result == DialogResult.OK)
-                {
-                    // we need to reload the grid.
-                    LoadDataGrid();
-                }
+                // we need to reload the grid.
+                LoadDataGrid();
             }
         }
 
         private void ChangeColumnNames()
         {
             // Dictionary to map DbContext column names to desired DataGridView column names
-            Dictionary<string, string> columnMappings = new Dictionary<string, string>
-        {
+            Dictionary<string, string> columnMappings = new()
+            {
             {"UserTotal", "Checked Out" },
             {"dateTime", "Date"},
             // Add more mappings as needed
@@ -298,17 +296,15 @@ namespace grace.tabs
         private void PulledEntrySetComplete(DateTime dateTime, int userId,
             int collectionId, int graceId, int updatedValue)
         {
-            using (var context = new GraceDbContext())
+            using var context = new GraceDbContext();
+            Pulled? pulled = context.PulledDb.SingleOrDefault(e => e.UserId
+                == userId && e.CollectionId == collectionId
+                && e.GraceId == graceId && e.LastUpdated == dateTime);
+            if (pulled != null)
             {
-                Pulled? pulled = context.PulledDb.SingleOrDefault(e => e.UserId
-                    == userId && e.CollectionId == collectionId
-                    && e.GraceId == graceId && e.LastUpdated == dateTime);
-                if (pulled != null)
-                {
-                    pulled.IsCompleted = true;
-                    pulled.CheckedInAmount = updatedValue;
-                    context.SaveChanges();
-                }
+                pulled.IsCompleted = true;
+                pulled.CheckedInAmount = updatedValue;
+                context.SaveChanges();
             }
         }
     }

@@ -10,12 +10,12 @@
  *
  * Year: 2023
  */
+using grace.data.models;
+using NLog;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
-using NLog;
-using System.IO;
-using grace.data.models;
 using System.Data;
+using System.IO;
 
 
 namespace grace
@@ -48,7 +48,7 @@ namespace grace
         }
 
 
-        private void AddRow(Grace grace, int total, string collection, List<CollectionName>collections)
+        private void AddRow(Grace grace, int total, string collection, List<CollectionName> collections)
         {
             // Create a new row
             DataRow newRow = dataTable.NewRow();
@@ -123,10 +123,12 @@ namespace grace
                 // column
                 List<CollectionName> collections = DataBase.GetCollections(row.ID);
                 int i = 0;
-                foreach (CollectionName c in collections) {
+                foreach (CollectionName c in collections)
+                {
                     string col = c.Name;
                     // Don't write out the current collection
-                    if (col.Equals(collection)) {
+                    if (col.Equals(collection))
+                    {
                         continue;
                     }
                     switch (i)
@@ -287,10 +289,8 @@ namespace grace
 
             }
 
-            using (var cells = worksheet.Cells[1, 1, worksheet.Dimension.End.Row, 11])
-            {
-                cells.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-            }
+            using var cells = worksheet.Cells[1, 1, worksheet.Dimension.End.Row, 11];
+            cells.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
         }
         public void WriteReport(string fileName)
         {

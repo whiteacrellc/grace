@@ -1,15 +1,7 @@
 ﻿using grace.data;
 using grace.data.models;
 using NLog;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace grace
 {
@@ -29,45 +21,42 @@ namespace grace
         private void CheckoutForm_Load(object sender, EventArgs e)
         {
             numCheckOutTextBox.Text = "0";
-            using (var context = new GraceDbContext())
+            using var context = new GraceDbContext();
+            // Fetch data from the DbContext
+            var graceRowsData =
+                context.GraceRows.FirstOrDefault(item => item.Sku == sku);
+            if (graceRowsData != null)
             {
-                // Fetch data from the DbContext
-                var graceRowsData =
-                    context.GraceRows.FirstOrDefault(item => item.Sku == sku);
-                if (graceRowsData != null)
+                skuLabel.Text = graceRowsData.Sku;
+                brandLabel.Text = graceRowsData.Brand;
+                descriptionLabel.Text = graceRowsData.Description;
+                totalLabel.Text = graceRowsData.Total.ToString();
+                currentTotal = graceRowsData.Total;
+                graceId = graceRowsData.GraceId;
+            }
+            else
+            {
+                MessageBox.Show("There was a problem",
+                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                DialogResult = DialogResult.Abort;
+                this.Close();
+            }
+            var collections =
+                context.Collections.Where(item => item.GraceId == graceId
+                && item.Name != "Other").OrderBy(item => item.Name).ToList();
+            if (collections.Any())
+            {
+                collectionComboBox.Items.Clear();
+                // Use the retrieved rows (collections) as needed
+                foreach (var collection in collections)
                 {
-                    skuLabel.Text = graceRowsData.Sku;
-                    brandLabel.Text = graceRowsData.Brand;
-                    descriptionLabel.Text = graceRowsData.Description;
-                    totalLabel.Text = graceRowsData.Total.ToString();
-                    currentTotal = graceRowsData.Total;
-                    graceId = graceRowsData.GraceId;
+                    collectionComboBox.Items.Add(collection.Name);
                 }
-                else
+                collectionComboBox.Items.Add("Other");
+                if (collectionComboBox.Items.Count > 0)
                 {
-                    MessageBox.Show("There was a problem",
-                        "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    DialogResult = DialogResult.Abort;
-                    this.Close();
+                    collectionComboBox.SelectedIndex = 0;
                 }
-                var collections =
-                    context.Collections.Where(item => item.GraceId == graceId
-                    && item.Name != "Other").OrderBy(item => item.Name).ToList();
-                if (collections.Any())
-                {
-                    collectionComboBox.Items.Clear();
-                    // Use the retrieved rows (collections) as needed
-                    foreach (var collection in collections)
-                    {
-                        collectionComboBox.Items.Add(collection.Name);
-                    }
-                    collectionComboBox.Items.Add("Other");
-                    if (collectionComboBox.Items.Count > 0)
-                    {
-                        collectionComboBox.SelectedIndex = 0;
-                    }
-                }
-
             }
         }
 
@@ -178,7 +167,7 @@ namespace grace
 
         private void label6_HelpRequested(object sender, HelpEventArgs hlpevent)
         {
-            ToolTip myToolTip = new ToolTip();
+            ToolTip myToolTip = new();
             myToolTip.SetToolTip((Control)sender,
                 "If you are not working on a collection please choose Other.");
 

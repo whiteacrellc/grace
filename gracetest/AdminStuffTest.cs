@@ -10,13 +10,9 @@
  *
  * Year: 2023
  */
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using grace; // For AdminStuff
 using grace.data; // For GraceDbContext
 using grace.data.models; // For User
-using System.Collections.Generic;
-using System.Linq;
-using System.IO; // Required for File operations
 
 namespace gracetest
 {
@@ -189,7 +185,7 @@ namespace gracetest
             // Assert
             var users = TestDbContext.Users.ToList();
             Assert.AreEqual(1, users.Count, "Number of users should not change.");
-            var user1 = users.First(u=> u.Username == "user1");
+            var user1 = users.First(u => u.Username == "user1");
             Assert.IsFalse(user1.Deleted, "Existing user should not be marked as deleted.");
         }
 
@@ -208,7 +204,7 @@ namespace gracetest
             {
                 Assert.Fail($"DeleteUser with null username threw an exception: {ex.Message}");
             }
-            var user1 = TestDbContext.Users.First(u=> u.Username == "user1");
+            var user1 = TestDbContext.Users.First(u => u.Username == "user1");
             Assert.IsFalse(user1.Deleted, "Existing user should not be affected by null username delete attempt.");
         }
 
@@ -284,10 +280,13 @@ namespace gracetest
             // Assert.IsFalse(result, "CreateUser with empty username should return false.");
             // Assert.AreEqual(0, TestDbContext.Users.Count(), "No user should be created with empty username.");
             // For now, testing based on current code structure:
-            if (user != null) {
-                 Assert.AreEqual("", user.Username);
-            } else {
-                 Assert.Fail("User with empty string was not created, or test logic needs adjustment based on requirements for empty usernames.");
+            if (user != null)
+            {
+                Assert.AreEqual("", user.Username);
+            }
+            else
+            {
+                Assert.Fail("User with empty string was not created, or test logic needs adjustment based on requirements for empty usernames.");
             }
         }
 

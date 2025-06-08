@@ -10,10 +10,6 @@
  *
  * Year: 2023
  */
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-
 
 namespace grace.data.models
 {
@@ -24,6 +20,6 @@ namespace grace.data.models
         public int CurrentTotal { get; set; }
         public int GraceId { get; set; }
         public Grace Grace { get; set; }
-        public String User {  get; set; }
+        public String User { get; set; }
     }
 }

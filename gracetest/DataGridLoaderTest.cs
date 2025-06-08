@@ -10,10 +10,7 @@
  *
  * Year: 2023
  */
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using grace;
-using System.Data.SQLite;
-using Moq;
 
 namespace gracetest
 {
@@ -27,7 +24,7 @@ namespace gracetest
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
 
-        
+
         [TestInitialize]
         public void Setup()
         {
@@ -39,7 +36,8 @@ namespace gracetest
             try
             {
                 DataBase.LoadFromExcel(filename);
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 Assert.Fail(ex.Message);
             }

@@ -106,7 +106,7 @@ namespace grace.tabs
         private void ChangeColumnNames()
         {
             // Dictionary to map DbContext column names to desired DataGridView column names
-            Dictionary<string, string> columnMappings = new Dictionary<string, string>
+            Dictionary<string, string> columnMappings = new()
             {
                 {"Total", "Available" },
                 {"UserTotal", "Checked Out" }

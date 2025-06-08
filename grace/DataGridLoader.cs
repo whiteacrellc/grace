@@ -19,13 +19,13 @@ using System.Data;
 namespace grace
 {
     internal class DataGridLoader
-    { 
+    {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
         public static DataTable GetData()
         {
             System.Data.DataTable table = new();
-           // table.Columns.Add("ID", typeof(int));
+            // table.Columns.Add("ID", typeof(int));
             table.Columns.Add("Sku", typeof(string));
             table.Columns.Add("Description", typeof(string));
             table.Columns.Add("Brand", typeof(string));
@@ -133,7 +133,7 @@ namespace grace
 
                 row.Total = total1.CurrentTotal;
                 row.LastUpdated = total1.LastUpdated;
-                row.PrevTotal= (total2 == null) ? 0 : total2.CurrentTotal;
+                row.PrevTotal = (total2 == null) ? 0 : total2.CurrentTotal;
 
                 var collectionList = context.Collections.Where(t => t.GraceId == item.ID);
 

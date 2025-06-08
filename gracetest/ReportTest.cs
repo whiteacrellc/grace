@@ -11,13 +11,10 @@
  * Year: 2023
  */
 using grace;
-using grace.data.models;
 using grace.data;
-using Microsoft.Office.Interop.Excel;
-using OfficeOpenXml;
-using System.Collections.Generic;
-using System.IO;
+using grace.data.models;
 using Microsoft.EntityFrameworkCore;
+using OfficeOpenXml;
 
 namespace gracetest
 {
@@ -47,7 +44,7 @@ namespace gracetest
                 int graceId = 0;
                 using (var context = new GraceDbContext())
                 {
-                   
+
                     var grace = new Grace
                     {
                         Brand = "brand" + (i % 3),
@@ -86,7 +83,7 @@ namespace gracetest
             var worksheet = package.Workbook.Worksheets[0];
             Assert.AreEqual(worksheet.Name, "Report");
             int rowCount = worksheet.Dimension.Rows;
-            Assert.AreEqual(rowCount,50);
+            Assert.AreEqual(rowCount, 50);
             int colCount = worksheet.Dimension.Columns;
             Assert.AreEqual(colCount, 12);
 
