@@ -11,6 +11,7 @@
  * Year: 2023
  */
 using grace.data;
+using grace.data.models;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using NLog;
@@ -18,7 +19,6 @@ using OfficeOpenXml;
 using System.Data;
 using System.IO;
 using System.Runtime.CompilerServices;
-using grace.data.models;
 
 
 [assembly: InternalsVisibleTo("gracetest")]
@@ -109,63 +109,59 @@ namespace grace
             table.Columns.Add("Total", typeof(int));
             table.Columns.Add("GraceId", typeof(int));
 
-            using (var dbContext = new GraceDbContext())
-            {
+            using var dbContext = new GraceDbContext();
 
-                var result = (
-                    from graces in dbContext.Graces
-                    join total in dbContext.Totals on graces.ID equals total.GraceId
-                    where total.LastUpdated == dbContext.Totals
-                                                  .Where(t => t.GraceId == graces.ID)
-                                                  .OrderByDescending(t => t.ID)
-                                                  .Max(t => t.LastUpdated)
-                    orderby graces.Sku ascending
-                    select new CheckOut
-                    {
-                        Sku = graces.Sku,
-                        Description = graces.Description,
-                        Brand = graces.Brand,
-                        BarCode = graces.BarCode,
-                        Total = total.CurrentTotal,
-                        GraceId = graces.ID
-                    }
-                ).ToList();
-
-                foreach (CheckOut? checkOut in result)
+            var result = (
+                from graces in dbContext.Graces
+                join total in dbContext.Totals on graces.ID equals total.GraceId
+                where total.LastUpdated == dbContext.Totals
+                                              .Where(t => t.GraceId == graces.ID)
+                                              .OrderByDescending(t => t.ID)
+                                              .Max(t => t.LastUpdated)
+                orderby graces.Sku ascending
+                select new CheckOut
                 {
-                    table.Rows.Add(checkOut.Sku, checkOut.Description,
-                        checkOut.Brand, checkOut.BarCode, checkOut.Total,
-                        checkOut.GraceId);
+                    Sku = graces.Sku,
+                    Description = graces.Description,
+                    Brand = graces.Brand,
+                    BarCode = graces.BarCode,
+                    Total = total.CurrentTotal,
+                    GraceId = graces.ID
                 }
+            ).ToList();
 
-                return table;
+            foreach (CheckOut? checkOut in result)
+            {
+                table.Rows.Add(checkOut.Sku, checkOut.Description,
+                    checkOut.Brand, checkOut.BarCode, checkOut.Total,
+                    checkOut.GraceId);
             }
+
+            return table;
         }
 
         public static List<CheckOut> GetPulledItem(int pulledId)
         {
-            using (var dbContext = new GraceDbContext())
-            {
+            using var dbContext = new GraceDbContext();
 
-                var result = (
-                    from graces in dbContext.Graces
-                    join total in dbContext.Totals on graces.ID equals total.GraceId
-                    where total == dbContext.Totals
-                                                  .Where(t => t.GraceId == graces.ID)
-                                                  .OrderByDescending(t => t.ID)
-                    orderby graces.Sku ascending
-                    select new CheckOut
-                    {
-                        Sku = graces.Sku,
-                        Description = graces.Description,
-                        Brand = graces.Brand,
-                        BarCode = graces.BarCode,
-                        Total = total.CurrentTotal,
-                        GraceId = graces.ID
-                    }
-                ).ToList();
-                return result;
-            }
+            var result = (
+                from graces in dbContext.Graces
+                join total in dbContext.Totals on graces.ID equals total.GraceId
+                where total == dbContext.Totals
+                                              .Where(t => t.GraceId == graces.ID)
+                                              .OrderByDescending(t => t.ID)
+                orderby graces.Sku ascending
+                select new CheckOut
+                {
+                    Sku = graces.Sku,
+                    Description = graces.Description,
+                    Brand = graces.Brand,
+                    BarCode = graces.BarCode,
+                    Total = total.CurrentTotal,
+                    GraceId = graces.ID
+                }
+            ).ToList();
+            return result;
         }
 
         public static DataView GetPulledGridFromBarCode(string scannedBarcode)
@@ -311,7 +307,7 @@ namespace grace
             public string Sku { get; set; }
             public string Brand { get; set; }
             public string Description { get; set; }
-            public string User {  get; set; }
+            public string User { get; set; }
             public int Total { get; set; }
             public int PrevTotal { get; set; } = 0;
             public DateTime LastUpdated { get; set; }
@@ -443,60 +439,58 @@ namespace grace
             try
             {
 
-                FileInfo fileInfo = new FileInfo(filename);
+                FileInfo fileInfo = new(filename);
                 ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
-                using (ExcelPackage package = new ExcelPackage(fileInfo))
+                using ExcelPackage package = new(fileInfo);
+                ExcelWorksheet worksheet = package.Workbook.Worksheets[0]; // Assuming the first worksheet is the one to read
+
+                int rowCount = worksheet.Dimension.Rows;
+                int colCount = worksheet.Dimension.Columns;
+                int insertId = 0;
+
+                for (int row = 2; row <= rowCount; row++)
                 {
-                    ExcelWorksheet worksheet = package.Workbook.Worksheets[0]; // Assuming the first worksheet is the one to read
+                    ExcelRange rowobj = worksheet.Cells[row, 1, row, worksheet.Dimension.Columns];
 
-                    int rowCount = worksheet.Dimension.Rows;
-                    int colCount = worksheet.Dimension.Columns;
-                    int insertId = 0;
-
-                    for (int row = 2; row <= rowCount; row++)
+                    // if the first column is not null we assume we have a
+                    // valid row
+                    var firstCol = worksheet.Cells[row, 1].Value;
+                    if (firstCol != null)
                     {
-                        ExcelRange rowobj = worksheet.Cells[row, 1, row, worksheet.Dimension.Columns];
-
-                        // if the first column is not null we assume we have a
-                        // valid row
-                        var firstCol = worksheet.Cells[row, 1].Value;
-                        if (firstCol != null)
-                        {
-                            string brand = (string)worksheet.Cells[row, 1].Value;
-                            string barcode = CheckString(worksheet.Cells[row, 2].Value);
-                            string sku = CheckString(worksheet.Cells[row, 3].Value);
-                            string description = (string)worksheet.Cells[row, 4].Value;
-                            var a = worksheet.Cells[row, 11].Value;
-                            string availability = (a == null) ? string.Empty : a as string;
-                            int total = Convert.ToInt32(worksheet.Cells[row, 13].Value);
+                        string brand = (string)worksheet.Cells[row, 1].Value;
+                        string barcode = CheckString(worksheet.Cells[row, 2].Value);
+                        string sku = CheckString(worksheet.Cells[row, 3].Value);
+                        string description = (string)worksheet.Cells[row, 4].Value;
+                        var a = worksheet.Cells[row, 11].Value;
+                        string availability = (a == null) ? string.Empty : a as string;
+                        int total = Convert.ToInt32(worksheet.Cells[row, 13].Value);
 
 
 
-                            insertId = InsertRow(sku, description, brand,
-                                 availability, barcode);
-                            AddTotal(total, insertId);
-                            var col1 = (string)worksheet.Cells[row, 5].Value;
-                            AddCollection(col1, insertId);
+                        insertId = InsertRow(sku, description, brand,
+                             availability, barcode);
+                        AddTotal(total, insertId);
+                        var col1 = (string)worksheet.Cells[row, 5].Value;
+                        AddCollection(col1, insertId);
 
-                            var col2 = (string)worksheet.Cells[row, 6].Value;
-                            AddCollection(col2, insertId);
+                        var col2 = (string)worksheet.Cells[row, 6].Value;
+                        AddCollection(col2, insertId);
 
-                            var col3 = (string)worksheet.Cells[row, 7].Value;
-                            AddCollection(col3, insertId);
+                        var col3 = (string)worksheet.Cells[row, 7].Value;
+                        AddCollection(col3, insertId);
 
-                            var col4 = (string)worksheet.Cells[row, 8].Value;
-                            AddCollection(col4, insertId);
+                        var col4 = (string)worksheet.Cells[row, 8].Value;
+                        AddCollection(col4, insertId);
 
-                            var col5 = (string)worksheet.Cells[row, 9].Value;
-                            AddCollection(col5, insertId);
+                        var col5 = (string)worksheet.Cells[row, 9].Value;
+                        AddCollection(col5, insertId);
 
-                            var col6 = (string)worksheet.Cells[row, 10].Value;
-                            AddCollection(col6, insertId);
-                        }
-                        // we need to add Other into the collection 
-                        AddCollection("Other", insertId);
+                        var col6 = (string)worksheet.Cells[row, 10].Value;
+                        AddCollection(col6, insertId);
                     }
+                    // we need to add Other into the collection 
+                    AddCollection("Other", insertId);
                 }
             }
             catch (Exception ex)
@@ -520,24 +514,20 @@ namespace grace
 
         public static void CloseDatabase()
         {
-            using (var context = new GraceDbContext())
-            {
-                context.Database.CloseConnection();
-            }
+            using GraceDbContext context = new();
+            context.Database.CloseConnection();
         }
 
         private static void InitPrefs()
         {
-            using (var context = new GraceDbContext())
+            using var context = new GraceDbContext();
+            bool created = context.PrefsDb.Any();
+            if (!created)
             {
-                bool created = context.PrefsDb.Any();
-                if (!created)
-                {
-                    Preferences.AddOrUpdateIntPreference(Preferences.Preference.RowHeight, 35);
-                    Preferences.AddOrUpdateIntPreference(Preferences.Preference.RowsPerPage, 45);
-                    Preferences.AddOrUpdateIntPreference(Preferences.Preference.HeaderHeight, 40);
-                    Preferences.AddOrUpdateBooleanPreference(Preferences.Preference.BarCodeAutoOpen, true);
-                }
+                Preferences.AddOrUpdateIntPreference(Preferences.Preference.RowHeight, 35);
+                Preferences.AddOrUpdateIntPreference(Preferences.Preference.RowsPerPage, 45);
+                Preferences.AddOrUpdateIntPreference(Preferences.Preference.HeaderHeight, 40);
+                Preferences.AddOrUpdateBooleanPreference(Preferences.Preference.BarCodeAutoOpen, true);
             }
         }
 
@@ -575,20 +565,18 @@ namespace grace
             int id = 0;
             if (string.IsNullOrEmpty(collection) == false)
             {
-                using (var context = new GraceDbContext())
+                using var context = new GraceDbContext();
+                var newCollection = new CollectionName
                 {
-                    var newCollection = new CollectionName
-                    {
-                        Name = collection.Trim(),
-                        GraceId = graceId
-                    };
+                    Name = collection.Trim(),
+                    GraceId = graceId
+                };
 
-                    context.Collections.Add(newCollection);
-                    context.SaveChanges();
+                context.Collections.Add(newCollection);
+                context.SaveChanges();
 
 
-                    id = newCollection.ID;
-                }
+                id = newCollection.ID;
             }
             return id;
         }
@@ -597,13 +585,11 @@ namespace grace
         {
             if (string.IsNullOrEmpty(collection) == false)
             {
-                using (var context = new GraceDbContext())
-                {
-                    CollectionName? c =
-                        context.Collections.FirstOrDefault(e => e.Name == collection
-                        && e.GraceId == graceId);
-                    return c;
-                }
+                using var context = new GraceDbContext();
+                CollectionName? c =
+                    context.Collections.FirstOrDefault(e => e.Name == collection
+                    && e.GraceId == graceId);
+                return c;
             }
             return null;
         }
@@ -614,7 +600,7 @@ namespace grace
             String currentUser = Globals.GetInstance().CurrentUser;
             using (GraceDbContext context = new())
             {
-                Total newTotal = new Total
+                Total newTotal = new()
                 {
                     LastUpdated = DateTime.Now,
                     CurrentTotal = total,
@@ -733,7 +719,7 @@ namespace grace
         {
             using GraceDbContext context = new();
             int newGraceId = 0;
-            GraceRow graceRow = new GraceRow();
+            GraceRow graceRow = new();
             var grace = context.Graces.Find(graceId);
             if (grace != null)
             {
@@ -861,15 +847,13 @@ namespace grace
 
         public static List<string> GetCollections()
         {
-            using (GraceDbContext dbContext = new GraceDbContext())
-            {
-                var distinctNames = dbContext.Collections
-                    .Where(c => c.Name != "Other")
-                    .Select(c => c.Name)
-                    .Distinct()
-                    .OrderBy(name => name).ToList();
-                return distinctNames;
-            }
+            using GraceDbContext dbContext = new();
+            var distinctNames = dbContext.Collections
+                .Where(c => c.Name != "Other")
+                .Select(c => c.Name)
+                .Distinct()
+                .OrderBy(name => name).ToList();
+            return distinctNames;
         }
 
         public static Dictionary<string, List<Grace>> OrderedCollectionNames()
@@ -916,91 +900,79 @@ namespace grace
 
         public static bool DeleteCollectionRow(int GraceId, string name)
         {
-            using (var context = new GraceDbContext())
-            {
-                // Find the row to check if it exists
-                CollectionName? rowToDelete = context.Collections
-                    .SingleOrDefault(c => c.GraceId == GraceId && c.Name == name);
+            using var context = new GraceDbContext();
+            // Find the row to check if it exists
+            CollectionName? rowToDelete = context.Collections
+                .SingleOrDefault(c => c.GraceId == GraceId && c.Name == name);
 
-                if (rowToDelete != null)
-                {
-                    // Row exists, so delete it
-                    context.Collections.Remove(rowToDelete);
-                    context.SaveChanges();
-                    return true;
-                }
-                return false;
+            if (rowToDelete != null)
+            {
+                // Row exists, so delete it
+                context.Collections.Remove(rowToDelete);
+                context.SaveChanges();
+                return true;
             }
+            return false;
         }
 
         public static bool CheckCollectionExists(string name)
         {
-            using (var context = new GraceDbContext())
-            {
-                bool rowExists = context.Collections
-                  .Any(c => c.Name == name);
-                return rowExists;
-            }
+            using var context = new GraceDbContext();
+            bool rowExists = context.Collections
+              .Any(c => c.Name == name);
+            return rowExists;
         }
 
         public static bool AddCollectionRow(int GraceId, string name)
         {
-            using (var context = new GraceDbContext())
+            using var context = new GraceDbContext();
+            bool rowExists = context.Collections
+                .Any(c => c.GraceId == GraceId && c.Name == name);
+            if (rowExists)
             {
-                bool rowExists = context.Collections
-                    .Any(c => c.GraceId == GraceId && c.Name == name);
-                if (rowExists)
-                {
-                    return false;
-                }
-
-                // Row does not exist, so insert a new row
-                var newRow = new CollectionName
-                {
-                    GraceId = GraceId,
-                    Name = name
-                    // Set other properties as needed
-                };
-
-                context.Collections.Add(newRow);
-                context.SaveChanges();
-                return true;
+                return false;
             }
+
+            // Row does not exist, so insert a new row
+            var newRow = new CollectionName
+            {
+                GraceId = GraceId,
+                Name = name
+                // Set other properties as needed
+            };
+
+            context.Collections.Add(newRow);
+            context.SaveChanges();
+            return true;
         }
 
         public static int GetCollectionId(int graceId, string name)
         {
-            using (var context = new GraceDbContext())
-            {
-                var row = context.Collections
-                    .SingleOrDefault(c => c.GraceId == graceId && c.Name == name);
-                return row.ID;
-            }
+            using var context = new GraceDbContext();
+            var row = context.Collections
+                .SingleOrDefault(c => c.GraceId == graceId && c.Name == name);
+            return row.ID;
         }
 
         public static List<CollectionName> GetCollections(int graceId)
         {
-            using (var context = new GraceDbContext())
-            {
-                List<CollectionName> collectionRows = [.. context.Collections
+            using var context = new GraceDbContext();
+            List<CollectionName> collectionRows = [.. context.Collections
                     .Where(c => c.Name != "Other" && c.GraceId == graceId)
                     .OrderBy(c => c.Name)];
-                return collectionRows;
-            }
+            return collectionRows;
         }
 
         public static Total GetTotal(int graceId)
         {
 
-            using (var context = new GraceDbContext())
-            {
-                var total = context.Totals
-                    .Where(t => t.GraceId == graceId)
-                    .OrderByDescending(t => t.ID)
-                    .Take(2).ToList();
-                var currentTotal = total[0];
-                return currentTotal;
-            }
+            using var context = new GraceDbContext();
+            var total = context.Totals
+                .Where(t => t.GraceId == graceId)
+                .OrderByDescending(t => t.ID)
+                .Take(2).ToList();
+            var currentTotal = total[0];
+            return currentTotal;
         }
 
     }

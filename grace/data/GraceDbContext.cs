@@ -10,8 +10,8 @@
  *
  * Year: 2023
  */
-using Microsoft.EntityFrameworkCore;
 using grace.data.models;
+using Microsoft.EntityFrameworkCore;
 
 
 namespace grace.data

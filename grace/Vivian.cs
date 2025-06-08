@@ -10,23 +10,10 @@
  *
  * Year: 2023
  */
-using System.Drawing;
-using grace.data;
 using grace.tabs;
 using grace.utils;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.VisualBasic.ApplicationServices;
 using NLog;
-using OfficeOpenXml;
-using System.Data;
-using System.Linq.Expressions;
 using System.Text;
-using System.Windows.Controls;
-using System.Windows.Forms;
-using System.Windows.Forms.VisualStyles;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 namespace grace
 {
@@ -47,7 +34,7 @@ namespace grace
         internal ReportTab reportTab;
         internal CollectionTab collectionTab;
         internal NLog.Config.LoggingConfiguration config = new();
-
+        private static bool backedUp = false; // Flag to check if backup has been done
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         public Vivian()
@@ -76,7 +63,7 @@ namespace grace
         private void InitializeLogger()
         {
             // Set up NLog configuration. This can be done in the NLog.config file as well.
-     
+
 
             // Create targets and rules
             NLog.Targets.MethodCallTarget textboxTarget = new("textboxTarget", LogToTextBox);
@@ -202,7 +189,6 @@ namespace grace
                 catch (Exception ex)
                 {
                     logger.Error(ex);
-                    DataBase.InitializeDatabase();
                 }
             }
 
@@ -211,6 +197,17 @@ namespace grace
 
         private void ExitToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (backedUp)
+            {
+                // If backup has already been done, just close the application
+                Application.Exit();
+                return;
+            }
+            // Backup the database on exit
+            backedUp = true; // Set the flag to true to indicate backup has been done
+            BackupAndRestore backup = new();
+            backup.BackupDatabaseToDocuments();
+
             // Close the application
             Application.Exit();
         }
@@ -343,7 +340,7 @@ namespace grace
             page.BackColor = System.Drawing.ColorTranslator.FromHtml("#FFF5EE");
 
             // Background of the tab itself
-            using (SolidBrush backBrush = new SolidBrush(System.Drawing.ColorTranslator.FromHtml("#FFF5EE")))
+            using (SolidBrush backBrush = new(System.Drawing.ColorTranslator.FromHtml("#FFF5EE")))
             {
                 e.Graphics.FillRectangle(backBrush, e.Bounds);
             }
@@ -485,6 +482,21 @@ namespace grace
             DataBase.CloseDatabase();
             this.Close();
             // The Program.cs logic will handle showing the login form.
+        }
+
+        private void Vivian_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (backedUp)
+            {
+                // If backup has already been done, just close the application
+                return;
+            }
+            backedUp = true; // Set the flag to true to indicate backup has been done
+            config.RemoveTarget("textboxTarget");
+            BackupAndRestore backup = new();
+            backup.BackupDatabaseToDocuments();
+            DataBase.CloseDatabase();
+
         }
     }
 }

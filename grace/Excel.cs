@@ -13,9 +13,9 @@
 using NLog;
 using OfficeOpenXml;
 using System.Globalization;
+using System.IO;
 using System.Text.RegularExpressions;
 using LicenseContext = OfficeOpenXml.LicenseContext;
-using System.IO;
 
 namespace grace
 {
@@ -45,8 +45,8 @@ namespace grace
     public class ExcelReader
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
-        private Dictionary<string, List<string>> items = new Dictionary<string, List<string>>();
-        private Dictionary<string, List<Row>> collections = new Dictionary<string, List<Row>>();
+        private Dictionary<string, List<string>> items = new();
+        private Dictionary<string, List<Row>> collections = new();
 
         public Dictionary<string, List<Row>> Collections { get; }
         public Dictionary<string, List<string>> Items { get; }
@@ -80,7 +80,7 @@ namespace grace
             }
             else
             {
-                List<Row> rowList = new List<Row>();
+                List<Row> rowList = new();
                 rowList.Add(r);
                 collections[trimmedKey] = rowList;
             }
@@ -100,7 +100,7 @@ namespace grace
             }
             else
             {
-                List<string> skuList = new List<string>();
+                List<string> skuList = new();
                 skuList.Add(tcol);
                 items[trimmedkey] = skuList;
             }
@@ -161,7 +161,7 @@ namespace grace
             string pattern = @"\b(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sept|Oct|Nov|Dec)\s\d{1,2},\s\d{4}\b";
 
             // Create a regular expression object
-            Regex regex = new Regex(pattern);
+            Regex regex = new(pattern);
 
             // Match the regular expression pattern in the input string
             MatchCollection matches = regex.Matches(header);
@@ -185,69 +185,67 @@ namespace grace
 
         public void ReadExcelFile(string filePath)
         {
-            FileInfo fileInfo = new FileInfo(filePath);
+            FileInfo fileInfo = new(filePath);
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
-            using (ExcelPackage package = new ExcelPackage(fileInfo))
+            using ExcelPackage package = new(fileInfo);
+            ExcelWorksheet worksheet = package.Workbook.Worksheets[0]; // Assuming the first worksheet is the one to read
+
+            int rowCount = worksheet.Dimension.Rows;
+            int colCount = worksheet.Dimension.Columns;
+
+            DateTime dateTime = DateTime.Now;
+            PreviousColumnHeader = parseColumnHeader((string)worksheet.Cells["L1"].Value, -14, out dateTime);
+            Globals.GetInstance().PreviousHeaderDate = dateTime;
+            CurrentColumnHeader = parseColumnHeader((string)worksheet.Cells["M1"].Value, 0, out dateTime);
+            Globals.GetInstance().CurrentHeaderDate = dateTime;
+
+            for (int row = 2; row <= rowCount; row++)
             {
-                ExcelWorksheet worksheet = package.Workbook.Worksheets[0]; // Assuming the first worksheet is the one to read
-
-                int rowCount = worksheet.Dimension.Rows;
-                int colCount = worksheet.Dimension.Columns;
-
-                DateTime dateTime = DateTime.Now;
-                PreviousColumnHeader = parseColumnHeader((string)worksheet.Cells["L1"].Value, -14, out dateTime);
-                Globals.GetInstance().PreviousHeaderDate = dateTime;
-                CurrentColumnHeader = parseColumnHeader((string)worksheet.Cells["M1"].Value, 0, out dateTime);
-                Globals.GetInstance().CurrentHeaderDate = dateTime;
-
-                for (int row = 2; row <= rowCount; row++)
+                // if the first column is not null we assume we have a
+                // valid row
+                var firstCol = worksheet.Cells[row, 1].Value;
+                if (firstCol != null)
                 {
-                    // if the first column is not null we assume we have a
-                    // valid row
-                    var firstCol = worksheet.Cells[row, 1].Value;
-                    if (firstCol != null)
+                    Row r = new();
+
+
+                    r.Brand = (string)worksheet.Cells[row, 1].Value;
+                    r.BarCode = checkString(worksheet.Cells[row, 2].Value);
+                    r.Sku = checkString(worksheet.Cells[row, 3].Value);
+                    r.Description = (string)worksheet.Cells[row, 4].Value;
+                    var availabilty = (worksheet.Cells[row, 11].Value);
+                    if (availabilty != null)
                     {
-                        Row r = new Row();
-
-
-                        r.Brand = (string)worksheet.Cells[row, 1].Value;
-                        r.BarCode = checkString(worksheet.Cells[row, 2].Value);
-                        r.Sku = checkString(worksheet.Cells[row, 3].Value);
-                        r.Description = (string)worksheet.Cells[row, 4].Value;
-                        var availabilty = (worksheet.Cells[row, 11].Value);
-                        if (availabilty != null)
-                        {
-                            r.Availabilty = (string)availabilty;
-                        }
-                        r.PreviousTotal = Convert.ToInt32(worksheet.Cells[row, 12].Value);
-                        r.Total = Convert.ToInt32(worksheet.Cells[row, 13].Value);
-
-                        var col1 = (string)worksheet.Cells[row, 5].Value;
-                        addCollection(col1, r);
-                        addItem(r.Sku, col1);
-                        var col2 = (string)worksheet.Cells[row, 6].Value;
-                        addCollection(col2, r);
-                        addItem(r.Sku, col2);
-                        var col3 = (string)worksheet.Cells[row, 7].Value;
-                        addCollection(col3, r);
-                        addItem(r.Sku, col3);
-                        var col4 = (string)worksheet.Cells[row, 8].Value;
-                        addCollection(col4, r);
-                        addItem(r.Sku, col4);
-                        var col5 = (string)worksheet.Cells[row, 9].Value;
-                        addCollection(col5, r);
-                        addItem(r.Sku, col5);
-                        var col6 = (string)worksheet.Cells[row, 10].Value;
-                        addCollection(col6, r);
-                        addItem(r.Sku, col6);
+                        r.Availabilty = (string)availabilty;
                     }
-                    else
-                    {
-                        logger.Warn("Empty row " + row);
-                    }
+                    r.PreviousTotal = Convert.ToInt32(worksheet.Cells[row, 12].Value);
+                    r.Total = Convert.ToInt32(worksheet.Cells[row, 13].Value);
 
+                    var col1 = (string)worksheet.Cells[row, 5].Value;
+                    addCollection(col1, r);
+                    addItem(r.Sku, col1);
+                    var col2 = (string)worksheet.Cells[row, 6].Value;
+                    addCollection(col2, r);
+                    addItem(r.Sku, col2);
+                    var col3 = (string)worksheet.Cells[row, 7].Value;
+                    addCollection(col3, r);
+                    addItem(r.Sku, col3);
+                    var col4 = (string)worksheet.Cells[row, 8].Value;
+                    addCollection(col4, r);
+                    addItem(r.Sku, col4);
+                    var col5 = (string)worksheet.Cells[row, 9].Value;
+                    addCollection(col5, r);
+                    addItem(r.Sku, col5);
+                    var col6 = (string)worksheet.Cells[row, 10].Value;
+                    addCollection(col6, r);
+                    addItem(r.Sku, col6);
                 }
+                else
+                {
+                    logger.Warn("Empty row " + row);
+                }
+
             }
         }
     }

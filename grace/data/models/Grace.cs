@@ -10,8 +10,6 @@
  *
  * Year: 2023
  */
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 
@@ -28,7 +26,7 @@ namespace grace.data.models
         public string Brand { get; set; }
         public string Availability { get; set; } = string.Empty;
         public string BarCode { get; set; } = string.Empty;
-        public string Note {  get; set; } = string.Empty;
+        public string Note { get; set; } = string.Empty;
         public bool Deleted { get; set; } = false;
 
     }

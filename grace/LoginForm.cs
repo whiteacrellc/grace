@@ -1,14 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using grace.utils;
-using System.Collections.Generic; // Added for List<string>
 
 namespace grace
 {
@@ -53,14 +43,12 @@ namespace grace
                 return;
             }
 
-            using (PasswordChange passwordChange = new PasswordChange(username))
+            using PasswordChange passwordChange = new(username);
+            DialogResult dialogResult = passwordChange.ShowDialog(this); // Show as a child of LoginForm
+            if (dialogResult == DialogResult.OK)
             {
-                DialogResult dialogResult = passwordChange.ShowDialog(this); // Show as a child of LoginForm
-                if (dialogResult == DialogResult.OK)
-                {
-                    MessageBox.Show(this, "Password updated successfully.", "Success",
-                        MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
+                MessageBox.Show(this, "Password updated successfully.", "Success",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 

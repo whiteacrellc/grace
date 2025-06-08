@@ -1,5 +1,5 @@
-﻿using NLog;
-using Microsoft.Data.Sqlite;
+﻿using Microsoft.Data.Sqlite;
+using NLog;
 
 
 namespace grace.data
@@ -76,38 +76,32 @@ namespace grace.data
             bool found = false;
             var connectionString = DataBase.ConnectionString;
 
-            using (var con = new SqliteConnection(connectionString))
+            using var con = new SqliteConnection(connectionString);
+            using (var cmd = new SqliteCommand("PRAGMA table_info(" + tableName + ");"))
             {
-                using (var cmd = new SqliteCommand("PRAGMA table_info(" + tableName + ");"))
-                {
-                    cmd.Connection = con;
-                    cmd.Connection.Open();
+                cmd.Connection = con;
+                cmd.Connection.Open();
 
-                    using (var reader = cmd.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            string name = reader["name"].ToString();
-                            if (name == columnName)
-                            {
-                                found = true;
-                                break;
-                            }
-                        }
-                    }
-                }
-                if (!found)
+                using var reader = cmd.ExecuteReader();
+                while (reader.Read())
                 {
-                    var sql = $"alter table {tableName} ADD COLUMN {columnName} INT DEFAULT 0;";
-                    using (var cmd = new SqliteCommand(sql))
+                    string name = reader["name"].ToString();
+                    if (name == columnName)
                     {
-                        cmd.Connection = con;
-                        //cmd.Connection.Open();
-                        cmd.ExecuteNonQuery();
+                        found = true;
+                        break;
                     }
                 }
-                con.Close();
             }
+            if (!found)
+            {
+                var sql = $"alter table {tableName} ADD COLUMN {columnName} INT DEFAULT 0;";
+                using var cmd = new SqliteCommand(sql);
+                cmd.Connection = con;
+                //cmd.Connection.Open();
+                cmd.ExecuteNonQuery();
+            }
+            con.Close();
         }
 
         private static void CreateColumnString(string columnName, string tableName)

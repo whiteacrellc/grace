@@ -1,19 +1,6 @@
 ﻿using grace.data;
 using grace.data.models;
-using Microsoft.Extensions.Logging;
-using Microsoft.Office.Interop.Excel;
 using NLog;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using System.Xml.Linq;
-using static grace.DataBase;
 
 namespace grace
 {

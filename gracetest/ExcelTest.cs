@@ -17,8 +17,8 @@ namespace gracetest
     [TestClass]
     public class ExcelTest
     {
-    
-        private const string TestFilePath = "C:\\Users\\tom\\source\\repos\\" + 
+
+        private const string TestFilePath = "C:\\Users\\tom\\source\\repos\\" +
             "grace\\gracetest\\test_file.xlsx";
 
         [TestMethod]
@@ -49,7 +49,7 @@ namespace gracetest
             Assert.AreEqual(57, firstRow.Total);
 
             // Add more assertions as needed
-            var firstItem = excelReader.Items.FirstOrDefault().Value.FirstOrDefault();  
+            var firstItem = excelReader.Items.FirstOrDefault().Value.FirstOrDefault();
             Assert.IsNotNull(firstItem);
             Assert.AreEqual("Zoey Lee", firstItem);
         }

@@ -9,9 +9,6 @@
  * White Acre Software LLC.
  *
  */
-using System.Diagnostics;
-using System.Windows.Forms;
-
 namespace grace
 {
     public partial class AboutBox : Form
@@ -25,7 +22,7 @@ namespace grace
         {
 
             // Format the build date and time as "yyyyMMddHHmm"
-            string versionString = "2.0.12";
+            string versionString = "2.0.13";
             buildLabel.Text = "Version: " + versionString;
         }
 

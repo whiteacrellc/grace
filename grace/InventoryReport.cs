@@ -10,29 +10,19 @@
  *
  * Year: 2023
  */
+using NLog;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
-using System;
-using System.Collections.Generic;
-using System.Drawing.Design;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NLog;
-using NLog.Config;
-using System.Windows.Forms;
-using System.IO;
-using grace.data.models;
-using Microsoft.Office.Interop.Excel;
 using System.Data;
 using System.Globalization;
+using System.IO;
 
 
 namespace grace
 {
     public class InventoryReport
     {
- 
+
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         private DataGridView dataGridView;
         private int numPageRows = 0;
@@ -50,7 +40,7 @@ namespace grace
         private void WriteHeader(ExcelWorksheet worksheet, int row)
         {
             // Dictionary to map DbContext column names to desired DataGridView column names
-            Dictionary<string, string> columnMappings = new Dictionary<string, string>
+            Dictionary<string, string> columnMappings = new()
             {
                 {"Total", "Current Inventory"},
                 {"Col1", "Collection 1"},
@@ -89,80 +79,78 @@ namespace grace
             {
                 var fileInfo = new FileInfo(filePath);
 
-                using (ExcelPackage package = new ExcelPackage())
+                using ExcelPackage package = new();
+                // Add a new worksheet to the empty workbook
+                ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Report");
+
+                int numCols = dataGridView.Columns.Count;
+                worksheet.Cells.Style.Font.Size = 14;
+
+                // Set the row height to 10 for all rows
+                // worksheet.DefaultRowHeight = Globals.GetInstance().RowHeight;
+
+                currentRow = 1;
+                currentPage = 1;
+                WriteHeader(worksheet, 1);
+
+                for (int columnIndex = 1; columnIndex < dataTable.Columns.Count + 1; columnIndex++)
                 {
-                    // Add a new worksheet to the empty workbook
-                    ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Report");
+                    worksheet.Column(columnIndex).Width = 20;
+                    worksheet.Column(columnIndex).Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
 
-                    int numCols = dataGridView.Columns.Count;
-                    worksheet.Cells.Style.Font.Size = 14;
-
-                    // Set the row height to 10 for all rows
-                    // worksheet.DefaultRowHeight = Globals.GetInstance().RowHeight;
-
-                    currentRow = 1;
-                    currentPage = 1;
-                    WriteHeader(worksheet, 1);
-
-                    for (int columnIndex = 1; columnIndex < dataTable.Columns.Count + 1; columnIndex++)
-                    {
-                        worksheet.Column(columnIndex).Width = 20;
-                        worksheet.Column(columnIndex).Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
-
-                    }
-
-                    /*
-                    worksheet.Column(1).Width = 25;
-                    worksheet.Column(3).Width = 50;
-                    worksheet.Column(10).Width = 15;
-                    worksheet.Column(11).Width = 15;
-                    */
-
-                    WritePrintHeader(worksheet);
-
-
-
-
-                    // Add the data rows
-                    foreach (DataRow dataRow in dataTable.Rows)
-                    {
-                        if (currentPage > numPageRows)
-                        {
-                            currentRow += 2;
-                            worksheet.InsertRow(currentRow++, 1);
-                            worksheet.Row(currentRow++).PageBreak = true;
-                            WriteHeader(worksheet, currentRow);
-                            currentPage = 0;
-                        }
-
-
-                        for (int col = 0; col < dataTable.Columns.Count; col++)
-                        {
-                            var item = dataRow[col];
-                            if (col == 12)
-                            {
-                                DateTime dateTime = (DateTime)item;
-
-                                string formattedDate = dateTime.ToString("dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture);
-                                worksheet.Cells[currentRow + 1, col + 1].Value = formattedDate;
-                            }
-                            else
-                            {
-                                worksheet.Cells[currentRow + 1, col + 1].Value = item;
-                            }
-                        }
-                        currentRow++;
-                        currentPage++;
-
-                    }
-
-                    // Set column 5 to text format
-                    worksheet.Column(5).Style.Numberformat.Format = "@";
-                    worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
-
-                    // Save the package to the specified file
-                    package.SaveAs(fileInfo);
                 }
+
+                /*
+                worksheet.Column(1).Width = 25;
+                worksheet.Column(3).Width = 50;
+                worksheet.Column(10).Width = 15;
+                worksheet.Column(11).Width = 15;
+                */
+
+                WritePrintHeader(worksheet);
+
+
+
+
+                // Add the data rows
+                foreach (DataRow dataRow in dataTable.Rows)
+                {
+                    if (currentPage > numPageRows)
+                    {
+                        currentRow += 2;
+                        worksheet.InsertRow(currentRow++, 1);
+                        worksheet.Row(currentRow++).PageBreak = true;
+                        WriteHeader(worksheet, currentRow);
+                        currentPage = 0;
+                    }
+
+
+                    for (int col = 0; col < dataTable.Columns.Count; col++)
+                    {
+                        var item = dataRow[col];
+                        if (col == 12)
+                        {
+                            DateTime dateTime = (DateTime)item;
+
+                            string formattedDate = dateTime.ToString("dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture);
+                            worksheet.Cells[currentRow + 1, col + 1].Value = formattedDate;
+                        }
+                        else
+                        {
+                            worksheet.Cells[currentRow + 1, col + 1].Value = item;
+                        }
+                    }
+                    currentRow++;
+                    currentPage++;
+
+                }
+
+                // Set column 5 to text format
+                worksheet.Column(5).Style.Numberformat.Format = "@";
+                worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
+
+                // Save the package to the specified file
+                package.SaveAs(fileInfo);
             }
             catch (Exception ex)
             {
@@ -172,7 +160,7 @@ namespace grace
             }
         }
 
-      
+
         private static void WritePrintHeader(ExcelWorksheet worksheet)
         {
             // Get the current date and format it as desired

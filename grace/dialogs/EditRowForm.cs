@@ -57,7 +57,7 @@ namespace grace
 
             List<string> distinctBrandNames = [];
             List<string> distinctCollectionNames = new();
-            using (GraceDbContext context = new GraceDbContext())
+            using (GraceDbContext context = new())
             {
                 // Fill checkbox list with collection names
                 distinctCollectionNames = [.. context.Collections
@@ -182,7 +182,7 @@ namespace grace
 
         private void CheckItem(object var)
         {
-            if (var == null || var == DBNull.Value )
+            if (var == null || var == DBNull.Value)
             {
                 return;
             }

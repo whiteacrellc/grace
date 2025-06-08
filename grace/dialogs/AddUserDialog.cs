@@ -1,16 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Diagnostics.Eventing.Reader;
-using System.Drawing;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-
-namespace grace
+﻿namespace grace
 {
     public partial class AddUserDialog : Form
     {
@@ -30,7 +18,8 @@ namespace grace
             if (ok)
             {
                 DialogResult = DialogResult.OK;
-            } else
+            }
+            else
             {
                 usernameTextBox.Clear();
             }

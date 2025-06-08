@@ -1,10 +1,5 @@
-﻿using NLog;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using grace.data.models;
+﻿using grace.data.models;
+using NLog;
 
 namespace grace.data
 {
@@ -58,7 +53,7 @@ namespace grace.data
                     }
                 }
             }
-            return ret; 
+            return ret;
         }
 
         public static bool GetBooleanValue(Preference pref)
@@ -106,25 +101,22 @@ namespace grace.data
 
         private static void AddOrUpdateStringPreference(string name, string value)
         {
-            using (var _context = new GraceDbContext())
+            using var _context = new GraceDbContext();
+            var existingPreference = _context.PrefsDb.FirstOrDefault(p => p.Name == name);
+
+            if (existingPreference != null)
             {
-                var existingPreference = _context.PrefsDb.FirstOrDefault(p => p.Name == name);
-
-                if (existingPreference != null)
-                {
-                    // Update the existing preference
-                    existingPreference.Value = value;
-                }
-                else
-                {
-                    // Add a new preference if it doesn't exist
-                    var newPreference = new Prefs { Name = name, Value = value };
-                    _context.PrefsDb.Add(newPreference);
-                }
-
-                _context.SaveChanges(); // Save changes to the database
-
+                // Update the existing preference
+                existingPreference.Value = value;
             }
+            else
+            {
+                // Add a new preference if it doesn't exist
+                var newPreference = new Prefs { Name = name, Value = value };
+                _context.PrefsDb.Add(newPreference);
+            }
+
+            _context.SaveChanges(); // Save changes to the database
         }
     }
 }

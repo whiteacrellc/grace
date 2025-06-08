@@ -10,16 +10,10 @@
  *
  * Year: 2023
  */
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using grace; // For InventoryReport, DataBase, DataGridLoader
 using grace.data; // For GraceDbContext
 using grace.data.models; // For User, Grace, Total, CollectionName etc.
 using OfficeOpenXml; // For ExcelPackage
-using System.Collections.Generic;
-using System.Linq;
-using System.IO; // Required for File operations
-using System.Windows.Forms; // For DataGridView (passing null)
-using System.Globalization; // For DateTime parsing, if needed for assertions
 
 namespace gracetest
 {
@@ -101,7 +95,7 @@ namespace gracetest
                 // Using DataBase.AddTotal requires Globals.GetInstance().CurrentUser, let's set a default for tests
                 if (string.IsNullOrEmpty(Globals.GetInstance().CurrentUser))
                 {
-                     Globals.GetInstance().CurrentUser = "testuser"; // Or fetch from a seeded test user
+                    Globals.GetInstance().CurrentUser = "testuser"; // Or fetch from a seeded test user
                 }
                 DataBase.AddTotal(10 + i * 5, graceId); // Current inventory: 10, 15, 20, 25, 30
 
@@ -139,7 +133,7 @@ namespace gracetest
             // direct DataGridView properties (beyond Columns.Count for an initial style) aren't heavily used,
             // or if their absence doesn't cause a crash.
             // The critical part is that DataGridLoader.GetData() uses the DB, which we control.
-            InventoryReport inventoryReport = new InventoryReport(null); // Passing null for DataGridView
+            InventoryReport inventoryReport = new(null); // Passing null for DataGridView
 
             // Act
             Exception thrownException = null;
@@ -156,59 +150,57 @@ namespace gracetest
             Assert.IsNull(thrownException, $"WriteReport should not throw an exception. Exception: {thrownException?.Message}");
             Assert.IsTrue(File.Exists(fullReportPath), "Excel report file should be created.");
 
-            using (var package = new ExcelPackage(new FileInfo(fullReportPath)))
-            {
-                Assert.IsNotNull(package.Workbook, "Workbook should exist.");
-                Assert.IsTrue(package.Workbook.Worksheets.Count > 0, "Workbook should have at least one worksheet.");
+            using var package = new ExcelPackage(new FileInfo(fullReportPath));
+            Assert.IsNotNull(package.Workbook, "Workbook should exist.");
+            Assert.IsTrue(package.Workbook.Worksheets.Count > 0, "Workbook should have at least one worksheet.");
 
-                var worksheet = package.Workbook.Worksheets[0]; // Using index as name might vary if locale affects "Report"
-                Assert.AreEqual("Report", worksheet.Name, "Worksheet name should be 'Report'.");
+            var worksheet = package.Workbook.Worksheets[0]; // Using index as name might vary if locale affects "Report"
+            Assert.AreEqual("Report", worksheet.Name, "Worksheet name should be 'Report'.");
 
-                // Verify Headers (mapped names) - Row 1 after WriteHeader is called
-                // These mappings are from InventoryReport.WriteHeader
-                Assert.AreEqual("Item #", worksheet.Cells[1, 1].Text, "Header SKU mismatch."); // Sku -> Item #
-                Assert.AreEqual("Brand", worksheet.Cells[1, 2].Text, "Header Brand mismatch.");
-                Assert.AreEqual("Description", worksheet.Cells[1, 3].Text, "Header Description mismatch.");
-                // ... (add more header checks based on DataGridLoader.COLUMN_ORDER and columnMappings)
-                // Example: Total is column 10 in GraceRow, mapped to "Current Inventory"
-                // Note: Column indices in DataGridLoader.COLUMN_ORDER need to be mapped to their actual position
-                // For simplicity, let's check a few key ones based on expected GraceRow structure.
-                // The actual column order is defined in DataGridLoader.GetData() and its internal DataTable.
-                // DataGridLoader.GetData() creates a DataTable from GraceRows.
-                // Let's assume standard GraceRow property order for now for a few checks.
-                // Sku, Brand, Description, Col1, Col2, Col3, Col4, Col5, Col6, Total, PrevTotal, LastUpdated, Availability, Note, BarCode, GraceId, ID
+            // Verify Headers (mapped names) - Row 1 after WriteHeader is called
+            // These mappings are from InventoryReport.WriteHeader
+            Assert.AreEqual("Item #", worksheet.Cells[1, 1].Text, "Header SKU mismatch."); // Sku -> Item #
+            Assert.AreEqual("Brand", worksheet.Cells[1, 2].Text, "Header Brand mismatch.");
+            Assert.AreEqual("Description", worksheet.Cells[1, 3].Text, "Header Description mismatch.");
+            // ... (add more header checks based on DataGridLoader.COLUMN_ORDER and columnMappings)
+            // Example: Total is column 10 in GraceRow, mapped to "Current Inventory"
+            // Note: Column indices in DataGridLoader.COLUMN_ORDER need to be mapped to their actual position
+            // For simplicity, let's check a few key ones based on expected GraceRow structure.
+            // The actual column order is defined in DataGridLoader.GetData() and its internal DataTable.
+            // DataGridLoader.GetData() creates a DataTable from GraceRows.
+            // Let's assume standard GraceRow property order for now for a few checks.
+            // Sku, Brand, Description, Col1, Col2, Col3, Col4, Col5, Col6, Total, PrevTotal, LastUpdated, Availability, Note, BarCode, GraceId, ID
 
-                Assert.AreEqual("Current Inventory", worksheet.Cells[1, 10].Text, "Header Total (Current Inventory) mismatch.");
-                Assert.AreEqual("Collection 1", worksheet.Cells[1, 4].Text, "Header Col1 (Collection 1) mismatch.");
+            Assert.AreEqual("Current Inventory", worksheet.Cells[1, 10].Text, "Header Total (Current Inventory) mismatch.");
+            Assert.AreEqual("Collection 1", worksheet.Cells[1, 4].Text, "Header Col1 (Collection 1) mismatch.");
 
 
-                // Verify Data Rows (Number of rows = header + 5 data rows)
-                // InventoryReport adds page breaks and extra headers, so direct row count is complex.
-                // Let's focus on finding our data. The data starts at row 2.
-                // There are 5 data items.
-                int expectedDataRowCount = 5;
-                // Simple check for now: ensure at least header + 5 rows exist (actual count will be more due to pagination logic)
-                Assert.IsTrue(worksheet.Dimension.Rows >= expectedDataRowCount + 1, $"Worksheet should have at least {expectedDataRowCount + 1} rows (1 header + 5 data). Actual: {worksheet.Dimension.Rows}");
+            // Verify Data Rows (Number of rows = header + 5 data rows)
+            // InventoryReport adds page breaks and extra headers, so direct row count is complex.
+            // Let's focus on finding our data. The data starts at row 2.
+            // There are 5 data items.
+            int expectedDataRowCount = 5;
+            // Simple check for now: ensure at least header + 5 rows exist (actual count will be more due to pagination logic)
+            Assert.IsTrue(worksheet.Dimension.Rows >= expectedDataRowCount + 1, $"Worksheet should have at least {expectedDataRowCount + 1} rows (1 header + 5 data). Actual: {worksheet.Dimension.Rows}");
 
-                // Verify some data cells for the first data row (SKU000)
-                // Row 2 should be the first data item.
-                Assert.AreEqual("SKU000", worksheet.Cells[2, 1].Text, "Data SKU000 mismatch.");
-                Assert.AreEqual("Brand0", worksheet.Cells[2, 2].Text, "Data Brand0 mismatch.");
-                Assert.AreEqual("Test Item Description 0", worksheet.Cells[2, 3].Text, "Data Description 0 mismatch.");
-                Assert.AreEqual("10", worksheet.Cells[2, 10].Text, "Data Total for SKU000 mismatch."); // Total for SKU000 is 10
-                Assert.AreEqual("CollectionA0", worksheet.Cells[2, 4].Text, "Data Collection1 for SKU000 mismatch."); // Col1
-                Assert.AreEqual("CollectionB", worksheet.Cells[2, 5].Text, "Data Collection2 for SKU000 mismatch."); // Col2
-                Assert.AreEqual("CollectionC", worksheet.Cells[2, 6].Text, "Data Collection3 for SKU000 mismatch."); // Col3
+            // Verify some data cells for the first data row (SKU000)
+            // Row 2 should be the first data item.
+            Assert.AreEqual("SKU000", worksheet.Cells[2, 1].Text, "Data SKU000 mismatch.");
+            Assert.AreEqual("Brand0", worksheet.Cells[2, 2].Text, "Data Brand0 mismatch.");
+            Assert.AreEqual("Test Item Description 0", worksheet.Cells[2, 3].Text, "Data Description 0 mismatch.");
+            Assert.AreEqual("10", worksheet.Cells[2, 10].Text, "Data Total for SKU000 mismatch."); // Total for SKU000 is 10
+            Assert.AreEqual("CollectionA0", worksheet.Cells[2, 4].Text, "Data Collection1 for SKU000 mismatch."); // Col1
+            Assert.AreEqual("CollectionB", worksheet.Cells[2, 5].Text, "Data Collection2 for SKU000 mismatch."); // Col2
+            Assert.AreEqual("CollectionC", worksheet.Cells[2, 6].Text, "Data Collection3 for SKU000 mismatch."); // Col3
 
-                // Verify some data for the second data row (SKU001) - starts at row 3
-                Assert.AreEqual("SKU001", worksheet.Cells[3, 1].Text, "Data SKU001 mismatch.");
-                Assert.AreEqual("Brand1", worksheet.Cells[3, 2].Text, "Data Brand1 mismatch.");
-                Assert.AreEqual("15", worksheet.Cells[3, 10].Text, "Data Total for SKU001 mismatch."); // Total for SKU001 is 15
-                Assert.AreEqual("CollectionA1", worksheet.Cells[3, 4].Text, "Data Collection1 for SKU001 mismatch.");
-                // SKU001 doesn't have CollectionB or CollectionC based on i % 2 and i % 3 for i=1
-                Assert.IsTrue(string.IsNullOrEmpty(worksheet.Cells[3, 5].Text), "Data Collection2 for SKU001 should be empty.");
-                Assert.IsTrue(string.IsNullOrEmpty(worksheet.Cells[3, 6].Text), "Data Collection3 for SKU001 should be empty.");
-            }
+            // Verify some data for the second data row (SKU001) - starts at row 3
+            Assert.AreEqual("SKU001", worksheet.Cells[3, 1].Text, "Data SKU001 mismatch.");
+            Assert.AreEqual("Brand1", worksheet.Cells[3, 2].Text, "Data Brand1 mismatch.");
+            Assert.AreEqual("15", worksheet.Cells[3, 10].Text, "Data Total for SKU001 mismatch."); // Total for SKU001 is 15
+            Assert.AreEqual("CollectionA1", worksheet.Cells[3, 4].Text, "Data Collection1 for SKU001 mismatch.");
+            // SKU001 doesn't have CollectionB or CollectionC based on i % 2 and i % 3 for i=1
+            Assert.IsTrue(string.IsNullOrEmpty(worksheet.Cells[3, 5].Text), "Data Collection2 for SKU001 should be empty.");
+            Assert.IsTrue(string.IsNullOrEmpty(worksheet.Cells[3, 6].Text), "Data Collection3 for SKU001 should be empty.");
         }
     }
 }

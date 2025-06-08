@@ -1,18 +1,6 @@
 ﻿using grace.data;
 using grace.data.models;
 using grace.utils;
-using OfficeOpenXml.ConditionalFormatting;
-using OfficeOpenXml.Drawing.Slicer.Style;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 namespace grace
 {
@@ -83,35 +71,33 @@ namespace grace
             }
             else
             {
-                using (var dbContext = new GraceDbContext())
+                using var dbContext = new GraceDbContext();
+                // Retrieve the user from the database
+                User? user = dbContext.Users
+                    .FirstOrDefault(u => u.Username == username);
+                if (user == null)
                 {
-                    // Retrieve the user from the database
-                    User? user = dbContext.Users
-                        .FirstOrDefault(u => u.Username == username);
-                    if (user == null)
+                    MessageBox.Show("User not in database, please contact admin.",
+                        "Error", MessageBoxButtons.OK,
+                        MessageBoxIcon.Exclamation);
+                }
+                else
+                {
+                    string dbPassword = user.Password;
+                    if ((reset == false) && (dbPassword.Equals(oldPassword) == false))
                     {
-                        MessageBox.Show("User not in database, please contact admin.",
+                        MessageBox.Show("Current password is incorrect.",
                             "Error", MessageBoxButtons.OK,
-                            MessageBoxIcon.Exclamation);
+                            MessageBoxIcon.Error);
+                        currentPasswordTextBox.Clear();
                     }
                     else
                     {
-                        string dbPassword = user.Password;
-                        if ((reset == false) && (dbPassword.Equals(oldPassword) == false))
-                        {
-                            MessageBox.Show("Current password is incorrect.",
-                                "Error", MessageBoxButtons.OK,
-                                MessageBoxIcon.Error);
-                            currentPasswordTextBox.Clear();
-                        }
-                        else
-                        {
-                            Globals.GetInstance().CurrentUser = username;
-                            user.Password = newPassword;
-                            user.ResetPassword = false;
-                            dbContext.SaveChanges();
-                            return true;
-                        }
+                        Globals.GetInstance().CurrentUser = username;
+                        user.Password = newPassword;
+                        user.ResetPassword = false;
+                        dbContext.SaveChanges();
+                        return true;
                     }
                 }
             }
@@ -125,7 +111,7 @@ namespace grace
                 Close();
             }
             return;
-           
+
         }
 
         private void currentPasswordShow(bool show)
