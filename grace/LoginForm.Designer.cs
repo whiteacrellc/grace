@@ -29,124 +29,133 @@ namespace grace
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LoginForm));
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.passwordTextBox = new System.Windows.Forms.TextBox();
-            this.loginButton = new System.Windows.Forms.Button();
-            this.comboBoxUsers = new System.Windows.Forms.ComboBox();
-            this.passwordLabel = new System.Windows.Forms.Label();
-            this.pickUserLabel = new System.Windows.Forms.Label();
-            this.changePasswordButton = new System.Windows.Forms.Button();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            this.SuspendLayout();
-            //
+            pictureBox1 = new PictureBox();
+            passwordTextBox = new TextBox();
+            loginButton = new Button();
+            comboBoxUsers = new ComboBox();
+            passwordLabel = new Label();
+            pickUserLabel = new Label();
+            changePasswordButton = new Button();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
+            SuspendLayout();
+            // 
             // pictureBox1
-            //
-            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(90, 20); // Adjusted from 101
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(277, 95);
-            this.pictureBox1.TabIndex = 24;
-            this.pictureBox1.TabStop = false;
-            //
+            // 
+            pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
+            pictureBox1.Location = new Point(70, 21);
+            pictureBox1.Margin = new Padding(4, 3, 4, 3);
+            pictureBox1.Name = "pictureBox1";
+            pictureBox1.Size = new Size(259, 89);
+            pictureBox1.TabIndex = 24;
+            pictureBox1.TabStop = false;
+            // 
             // passwordTextBox
-            //
-            this.passwordTextBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(250)))), ((int)(((byte)(240)))));
-            this.passwordTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.passwordTextBox.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.passwordTextBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(54)))), ((int)(((byte)(69)))), ((int)(((byte)(79)))));
-            this.passwordTextBox.Location = new System.Drawing.Point(155, 166); // Adjusted X from 154
-            this.passwordTextBox.Name = "passwordTextBox";
-            this.passwordTextBox.PasswordChar = '*';
-            this.passwordTextBox.Size = new System.Drawing.Size(230, 25);
-            this.passwordTextBox.TabIndex = 2; // Adjusted TabIndex
-            //
+            // 
+            passwordTextBox.BackColor = Color.FromArgb(255, 250, 240);
+            passwordTextBox.BorderStyle = BorderStyle.FixedSingle;
+            passwordTextBox.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            passwordTextBox.ForeColor = Color.FromArgb(54, 69, 79);
+            passwordTextBox.Location = new Point(181, 192);
+            passwordTextBox.Margin = new Padding(4, 3, 4, 3);
+            passwordTextBox.Name = "passwordTextBox";
+            passwordTextBox.PasswordChar = '*';
+            passwordTextBox.Size = new Size(268, 25);
+            passwordTextBox.TabIndex = 2;
+            // 
             // loginButton
-            //
-            this.loginButton.AutoSize = true;
-            this.loginButton.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.loginButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(245)))), ((int)(((byte)(245)))));
-            this.loginButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(207)))), ((int)(((byte)(181)))), ((int)(((byte)(59)))));
-            this.loginButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.loginButton.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.loginButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(54)))), ((int)(((byte)(69)))), ((int)(((byte)(79)))));
-            this.loginButton.Location = new System.Drawing.Point(155, 211); // Adjusted X from 154
-            this.loginButton.Name = "loginButton";
-            this.loginButton.Size = new System.Drawing.Size(58, 31);
-            this.loginButton.TabIndex = 3; // Adjusted TabIndex
-            this.loginButton.Text = "Login";
-            this.loginButton.UseVisualStyleBackColor = false;
-            //
+            // 
+            loginButton.AutoSize = true;
+            loginButton.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            loginButton.BackColor = Color.FromArgb(245, 245, 245);
+            loginButton.FlatAppearance.BorderColor = Color.FromArgb(207, 181, 59);
+            loginButton.FlatStyle = FlatStyle.Flat;
+            loginButton.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            loginButton.ForeColor = Color.FromArgb(54, 69, 79);
+            loginButton.Location = new Point(181, 243);
+            loginButton.Margin = new Padding(4, 3, 4, 3);
+            loginButton.Name = "loginButton";
+            loginButton.Size = new Size(58, 31);
+            loginButton.TabIndex = 3;
+            loginButton.Text = "Login";
+            loginButton.UseVisualStyleBackColor = false;
+            // 
             // comboBoxUsers
-            //
-            this.comboBoxUsers.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(250)))), ((int)(((byte)(240)))));
-            this.comboBoxUsers.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.comboBoxUsers.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.comboBoxUsers.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(54)))), ((int)(((byte)(69)))), ((int)(((byte)(79)))));
-            this.comboBoxUsers.FormattingEnabled = true;
-            this.comboBoxUsers.Location = new System.Drawing.Point(155, 132); // Adjusted X from 154
-            this.comboBoxUsers.Name = "comboBoxUsers";
-            this.comboBoxUsers.Size = new System.Drawing.Size(230, 25);
-            this.comboBoxUsers.TabIndex = 1; // Adjusted TabIndex
-            //
+            // 
+            comboBoxUsers.BackColor = Color.FromArgb(255, 250, 240);
+            comboBoxUsers.FlatStyle = FlatStyle.Flat;
+            comboBoxUsers.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            comboBoxUsers.ForeColor = Color.FromArgb(54, 69, 79);
+            comboBoxUsers.FormattingEnabled = true;
+            comboBoxUsers.Location = new Point(181, 152);
+            comboBoxUsers.Margin = new Padding(4, 3, 4, 3);
+            comboBoxUsers.Name = "comboBoxUsers";
+            comboBoxUsers.Size = new Size(268, 25);
+            comboBoxUsers.TabIndex = 1;
+            // 
             // passwordLabel
-            //
-            this.passwordLabel.AutoSize = true;
-            this.passwordLabel.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.passwordLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(54)))), ((int)(((byte)(69)))), ((int)(((byte)(79)))));
-            this.passwordLabel.Location = new System.Drawing.Point(60, 169); // Adjusted X from 40
-            this.passwordLabel.Name = "passwordLabel";
-            this.passwordLabel.Size = new System.Drawing.Size(73, 19);
-            this.passwordLabel.TabIndex = 23;
-            this.passwordLabel.Text = "Password";
-            //
+            // 
+            passwordLabel.AutoSize = true;
+            passwordLabel.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            passwordLabel.ForeColor = Color.FromArgb(54, 69, 79);
+            passwordLabel.Location = new Point(70, 195);
+            passwordLabel.Margin = new Padding(4, 0, 4, 0);
+            passwordLabel.Name = "passwordLabel";
+            passwordLabel.Size = new Size(73, 19);
+            passwordLabel.TabIndex = 23;
+            passwordLabel.Text = "Password";
+            // 
             // pickUserLabel
-            //
-            this.pickUserLabel.AutoSize = true;
-            this.pickUserLabel.BackColor = System.Drawing.Color.Transparent;
-            this.pickUserLabel.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.pickUserLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(54)))), ((int)(((byte)(69)))), ((int)(((byte)(79)))));
-            this.pickUserLabel.Location = new System.Drawing.Point(60, 135); // Adjusted X from 40
-            this.pickUserLabel.Name = "pickUserLabel";
-            this.pickUserLabel.Size = new System.Drawing.Size(76, 19);
-            this.pickUserLabel.TabIndex = 16;
-            this.pickUserLabel.Text = "Username";
-            //
+            // 
+            pickUserLabel.AutoSize = true;
+            pickUserLabel.BackColor = Color.Transparent;
+            pickUserLabel.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            pickUserLabel.ForeColor = Color.FromArgb(54, 69, 79);
+            pickUserLabel.Location = new Point(70, 156);
+            pickUserLabel.Margin = new Padding(4, 0, 4, 0);
+            pickUserLabel.Name = "pickUserLabel";
+            pickUserLabel.Size = new Size(76, 19);
+            pickUserLabel.TabIndex = 16;
+            pickUserLabel.Text = "Username";
+            // 
             // changePasswordButton
-            //
-            this.changePasswordButton.AutoSize = true;
-            this.changePasswordButton.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.changePasswordButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(245)))), ((int)(((byte)(245)))));
-            this.changePasswordButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(207)))), ((int)(((byte)(181)))), ((int)(((byte)(59)))));
-            this.changePasswordButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.changePasswordButton.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.changePasswordButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(54)))), ((int)(((byte)(69)))), ((int)(((byte)(79)))));
-            this.changePasswordButton.Location = new System.Drawing.Point(240, 211); // Adjusted X from 245
-            this.changePasswordButton.Name = "changePasswordButton";
-            this.changePasswordButton.Size = new System.Drawing.Size(139, 31);
-            this.changePasswordButton.TabIndex = 4; // Adjusted TabIndex
-            this.changePasswordButton.Text = "Change Password";
-            this.changePasswordButton.UseVisualStyleBackColor = false;
-            //
+            // 
+            changePasswordButton.AutoSize = true;
+            changePasswordButton.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            changePasswordButton.BackColor = Color.FromArgb(245, 245, 245);
+            changePasswordButton.FlatAppearance.BorderColor = Color.FromArgb(207, 181, 59);
+            changePasswordButton.FlatStyle = FlatStyle.Flat;
+            changePasswordButton.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            changePasswordButton.ForeColor = Color.FromArgb(54, 69, 79);
+            changePasswordButton.Location = new Point(280, 243);
+            changePasswordButton.Margin = new Padding(4, 3, 4, 3);
+            changePasswordButton.Name = "changePasswordButton";
+            changePasswordButton.Size = new Size(139, 31);
+            changePasswordButton.TabIndex = 4;
+            changePasswordButton.Text = "Change Password";
+            changePasswordButton.UseVisualStyleBackColor = false;
+            // 
             // LoginForm
-            //
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(245)))), ((int)(((byte)(238)))));
-            this.ClientSize = new System.Drawing.Size(458, 273); // Adjusted ClientSize slightly
-            this.Controls.Add(this.changePasswordButton);
-            this.Controls.Add(this.pickUserLabel);
-            this.Controls.Add(this.passwordLabel);
-            this.Controls.Add(this.comboBoxUsers);
-            this.Controls.Add(this.loginButton);
-            this.Controls.Add(this.passwordTextBox);
-            this.Controls.Add(this.pictureBox1);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
-            this.Name = "LoginForm";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Login";
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            // 
+            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            BackColor = Color.FromArgb(255, 245, 238);
+            ClientSize = new Size(534, 315);
+            Controls.Add(changePasswordButton);
+            Controls.Add(pickUserLabel);
+            Controls.Add(passwordLabel);
+            Controls.Add(comboBoxUsers);
+            Controls.Add(loginButton);
+            Controls.Add(passwordTextBox);
+            Controls.Add(pictureBox1);
+            FormBorderStyle = FormBorderStyle.Fixed3D;
+            Margin = new Padding(4, 3, 4, 3);
+            Name = "LoginForm";
+            StartPosition = FormStartPosition.CenterScreen;
+            Text = "Login";
+            Load += LoginForm_Load;
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
+            ResumeLayout(false);
+            PerformLayout();
 
         }
 

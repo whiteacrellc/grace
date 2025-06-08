@@ -61,11 +61,6 @@ namespace grace
 
             EnableReportMenuItems(false);
 
-            // REMOVE loginPage immediately after components are initialized
-            if (this.loginPage != null && this.tabControl.TabPages.Contains(this.loginPage))
-            {
-                this.tabControl.TabPages.Remove(this.loginPage);
-            }
 
             // Init the tab page classes
             // homeTab = new HomeTab(this); // Removed
@@ -168,7 +163,7 @@ namespace grace
             InitializeLogger();
 
             // Loads the preferences into the globals singleton
-            _ = new DataBase();
+            //_ = new DataBase();
 
             // Load all the tab classes
             // homeTab.Load(); // Removed

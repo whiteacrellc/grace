@@ -8,7 +8,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using grace.utils;
-using grace.dialogs;
 using System.Collections.Generic; // Added for List<string>
 
 namespace grace
@@ -27,35 +26,16 @@ namespace grace
         public LoginForm()
         {
             InitializeComponent();
-            InitializeComboBox();
-            this.loginButton.Click += new System.EventHandler(this.loginButton_Click);
-            this.changePasswordButton.Click += new System.EventHandler(this.changePasswordButton_Click);
-            this.passwordTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.passwordTextBox_KeyPress);
-            this.comboBoxUsers.SelectedIndexChanged += new System.EventHandler(this.comboBoxUsers_SelectedIndexChanged);
-        }
 
-        private void InitializeComboBox()
-        {
-            // Clear existing items in the ComboBox
-            this.comboBoxUsers.Items.Clear();
-            AdminStuff.InitUserDB(); // Assumes AdminStuff is accessible
-
-            List<string> users = AdminStuff.getUserNames();
-            foreach (var user in users)
-            {
-                this.comboBoxUsers.Items.Add(user);
-            }
-
-            // Optionally, set the default selected item (first item in the list)
-            if (this.comboBoxUsers.Items.Count > 0)
-            {
-                this.comboBoxUsers.SelectedIndex = 0;
-            }
+            this.loginButton.Click += loginButton_Click;
+            this.changePasswordButton.Click += changePasswordButton_Click;
+            this.passwordTextBox.KeyPress += PasswordTextBox_KeyPress;
+            this.comboBoxUsers.SelectedIndexChanged += comboBoxUsers_SelectedIndexChanged;
         }
 
         public void loginButton_Click(object? sender, EventArgs e)
         {
-            processLogin();
+            ProcessLogin();
         }
 
         public void changePasswordButton_Click(object? sender, EventArgs e)
@@ -69,7 +49,7 @@ namespace grace
 
             if (string.IsNullOrEmpty(username))
             {
-                 MessageBox.Show("Selected username is invalid.", "Invalid User", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Selected username is invalid.", "Invalid User", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -84,16 +64,16 @@ namespace grace
             }
         }
 
-        public void passwordTextBox_KeyPress(object? sender, KeyPressEventArgs e)
+        public void PasswordTextBox_KeyPress(object? sender, KeyPressEventArgs e)
         {
             if (e.KeyChar == (char)Keys.Return)
             {
-                processLogin();
+                ProcessLogin();
                 e.Handled = true; // Prevent the Enter key from being processed further
             }
         }
 
-        private void processLogin()
+        private void ProcessLogin()
         {
             string password = this.passwordTextBox.Text;
             if (this.comboBoxUsers.SelectedItem == null)
@@ -158,6 +138,29 @@ namespace grace
         public void comboBoxUsers_SelectedIndexChanged(object? sender, EventArgs e)
         {
             this.passwordTextBox.Focus();
+        }
+
+        private void LoginForm_Load(object sender, EventArgs e)
+        {
+            // Loads the preferences into the globals singleton
+            _ = new DataBase();
+
+            // Clear existing items in the ComboBox
+            this.comboBoxUsers.Items.Clear();
+            AdminStuff.InitUserDB(); // Assumes AdminStuff is accessible
+
+            List<string> users = AdminStuff.getUserNames();
+            foreach (var user in users)
+            {
+                this.comboBoxUsers.Items.Add(user);
+            }
+
+            // Optionally, set the default selected item (first item in the list)
+            if (this.comboBoxUsers.Items.Count > 0)
+            {
+                this.comboBoxUsers.SelectedIndex = 0;
+            }
+
         }
 #pragma warning restore CS8601 // Possible null reference assignment.
 #pragma warning restore CS8602 // Dereference of a possibly null reference.

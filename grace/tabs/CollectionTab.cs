@@ -27,7 +27,7 @@ namespace grace.tabs
             this.collGridView = v.collGridView;
             this.colReportComboBox = v.colReportComboBox;
             this.clearComboButton = v.clearComboButton;
-            this.collectionTab = vivian.tabControl.TabPages[5];
+            this.collectionTab = vivian.tabControl.TabPages[4];
             this.report = new Report();
         }
 

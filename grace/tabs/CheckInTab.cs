@@ -42,7 +42,7 @@ namespace grace.tabs
     
             this.skuFilterTextBox = vivian.skuFilterTextBox;
             this.checkInDataGrid = vivian.checkInDataGrid;
-            this.checkInTabPage = vivian.tabControl.TabPages[3];
+            this.checkInTabPage = vivian.tabControl.TabPages[2];
             this.allUsersCheckBox = vivian.allUsersCheckBox;
             this.applyChangesButton = vivian.applyChangesButton;
         }
