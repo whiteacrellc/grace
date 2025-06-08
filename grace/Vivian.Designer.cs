@@ -62,6 +62,7 @@ namespace grace
             saveInventoryReportToolStripMenuItem = new ToolStripMenuItem();
             saveReportToolStripMenuItem = new ToolStripMenuItem();
             aboutToolStripMenuItem = new ToolStripMenuItem();
+            toolStripMenuItem2 = new ToolStripMenuItem();
             exitToolStripMenuItem = new ToolStripMenuItem();
             viewToolStripMenuItem = new ToolStripMenuItem();
             setInventoryFontSizeToolStripMenuItem = new ToolStripMenuItem();
@@ -116,7 +117,6 @@ namespace grace
             checkoutBindingSource = new BindingSource(components);
             checkInBindingSource = new BindingSource(components);
             reportToolTip = new ToolTip(components);
-            toolStripMenuItem2 = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             tabControl.SuspendLayout();
             dataPage.SuspendLayout();
@@ -200,6 +200,13 @@ namespace grace
             aboutToolStripMenuItem.Size = new Size(231, 24);
             aboutToolStripMenuItem.Text = "About";
             aboutToolStripMenuItem.Click += AboutToolStripMenuItem_Click;
+            // 
+            // toolStripMenuItem2
+            // 
+            toolStripMenuItem2.Name = "toolStripMenuItem2";
+            toolStripMenuItem2.Size = new Size(231, 24);
+            toolStripMenuItem2.Text = "Logout";
+            toolStripMenuItem2.Click += ToolStripMenuItem2_Click;
             // 
             // exitToolStripMenuItem
             // 
@@ -1070,13 +1077,6 @@ namespace grace
             reportToolTip.ToolTipIcon = ToolTipIcon.Info;
             reportToolTip.ToolTipTitle = "Report Info";
             // 
-            // toolStripMenuItem2
-            // 
-            toolStripMenuItem2.Name = "toolStripMenuItem2";
-            toolStripMenuItem2.Size = new Size(231, 24);
-            toolStripMenuItem2.Text = "Logout";
-            toolStripMenuItem2.Click += ToolStripMenuItem2_Click;
-            // 
             // Vivian
             // 
             AutoScaleDimensions = new SizeF(7F, 17F);
@@ -1094,6 +1094,7 @@ namespace grace
             Name = "Vivian";
             SizeGripStyle = SizeGripStyle.Show;
             Text = "VivianGrace";
+            FormClosing += Vivian_FormClosing;
             Load += Vivian_Load;
             Paint += Vivian_Paint;
             menuStrip1.ResumeLayout(false);

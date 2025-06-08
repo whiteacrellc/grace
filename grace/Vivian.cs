@@ -34,7 +34,7 @@ namespace grace
         internal ReportTab reportTab;
         internal CollectionTab collectionTab;
         internal NLog.Config.LoggingConfiguration config = new();
-
+        private static bool backedUp = false; // Flag to check if backup has been done
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         public Vivian()
@@ -197,7 +197,14 @@ namespace grace
 
         private void ExitToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (backedUp)
+            {
+                // If backup has already been done, just close the application
+                Application.Exit();
+                return;
+            }
             // Backup the database on exit
+            backedUp = true; // Set the flag to true to indicate backup has been done
             BackupAndRestore backup = new();
             backup.BackupDatabaseToDocuments();
 
@@ -475,6 +482,21 @@ namespace grace
             DataBase.CloseDatabase();
             this.Close();
             // The Program.cs logic will handle showing the login form.
+        }
+
+        private void Vivian_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (backedUp)
+            {
+                // If backup has already been done, just close the application
+                return;
+            }
+            backedUp = true; // Set the flag to true to indicate backup has been done
+            config.RemoveTarget("textboxTarget");
+            BackupAndRestore backup = new();
+            backup.BackupDatabaseToDocuments();
+            DataBase.CloseDatabase();
+
         }
     }
 }
