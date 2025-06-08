@@ -518,6 +518,14 @@ namespace grace
             AdminStuff.InitUserDB();
         }
 
+        public static void CloseDatabase()
+        {
+            using (var context = new GraceDbContext())
+            {
+                context.Database.CloseConnection();
+            }
+        }
+
         private static void InitPrefs()
         {
             using (var context = new GraceDbContext())
