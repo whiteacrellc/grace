@@ -15,7 +15,17 @@ namespace grace
                 // To customize application configuration such as set high DPI settings or default font,
                 // see https://aka.ms/applicationconfiguration.
                 ApplicationConfiguration.Initialize();
-                Application.Run(new Vivian());
+
+                LoginForm loginForm = new LoginForm();
+                DialogResult loginResult = loginForm.ShowDialog();
+
+                if (loginResult == DialogResult.OK)
+                {
+                    // User logged in successfully. Globals.GetInstance().CurrentUser should be set by LoginForm.
+                    // Proceed to show the main application window.
+                    Application.Run(new Vivian());
+                }
+                // If login is not OK, the application will exit as there's nothing else to run after this block.
 
                 // Release the mutex when the application exits
                 mutex.ReleaseMutex();

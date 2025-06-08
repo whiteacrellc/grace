@@ -39,7 +39,7 @@ namespace grace
 
         // To keep this file a reasonable size put all tab code and callbacks
         // in their own class
-        private HomeTab homeTab;
+        // private HomeTab homeTab; // Removed
         private AdminTab adminTab;
         private DataTab dataTab;
         internal CheckInTab checkInTab { get; set; }
@@ -61,8 +61,14 @@ namespace grace
 
             EnableReportMenuItems(false);
 
+            // REMOVE loginPage immediately after components are initialized
+            if (this.loginPage != null && this.tabControl.TabPages.Contains(this.loginPage))
+            {
+                this.tabControl.TabPages.Remove(this.loginPage);
+            }
+
             // Init the tab page classes
-            homeTab = new HomeTab(this);
+            // homeTab = new HomeTab(this); // Removed
             adminTab = new AdminTab(this);
             dataTab = new DataTab(this);
             checkOutTab = new CheckOutTab(this);
@@ -165,8 +171,48 @@ namespace grace
             _ = new DataBase();
 
             // Load all the tab classes
-            homeTab.Load();
-            adminTab.Load();
+            // homeTab.Load(); // Removed
+            adminTab.Load(); // This might cause an error if AdminTab.cs hardcodes TabPages[6]
+
+            string? currentUser = Globals.GetInstance().CurrentUser;
+            if (string.IsNullOrEmpty(currentUser))
+            {
+                MessageBox.Show("Critical Error: No user is logged in. Exiting.", "Application Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Application.Exit(); // Use Application.Exit() for a cleaner shutdown
+                return; // Ensure no further code in this method is executed
+            }
+
+            bool isAdmin = PasswordChecker.IsUserAdmin(currentUser);
+            if (isAdmin)
+            {
+                this.importInventoryToolStripMenuItem.Enabled = true;
+                this.EnableReportMenuItems(true);
+            }
+            else
+            {
+                this.importInventoryToolStripMenuItem.Enabled = false;
+                this.EnableReportMenuItems(false);
+            }
+
+            // Ensure dataPage is selected. It should be the first tab (index 0)
+            // after loginPage is removed.
+            if (this.tabControl.TabPages.Count > 0 && this.tabControl.TabPages[0] == this.dataPage)
+            {
+                this.tabControl.SelectedTab = this.dataPage;
+            }
+            else if (this.tabControl.TabPages.Contains(this.dataPage))
+            {
+                // Fallback if dataPage is not at index 0 for some reason
+                this.tabControl.SelectedTab = this.dataPage;
+            }
+            else if (this.tabControl.TabPages.Count > 0)
+            {
+                // Fallback: select the first available tab if dataPage is missing
+                this.tabControl.SelectedIndex = 0;
+                DisplayLogMessage($"Warning: dataPage not found. Defaulted to first available tab: {this.tabControl.SelectedTab.Name}");
+            }
+            // If no tab pages, nothing to select, which would be an error state handled by other checks.
+
 
             if (DataBase.HaveData())
             {
@@ -260,25 +306,41 @@ namespace grace
 
         private void TabControl_Selecting(object sender, TabControlCancelEventArgs e)
         {
-            string username = Globals.GetInstance().CurrentUser;
+            string? username = Globals.GetInstance().CurrentUser; // Nullable string
+            if (string.IsNullOrEmpty(username)) {
+                e.Cancel = true; // Prevent navigation if no user
+                // Optionally, show a message or log, but Vivian_Load should prevent this state.
+                return;
+            }
+
             bool isAdmin = PasswordChecker.IsUserAdmin(username);
-            int tabIndex = e.TabPageIndex;
+            int tabIndex = e.TabPageIndex; // This is the NEW index of the tab being selected.
+
+            // After removing loginPage (original index 0):
+            // dataPage is now at index 0 (original 1)
+            // checkoutPage is now at index 1 (original 2)
+            // checkinPage is now at index 2 (original 3)
+            // reportPage is now at index 3 (original 4)
+            // collectionPage is now at index 4 (original 5)
+            // adminPage is now at index 5 (original 6)
+
             if (!isAdmin)
             {
-
-                if (tabIndex is 1 or 6)
+                // Restrict access to adminPage (new index 5)
+                if (tabIndex == 5)
                 {
                     e.Cancel = true;
-                    MessageBox.Show("You can't select this tab.", "Information",
-                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show("You do not have permission to access this page.", "Access Denied",
+                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
-
             }
-            else
+            else // User is Admin
             {
-                if (tabIndex == 1)
+                // Original logic for admin on tabIndex 1 (dataPage)
+                // dataPage is now at index 0
+                if (tabIndex == 0)
                 {
-                    // SizeForm();
+                    // SizeForm(); // Commented out as its purpose/necessity is unclear in this context
                 }
             }
         }
