@@ -2,7 +2,7 @@ namespace grace
 {
     internal static class Program
     {
-        static Mutex mutex = new(true, "UniqueApplicationMutexName");
+        static Mutex mutex = new Mutex(true, "UniqueApplicationMutexName");
         /// <summary>
         ///  The main entry point for the application.
         /// </summary>
@@ -16,24 +16,42 @@ namespace grace
                 // see https://aka.ms/applicationconfiguration.
                 ApplicationConfiguration.Initialize();
 
-                LoginForm loginForm = new();
-                DialogResult loginResult = loginForm.ShowDialog();
-
-                if (loginResult == DialogResult.OK)
+                while (true)
                 {
-                    // User logged in successfully. Globals.GetInstance().CurrentUser should be set by LoginForm.
-                    // Proceed to show the main application window.
-                    Application.Run(new Vivian());
+                    LoginForm loginForm = new LoginForm();
+                    DialogResult loginResult = loginForm.ShowDialog();
+
+                    if (loginResult == DialogResult.OK)
+                    {
+                        // User logged in successfully. Globals.GetInstance().CurrentUser should be set by LoginForm.
+                        Application.Run(new Vivian()); // This blocks until Vivian form is closed.
+
+                        // After Vivian form is closed, check if it was due to logout
+                        if (Globals.GetInstance().CurrentUser == null)
+                        {
+                            // User logged out, continue the loop to show login form again
+                            continue;
+                        }
+                        else
+                        {
+                            // Vivian form closed for another reason (e.g., Exit menu)
+                            break; // Exit the loop and the application
+                        }
+                    }
+                    else
+                    {
+                        // LoginForm was closed or login failed (not DialogResult.OK)
+                        break; // Exit the loop and the application
+                    }
                 }
-                // If login is not OK, the application will exit as there's nothing else to run after this block.
 
                 // Release the mutex when the application exits
                 mutex.ReleaseMutex();
-
             }
             else
             {
                 // Another instance is running, exit
+                // Mutex is not acquired, so no need to release it here.
                 return;
             }
         }
