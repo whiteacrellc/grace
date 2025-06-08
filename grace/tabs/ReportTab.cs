@@ -36,7 +36,7 @@ namespace grace.tabs
             this.reportGridView = vivian.reportGridView;
             this.refreshButton = vivian.refreshButton;
             this.filterTextBox = vivian.reportFilterTextBox;
-            reportTabPage = vivian.tabControl.TabPages[4];
+            reportTabPage = vivian.tabControl.TabPages[3];
         }
 
 

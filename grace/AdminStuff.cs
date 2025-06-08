@@ -13,50 +13,42 @@
 using grace.data;
 using grace.data.models;
 using NLog;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace grace
 {
     internal class AdminStuff
     {
-        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
-
-        public static Logger Logger => logger;
+        public static Logger Logger { get; } = LogManager.GetCurrentClassLogger();
 
         public static void InitUserDB()
         {
-            using (var graceDb = new GraceDbContext())
-            {
-                bool empty = !graceDb.Users.Any();
+            using GraceDbContext graceDb = new();
+            bool empty = !graceDb.Users.Any();
 
-                if (empty)
-                {
-                    string[] defaultUsers = { "patster", "susan",
+            if (empty)
+            {
+                string[] defaultUsers = { "patster", "susan",
                     "christa", "mandy", "whitney" };
 
-                    foreach (var user in defaultUsers)
+                foreach (var user in defaultUsers)
+                {
+                    if (user != null)
                     {
-                        if (user != null)
+                        User u = new()
                         {
-                            User u = new User();
-                            u.Username = user;
-                            u.Password = "changeme";
-                            if (user.Equals("patster", StringComparison.Ordinal) || user.Equals("susan", StringComparison.Ordinal))
-                            {
-                                u.Admin = true;
-                            }
-                            u.ResetPassword = true;
-                            graceDb.Users.Add(u);
-                            u.Deleted = false;
+                            Username = user,
+                            Password = "changeme"
+                        };
+                        if (user.Equals("patster", StringComparison.Ordinal) || user.Equals("susan", StringComparison.Ordinal))
+                        {
+                            u.Admin = true;
                         }
+                        u.ResetPassword = true;
+                        graceDb.Users.Add(u);
+                        u.Deleted = false;
                     }
-                    graceDb.SaveChanges();
                 }
+                graceDb.SaveChanges();
             }
         }
 
@@ -92,7 +84,7 @@ namespace grace
                     u.Deleted = true;
                     graceDb.Users.Update(u);
                     graceDb.SaveChanges();
-                    logger.Info("deleted user " + username);
+                    Logger.Info("deleted user " + username);
                 }
             }
             catch (Exception ex)
@@ -121,7 +113,7 @@ namespace grace
                             u.Deleted = false;
                             graceDb.Users.Update(u);
                             graceDb.SaveChanges();
-                            logger.Info("undeleted user " + username);
+                            Logger.Info("undeleted user " + username);
                             return true;
                         }
                     }
@@ -143,7 +135,7 @@ namespace grace
                 };
                 graceDb.Users.Add(u);
                 graceDb.SaveChanges();
-                logger.Info("created user " + username);
+                Logger.Info("created user " + username);
                 return true;
             }
             catch (Exception ex)

@@ -54,7 +54,7 @@ namespace grace.tabs
 
         public void Load()
         {
-            adminTabPage = vivian.tabControl.TabPages[6];
+            adminTabPage = vivian.tabControl.TabPages[5];
             resetPasswordButton.Click += ResetButton_Click;
             backupButton.Click += BackupButton_Click;
             restoreDatabaseButton.Click += RestoreDatabaseButton_Click;

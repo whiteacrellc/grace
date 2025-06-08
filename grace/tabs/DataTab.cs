@@ -49,7 +49,7 @@ namespace grace.tabs
         {
             vivian = v;
             // set the tab page
-            dataTabPage = vivian.tabControl.TabPages[1];
+            dataTabPage = vivian.tabControl.TabPages[0];
 
             // set the controls in the page. 
             filterSkuTextBox = vivian.filterSkuTextBox;

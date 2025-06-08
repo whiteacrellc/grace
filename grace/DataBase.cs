@@ -339,9 +339,8 @@ namespace grace
                 from gr in dbContext.GraceRows
                 join totals in dbContext.Totals on gr.GraceId equals totals.GraceId
                 let prevTotal = dbContext.Totals
-                    .Where(t => t.GraceId == gr.GraceId)
+                    .Where(t => t.GraceId == gr.GraceId && t.LastUpdated < totals.LastUpdated)
                     .OrderByDescending(t => t.LastUpdated)
-                    .Skip(1)
                     .Select(t => t.CurrentTotal)
                     .FirstOrDefault()
                 orderby totals.LastUpdated descending, totals.CurrentTotal descending
@@ -356,7 +355,8 @@ namespace grace
                     LastUpdated = totals.LastUpdated,
                     Note = gr.Note,
                     GraceId = gr.GraceId
-            })];
+                }
+            )];
 
             /*
             // Performing the join and projection

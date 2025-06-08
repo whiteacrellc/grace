@@ -37,7 +37,7 @@ namespace grace.tabs
             checkOutSearchTextBox = vivian.checkOutSearchTextBox;
             textBoxBarCode = vivian.textBoxBarcode;
             coResetButton = vivian.coResetButton;
-            checkOutTabPage = vivian.tabControl.TabPages[2];
+            checkOutTabPage = vivian.tabControl.TabPages[1];
         }
 
         public void Load()

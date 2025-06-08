@@ -66,16 +66,16 @@ namespace grace
             viewToolStripMenuItem = new ToolStripMenuItem();
             setInventoryFontSizeToolStripMenuItem = new ToolStripMenuItem();
             tabControl = new TabControl();
-            loginPage = new TabPage();
-            pictureBox1 = new PictureBox();
-            loggedInLabel = new Label();
-            logoutButton = new Button();
-            passwordTextBox = new TextBox();
-            loginButton = new Button();
-            comboBoxUsers = new ComboBox();
-            passwordLabel = new Label();
-            pickUserLabel = new Label();
-            changePasswordButton = new Button();
+            // loginPage = new TabPage(); // Removed
+            // pictureBox1 = new PictureBox(); // Removed
+            // loggedInLabel = new Label(); // Removed
+            // logoutButton = new Button(); // Removed
+            // passwordTextBox = new TextBox(); // Removed
+            // loginButton = new Button(); // Removed
+            // comboBoxUsers = new ComboBox(); // Removed
+            // passwordLabel = new Label(); // Removed
+            // pickUserLabel = new Label(); // Removed
+            // changePasswordButton = new Button(); // Removed
             dataPage = new TabPage();
             dataGridView = new DataGridView();
             filterBarcodeTextBox = new TextBox();
@@ -128,8 +128,8 @@ namespace grace
             reportToolTip = new ToolTip(components);
             menuStrip1.SuspendLayout();
             tabControl.SuspendLayout();
-            loginPage.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
+            // loginPage.SuspendLayout(); // Removed
+            // ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit(); // Removed
             dataPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridView).BeginInit();
             checkoutPage.SuspendLayout();
@@ -239,7 +239,7 @@ namespace grace
             // 
             tabControl.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             tabControl.Appearance = TabAppearance.Buttons;
-            tabControl.Controls.Add(loginPage);
+            // tabControl.Controls.Add(loginPage); // Removed
             tabControl.Controls.Add(dataPage);
             tabControl.Controls.Add(checkoutPage);
             tabControl.Controls.Add(checkinPage);
@@ -262,141 +262,25 @@ namespace grace
             tabControl.DrawItem += TabControl_DrawItem;
             tabControl.Selecting += TabControl_Selecting;
             // 
-            // loginPage
-            // 
-            loginPage.BackColor = Color.FromArgb(255, 245, 238);
-            loginPage.BorderStyle = BorderStyle.Fixed3D;
-            loginPage.Controls.Add(pictureBox1);
-            loginPage.Controls.Add(loggedInLabel);
-            loginPage.Controls.Add(logoutButton);
-            loginPage.Controls.Add(passwordTextBox);
-            loginPage.Controls.Add(loginButton);
-            loginPage.Controls.Add(comboBoxUsers);
-            loginPage.Controls.Add(passwordLabel);
-            loginPage.Controls.Add(pickUserLabel);
-            loginPage.Controls.Add(changePasswordButton);
-            loginPage.Location = new Point(4, 44);
-            loginPage.Margin = new Padding(5, 2, 5, 2);
-            loginPage.Name = "loginPage";
-            loginPage.Padding = new Padding(10, 2, 10, 2);
-            loginPage.Size = new Size(1517, 733);
-            loginPage.TabIndex = 0;
-            loginPage.Text = "Home";
-            loginPage.ToolTipText = "Login Page";
-            // 
-            // pictureBox1
-            // 
-            pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
-            pictureBox1.Location = new Point(34, 29);
-            pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(277, 95);
-            pictureBox1.TabIndex = 24;
-            pictureBox1.TabStop = false;
-            // 
-            // loggedInLabel
-            // 
-            loggedInLabel.AutoSize = true;
-            loggedInLabel.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            loggedInLabel.ForeColor = Color.FromArgb(54, 69, 79);
-            loggedInLabel.Location = new Point(343, 29);
-            loggedInLabel.Name = "loggedInLabel";
-            loggedInLabel.Size = new Size(50, 19);
-            loggedInLabel.TabIndex = 0;
-            loggedInLabel.Text = "label5";
-            // 
-            // logoutButton
-            // 
-            logoutButton.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            logoutButton.BackColor = Color.FromArgb(245, 245, 245);
-            logoutButton.FlatAppearance.BorderColor = Color.FromArgb(207, 181, 59);
-            logoutButton.FlatStyle = FlatStyle.Flat;
-            logoutButton.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            logoutButton.ForeColor = Color.FromArgb(54, 69, 79);
-            logoutButton.Location = new Point(343, 70);
-            logoutButton.Name = "logoutButton";
-            logoutButton.Size = new Size(116, 33);
-            logoutButton.TabIndex = 1;
-            logoutButton.Text = "Logout";
-            logoutButton.UseVisualStyleBackColor = false;
-            // 
-            // passwordTextBox
-            // 
-            passwordTextBox.BackColor = Color.FromArgb(255, 250, 240);
-            passwordTextBox.BorderStyle = BorderStyle.FixedSingle;
-            passwordTextBox.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            passwordTextBox.ForeColor = Color.FromArgb(54, 69, 79);
-            passwordTextBox.Location = new Point(235, 234);
-            passwordTextBox.Name = "passwordTextBox";
-            passwordTextBox.PasswordChar = '*';
-            passwordTextBox.Size = new Size(230, 25);
-            passwordTextBox.TabIndex = 18;
-            // 
-            // loginButton
-            // 
-            loginButton.AutoSize = true;
-            loginButton.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            loginButton.BackColor = Color.FromArgb(245, 245, 245);
-            loginButton.FlatAppearance.BorderColor = Color.FromArgb(207, 181, 59);
-            loginButton.FlatStyle = FlatStyle.Flat;
-            loginButton.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            loginButton.ForeColor = Color.FromArgb(54, 69, 79);
-            loginButton.Location = new Point(235, 304);
-            loginButton.Name = "loginButton";
-            loginButton.Size = new Size(58, 31);
-            loginButton.TabIndex = 19;
-            loginButton.Text = "Login";
-            loginButton.UseVisualStyleBackColor = false;
-            // 
-            // comboBoxUsers
-            // 
-            comboBoxUsers.BackColor = Color.FromArgb(255, 250, 240);
-            comboBoxUsers.FlatStyle = FlatStyle.Flat;
-            comboBoxUsers.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            comboBoxUsers.ForeColor = Color.FromArgb(54, 69, 79);
-            comboBoxUsers.FormattingEnabled = true;
-            comboBoxUsers.Location = new Point(235, 175);
-            comboBoxUsers.Name = "comboBoxUsers";
-            comboBoxUsers.Size = new Size(230, 25);
-            comboBoxUsers.TabIndex = 17;
-            // 
-            // passwordLabel
-            // 
-            passwordLabel.AutoSize = true;
-            passwordLabel.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            passwordLabel.ForeColor = Color.FromArgb(54, 69, 79);
-            passwordLabel.Location = new Point(121, 238);
-            passwordLabel.Name = "passwordLabel";
-            passwordLabel.Size = new Size(73, 19);
-            passwordLabel.TabIndex = 23;
-            passwordLabel.Text = "Password";
-            // 
-            // pickUserLabel
-            // 
-            pickUserLabel.AutoSize = true;
-            pickUserLabel.BackColor = Color.Transparent;
-            pickUserLabel.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            pickUserLabel.ForeColor = Color.FromArgb(54, 69, 79);
-            pickUserLabel.Location = new Point(121, 179);
-            pickUserLabel.Name = "pickUserLabel";
-            pickUserLabel.Size = new Size(76, 19);
-            pickUserLabel.TabIndex = 16;
-            pickUserLabel.Text = "Username";
-            // 
-            // changePasswordButton
-            // 
-            changePasswordButton.AutoSize = true;
-            changePasswordButton.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            changePasswordButton.BackColor = Color.FromArgb(245, 245, 245);
-            changePasswordButton.FlatAppearance.BorderColor = Color.FromArgb(207, 181, 59);
-            changePasswordButton.FlatStyle = FlatStyle.Flat;
-            changePasswordButton.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            changePasswordButton.ForeColor = Color.FromArgb(54, 69, 79);
-            changePasswordButton.Location = new Point(326, 304);
-            changePasswordButton.Name = "changePasswordButton";
-            changePasswordButton.Size = new Size(139, 31);
-            changePasswordButton.TabIndex = 22;
-            changePasswordButton.Text = "Change Password";
-            changePasswordButton.UseVisualStyleBackColor = false;
+            // loginPage REMOVED
+            //
+            // pictureBox1 REMOVED
+            //
+            // loggedInLabel REMOVED
+            //
+            // logoutButton REMOVED
+            //
+            // passwordTextBox REMOVED
+            //
+            // loginButton REMOVED
+            //
+            // comboBoxUsers REMOVED
+            //
+            // passwordLabel REMOVED
+            //
+            // pickUserLabel REMOVED
+            //
+            // changePasswordButton REMOVED
             // 
             // dataPage
             // 
@@ -1240,9 +1124,9 @@ namespace grace
             menuStrip1.ResumeLayout(false);
             menuStrip1.PerformLayout();
             tabControl.ResumeLayout(false);
-            loginPage.ResumeLayout(false);
-            loginPage.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
+            // loginPage.ResumeLayout(false); // Removed
+            // loginPage.PerformLayout(); // Removed
+            // ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit(); // Removed
             dataPage.ResumeLayout(false);
             dataPage.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridView).EndInit();
@@ -1280,15 +1164,15 @@ namespace grace
         private ErrorProvider errorProvider1;
         private Label label5;
         private TabPage checkinPage;
-        public Label loggedInLabel;
+        // public Label loggedInLabel; // Removed
         public ComboBox resetComboBox;
         public Button resetPasswordButton;
         public TabControl tabControl;
-        public Button loginButton;
-        public TextBox passwordTextBox;
-        public ComboBox comboBoxUsers;
-        internal Button changePasswordButton;
-        internal Button logoutButton;
+        // public Button loginButton; // Removed
+        // public TextBox passwordTextBox; // Removed
+        // public ComboBox comboBoxUsers; // Removed
+        // internal Button changePasswordButton; // Removed
+        // internal Button logoutButton; // Removed
         internal DataGridView checkOutDataGrid;
         internal BindingSource checkoutBindingSource;
         internal Button coResetButton;
@@ -1301,7 +1185,7 @@ namespace grace
         private Label label7;
         internal Button restoreDatabaseButton;
         internal Button backupButton;
-        internal TabPage loginPage;
+        // internal TabPage loginPage; // Removed
         private Label label8;
         private Label label6;
         internal TextBox loggingTextBox;
@@ -1313,8 +1197,8 @@ namespace grace
         internal Button addRowButton;
         internal Button clearFilterButton;
         internal TextBox filterSkuTextBox;
-        internal Label passwordLabel;
-        internal Label pickUserLabel;
+        // internal Label passwordLabel; // Removed
+        // internal Label pickUserLabel; // Removed
         private ToolStripMenuItem viewToolStripMenuItem;
         internal ToolStripMenuItem setInventoryFontSizeToolStripMenuItem;
         private Label scanBarcodeLabel;
@@ -1340,6 +1224,6 @@ namespace grace
         private ToolStripMenuItem aboutToolStripMenuItem;
         private Label filterSkuLabel;
         public TextBox skuFilterTextBox;
-        private PictureBox pictureBox1;
+        // private PictureBox pictureBox1; // Removed
     }
 }
