@@ -46,6 +46,7 @@ namespace grace
         internal CheckOutTab checkOutTab { get; }
         internal ReportTab reportTab;
         internal CollectionTab collectionTab;
+        internal NLog.Config.LoggingConfiguration config = new();
 
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
@@ -75,7 +76,7 @@ namespace grace
         private void InitializeLogger()
         {
             // Set up NLog configuration. This can be done in the NLog.config file as well.
-            NLog.Config.LoggingConfiguration config = new();
+     
 
             // Create targets and rules
             NLog.Targets.MethodCallTarget textboxTarget = new("textboxTarget", LogToTextBox);
@@ -281,7 +282,8 @@ namespace grace
         private void TabControl_Selecting(object sender, TabControlCancelEventArgs e)
         {
             string? username = Globals.GetInstance().CurrentUser; // Nullable string
-            if (string.IsNullOrEmpty(username)) {
+            if (string.IsNullOrEmpty(username))
+            {
                 e.Cancel = true; // Prevent navigation if no user
                 // Optionally, show a message or log, but Vivian_Load should prevent this state.
                 return;
@@ -464,7 +466,7 @@ namespace grace
             reportToolTip.Show("This report shows a chronological log of inventory changes to an item", reportInfoLabel);
         }
 
-        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        private void AboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
             using AboutBox aboutBox = new();
             DialogResult result = aboutBox.ShowDialog();
@@ -476,9 +478,11 @@ namespace grace
 
         }
 
-        private void LogoutToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ToolStripMenuItem2_Click(object sender, EventArgs e)
         {
             Globals.GetInstance().CurrentUser = null;
+            config.RemoveTarget("textboxTarget");
+            DataBase.CloseDatabase();
             this.Close();
             // The Program.cs logic will handle showing the login form.
         }
