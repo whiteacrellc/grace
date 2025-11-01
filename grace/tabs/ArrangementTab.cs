@@ -1,9 +1,11 @@
-﻿using NLog;
+﻿using grace.data;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace grace.tabs
 {
@@ -32,6 +34,35 @@ namespace grace.tabs
         public void Load()
         {
             bindingSource = [];
+            createArrangementButton.Click += CreateArrangementButton_Click;
 
+
+            InitializeComboBox();
+        }
+
+        private void InitializeComboBox()
+        {
+
+            List<string> distinctCollectionNames = [];
+            using (GraceDbContext context = new())
+            {
+                // Fill checkbox list with collection names
+                distinctCollectionNames = [.. context.Collections
+                    .Where(e => e.Name != "Other")
+                    .Select(e => e.Name)
+                    .Distinct()
+                    .OrderBy(name => name)];
+
+            }
+
+            collectionDropDown.Items.Clear();
+            foreach (string d in distinctCollectionNames)
+            {
+                collectionDropDown.Items.Add(d);
+            }
+        }
+
+        public void CreateArrangementButton_Click(object? sender, EventArgs e)
+        {
         }
 }

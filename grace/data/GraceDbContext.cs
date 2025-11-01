@@ -29,7 +29,7 @@ namespace grace.data
 
         public virtual DbSet<Inventory> InventoryDb { get; set; }
 
-        public virtual DbSet<Arrangements> Arrangements { get; set; }
+        public virtual DbSet<Arrangement> Arrangement { get; set; }
 
         public static string ConnectionString { get; set; }
 
@@ -194,9 +194,9 @@ namespace grace.data
 
             });
 
-            modelBuilder.Entity<Arrangements>(entity =>
+            modelBuilder.Entity<Arrangement>(entity =>
             {
-                entity.ToTable("Arrangements");
+                entity.ToTable("Arrangement");
                 // Primary key
                 entity.HasKey(e => e.ID);
 

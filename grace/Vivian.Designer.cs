@@ -121,6 +121,7 @@ namespace grace
             createArrangementButton = new Button();
             collectionDropDown = new ComboBox();
             arrangementDataGrid = new DataGridView();
+            deleteArrangementButton = new Button();
             menuStrip1.SuspendLayout();
             tabControl.SuspendLayout();
             dataPage.SuspendLayout();
@@ -1087,6 +1088,7 @@ namespace grace
             // arrangementPage
             // 
             arrangementPage.BackColor = SystemColors.ControlLightLight;
+            arrangementPage.Controls.Add(deleteArrangementButton);
             arrangementPage.Controls.Add(arrangementDataGrid);
             arrangementPage.Controls.Add(collectionDropDown);
             arrangementPage.Controls.Add(createArrangementButton);
@@ -1095,7 +1097,7 @@ namespace grace
             arrangementPage.Name = "arrangementPage";
             arrangementPage.Size = new Size(1517, 733);
             arrangementPage.TabIndex = 7;
-            arrangementPage.Text = "Arrangements";
+            arrangementPage.Text = "Arrangement";
             // 
             // createArrangementButton
             // 
@@ -1122,6 +1124,15 @@ namespace grace
             arrangementDataGrid.Name = "arrangementDataGrid";
             arrangementDataGrid.Size = new Size(509, 687);
             arrangementDataGrid.TabIndex = 3;
+            // 
+            // deleteArrangementButton
+            // 
+            deleteArrangementButton.Location = new Point(555, 240);
+            deleteArrangementButton.Name = "deleteArrangementButton";
+            deleteArrangementButton.Size = new Size(177, 39);
+            deleteArrangementButton.TabIndex = 4;
+            deleteArrangementButton.Text = "Delete Arrangement";
+            deleteArrangementButton.UseVisualStyleBackColor = true;
             // 
             // Vivian
             // 
@@ -1251,6 +1262,7 @@ namespace grace
         internal Button createArrangementButton;
         internal ComboBox collectionDropDown;
         internal DataGridView arrangementDataGrid;
+        internal Button deleteArrangementButton;
         // private PictureBox pictureBox1; // Removed
     }
 }
