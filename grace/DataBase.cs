@@ -296,7 +296,10 @@ namespace grace
 
             foreach (CheckInData data in result)
             {
-                table.Rows.Add(data);
+                table.Rows.Add(data.UserName, data.Sku, data.Brand,
+                    data.Description, data.BarCode, data.Collection,
+                    data.LastUpdated, data.UserTotal, data.CheckIn,
+                    data.GraceId);
             }
 
             return table;
