@@ -305,6 +305,48 @@ namespace grace
             return table;
         }
 
+
+        public class ArrangementData
+        {
+            public string Name { get; set; }
+            public int Total { get; set; }
+        }
+
+        public static System.Data.DataTable GetArrangementNameGrid(string collectionName)
+        {
+
+            System.Data.DataTable table = new();
+
+            // Define columns
+            table.Columns.Add("Name", typeof(string));
+            table.Columns.Add("Total", typeof(int));
+
+            using GraceDbContext dbContext = new();
+
+            List<ArrangementData> result = [.. (
+                from arrangements in dbContext.Arrangement
+                join collection in dbContext.Collections on arrangements.CollectionId equals collection.ID
+                join arrangemtntTotal in dbContext.ArrangementTotals on arrangements.ID equals arrangemtntTotal.ArrangementId
+                where collection.Name == collectionName &&
+                      arrangemtntTotal.LastUpdated == dbContext.ArrangementTotals
+                                              .Where(t => t.ArrangementId == arrangements.ID)
+                                              .OrderByDescending(t => t.ID)
+                                              .Max(t => t.LastUpdated)
+                orderby arrangements.Name ascending
+                select new ArrangementData
+                {
+                    Name = arrangements.Name,
+                    Total = arrangemtntTotal.CurrentTotal
+                }
+            )];
+
+            foreach (ArrangementData? at in result)
+            {
+                table.Rows.Add(at.Name, at.Total);
+            }
+
+            return table;
+        }
         public class ReportData
         {
             public string Sku { get; set; }

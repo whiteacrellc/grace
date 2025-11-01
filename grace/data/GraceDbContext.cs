@@ -29,6 +29,9 @@ namespace grace.data
 
         public virtual DbSet<Inventory> InventoryDb { get; set; }
 
+        public virtual DbSet<Arrangement> Arrangement { get; set; }
+        public virtual DbSet<ArrangementTotal> ArrangementTotals { get; set; }
+
         public static string ConnectionString { get; set; }
 
         public GraceDbContext(DbContextOptions<GraceDbContext> options)
@@ -190,6 +193,40 @@ namespace grace.data
                  .HasForeignKey(e => e.GraceId)
                  .OnDelete(DeleteBehavior.Cascade);
 
+            });
+
+            modelBuilder.Entity<Arrangement>(entity =>
+            {
+                entity.ToTable("Arrangement");
+                // Primary key
+                entity.HasKey(e => e.ID);
+
+                entity.Property(e => e.Name)
+                    .IsRequired();
+
+                entity.Property(e => e.IsDeleted)
+                    .HasDefaultValue(false);
+
+                entity.HasOne(e => e.Collection)
+                  .WithMany()
+                  .HasForeignKey(e => e.CollectionId)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            });
+
+            modelBuilder.Entity<ArrangementTotal>(entity =>
+            {
+                entity.ToTable("ArrangementTotals");
+                // Primary key
+                entity.HasKey(e => e.ID);
+
+                entity.Property(e => e.LastUpdated)
+                   .IsRequired();
+
+                entity.HasOne(e => e.Arrangement)
+                  .WithMany()
+                  .HasForeignKey(e => e.ArrangementId)
+                  .OnDelete(DeleteBehavior.Cascade);
             });
         }
 
