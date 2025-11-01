@@ -600,6 +600,18 @@ namespace grace
             String currentUser = Globals.GetInstance().CurrentUser;
             using (GraceDbContext context = new())
             {
+                // Check if the most recent total for this graceId has the same value
+                var mostRecentTotal = context.Totals
+                    .Where(t => t.GraceId == graceId)
+                    .OrderByDescending(t => t.ID)
+                    .FirstOrDefault();
+
+                // If the current total in the database equals the new total, don't insert
+                if (mostRecentTotal != null && mostRecentTotal.CurrentTotal == total)
+                {
+                    return mostRecentTotal.ID;
+                }
+
                 Total newTotal = new()
                 {
                     LastUpdated = DateTime.Now,
