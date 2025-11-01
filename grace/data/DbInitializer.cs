@@ -12,6 +12,7 @@ namespace grace.data
 
         public static void CheckDbSchemaCurrent(GraceDbContext context)
         {
+            EnsureArrangementsTable();
             EnsureCheckedInColumn(context);
             EnsureLastUpdatedColumn(context);
             EnsureGraceNoteColumn(context);
@@ -69,6 +70,18 @@ namespace grace.data
             const string columnName = "PrevTotal";
             const string tableName = "GraceRows";
             CreateColumn(columnName, tableName);
+        }
+
+        private static void EnsureArrangementsTable()
+        {
+            const string tableName = "Arrangements";
+            const string createTableSql = @"
+                CREATE TABLE Arrangements (
+                    ID INTEGER PRIMARY KEY AUTOINCREMENT,
+                    Name TEXT NOT NULL,
+                    IsDeleted INTEGER NOT NULL DEFAULT 0
+                )";
+            EnsureTableExists(tableName, createTableSql);
         }
 
         private static void CreateColumn(string columnName, string tableName)
