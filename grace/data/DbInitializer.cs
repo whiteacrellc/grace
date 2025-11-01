@@ -13,6 +13,7 @@ namespace grace.data
         public static void CheckDbSchemaCurrent(GraceDbContext context)
         {
             EnsureArrangementTable();
+            EnsureArrangementTotalTable();
             EnsureCheckedInColumn(context);
             EnsureLastUpdatedColumn(context);
             EnsureGraceNoteColumn(context);
@@ -79,7 +80,23 @@ namespace grace.data
                 CREATE TABLE Arrangement (
                     ID INTEGER PRIMARY KEY AUTOINCREMENT,
                     Name TEXT NOT NULL,
-                    IsDeleted INTEGER NOT NULL DEFAULT 0
+                    IsDeleted INTEGER NOT NULL DEFAULT 0,
+                    CollectionId INTEGER NOT NULL,
+                    FOREIGN KEY (CollectionId) REFERENCES Collections(ID) ON DELETE CASCADE
+                )";
+            EnsureTableExists(tableName, createTableSql);
+        }
+
+        private static void EnsureArrangementTotalTable()
+        {
+            const string tableName = "ArrangementTotals";
+            const string createTableSql = @"
+                CREATE TABLE ArrangementTotals (
+                    ID INTEGER PRIMARY KEY AUTOINCREMENT,
+                    LastUpdated TEXT NOT NULL,
+                    CurrentTotal INTEGER NOT NULL DEFAULT 0,
+                    ArrangementId INTEGER NOT NULL,
+                    FOREIGN KEY (ArrangementId) REFERENCES Arrangement(ID) ON DELETE CASCADE
                 )";
             EnsureTableExists(tableName, createTableSql);
         }
