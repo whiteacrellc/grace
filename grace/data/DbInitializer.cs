@@ -137,6 +137,47 @@ namespace grace.data
             con.Close();
         }
 
+        /// <summary>
+        /// Checks if a table exists in the database and creates it if it doesn't
+        /// </summary>
+        /// <param name="tableName">The name of the table to check/create</param>
+        /// <param name="createTableSql">The SQL statement to create the table if it doesn't exist</param>
+        public static void EnsureTableExists(string tableName, string createTableSql)
+        {
+            bool tableExists = false;
+            string connectionString = DataBase.ConnectionString;
+
+            using SqliteConnection con = new(connectionString);
+            con.Open();
+
+            // Check if table exists
+            using (SqliteCommand cmd = new($"SELECT name FROM sqlite_master WHERE type='table' AND name='{tableName}';"))
+            {
+                cmd.Connection = con;
+                using SqliteDataReader reader = cmd.ExecuteReader();
+                if (reader.Read())
+                {
+                    tableExists = true;
+                }
+            }
+
+            // Create table if it doesn't exist
+            if (!tableExists)
+            {
+                logger.Info($"Table '{tableName}' does not exist. Creating it now.");
+                using SqliteCommand cmd = new(createTableSql);
+                cmd.Connection = con;
+                cmd.ExecuteNonQuery();
+                logger.Info($"Table '{tableName}' created successfully.");
+            }
+            else
+            {
+                logger.Debug($"Table '{tableName}' already exists.");
+            }
+
+            con.Close();
+        }
+
     }
 }
 
