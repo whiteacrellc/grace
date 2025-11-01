@@ -11,7 +11,6 @@
  * Year: 2023
  */
 using grace.data;
-using NLog;
 
 namespace grace
 {
@@ -20,25 +19,17 @@ namespace grace
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         private static Globals instance;
 
-        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
-
-        private Preferences prefs;
-
         public string CurrentUser { get; set; }
         public bool CollectionDirty { get; set; }
 
         private Globals()
         {
-            prefs = new Preferences();
             CollectionDirty = false;
         }
         public static Globals GetInstance()
         {
             // If the instance doesn't exist, create it
-            if (instance == null)
-            {
-                instance = new Globals();
-            }
+            instance ??= new Globals();
             return instance;
         }
 
@@ -57,26 +48,12 @@ namespace grace
 
         public int HeaderHeight
         {
-            get
-            {
-                return Preferences.GetIntValue(Preferences.Preference.HeaderHeight);
-            }
-            set
-            {
-                Preferences.AddOrUpdateIntPreference(Preferences.Preference.HeaderHeight, value);
-            }
+            get => Preferences.GetIntValue(Preferences.Preference.HeaderHeight); set => Preferences.AddOrUpdateIntPreference(Preferences.Preference.HeaderHeight, value);
         }
 
         public bool BarCodeAutoOpen
         {
-            get
-            {
-                return Preferences.GetBooleanValue(Preferences.Preference.BarCodeAutoOpen);
-            }
-            set
-            {
-                Preferences.AddOrUpdateBooleanPreference(Preferences.Preference.BarCodeAutoOpen, value);
-            }
+            get => Preferences.GetBooleanValue(Preferences.Preference.BarCodeAutoOpen); set => Preferences.AddOrUpdateBooleanPreference(Preferences.Preference.BarCodeAutoOpen, value);
         }
 
         public DateTime CurrentHeaderDate { get; set; } = DateTime.Now;
