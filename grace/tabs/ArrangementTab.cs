@@ -15,6 +15,7 @@ namespace grace.tabs
         private readonly Vivian vivian;
         private DataGridView arragementDataGrid;
         private Button createArrangementButton;
+        private Button deleteArrangementButton;
         private ComboBox collectionDropDown;
         private BindingSource bindingSource;
 
@@ -28,6 +29,7 @@ namespace grace.tabs
         {
             arragementDataGrid = vivian.arrangementDataGrid;
             createArrangementButton = vivian.createArrangementButton;
+            deleteArrangementButton = vivian.deleteArrangementButton;
             collectionDropDown = vivian.collectionDropDown;
         }
 
@@ -35,9 +37,20 @@ namespace grace.tabs
         {
             bindingSource = [];
             createArrangementButton.Click += CreateArrangementButton_Click;
-
+            deleteArrangementButton.Click += DeleteArrangementButton_Click;
 
             InitializeComboBox();
+        }
+
+        private void LoadData()
+        {
+            var collectionName = collectionDropDown.SelectedItem?.ToString();
+            using (GraceDbContext context = new())
+            {
+                var arrangements = context.Arrangement.ToList();
+                bindingSource.DataSource = arrangements;
+                arragementDataGrid.DataSource = bindingSource;
+            }
         }
 
         private void InitializeComboBox()
@@ -54,15 +67,29 @@ namespace grace.tabs
                     .OrderBy(name => name)];
 
             }
-
+            var collectionNames = DataBase.GetCollections();
             collectionDropDown.Items.Clear();
-            foreach (string d in distinctCollectionNames)
+            foreach (string d in collectionNames)
             {
                 collectionDropDown.Items.Add(d);
+            }
+            if (collectionDropDown.Items.Count > 0)
+            {
+                collectionDropDown.SelectedIndex = 0;
             }
         }
 
         public void CreateArrangementButton_Click(object? sender, EventArgs e)
         {
+            using dialogs.AddArrangementDialog addArrangementDialog = new();
+            DialogResult result = addArrangementDialog.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                // Refresh the arrangement data grid or perform any necessary actions
+            }
         }
-}
+
+        public void DeleteArrangementButton_Click(object? sender, EventArgs e)
+        {
+        }
+    }
