@@ -96,7 +96,6 @@ namespace grace.data
                     LastUpdated TEXT NOT NULL,
                     CurrentTotal INTEGER NOT NULL DEFAULT 0,
                     ArrangementId INTEGER NOT NULL,
-                    User TEXT DEFAULT '',
                     FOREIGN KEY (ArrangementId) REFERENCES Arrangement(ID) ON DELETE CASCADE
                 )";
             EnsureTableExists(tableName, createTableSql);

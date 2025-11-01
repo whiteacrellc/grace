@@ -227,8 +227,6 @@ namespace grace.data
                   .WithMany()
                   .HasForeignKey(e => e.ArrangementId)
                   .OnDelete(DeleteBehavior.Cascade);
-                entity.Property(e => e.User)
-                   .HasDefaultValue("");
             });
         }
 

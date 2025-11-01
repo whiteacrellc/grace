@@ -117,6 +117,11 @@ namespace grace
             checkoutBindingSource = new BindingSource(components);
             checkInBindingSource = new BindingSource(components);
             reportToolTip = new ToolTip(components);
+            arrangementPage = new TabPage();
+            createArrangementButton = new Button();
+            collectionDropDown = new ComboBox();
+            arrangementDataGrid = new DataGridView();
+            deleteArrangementButton = new Button();
             menuStrip1.SuspendLayout();
             tabControl.SuspendLayout();
             dataPage.SuspendLayout();
@@ -133,6 +138,8 @@ namespace grace
             ((System.ComponentModel.ISupportInitialize)errorProvider1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)checkoutBindingSource).BeginInit();
             ((System.ComponentModel.ISupportInitialize)checkInBindingSource).BeginInit();
+            arrangementPage.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)arrangementDataGrid).BeginInit();
             SuspendLayout();
             // 
             // openFileDialog
@@ -241,6 +248,7 @@ namespace grace
             tabControl.Controls.Add(reportPage);
             tabControl.Controls.Add(collectionPage);
             tabControl.Controls.Add(adminPage);
+            tabControl.Controls.Add(arrangementPage);
             tabControl.DrawMode = TabDrawMode.OwnerDrawFixed;
             tabControl.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 0);
             tabControl.HotTrack = true;
@@ -1077,6 +1085,55 @@ namespace grace
             reportToolTip.ToolTipIcon = ToolTipIcon.Info;
             reportToolTip.ToolTipTitle = "Report Info";
             // 
+            // arrangementPage
+            // 
+            arrangementPage.BackColor = SystemColors.ControlLightLight;
+            arrangementPage.Controls.Add(deleteArrangementButton);
+            arrangementPage.Controls.Add(arrangementDataGrid);
+            arrangementPage.Controls.Add(collectionDropDown);
+            arrangementPage.Controls.Add(createArrangementButton);
+            arrangementPage.ForeColor = Color.Black;
+            arrangementPage.Location = new Point(4, 44);
+            arrangementPage.Name = "arrangementPage";
+            arrangementPage.Size = new Size(1517, 733);
+            arrangementPage.TabIndex = 7;
+            arrangementPage.Text = "Arrangement";
+            // 
+            // createArrangementButton
+            // 
+            createArrangementButton.Location = new Point(555, 185);
+            createArrangementButton.Name = "createArrangementButton";
+            createArrangementButton.Size = new Size(177, 39);
+            createArrangementButton.TabIndex = 1;
+            createArrangementButton.Text = "Create Arrangement";
+            createArrangementButton.UseVisualStyleBackColor = true;
+            // 
+            // collectionDropDown
+            // 
+            collectionDropDown.FormattingEnabled = true;
+            collectionDropDown.Location = new Point(555, 64);
+            collectionDropDown.Name = "collectionDropDown";
+            collectionDropDown.Size = new Size(177, 25);
+            collectionDropDown.TabIndex = 2;
+            // 
+            // arrangementDataGrid
+            // 
+            arrangementDataGrid.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
+            arrangementDataGrid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            arrangementDataGrid.Location = new Point(21, 34);
+            arrangementDataGrid.Name = "arrangementDataGrid";
+            arrangementDataGrid.Size = new Size(509, 687);
+            arrangementDataGrid.TabIndex = 3;
+            // 
+            // deleteArrangementButton
+            // 
+            deleteArrangementButton.Location = new Point(555, 240);
+            deleteArrangementButton.Name = "deleteArrangementButton";
+            deleteArrangementButton.Size = new Size(177, 39);
+            deleteArrangementButton.TabIndex = 4;
+            deleteArrangementButton.Text = "Delete Arrangement";
+            deleteArrangementButton.UseVisualStyleBackColor = true;
+            // 
             // Vivian
             // 
             AutoScaleDimensions = new SizeF(7F, 17F);
@@ -1120,6 +1177,8 @@ namespace grace
             ((System.ComponentModel.ISupportInitialize)errorProvider1).EndInit();
             ((System.ComponentModel.ISupportInitialize)checkoutBindingSource).EndInit();
             ((System.ComponentModel.ISupportInitialize)checkInBindingSource).EndInit();
+            arrangementPage.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)arrangementDataGrid).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -1199,6 +1258,11 @@ namespace grace
         private Label filterSkuLabel;
         public TextBox skuFilterTextBox;
         private ToolStripMenuItem toolStripMenuItem2;
+        private TabPage arrangementPage;
+        internal Button createArrangementButton;
+        internal ComboBox collectionDropDown;
+        internal DataGridView arrangementDataGrid;
+        internal Button deleteArrangementButton;
         // private PictureBox pictureBox1; // Removed
     }
 }
