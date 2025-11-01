@@ -40,7 +40,7 @@ namespace grace
 
         private void EditRowForm_Load(object sender, EventArgs e)
         {
-            List<string> colList = new();
+            List<string> colList = [];
             // We will need this to newCol the database
             if (row != null)
             {
@@ -55,23 +55,9 @@ namespace grace
                 }
             }
 
-            List<string> distinctBrandNames = [];
-            List<string> distinctCollectionNames = new();
-            using (GraceDbContext context = new())
-            {
-                // Fill checkbox list with collection names
-                distinctCollectionNames = [.. context.Collections
-                    .Where(e => e.Name != "Other")
-                    .Select(e => e.Name)
-                    .Distinct()
-                    .OrderBy(name => name)];
-                // Fill in drop down for brand name
-                distinctBrandNames = [.. context.Graces
-                    .Select(c => c.Brand)
-                    .Distinct()
-                    .OrderBy(brand => brand)];
-            }
-
+            List<string> distinctBrandNames = DataBase.GetBrandNames();
+            List<string> distinctCollectionNames = DataBase.GetCollections();
+   
             checkedListBox.Items.Clear();
             foreach (string d in distinctCollectionNames)
             {

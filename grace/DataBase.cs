@@ -904,14 +904,23 @@ namespace grace
 
         public static List<string> GetCollections()
         {
-            using GraceDbContext dbContext = new();
-            var distinctNames = dbContext.Collections
-                .Where(c => c.Name != "Other")
-                .Select(c => c.Name)
-                .Distinct()
-                .OrderBy(name => name).ToList();
-            return distinctNames;
+            using GraceDbContext context = new();
+            return [.. context.Collections
+                    .Where(e => e.Name != "Other")
+                    .Select(e => e.Name)
+                    .Distinct()
+                    .OrderBy(name => name)];
         }
+
+        public static List<string> GetBrandNames()
+        {
+            using GraceDbContext context = new();
+            return [.. context.Graces
+                    .Select(c => c.Brand)
+                    .Distinct()
+                    .OrderBy(brand => brand)];
+        }
+
 
         public static Dictionary<string, List<Grace>> OrderedCollectionNames()
         {

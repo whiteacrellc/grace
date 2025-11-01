@@ -12,6 +12,8 @@ namespace grace.data
 
         public static void CheckDbSchemaCurrent(GraceDbContext context)
         {
+            EnsureArrangementTable();
+            EnsureArrangementTotalTable();
             EnsureCheckedInColumn(context);
             EnsureLastUpdatedColumn(context);
             EnsureGraceNoteColumn(context);
@@ -69,6 +71,34 @@ namespace grace.data
             const string columnName = "PrevTotal";
             const string tableName = "GraceRows";
             CreateColumn(columnName, tableName);
+        }
+
+        private static void EnsureArrangementTable()
+        {
+            const string tableName = "Arrangement";
+            const string createTableSql = @"
+                CREATE TABLE Arrangement (
+                    ID INTEGER PRIMARY KEY AUTOINCREMENT,
+                    Name TEXT NOT NULL,
+                    IsDeleted INTEGER NOT NULL DEFAULT 0,
+                    CollectionId INTEGER NOT NULL,
+                    FOREIGN KEY (CollectionId) REFERENCES Collections(ID) ON DELETE CASCADE
+                )";
+            EnsureTableExists(tableName, createTableSql);
+        }
+
+        private static void EnsureArrangementTotalTable()
+        {
+            const string tableName = "ArrangementTotals";
+            const string createTableSql = @"
+                CREATE TABLE ArrangementTotals (
+                    ID INTEGER PRIMARY KEY AUTOINCREMENT,
+                    LastUpdated TEXT NOT NULL,
+                    CurrentTotal INTEGER NOT NULL DEFAULT 0,
+                    ArrangementId INTEGER NOT NULL,
+                    FOREIGN KEY (ArrangementId) REFERENCES Arrangement(ID) ON DELETE CASCADE
+                )";
+            EnsureTableExists(tableName, createTableSql);
         }
 
         private static void CreateColumn(string columnName, string tableName)
@@ -134,6 +164,47 @@ namespace grace.data
                 //cmd.Connection.Open();
                 cmd.ExecuteNonQuery();
             }
+            con.Close();
+        }
+
+        /// <summary>
+        /// Checks if a table exists in the database and creates it if it doesn't
+        /// </summary>
+        /// <param name="tableName">The name of the table to check/create</param>
+        /// <param name="createTableSql">The SQL statement to create the table if it doesn't exist</param>
+        public static void EnsureTableExists(string tableName, string createTableSql)
+        {
+            bool tableExists = false;
+            string connectionString = DataBase.ConnectionString;
+
+            using SqliteConnection con = new(connectionString);
+            con.Open();
+
+            // Check if table exists
+            using (SqliteCommand cmd = new($"SELECT name FROM sqlite_master WHERE type='table' AND name='{tableName}';"))
+            {
+                cmd.Connection = con;
+                using SqliteDataReader reader = cmd.ExecuteReader();
+                if (reader.Read())
+                {
+                    tableExists = true;
+                }
+            }
+
+            // Create table if it doesn't exist
+            if (!tableExists)
+            {
+                logger.Info($"Table '{tableName}' does not exist. Creating it now.");
+                using SqliteCommand cmd = new(createTableSql);
+                cmd.Connection = con;
+                cmd.ExecuteNonQuery();
+                logger.Info($"Table '{tableName}' created successfully.");
+            }
+            else
+            {
+                logger.Debug($"Table '{tableName}' already exists.");
+            }
+
             con.Close();
         }
 
