@@ -327,7 +327,8 @@ namespace grace
                 from arrangements in dbContext.Arrangement
                 join collection in dbContext.Collections on arrangements.CollectionId equals collection.ID
                 join arrangemtntTotal in dbContext.ArrangementTotals on arrangements.ID equals arrangemtntTotal.ArrangementId
-                where arrangemtntTotal.LastUpdated == dbContext.ArrangementTotals
+                where collection.Name == collectionName &&
+                      arrangemtntTotal.LastUpdated == dbContext.ArrangementTotals
                                               .Where(t => t.ArrangementId == arrangements.ID)
                                               .OrderByDescending(t => t.ID)
                                               .Max(t => t.LastUpdated)
