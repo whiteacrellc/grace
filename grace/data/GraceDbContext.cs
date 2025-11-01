@@ -29,6 +29,8 @@ namespace grace.data
 
         public virtual DbSet<Inventory> InventoryDb { get; set; }
 
+        public virtual DbSet<Arrangements> Arrangements { get; set; }
+
         public static string ConnectionString { get; set; }
 
         public GraceDbContext(DbContextOptions<GraceDbContext> options)
@@ -189,6 +191,20 @@ namespace grace.data
                  .WithMany()
                  .HasForeignKey(e => e.GraceId)
                  .OnDelete(DeleteBehavior.Cascade);
+
+            });
+
+            modelBuilder.Entity<Arrangements>(entity =>
+            {
+                entity.ToTable("Arrangements");
+                // Primary key
+                entity.HasKey(e => e.ID);
+
+                entity.Property(e => e.Name)
+                    .IsRequired();
+
+                entity.Property(e => e.IsDeleted)
+                    .HasDefaultValue(false);
 
             });
         }
