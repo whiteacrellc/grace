@@ -201,6 +201,8 @@ namespace grace.data
                 // Primary key
                 entity.HasKey(e => e.ID);
 
+                entity.HasIndex(e => new { e.Name, e.CollectionId }).IsUnique();
+
                 entity.Property(e => e.Name)
                     .IsRequired();
 
