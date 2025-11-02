@@ -202,6 +202,83 @@ namespace grace.tabs
         }
         public void DeleteArrangementButton_Click(object? sender, EventArgs e)
         {
+            // Check if a row is selected
+            if (arragementDataGrid.SelectedRows.Count == 0 && arragementDataGrid.CurrentRow == null)
+            {
+                MessageBox.Show("You must select a row to delete", "No Row Selected",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            // Get the selected row (prefer SelectedRows, fallback to CurrentRow)
+            DataGridViewRow selectedRow = arragementDataGrid.SelectedRows.Count > 0
+                ? arragementDataGrid.SelectedRows[0]
+                : arragementDataGrid.CurrentRow;
+
+            // Get the value of the Name column
+            string name = string.Empty;
+            if (arragementDataGrid.Columns.Contains("Name"))
+            {
+                object nameValue = selectedRow.Cells["Name"].Value;
+                name = nameValue?.ToString() ?? string.Empty;
+            }
+
+            if (string.IsNullOrEmpty(name))
+            {
+                MessageBox.Show("Cannot delete: Name is empty", "Invalid Name",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            // Show confirmation dialog
+            DialogResult result = MessageBox.Show(
+                $"Are you sure you want to delete {name}?",
+                "Confirm Delete",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question);
+
+            if (result != DialogResult.Yes)
+            {
+                return;
+            }
+
+            // Delete all arrangements with the given name in the current collection
+            try
+            {
+                using GraceDbContext context = new();
+
+                // Find all arrangements with the given name in the current collection
+                List<Arrangement> arrangementsToDelete = [.. context.Arrangement.Where(a => a.Name == name)];
+
+                if (arrangementsToDelete.Count == 0)
+                {
+                    MessageBox.Show($"No arrangement found with name '{name}'",
+                        "Not Found", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+
+
+                // Delete the arrangements
+                context.Arrangement.RemoveRange(arrangementsToDelete);
+
+                // Save changes
+                context.SaveChanges();
+
+                // Update status label
+                if (statusStrip.Items["toolStripStatusLabel1"] is ToolStripStatusLabel statusLabel)
+                {
+                    statusLabel.Text = $"Successfully deleted arrangement '{name}'.";
+                }
+
+                // Reload the data to refresh the grid
+                LoadData();
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Error deleting arrangement {Name}", name);
+                MessageBox.Show($"Error deleting arrangement: {ex.Message}", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void ArrangementDataGrid_EditingControlShowing(object? sender, DataGridViewEditingControlShowingEventArgs e)
