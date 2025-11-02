@@ -325,9 +325,8 @@ namespace grace
 
             List<ArrangementData> result = [.. (
                 from arrangements in dbContext.Arrangement
-                join collection in dbContext.Collections on arrangements.CollectionId equals collection.ID
                 join arrangemtntTotal in dbContext.ArrangementTotals on arrangements.ID equals arrangemtntTotal.ArrangementId
-                where collection.Name == collectionName &&
+                where arrangements.CollectionName == collectionName &&
                       arrangemtntTotal.LastUpdated == dbContext.ArrangementTotals
                                               .Where(t => t.ArrangementId == arrangements.ID)
                                               .OrderByDescending(t => t.ID)
@@ -637,6 +636,14 @@ namespace grace
                 return c;
             }
             return null;
+        }
+
+        public static Arrangement? GetArrangement(string collectionName, string name)
+        {
+
+            using GraceDbContext context = new();
+            return context.Arrangement.FirstOrDefault(e => e.Name == name
+                    && e.CollectionName == collectionName);
         }
 
         public static int AddTotal(int total, int graceId)

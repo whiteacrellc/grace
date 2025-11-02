@@ -201,19 +201,16 @@ namespace grace.data
                 // Primary key
                 entity.HasKey(e => e.ID);
 
-                entity.HasIndex(e => new { e.Name, e.CollectionId }).IsUnique();
+                entity.HasIndex(e => new { e.Name, e.CollectionName }).IsUnique();
 
                 entity.Property(e => e.Name)
                     .IsRequired();
 
+                entity.Property(e => e.CollectionName)
+                    .IsRequired();
+
                 entity.Property(e => e.IsDeleted)
                     .HasDefaultValue(false);
-
-                entity.HasOne(e => e.Collection)
-                  .WithMany()
-                  .HasForeignKey(e => e.CollectionId)
-                  .OnDelete(DeleteBehavior.Cascade);
-
             });
 
             modelBuilder.Entity<ArrangementTotal>(entity =>

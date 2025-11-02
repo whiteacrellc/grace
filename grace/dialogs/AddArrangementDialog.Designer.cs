@@ -72,6 +72,9 @@
             initialAmountTextBox.Name = "initialAmountTextBox";
             initialAmountTextBox.Size = new Size(137, 23);
             initialAmountTextBox.TabIndex = 3;
+            initialAmountTextBox.Text = "0";
+            initialAmountTextBox.TextAlign = HorizontalAlignment.Right;
+            initialAmountTextBox.KeyPress += InitialAmountTextBox_KeyPressHandler;
             // 
             // label3
             // 
@@ -85,7 +88,7 @@
             // label4
             // 
             label4.AutoSize = true;
-            label4.Location = new Point(39, 167);
+            label4.Location = new Point(56, 162);
             label4.Name = "label4";
             label4.Size = new Size(61, 15);
             label4.TabIndex = 5;
@@ -96,7 +99,7 @@
             collectionDropDown.FormattingEnabled = true;
             collectionDropDown.Location = new Point(128, 159);
             collectionDropDown.Name = "collectionDropDown";
-            collectionDropDown.Size = new Size(121, 23);
+            collectionDropDown.Size = new Size(137, 23);
             collectionDropDown.TabIndex = 6;
             // 
             // saveButton

@@ -33,6 +33,7 @@ namespace grace
         internal CheckOutTab checkOutTab { get; }
         internal ReportTab reportTab;
         internal CollectionTab collectionTab;
+        internal ArrangementTab arrangementTab;
         internal NLog.Config.LoggingConfiguration config = new();
         private static bool backedUp = false; // Flag to check if backup has been done
 
@@ -58,6 +59,7 @@ namespace grace
             checkInTab = new CheckInTab(this);
             reportTab = new ReportTab(this);
             collectionTab = new CollectionTab(this);
+            arrangementTab = new ArrangementTab(this);
         }
 
         private void InitializeLogger()
@@ -155,6 +157,7 @@ namespace grace
             checkOutTab.Load();
             reportTab.Load();
             collectionTab.Load();
+            arrangementTab.Load();
 
             string? currentUser = Globals.GetInstance().CurrentUser;
             if (string.IsNullOrEmpty(currentUser))
@@ -496,6 +499,13 @@ namespace grace
             BackupAndRestore backup = new();
             backup.BackupDatabaseToDocuments();
             DataBase.CloseDatabase();
+
+        }
+
+        private void CollectionDropDown_SelectedValueChanged(object sender, EventArgs e)
+        {
+            string selectedCollection = collectionDropDown.Text;
+
 
         }
     }

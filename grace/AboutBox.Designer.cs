@@ -96,7 +96,6 @@
             this.linkLabelReleases.TabIndex = 4; // Next available tab index
             this.linkLabelReleases.Text = "View Release Notes";
             this.linkLabelReleases.TabStop = true; // Ensure it's a tab stop
-            this.linkLabelReleases.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelReleases_LinkClicked);
             //
             // AboutBox
             // 

@@ -21,8 +21,7 @@ namespace grace.data.models
         [StringLength(100, MinimumLength = 3, ErrorMessage = "Name must be between 3 and 100 characters.")]
         public string Name { get; set; }
         public bool IsDeleted { get; set; }
-        public int CollectionId { get; set; }
-        public CollectionName Collection { get; set; }
+        public string CollectionName { get; set; }
 
     }
 }

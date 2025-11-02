@@ -81,8 +81,8 @@ namespace grace.data
                     ID INTEGER PRIMARY KEY AUTOINCREMENT,
                     Name TEXT NOT NULL,
                     IsDeleted INTEGER NOT NULL DEFAULT 0,
-                    CollectionId INTEGER NOT NULL,
-                    FOREIGN KEY (CollectionId) REFERENCES Collections(ID) ON DELETE CASCADE
+                    CollectionName TEXT NOT NULL,
+                    UNIQUE(Name, CollectionName)
                 )";
             EnsureTableExists(tableName, createTableSql);
         }
