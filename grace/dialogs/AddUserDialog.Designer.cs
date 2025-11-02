@@ -53,8 +53,8 @@
             saveButton.TabIndex = 0;
             saveButton.Text = "Save";
             saveButton.UseVisualStyleBackColor = false;
-            saveButton.Click += saveButton_Click;
-            //
+            saveButton.Click += SaveButton_Click;
+            // 
             // usernameTextBox
             //
             usernameTextBox.BackColor = Color.FromArgb(255, 250, 240);

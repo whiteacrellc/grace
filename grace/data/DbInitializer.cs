@@ -94,6 +94,7 @@ namespace grace.data
                 CREATE TABLE ArrangementTotals (
                     ID INTEGER PRIMARY KEY AUTOINCREMENT,
                     LastUpdated TEXT NOT NULL,
+                    User TEXT NOT NULL,
                     CurrentTotal INTEGER NOT NULL DEFAULT 0,
                     ArrangementId INTEGER NOT NULL,
                     FOREIGN KEY (ArrangementId) REFERENCES Arrangement(ID) ON DELETE CASCADE

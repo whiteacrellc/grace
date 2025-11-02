@@ -32,23 +32,20 @@
             nameTextBox = new TextBox();
             label1 = new Label();
             label2 = new Label();
-            initialAmountTextBox = new TextBox();
-            label3 = new Label();
-            label4 = new Label();
-            collectionDropDown = new ComboBox();
             saveButton = new Button();
             cancelButton = new Button();
+            progressBar = new ProgressBar();
             SuspendLayout();
             // 
-            // nameTextBox
-            //
+            // nameText
+            // 
+            nameTextBox.Location = new Point(90, 68);
+            nameTextBox.Size = new Size(189, 23);
             nameTextBox.BackColor = Color.FromArgb(255, 250, 240);
             nameTextBox.BorderStyle = BorderStyle.FixedSingle;
             nameTextBox.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point, 0);
             nameTextBox.ForeColor = Color.FromArgb(54, 69, 79);
-            nameTextBox.Location = new Point(128, 76);
             nameTextBox.Name = "nameTextBox";
-            nameTextBox.Size = new Size(137, 25);
             nameTextBox.TabIndex = 0;
             // 
             // label1
@@ -67,60 +64,13 @@
             label2.AutoSize = true;
             label2.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point, 0);
             label2.ForeColor = Color.FromArgb(54, 69, 79);
-            label2.Location = new Point(80, 84);
+             label2.Location = new Point(42, 76);
             label2.Name = "label2";
             label2.Size = new Size(44, 19);
             label2.TabIndex = 2;
             label2.Text = "Name";
-            // 
-            // initialAmountTextBox
             //
-            initialAmountTextBox.BackColor = Color.FromArgb(255, 250, 240);
-            initialAmountTextBox.BorderStyle = BorderStyle.FixedSingle;
-            initialAmountTextBox.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            initialAmountTextBox.ForeColor = Color.FromArgb(54, 69, 79);
-            initialAmountTextBox.Location = new Point(128, 115);
-            initialAmountTextBox.Name = "initialAmountTextBox";
-            initialAmountTextBox.Size = new Size(137, 25);
-            initialAmountTextBox.TabIndex = 3;
-            initialAmountTextBox.Text = "0";
-            initialAmountTextBox.TextAlign = HorizontalAlignment.Right;
-            initialAmountTextBox.KeyPress += InitialAmountTextBox_KeyPressHandler;
-            //
-            // label3
-            //
-            label3.AutoSize = true;
-            label3.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label3.ForeColor = Color.FromArgb(54, 69, 79);
-            label3.Location = new Point(36, 118);
-            label3.Name = "label3";
-            label3.Size = new Size(95, 19);
-            label3.TabIndex = 4;
-            label3.Text = "Initial Amount";
-            //
-            // label4
-            //
-            label4.AutoSize = true;
-            label4.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label4.ForeColor = Color.FromArgb(54, 69, 79);
-            label4.Location = new Point(56, 162);
-            label4.Name = "label4";
-            label4.Size = new Size(70, 19);
-            label4.TabIndex = 5;
-            label4.Text = "Collection";
-            // 
-            // collectionDropDown
-            //
-            collectionDropDown.BackColor = Color.FromArgb(255, 250, 240);
-            collectionDropDown.FlatStyle = FlatStyle.Flat;
-            collectionDropDown.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            collectionDropDown.ForeColor = Color.FromArgb(54, 69, 79);
-            collectionDropDown.FormattingEnabled = true;
-            collectionDropDown.Location = new Point(128, 159);
-            collectionDropDown.Name = "collectionDropDown";
-            collectionDropDown.Size = new Size(137, 25);
-            collectionDropDown.TabIndex = 6;
-            // 
+
             // saveButton
             //
             saveButton.BackColor = Color.FromArgb(245, 245, 245);
@@ -128,7 +78,7 @@
             saveButton.FlatStyle = FlatStyle.Flat;
             saveButton.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 0);
             saveButton.ForeColor = Color.FromArgb(54, 69, 79);
-            saveButton.Location = new Point(56, 225);
+            saveButton.Location = new Point(35, 127);
             saveButton.Name = "saveButton";
             saveButton.Size = new Size(90, 35);
             saveButton.TabIndex = 7;
@@ -143,7 +93,7 @@
             cancelButton.FlatStyle = FlatStyle.Flat;
             cancelButton.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 0);
             cancelButton.ForeColor = Color.FromArgb(54, 69, 79);
-            cancelButton.Location = new Point(161, 225);
+            cancelButton.Location = new Point(140, 128);
             cancelButton.Name = "cancelButton";
             cancelButton.Size = new Size(90, 35);
             cancelButton.TabIndex = 8;
@@ -151,18 +101,22 @@
             cancelButton.UseVisualStyleBackColor = false;
             cancelButton.Click += CancelButton_Click;
             // 
+            // progressBar
+            // 
+            progressBar.Location = new Point(59, 182);
+            progressBar.Name = "progressBar";
+            progressBar.Size = new Size(235, 23);
+            progressBar.TabIndex = 9;
+            // 
             // AddArrangementDialog
             //
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            BackColor = Color.FromArgb(255, 245, 238);
-            ClientSize = new Size(635, 386);
+            ClientSize = new Size(407, 242);
+            Controls.Add(progressBar);
+            BackColor = Color.FromArgb(255, 245, 238)
             Controls.Add(cancelButton);
             Controls.Add(saveButton);
-            Controls.Add(collectionDropDown);
-            Controls.Add(label4);
-            Controls.Add(label3);
-            Controls.Add(initialAmountTextBox);
             Controls.Add(label2);
             Controls.Add(label1);
             Controls.Add(nameTextBox);
@@ -171,7 +125,7 @@
             Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "AddArrangementDialog";
             StartPosition = FormStartPosition.CenterParent;
-            Text = "AddArrangementDialog";
+            Text = "Add Arrangement Dialog";
             Load += AddArrangementDialog_Load;
             ResumeLayout(false);
             PerformLayout();
@@ -182,11 +136,8 @@
         private TextBox nameTextBox;
         private Label label1;
         private Label label2;
-        private TextBox initialAmountTextBox;
-        private Label label3;
-        private Label label4;
-        private ComboBox collectionDropDown;
         private Button saveButton;
         private Button cancelButton;
+        private ProgressBar progressBar;
     }
 }
