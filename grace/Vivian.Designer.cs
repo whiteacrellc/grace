@@ -1077,14 +1077,14 @@ namespace grace
             backupButton.UseVisualStyleBackColor = false;
             // 
             // arrangementPage
-            // 
-            arrangementPage.BackColor = SystemColors.ControlLightLight;
+            //
+            arrangementPage.BackColor = Color.FromArgb(255, 245, 238);
             arrangementPage.Controls.Add(currentCollectionLabel);
             arrangementPage.Controls.Add(deleteArrangementButton);
             arrangementPage.Controls.Add(arrangementDataGrid);
             arrangementPage.Controls.Add(collectionDropDown);
             arrangementPage.Controls.Add(createArrangementButton);
-            arrangementPage.ForeColor = Color.Black;
+            arrangementPage.ForeColor = Color.FromArgb(54, 69, 79);
             arrangementPage.Location = new Point(4, 44);
             arrangementPage.Name = "arrangementPage";
             arrangementPage.Size = new Size(1517, 733);
@@ -1092,8 +1092,10 @@ namespace grace
             arrangementPage.Text = "Arrangement";
             // 
             // currentCollectionLabel
-            // 
+            //
             currentCollectionLabel.AutoSize = true;
+            currentCollectionLabel.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            currentCollectionLabel.ForeColor = Color.FromArgb(54, 69, 79);
             currentCollectionLabel.Location = new Point(63, 25);
             currentCollectionLabel.Name = "currentCollectionLabel";
             currentCollectionLabel.Size = new Size(50, 19);
@@ -1101,26 +1103,65 @@ namespace grace
             currentCollectionLabel.Text = "label1";
             // 
             // deleteArrangementButton
-            // 
+            //
+            deleteArrangementButton.BackColor = Color.FromArgb(245, 245, 245);
+            deleteArrangementButton.FlatAppearance.BorderColor = Color.FromArgb(207, 181, 59);
+            deleteArrangementButton.FlatStyle = FlatStyle.Flat;
+            deleteArrangementButton.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            deleteArrangementButton.ForeColor = Color.FromArgb(54, 69, 79);
             deleteArrangementButton.Location = new Point(555, 240);
             deleteArrangementButton.Name = "deleteArrangementButton";
             deleteArrangementButton.Size = new Size(177, 39);
             deleteArrangementButton.TabIndex = 4;
             deleteArrangementButton.Text = "Delete Arrangement";
-            deleteArrangementButton.UseVisualStyleBackColor = true;
+            deleteArrangementButton.UseVisualStyleBackColor = false;
             // 
             // arrangementDataGrid
-            // 
+            //
+            arrangementDataGrid.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(248, 240, 227);
+            arrangementDataGrid.AlternatingRowsDefaultCellStyle.Font = new Font("Segoe UI", 10F);
+            arrangementDataGrid.AlternatingRowsDefaultCellStyle.ForeColor = Color.FromArgb(54, 69, 79);
+            arrangementDataGrid.AlternatingRowsDefaultCellStyle.SelectionBackColor = Color.FromArgb(224, 201, 127);
+            arrangementDataGrid.AlternatingRowsDefaultCellStyle.SelectionForeColor = Color.FromArgb(54, 69, 79);
             arrangementDataGrid.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
             arrangementDataGrid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            arrangementDataGrid.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
+            arrangementDataGrid.BackgroundColor = Color.FromArgb(255, 245, 238);
+            arrangementDataGrid.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            arrangementDataGrid.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(234, 221, 202);
+            arrangementDataGrid.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            arrangementDataGrid.ColumnHeadersDefaultCellStyle.ForeColor = Color.FromArgb(54, 69, 79);
+            arrangementDataGrid.ColumnHeadersDefaultCellStyle.SelectionBackColor = Color.FromArgb(234, 221, 202);
+            arrangementDataGrid.ColumnHeadersDefaultCellStyle.SelectionForeColor = Color.FromArgb(54, 69, 79);
+            arrangementDataGrid.ColumnHeadersDefaultCellStyle.WrapMode = DataGridViewTriState.True;
             arrangementDataGrid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            arrangementDataGrid.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            arrangementDataGrid.DefaultCellStyle.BackColor = Color.FromArgb(255, 250, 240);
+            arrangementDataGrid.DefaultCellStyle.Font = new Font("Segoe UI", 10F);
+            arrangementDataGrid.DefaultCellStyle.ForeColor = Color.FromArgb(54, 69, 79);
+            arrangementDataGrid.DefaultCellStyle.SelectionBackColor = Color.FromArgb(224, 201, 127);
+            arrangementDataGrid.DefaultCellStyle.SelectionForeColor = Color.FromArgb(54, 69, 79);
+            arrangementDataGrid.DefaultCellStyle.WrapMode = DataGridViewTriState.False;
+            arrangementDataGrid.EnableHeadersVisualStyles = false;
+            arrangementDataGrid.GridColor = Color.FromArgb(211, 192, 177);
             arrangementDataGrid.Location = new Point(21, 64);
             arrangementDataGrid.Name = "arrangementDataGrid";
+            arrangementDataGrid.RowHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            arrangementDataGrid.RowHeadersDefaultCellStyle.BackColor = Color.FromArgb(234, 221, 202);
+            arrangementDataGrid.RowHeadersDefaultCellStyle.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            arrangementDataGrid.RowHeadersDefaultCellStyle.ForeColor = Color.FromArgb(54, 69, 79);
+            arrangementDataGrid.RowHeadersDefaultCellStyle.SelectionBackColor = Color.FromArgb(224, 201, 127);
+            arrangementDataGrid.RowHeadersDefaultCellStyle.SelectionForeColor = Color.FromArgb(54, 69, 79);
+            arrangementDataGrid.RowHeadersDefaultCellStyle.WrapMode = DataGridViewTriState.True;
             arrangementDataGrid.Size = new Size(509, 657);
             arrangementDataGrid.TabIndex = 3;
             // 
             // collectionDropDown
-            // 
+            //
+            collectionDropDown.BackColor = Color.FromArgb(255, 250, 240);
+            collectionDropDown.FlatStyle = FlatStyle.Flat;
+            collectionDropDown.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            collectionDropDown.ForeColor = Color.FromArgb(54, 69, 79);
             collectionDropDown.FormattingEnabled = true;
             collectionDropDown.Location = new Point(555, 64);
             collectionDropDown.Name = "collectionDropDown";
@@ -1129,13 +1170,18 @@ namespace grace
             collectionDropDown.SelectedValueChanged += CollectionDropDown_SelectedValueChanged;
             // 
             // createArrangementButton
-            // 
+            //
+            createArrangementButton.BackColor = Color.FromArgb(245, 245, 245);
+            createArrangementButton.FlatAppearance.BorderColor = Color.FromArgb(207, 181, 59);
+            createArrangementButton.FlatStyle = FlatStyle.Flat;
+            createArrangementButton.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            createArrangementButton.ForeColor = Color.FromArgb(54, 69, 79);
             createArrangementButton.Location = new Point(555, 185);
             createArrangementButton.Name = "createArrangementButton";
             createArrangementButton.Size = new Size(177, 39);
             createArrangementButton.TabIndex = 1;
             createArrangementButton.Text = "Create Arrangement";
-            createArrangementButton.UseVisualStyleBackColor = true;
+            createArrangementButton.UseVisualStyleBackColor = false;
             // 
             // errorProvider1
             // 
