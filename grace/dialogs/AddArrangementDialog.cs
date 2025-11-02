@@ -19,6 +19,9 @@ namespace grace.dialogs
 {
     public partial class AddArrangementDialog : Form
     {
+        string currentUser = Globals.GetInstance().CurrentUser;
+        private List<string> collectionNames = [];
+
         public AddArrangementDialog()
         {
             InitializeComponent();
@@ -32,15 +35,7 @@ namespace grace.dialogs
 
         private void SaveButton_Click(object sender, EventArgs e)
         {
-            var collectionName = collectionDropDown.SelectedItem?.ToString();
-            if (collectionName == null)
-            {
-                MessageBox.Show("You must select a collection.",
-                    "Information", MessageBoxButtons.OK,
-                    MessageBoxIcon.Exclamation);
-                return;
-            }
-            var arrangementName = nameTextBox.Text;
+            string arrangementName = nameTextBox.Text;
             if (string.IsNullOrWhiteSpace(arrangementName))
             {
                 MessageBox.Show("You must enter an arrangement name.",
@@ -48,16 +43,18 @@ namespace grace.dialogs
                     MessageBoxIcon.Exclamation);
                 return;
             }
-            if (int.TryParse(initialAmountTextBox.Text, out int initialAmount))
+            try
             {
-                InsertRow(arrangementName, collectionName, initialAmount);
+                foreach (string collectionName in collectionNames)
+                {
+                    InsertRow(arrangementName, collectionName);
+                }
             }
-            else
+            catch (DbUpdateException)
             {
-                MessageBox.Show("Initial Amount must be a valid integer.",
-                    "Information", MessageBoxButtons.OK,
-                    MessageBoxIcon.Exclamation);
-                return;
+                MessageBox.Show("Attempted to add duplicate arrangement name",
+                    "Error", MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
             }
 
             DialogResult = DialogResult.OK;
@@ -66,53 +63,46 @@ namespace grace.dialogs
 
         private void AddArrangementDialog_Load(object sender, EventArgs e)
         {
-            List<string> collectionNames = DataBase.GetCollections();
-            collectionDropDown.Items.Clear();
-            foreach (string d in collectionNames)
-            {
-                collectionDropDown.Items.Add(d);
-            }
-            if (collectionDropDown.Items.Count > 0)
-            {
-                collectionDropDown.SelectedIndex = 0;
-            }
 
+            collectionNames = DataBase.GetCollections();
+            progressBar.Maximum = collectionNames.Count;
+            progressBar.Value = 0;
+            progressBar.Step = 1;
         }
 
-        private void InsertRow(string name, string collectionName, int initialValue)
+        private void InsertRow(string name, string collectionName)
         {
             using GraceDbContext context = new();
-            try
+
+            // Create a new Grace object to insert
+            Arrangement arrangement = new()
             {
-                // Create a new Grace object to insert
-                Arrangement arrangement = new()
-                {
-                    Name = name.Trim(),
-                    CollectionName = collectionName.Trim(),
-                };
+                Name = name.Trim(),
+                CollectionName = collectionName.Trim(),
+            };
 
-                // Add the new Grace object to the DbContext
-                context.Arrangement.Add(arrangement);
+            // Add the new Grace object to the DbContext
+            context.Arrangement.Add(arrangement);
 
-                // Save the changes to the database
-                context.SaveChanges();
+            // Save the changes to the database
+            context.SaveChanges();
 
-                int insertId = arrangement.ID;
-                ArrangementTotal arrangementTotal = new()
-                {
-                    ArrangementId = insertId,
-                    CurrentTotal = initialValue,
-                };
-                context.ArrangementTotals.Add(arrangementTotal);
-                context.SaveChanges();
-
-            }
-            catch (DbUpdateException ex)
+            int insertId = arrangement.ID;
+            ArrangementTotal arrangementTotal = new()
             {
-                MessageBox.Show("Error adding arrangement: " + ex.Message,
-                    "Error", MessageBoxButtons.OK,
-                    MessageBoxIcon.Error);
-            }
+                ArrangementId = insertId,
+                CurrentTotal = 0,
+                User = currentUser,
+            };
+            context.ArrangementTotals.Add(arrangementTotal);
+            context.SaveChanges();
+
+            progressBar.PerformStep();
+
+            // Sleep so people see the progress
+            Thread.Sleep(250);
+
+
         }
 
         private void InitialAmountTextBox_KeyPressHandler(object sender, KeyPressEventArgs e)
