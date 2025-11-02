@@ -114,7 +114,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(407, 242);
             Controls.Add(progressBar);
-            BackColor = Color.FromArgb(255, 245, 238)
+            BackColor = Color.FromArgb(255, 245, 238);
             Controls.Add(cancelButton);
             Controls.Add(saveButton);
             Controls.Add(label2);

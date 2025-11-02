@@ -188,7 +188,7 @@ namespace grace.tabs
             {
                 if (statusStrip.Items["toolStripStatusLabel1"] is ToolStripStatusLabel statusLabel)
                 {
-                    statusLabel.Text = $"Successfully added arrangement, updating data for";
+                    statusLabel.Text = $"Successfully added arrangement";
                 }
                 LoadData();
             }
