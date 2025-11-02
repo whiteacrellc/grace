@@ -242,42 +242,21 @@ namespace grace.tabs
                 return;
             }
 
-            // Get the current collection name
-            string? collectionName = collectionDropDown.SelectedItem?.ToString();
-
-            if (string.IsNullOrEmpty(collectionName))
-            {
-                MessageBox.Show("Cannot delete: No collection selected", "Invalid Collection",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
             // Delete all arrangements with the given name in the current collection
             try
             {
                 using GraceDbContext context = new();
 
                 // Find all arrangements with the given name in the current collection
-                var arrangementsToDelete = context.Arrangement
-                    .Where(a => a.Name == name && a.CollectionName == collectionName)
-                    .ToList();
+                List<Arrangement> arrangementsToDelete = [.. context.Arrangement.Where(a => a.Name == name)];
 
                 if (arrangementsToDelete.Count == 0)
                 {
-                    MessageBox.Show($"No arrangement found with name '{name}' in collection '{collectionName}'",
+                    MessageBox.Show($"No arrangement found with name '{name}'",
                         "Not Found", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     return;
                 }
 
-                // For each arrangement, delete the associated totals first
-                foreach (var arrangement in arrangementsToDelete)
-                {
-                    var totalsToDelete = context.ArrangementTotals
-                        .Where(t => t.ArrangementId == arrangement.ID)
-                        .ToList();
-
-                    context.ArrangementTotals.RemoveRange(totalsToDelete);
-                }
 
                 // Delete the arrangements
                 context.Arrangement.RemoveRange(arrangementsToDelete);
@@ -288,7 +267,7 @@ namespace grace.tabs
                 // Update status label
                 if (statusStrip.Items["toolStripStatusLabel1"] is ToolStripStatusLabel statusLabel)
                 {
-                    statusLabel.Text = $"Successfully deleted arrangement '{name}' from collection '{collectionName}'.";
+                    statusLabel.Text = $"Successfully deleted arrangement '{name}'.";
                 }
 
                 // Reload the data to refresh the grid
@@ -296,7 +275,7 @@ namespace grace.tabs
             }
             catch (Exception ex)
             {
-                logger.Error(ex, "Error deleting arrangement {Name} from collection {CollectionName}", name, collectionName);
+                logger.Error(ex, "Error deleting arrangement {Name}", name);
                 MessageBox.Show($"Error deleting arrangement: {ex.Message}", "Error",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
