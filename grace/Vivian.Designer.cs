@@ -123,6 +123,8 @@ namespace grace
             checkoutBindingSource = new BindingSource(components);
             checkInBindingSource = new BindingSource(components);
             reportToolTip = new ToolTip(components);
+            statusStrip = new StatusStrip();
+            toolStripStatusLabel1 = new ToolStripStatusLabel();
             menuStrip1.SuspendLayout();
             tabControl.SuspendLayout();
             dataPage.SuspendLayout();
@@ -141,6 +143,7 @@ namespace grace
             ((System.ComponentModel.ISupportInitialize)errorProvider1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)checkoutBindingSource).BeginInit();
             ((System.ComponentModel.ISupportInitialize)checkInBindingSource).BeginInit();
+            statusStrip.SuspendLayout();
             SuspendLayout();
             // 
             // openFileDialog
@@ -1079,6 +1082,7 @@ namespace grace
             // arrangementPage
             // 
             arrangementPage.BackColor = SystemColors.ControlLightLight;
+            arrangementPage.Controls.Add(statusStrip);
             arrangementPage.Controls.Add(currentCollectionLabel);
             arrangementPage.Controls.Add(deleteArrangementButton);
             arrangementPage.Controls.Add(arrangementDataGrid);
@@ -1116,7 +1120,7 @@ namespace grace
             arrangementDataGrid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             arrangementDataGrid.Location = new Point(21, 64);
             arrangementDataGrid.Name = "arrangementDataGrid";
-            arrangementDataGrid.Size = new Size(509, 657);
+            arrangementDataGrid.Size = new Size(509, 630);
             arrangementDataGrid.TabIndex = 3;
             // 
             // collectionDropDown
@@ -1146,6 +1150,19 @@ namespace grace
             reportToolTip.IsBalloon = true;
             reportToolTip.ToolTipIcon = ToolTipIcon.Info;
             reportToolTip.ToolTipTitle = "Report Info";
+            // 
+            // statusStrip
+            // 
+            statusStrip.Items.AddRange(new ToolStripItem[] { toolStripStatusLabel1 });
+            statusStrip.Location = new Point(0, 711);
+            statusStrip.Name = "statusStrip";
+            statusStrip.Size = new Size(1517, 22);
+            statusStrip.TabIndex = 6;
+            // 
+            // toolStripStatusLabel1
+            // 
+            toolStripStatusLabel1.Name = "toolStripStatusLabel1";
+            toolStripStatusLabel1.Size = new Size(0, 17);
             // 
             // Vivian
             // 
@@ -1193,6 +1210,8 @@ namespace grace
             ((System.ComponentModel.ISupportInitialize)errorProvider1).EndInit();
             ((System.ComponentModel.ISupportInitialize)checkoutBindingSource).EndInit();
             ((System.ComponentModel.ISupportInitialize)checkInBindingSource).EndInit();
+            statusStrip.ResumeLayout(false);
+            statusStrip.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -1278,6 +1297,8 @@ namespace grace
         internal DataGridView arrangementDataGrid;
         internal Button deleteArrangementButton;
         internal Label currentCollectionLabel;
+        internal StatusStrip statusStrip;
+        private ToolStripStatusLabel toolStripStatusLabel1;
         // private PictureBox pictureBox1; // Removed
     }
 }

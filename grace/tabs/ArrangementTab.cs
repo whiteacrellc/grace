@@ -20,6 +20,9 @@ namespace grace.tabs
         private ComboBox collectionDropDown;
         private BindingSource bindingSource;
         private Label currentCollectionLabel;
+        private StatusStrip statusStrip;
+        private readonly string currentUser = Globals.GetInstance().CurrentUser;
+
         internal ArrangementTab(Vivian v)
         {
             this.vivian = v;
@@ -33,6 +36,7 @@ namespace grace.tabs
             deleteArrangementButton = vivian.deleteArrangementButton;
             collectionDropDown = vivian.collectionDropDown;
             currentCollectionLabel = vivian.currentCollectionLabel;
+            statusStrip = vivian.statusStrip;
         }
 
         public void Load()
@@ -45,6 +49,7 @@ namespace grace.tabs
             arragementDataGrid.EditingControlShowing += ArrangementDataGrid_EditingControlShowing;
             InitializeComboBox();
             LoadData();
+            SetTimeOfDayGreeting();
         }
 
 
@@ -84,6 +89,23 @@ namespace grace.tabs
 
         }
 
+        private void SetTimeOfDayGreeting()
+        {
+            // We will update the status label (assumed to be named 'toolStripStatusLabel1')
+            if (statusStrip.Items["toolStripStatusLabel1"] is not ToolStripStatusLabel statusLabel)
+            {
+                Console.WriteLine("Error: ToolStripStatusLabel 'toolStripStatusLabel1' not found.");
+                return; // Can't update if the label doesn't exist.
+            }
+
+            DateTime currentTime = DateTime.Now;
+            string greeting = currentTime.Hour is >= 0 and < 12 ? "Good Morning" : currentTime.Hour is >= 12 and < 17 ? "Good Afternoon" : "Good Evening";
+
+            // Combine greeting with the currentUser variable (assumed to exist in Form1)
+            statusLabel.Text = $"{greeting}, {currentUser}!";
+        }
+
+
         // Placeholder for a function that might update your database
         private void UpdateArrangementTotal(string name, int total)
         {
@@ -97,12 +119,17 @@ namespace grace.tabs
                     ArrangementTotal arrangementTotal = new()
                     {
                         CurrentTotal = total,
-                        ArrangementId = arrangement.ID
+                        ArrangementId = arrangement.ID,
+                        User = currentUser
                     };
                     context.ArrangementTotals.Add(arrangementTotal);
 
                     // Save the changes to the database
                     context.SaveChanges();
+                    if (statusStrip.Items["toolStripStatusLabel1"] is ToolStripStatusLabel statusLabel)
+                    {
+                        statusLabel.Text = $"Successfully updated total for '{name}' to {total}.";
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -145,10 +172,20 @@ namespace grace.tabs
             DialogResult result = addArrangementDialog.ShowDialog();
             if (result == DialogResult.OK)
             {
+                if (statusStrip.Items["toolStripStatusLabel1"] is ToolStripStatusLabel statusLabel)
+                {
+                    statusLabel.Text = $"Successfully added arrangement, updating data for";
+                }
                 LoadData();
             }
+            else if (result == DialogResult.Cancel)
+            {
+                if (statusStrip.Items["toolStripStatusLabel1"] is ToolStripStatusLabel statusLabel)
+                {
+                    statusLabel.Text = $"Add arrangement cancelled.";
+                }
+            }
         }
-
         public void DeleteArrangementButton_Click(object? sender, EventArgs e)
         {
         }

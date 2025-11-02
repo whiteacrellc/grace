@@ -919,6 +919,15 @@ namespace grace
                     .OrderBy(name => name)];
         }
 
+        public static List<string> GetArrangements()
+        {
+            using GraceDbContext context = new();
+            return [.. context.Arrangement
+                    .Select(e => e.Name)
+                    .Distinct()
+                    .OrderBy(name => name)];
+        }
+
         public static List<string> GetBrandNames()
         {
             using GraceDbContext context = new();

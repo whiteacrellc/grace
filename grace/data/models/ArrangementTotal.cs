@@ -20,5 +20,7 @@ namespace grace.data.models
         public int CurrentTotal { get; set; }
         public int ArrangementId { get; set; }
         public Arrangement Arrangement { get; set; }
+
+        public String User { get; set; }
     }
 }

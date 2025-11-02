@@ -218,7 +218,10 @@ namespace grace.data
                 entity.ToTable("ArrangementTotals");
                 // Primary key
                 entity.HasKey(e => e.ID);
-
+                entity.Property(e => e.CurrentTotal)
+                   .IsRequired();
+                entity.Property(e => e.User)
+                    .IsRequired();
                 entity.Property(e => e.LastUpdated)
                    .IsRequired();
 
