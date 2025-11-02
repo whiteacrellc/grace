@@ -202,6 +202,104 @@ namespace grace.tabs
         }
         public void DeleteArrangementButton_Click(object? sender, EventArgs e)
         {
+            // Check if a row is selected
+            if (arragementDataGrid.SelectedRows.Count == 0 && arragementDataGrid.CurrentRow == null)
+            {
+                MessageBox.Show("You must select a row to delete", "No Row Selected",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            // Get the selected row (prefer SelectedRows, fallback to CurrentRow)
+            DataGridViewRow selectedRow = arragementDataGrid.SelectedRows.Count > 0
+                ? arragementDataGrid.SelectedRows[0]
+                : arragementDataGrid.CurrentRow;
+
+            // Get the value of the Name column
+            string name = string.Empty;
+            if (arragementDataGrid.Columns.Contains("Name"))
+            {
+                object nameValue = selectedRow.Cells["Name"].Value;
+                name = nameValue?.ToString() ?? string.Empty;
+            }
+
+            if (string.IsNullOrEmpty(name))
+            {
+                MessageBox.Show("Cannot delete: Name is empty", "Invalid Name",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            // Show confirmation dialog
+            DialogResult result = MessageBox.Show(
+                $"Are you sure you want to delete {name}?",
+                "Confirm Delete",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question);
+
+            if (result != DialogResult.Yes)
+            {
+                return;
+            }
+
+            // Get the current collection name
+            string? collectionName = collectionDropDown.SelectedItem?.ToString();
+
+            if (string.IsNullOrEmpty(collectionName))
+            {
+                MessageBox.Show("Cannot delete: No collection selected", "Invalid Collection",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            // Delete all arrangements with the given name in the current collection
+            try
+            {
+                using GraceDbContext context = new();
+
+                // Find all arrangements with the given name in the current collection
+                var arrangementsToDelete = context.Arrangement
+                    .Where(a => a.Name == name && a.CollectionName == collectionName)
+                    .ToList();
+
+                if (arrangementsToDelete.Count == 0)
+                {
+                    MessageBox.Show($"No arrangement found with name '{name}' in collection '{collectionName}'",
+                        "Not Found", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+
+                // For each arrangement, delete the associated totals first
+                foreach (var arrangement in arrangementsToDelete)
+                {
+                    var totalsToDelete = context.ArrangementTotals
+                        .Where(t => t.ArrangementId == arrangement.ID)
+                        .ToList();
+
+                    context.ArrangementTotals.RemoveRange(totalsToDelete);
+                }
+
+                // Delete the arrangements
+                context.Arrangement.RemoveRange(arrangementsToDelete);
+
+                // Save changes
+                context.SaveChanges();
+
+                // Update status label
+                if (statusStrip.Items["toolStripStatusLabel1"] is ToolStripStatusLabel statusLabel)
+                {
+                    statusLabel.Text = $"Successfully deleted arrangement '{name}' from collection '{collectionName}'.";
+                }
+
+                // Reload the data to refresh the grid
+                LoadData();
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Error deleting arrangement {Name} from collection {CollectionName}", name, collectionName);
+                MessageBox.Show($"Error deleting arrangement: {ex.Message}", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void ArrangementDataGrid_EditingControlShowing(object? sender, DataGridViewEditingControlShowingEventArgs e)
