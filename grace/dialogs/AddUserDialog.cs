@@ -7,7 +7,7 @@
             InitializeComponent();
         }
 
-        private void saveButton_Click(object sender, EventArgs e)
+        private void SaveButton_Click(object sender, EventArgs e)
         {
             var username = usernameTextBox.Text.Trim();
             var password = passwordTextBox.Text.Trim();
