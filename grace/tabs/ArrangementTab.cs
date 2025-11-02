@@ -50,6 +50,20 @@ namespace grace.tabs
             InitializeComboBox();
             LoadData();
             SetTimeOfDayGreeting();
+            // Set row height and font
+            SetDataGridViewStyle();
+        }
+
+        private void SetDataGridViewStyle()
+        {
+            // Set the default cell style
+            DataGridViewCellStyle cellStyle = new()
+            {
+                Font = new Font("Veranda", 12),
+                // Set other style properties if needed
+            };
+
+            arragementDataGrid.DefaultCellStyle = cellStyle;
         }
 
 
