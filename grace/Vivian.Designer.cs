@@ -113,6 +113,12 @@ namespace grace
             loggingTextBox = new TextBox();
             restoreDatabaseButton = new Button();
             backupButton = new Button();
+            arrangementPage = new TabPage();
+            currentCollectionLabel = new Label();
+            deleteArrangementButton = new Button();
+            arrangementDataGrid = new DataGridView();
+            collectionDropDown = new ComboBox();
+            createArrangementButton = new Button();
             errorProvider1 = new ErrorProvider(components);
             checkoutBindingSource = new BindingSource(components);
             checkInBindingSource = new BindingSource(components);
@@ -130,6 +136,8 @@ namespace grace
             collectionPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)collGridView).BeginInit();
             adminPage.SuspendLayout();
+            arrangementPage.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)arrangementDataGrid).BeginInit();
             ((System.ComponentModel.ISupportInitialize)errorProvider1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)checkoutBindingSource).BeginInit();
             ((System.ComponentModel.ISupportInitialize)checkInBindingSource).BeginInit();
@@ -241,6 +249,7 @@ namespace grace
             tabControl.Controls.Add(reportPage);
             tabControl.Controls.Add(collectionPage);
             tabControl.Controls.Add(adminPage);
+            tabControl.Controls.Add(arrangementPage);
             tabControl.DrawMode = TabDrawMode.OwnerDrawFixed;
             tabControl.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 0);
             tabControl.HotTrack = true;
@@ -510,7 +519,7 @@ namespace grace
             dataGridViewCellStyle5.SelectionForeColor = Color.FromArgb(54, 69, 79);
             checkOutDataGrid.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle5;
             checkOutDataGrid.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
-            checkOutDataGrid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+            checkOutDataGrid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             checkOutDataGrid.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
             checkOutDataGrid.BackgroundColor = Color.FromArgb(255, 245, 238);
             dataGridViewCellStyle6.Alignment = DataGridViewContentAlignment.MiddleLeft;
@@ -651,7 +660,7 @@ namespace grace
             dataGridViewCellStyle10.SelectionForeColor = Color.FromArgb(54, 69, 79);
             checkInDataGrid.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle10;
             checkInDataGrid.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            checkInDataGrid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+            checkInDataGrid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             checkInDataGrid.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
             checkInDataGrid.BackgroundColor = Color.FromArgb(255, 245, 238);
             checkInDataGrid.CellBorderStyle = DataGridViewCellBorderStyle.Sunken;
@@ -762,7 +771,7 @@ namespace grace
             dataGridViewCellStyle14.SelectionForeColor = Color.FromArgb(54, 69, 79);
             reportGridView.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle14;
             reportGridView.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            reportGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+            reportGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             reportGridView.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
             reportGridView.BackgroundColor = Color.FromArgb(255, 245, 238);
             dataGridViewCellStyle15.Alignment = DataGridViewContentAlignment.MiddleLeft;
@@ -857,7 +866,7 @@ namespace grace
             dataGridViewCellStyle18.SelectionForeColor = Color.FromArgb(54, 69, 79);
             collGridView.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle18;
             collGridView.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            collGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+            collGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             collGridView.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
             collGridView.BackgroundColor = Color.FromArgb(255, 245, 238);
             dataGridViewCellStyle19.Alignment = DataGridViewContentAlignment.MiddleLeft;
@@ -1067,6 +1076,67 @@ namespace grace
             backupButton.Text = "Backup Database";
             backupButton.UseVisualStyleBackColor = false;
             // 
+            // arrangementPage
+            // 
+            arrangementPage.BackColor = SystemColors.ControlLightLight;
+            arrangementPage.Controls.Add(currentCollectionLabel);
+            arrangementPage.Controls.Add(deleteArrangementButton);
+            arrangementPage.Controls.Add(arrangementDataGrid);
+            arrangementPage.Controls.Add(collectionDropDown);
+            arrangementPage.Controls.Add(createArrangementButton);
+            arrangementPage.ForeColor = Color.Black;
+            arrangementPage.Location = new Point(4, 44);
+            arrangementPage.Name = "arrangementPage";
+            arrangementPage.Size = new Size(1517, 733);
+            arrangementPage.TabIndex = 7;
+            arrangementPage.Text = "Arrangement";
+            // 
+            // currentCollectionLabel
+            // 
+            currentCollectionLabel.AutoSize = true;
+            currentCollectionLabel.Location = new Point(63, 25);
+            currentCollectionLabel.Name = "currentCollectionLabel";
+            currentCollectionLabel.Size = new Size(50, 19);
+            currentCollectionLabel.TabIndex = 5;
+            currentCollectionLabel.Text = "label1";
+            // 
+            // deleteArrangementButton
+            // 
+            deleteArrangementButton.Location = new Point(555, 240);
+            deleteArrangementButton.Name = "deleteArrangementButton";
+            deleteArrangementButton.Size = new Size(177, 39);
+            deleteArrangementButton.TabIndex = 4;
+            deleteArrangementButton.Text = "Delete Arrangement";
+            deleteArrangementButton.UseVisualStyleBackColor = true;
+            // 
+            // arrangementDataGrid
+            // 
+            arrangementDataGrid.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
+            arrangementDataGrid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            arrangementDataGrid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            arrangementDataGrid.Location = new Point(21, 64);
+            arrangementDataGrid.Name = "arrangementDataGrid";
+            arrangementDataGrid.Size = new Size(509, 657);
+            arrangementDataGrid.TabIndex = 3;
+            // 
+            // collectionDropDown
+            // 
+            collectionDropDown.FormattingEnabled = true;
+            collectionDropDown.Location = new Point(555, 64);
+            collectionDropDown.Name = "collectionDropDown";
+            collectionDropDown.Size = new Size(177, 25);
+            collectionDropDown.TabIndex = 2;
+            collectionDropDown.SelectedValueChanged += CollectionDropDown_SelectedValueChanged;
+            // 
+            // createArrangementButton
+            // 
+            createArrangementButton.Location = new Point(555, 185);
+            createArrangementButton.Name = "createArrangementButton";
+            createArrangementButton.Size = new Size(177, 39);
+            createArrangementButton.TabIndex = 1;
+            createArrangementButton.Text = "Create Arrangement";
+            createArrangementButton.UseVisualStyleBackColor = true;
+            // 
             // errorProvider1
             // 
             errorProvider1.ContainerControl = this;
@@ -1117,6 +1187,9 @@ namespace grace
             ((System.ComponentModel.ISupportInitialize)collGridView).EndInit();
             adminPage.ResumeLayout(false);
             adminPage.PerformLayout();
+            arrangementPage.ResumeLayout(false);
+            arrangementPage.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)arrangementDataGrid).EndInit();
             ((System.ComponentModel.ISupportInitialize)errorProvider1).EndInit();
             ((System.ComponentModel.ISupportInitialize)checkoutBindingSource).EndInit();
             ((System.ComponentModel.ISupportInitialize)checkInBindingSource).EndInit();
@@ -1199,6 +1272,12 @@ namespace grace
         private Label filterSkuLabel;
         public TextBox skuFilterTextBox;
         private ToolStripMenuItem toolStripMenuItem2;
+        private TabPage arrangementPage;
+        internal Button createArrangementButton;
+        internal ComboBox collectionDropDown;
+        internal DataGridView arrangementDataGrid;
+        internal Button deleteArrangementButton;
+        internal Label currentCollectionLabel;
         // private PictureBox pictureBox1; // Removed
     }
 }

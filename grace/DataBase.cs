@@ -305,6 +305,47 @@ namespace grace
             return table;
         }
 
+
+        public class ArrangementData
+        {
+            public string Name { get; set; }
+            public int Total { get; set; }
+        }
+
+        public static System.Data.DataTable GetArrangementNameGrid(string collectionName)
+        {
+
+            System.Data.DataTable table = new();
+
+            // Define columns
+            table.Columns.Add("Name", typeof(string));
+            table.Columns.Add("Total", typeof(int));
+
+            using GraceDbContext dbContext = new();
+
+            List<ArrangementData> result = [.. (
+                from arrangements in dbContext.Arrangement
+                join arrangemtntTotal in dbContext.ArrangementTotals on arrangements.ID equals arrangemtntTotal.ArrangementId
+                where arrangements.CollectionName == collectionName &&
+                      arrangemtntTotal.LastUpdated == dbContext.ArrangementTotals
+                                              .Where(t => t.ArrangementId == arrangements.ID)
+                                              .OrderByDescending(t => t.ID)
+                                              .Max(t => t.LastUpdated)
+                orderby arrangements.Name ascending
+                select new ArrangementData
+                {
+                    Name = arrangements.Name,
+                    Total = arrangemtntTotal.CurrentTotal
+                }
+            )];
+
+            foreach (ArrangementData? at in result)
+            {
+                table.Rows.Add(at.Name, at.Total);
+            }
+
+            return table;
+        }
         public class ReportData
         {
             public string Sku { get; set; }
@@ -597,6 +638,14 @@ namespace grace
             return null;
         }
 
+        public static Arrangement? GetArrangement(string collectionName, string name)
+        {
+
+            using GraceDbContext context = new();
+            return context.Arrangement.FirstOrDefault(e => e.Name == name
+                    && e.CollectionName == collectionName);
+        }
+
         public static int AddTotal(int total, int graceId)
         {
             int id = 0;
@@ -862,14 +911,23 @@ namespace grace
 
         public static List<string> GetCollections()
         {
-            using GraceDbContext dbContext = new();
-            var distinctNames = dbContext.Collections
-                .Where(c => c.Name != "Other")
-                .Select(c => c.Name)
-                .Distinct()
-                .OrderBy(name => name).ToList();
-            return distinctNames;
+            using GraceDbContext context = new();
+            return [.. context.Collections
+                    .Where(e => e.Name != "Other")
+                    .Select(e => e.Name)
+                    .Distinct()
+                    .OrderBy(name => name)];
         }
+
+        public static List<string> GetBrandNames()
+        {
+            using GraceDbContext context = new();
+            return [.. context.Graces
+                    .Select(c => c.Brand)
+                    .Distinct()
+                    .OrderBy(brand => brand)];
+        }
+
 
         public static Dictionary<string, List<Grace>> OrderedCollectionNames()
         {
