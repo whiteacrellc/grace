@@ -3,6 +3,7 @@ using grace.data.models;
 using NLog;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -56,14 +57,30 @@ namespace grace.tabs
 
         private void SetDataGridViewStyle()
         {
-            // Set the default cell style
-            DataGridViewCellStyle cellStyle = new()
+            // Set the default cell style to match collGridView and checkOutDataGrid
+            DataGridViewCellStyle defaultCellStyle = new()
             {
-                Font = new Font("Veranda", 12),
-                // Set other style properties if needed
+                Font = new Font("Segoe UI", 10F),
+                BackColor = Color.FromArgb(255, 250, 240),
+                ForeColor = Color.FromArgb(54, 69, 79),
+                SelectionBackColor = Color.FromArgb(224, 201, 127),
+                SelectionForeColor = Color.FromArgb(54, 69, 79),
+                Alignment = DataGridViewContentAlignment.MiddleLeft,
+                WrapMode = DataGridViewTriState.False
             };
 
-            arragementDataGrid.DefaultCellStyle = cellStyle;
+            // Set the alternating rows style
+            DataGridViewCellStyle alternatingRowsStyle = new()
+            {
+                Font = new Font("Segoe UI", 10F),
+                BackColor = Color.FromArgb(248, 240, 227),
+                ForeColor = Color.FromArgb(54, 69, 79),
+                SelectionBackColor = Color.FromArgb(224, 201, 127),
+                SelectionForeColor = Color.FromArgb(54, 69, 79)
+            };
+
+            arragementDataGrid.DefaultCellStyle = defaultCellStyle;
+            arragementDataGrid.AlternatingRowsDefaultCellStyle = alternatingRowsStyle;
         }
 
 
