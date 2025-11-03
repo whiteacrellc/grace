@@ -69,6 +69,8 @@ namespace grace
 
 
                     String currentUser = Globals.GetInstance().CurrentUser;
+                    int newCurrentTotal = 0;
+                    int updateDelta = 0;
                     using (GraceDbContext context = new())
                     {
 
@@ -87,23 +89,13 @@ namespace grace
                             return;
                         }
 
-                        int updateDelta = pulled.Amount - newTotal;
-                        int newCurrentTotal = pulled.CurrentTotal += updateDelta;
+                        updateDelta = pulled.Amount - newTotal;
+                        newCurrentTotal = pulled.CurrentTotal += updateDelta;
                         if (updateDelta != 0)
                         {
 
                             pulled.Amount = newTotal;
                             pulled.CurrentTotal += updateDelta;
-
-
-                            Total total = new()
-                            {
-                                LastUpdated = DateTime.Now,
-                                GraceId = graceId,
-                                CurrentTotal = newCurrentTotal,
-                                User = currentUser,
-                            };
-                            context.Totals.Add(total);
 
                         }
                         if (newCollectionId != originalCollection.ID)
@@ -118,7 +110,10 @@ namespace grace
                         DialogResult = DialogResult.OK;
 
                     }
-
+                    if (updateDelta != 0)
+                    {
+                        DataBase.AddTotal(newCurrentTotal, graceId);
+                    }
                     // newRow the GraceRow
                     DataBase.UpdateGraceRow(graceId);
 

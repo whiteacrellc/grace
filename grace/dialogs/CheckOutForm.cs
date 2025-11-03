@@ -137,18 +137,9 @@ namespace grace
                         pulled.Comment = commentBox.Text;
                     }
                     context.PulledDb.Add(pulled);
-
-                    // Add Totals in CurrentTotal db
-                    Total total = new()
-                    {
-                        LastUpdated = DateTime.Now,
-                        GraceId = graceId,
-                        CurrentTotal = newTotal,
-                        User = currentUser
-                    };
-                    context.Totals.Add(total);
                     context.SaveChanges();
                 }
+                DataBase.AddTotal(newTotal, graceId);
                 // newRow the GraceRow
                 DataBase.UpdateGraceRow(graceId);
             }
