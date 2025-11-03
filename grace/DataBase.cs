@@ -375,17 +375,22 @@ namespace grace
 
             using GraceDbContext dbContext = new();
 
-            // OPTIMIZATION: Load all totals and group by GraceId to avoid N+1 queries
-            // This processes previous totals in a single database query instead of one per row
+            // OPTIMIZATION: Load all data into memory first to avoid N+1 queries
+            // This executes only 2 database queries instead of 1 query per row
+
+            // Load all GraceRows from database
+            var allGraceRows = dbContext.GraceRows.ToList();
+
+            // Load all Totals and group by GraceId
             var allTotalsGrouped = dbContext.Totals
                 .OrderByDescending(t => t.LastUpdated)
                 .ToList() // Execute query once
                 .GroupBy(t => t.GraceId)
                 .ToDictionary(g => g.Key, g => g.OrderByDescending(t => t.LastUpdated).ToList());
 
-            // Build the result set with joins
+            // Build the result set with in-memory joins
             var result = (
-                from gr in dbContext.GraceRows
+                from gr in allGraceRows
                 where allTotalsGrouped.ContainsKey(gr.GraceId)
                 let totalsForGrace = allTotalsGrouped[gr.GraceId]
                 from totals in totalsForGrace
