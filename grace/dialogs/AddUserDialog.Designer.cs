@@ -41,7 +41,7 @@
             // saveButton
             // 
             saveButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-            saveButton.BackColor = Color.FromArgb(245, 245, 245);
+            saveButton.BackColor = Color.FromArgb(234, 221, 202);
             saveButton.FlatAppearance.BorderColor = Color.FromArgb(207, 181, 59);
             saveButton.FlatAppearance.BorderSize = 1;
             saveButton.FlatStyle = FlatStyle.Flat;
@@ -129,7 +129,7 @@
             // cancelButton
             //
             cancelButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            cancelButton.BackColor = Color.FromArgb(245, 245, 245);
+            cancelButton.BackColor = Color.FromArgb(234, 221, 202);
             cancelButton.FlatAppearance.BorderColor = Color.FromArgb(207, 181, 59);
             cancelButton.FlatAppearance.BorderSize = 1;
             cancelButton.FlatStyle = FlatStyle.Flat;

@@ -73,7 +73,7 @@
 
             // saveButton
             //
-            saveButton.BackColor = Color.FromArgb(245, 245, 245);
+            saveButton.BackColor = Color.FromArgb(234, 221, 202);
             saveButton.FlatAppearance.BorderColor = Color.FromArgb(207, 181, 59);
             saveButton.FlatStyle = FlatStyle.Flat;
             saveButton.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 0);
@@ -88,7 +88,7 @@
             //
             // cancelButton
             //
-            cancelButton.BackColor = Color.FromArgb(245, 245, 245);
+            cancelButton.BackColor = Color.FromArgb(234, 221, 202);
             cancelButton.FlatAppearance.BorderColor = Color.FromArgb(207, 181, 59);
             cancelButton.FlatStyle = FlatStyle.Flat;
             cancelButton.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 0);

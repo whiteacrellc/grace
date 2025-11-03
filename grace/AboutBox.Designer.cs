@@ -70,7 +70,7 @@
             // button1
             // 
             button1.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-            button1.BackColor = System.Drawing.ColorTranslator.FromHtml("#F5F5F5");
+            button1.BackColor = System.Drawing.ColorTranslator.FromHtml("#EADDCA");
             button1.FlatAppearance.BorderColor = System.Drawing.ColorTranslator.FromHtml("#CFB53B");
             button1.FlatAppearance.BorderSize = 1;
             button1.FlatStyle = FlatStyle.Flat;
@@ -88,14 +88,18 @@
             //
             this.linkLabelReleases = new System.Windows.Forms.LinkLabel();
             this.linkLabelReleases.AutoSize = true;
-            this.linkLabelReleases.Font = new System.Drawing.Font("Segoe UI", 10F); // Match buildLabel font
-            this.linkLabelReleases.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F"); // Match buildLabel color
-            this.linkLabelReleases.Location = new System.Drawing.Point(238, 171); // Position below buildLabel
+            this.linkLabelReleases.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.linkLabelReleases.ForeColor = System.Drawing.ColorTranslator.FromHtml("#36454F");
+            this.linkLabelReleases.LinkColor = System.Drawing.ColorTranslator.FromHtml("#CFB53B");
+            this.linkLabelReleases.ActiveLinkColor = System.Drawing.ColorTranslator.FromHtml("#CFB53B");
+            this.linkLabelReleases.VisitedLinkColor = System.Drawing.ColorTranslator.FromHtml("#CFB53B");
+            this.linkLabelReleases.Location = new System.Drawing.Point(238, 171);
             this.linkLabelReleases.Name = "linkLabelReleases";
-            this.linkLabelReleases.Size = new System.Drawing.Size(150, 21); // Approximate size, AutoSize will adjust
-            this.linkLabelReleases.TabIndex = 4; // Next available tab index
+            this.linkLabelReleases.Size = new System.Drawing.Size(150, 21);
+            this.linkLabelReleases.TabIndex = 4;
             this.linkLabelReleases.Text = "View Release Notes";
-            this.linkLabelReleases.TabStop = true; // Ensure it's a tab stop
+            this.linkLabelReleases.TabStop = true;
+            this.linkLabelReleases.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkLabelReleases_LinkClicked);
             //
             // AboutBox
             // 

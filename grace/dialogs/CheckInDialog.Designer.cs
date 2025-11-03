@@ -46,7 +46,7 @@
             // updateButton
             //
             updateButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-            updateButton.BackColor = Color.FromArgb(245, 245, 245);
+            updateButton.BackColor = Color.FromArgb(234, 221, 202);
             updateButton.FlatAppearance.BorderColor = Color.FromArgb(207, 181, 59);
             updateButton.FlatAppearance.BorderSize = 1;
             updateButton.FlatStyle = FlatStyle.Flat;
@@ -63,7 +63,7 @@
             // deleteButton
             //
             deleteButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-            deleteButton.BackColor = Color.FromArgb(245, 245, 245);
+            deleteButton.BackColor = Color.FromArgb(234, 221, 202);
             deleteButton.FlatAppearance.BorderColor = Color.FromArgb(207, 181, 59);
             deleteButton.FlatAppearance.BorderSize = 1;
             deleteButton.FlatStyle = FlatStyle.Flat;
@@ -190,7 +190,7 @@
             // cancelButton
             //
             cancelButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            cancelButton.BackColor = Color.FromArgb(245, 245, 245);
+            cancelButton.BackColor = Color.FromArgb(234, 221, 202);
             cancelButton.FlatAppearance.BorderColor = Color.FromArgb(207, 181, 59);
             cancelButton.FlatAppearance.BorderSize = 1;
             cancelButton.FlatStyle = FlatStyle.Flat;
