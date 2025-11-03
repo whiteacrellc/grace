@@ -16,6 +16,7 @@ using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using NLog;
 using OfficeOpenXml;
+using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.IO;
 using System.Runtime.CompilerServices;
@@ -1025,7 +1026,29 @@ namespace grace
 
             context.Collections.Add(newRow);
             context.SaveChanges();
+            UpdateArrangementWithNewCollection(name);
             return true;
+        }
+
+        private static void UpdateArrangementWithNewCollection(string collectionName)
+        {
+            using GraceDbContext context = new();
+            List<string> arrangementNames = [.. context.Arrangement
+                    .Select(e => e.Name)
+                    .Distinct()
+                    .OrderBy(name => name)];
+
+            foreach (string arrangementName in arrangementNames)
+            {
+                Arrangement arrangement = new()
+                {
+                    Name = arrangementName,
+                    CollectionName = collectionName
+                };
+                context.Arrangement.Add(arrangement);
+                context.SaveChanges();
+            }
+
         }
 
         public static int GetCollectionId(int graceId, string name)

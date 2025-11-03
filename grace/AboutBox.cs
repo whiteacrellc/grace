@@ -24,7 +24,7 @@ namespace grace
         {
 
             // Format the build date and time as "yyyyMMddHHmm"
-            string versionString = "2.1.0";
+            string versionString = "2.1.1";
             buildLabel.Text = "Version: " + versionString;
         }
 
