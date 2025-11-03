@@ -244,7 +244,6 @@ namespace grace.tabs
             // Check if the edit is in the "Total" column
             int numrows = checkInDataGrid.Rows.Count;
             bool changed = false;
-            String currentUser = Globals.GetInstance().CurrentUser;
             for (int i = 0; i < numrows; i++)
             {
                 DataGridViewRow row = checkInDataGrid.Rows[i];
@@ -272,19 +271,7 @@ namespace grace.tabs
                     int currentTotal = DataBase.GetTotal(graceId).CurrentTotal;
                     int newTotal = currentTotal + updatedValue;
 
-                    using (GraceDbContext context = new())
-                    {
-                        // Add Totals in CurrentTotal db
-                        Total total = new()
-                        {
-                            LastUpdated = DateTime.Now,
-                            GraceId = graceId,
-                            CurrentTotal = newTotal,
-                            User = currentUser,
-                        };
-                        context.Totals.Add(total);
-                        context.SaveChanges();
-                    }
+                    DataBase.AddTotal(newTotal, graceId);
                     PulledEntrySetComplete(dateTime, user_id, col_id, graceId, updatedValue);
                 }
             }
