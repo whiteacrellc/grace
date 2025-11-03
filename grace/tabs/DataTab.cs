@@ -117,12 +117,18 @@ namespace grace.tabs
             // Show the "working" cursor
             Cursor.Current = Cursors.WaitCursor;
 
-
-            RefreshData(refresh);
-            UpdateDataGridView();
-
-            Cursor.Current = Cursors.Default;
-
+            // Suspend layout to prevent multiple repaints
+            dataGridView.SuspendLayout();
+            try
+            {
+                RefreshData(refresh);
+                UpdateDataGridView();
+            }
+            finally
+            {
+                dataGridView.ResumeLayout();
+                Cursor.Current = Cursors.Default;
+            }
         }
         private void DataTabPage_Enter(object? sender, EventArgs e)
         {
@@ -132,9 +138,25 @@ namespace grace.tabs
 
         internal void RefreshData(bool refresh = false)
         {
-            DataGridLoader.LoadBindingTable(refresh);
-            dataTable = DataGridLoader.GetData();
-            dataGridView.DataSource = dataTable;
+            // Temporarily disable auto-size for better performance
+            var originalAutoSizeColumnsMode = dataGridView.AutoSizeColumnsMode;
+            var originalAutoSizeRowsMode = dataGridView.AutoSizeRowsMode;
+
+            dataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
+            dataGridView.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.None;
+
+            try
+            {
+                DataGridLoader.LoadBindingTable(refresh);
+                dataTable = DataGridLoader.GetData();
+                dataGridView.DataSource = dataTable;
+            }
+            finally
+            {
+                // Restore auto-size settings
+                dataGridView.AutoSizeColumnsMode = originalAutoSizeColumnsMode;
+                dataGridView.AutoSizeRowsMode = originalAutoSizeRowsMode;
+            }
         }
         internal void UpdateDataGridView()
         {
@@ -238,11 +260,16 @@ namespace grace.tabs
             Button button = (Button)sender;
             button.Enabled = false;
 
-            filterSkuTextBox.Clear();
-            filterBarCodeTextBox.Clear();
-            BindDataSource();
-
-            button.Enabled = true;
+            try
+            {
+                filterSkuTextBox.Clear();
+                filterBarCodeTextBox.Clear();
+                BindDataSource();
+            }
+            finally
+            {
+                button.Enabled = true;
+            }
         }
 
         internal void FilterSkuTextBox_TextChanged(object? sender, EventArgs e)
@@ -340,34 +367,34 @@ namespace grace.tabs
 
         private void SetInventoryFontSizeToolStripMenuItem_Click(object? sender, EventArgs e)
         {
-            Button button = sender as Button;
-            button.Enabled = false;
-
             // Create a FontDialog
             using (FontDialog fontDialog = new())
             {
                 // Show the dialog and get the selected font
                 if (fontDialog.ShowDialog() == DialogResult.OK)
                 {
-                    // Apply the selected font to the rows
-                    // ApplyFontToDataGridViewRows(fontDialog.Font);
-                    dataGridView.RowsDefaultCellStyle.Font = fontDialog.Font;
+                    // Suspend layout for better performance during font change
+                    dataGridView.SuspendLayout();
+                    try
+                    {
+                        // Apply the selected font to all rows efficiently
+                        ApplyFontToDataGridViewRows(fontDialog.Font);
 
-                    // Save the selected font
-                    SaveSelectedFont(fontDialog.Font);
+                        // Save the selected font
+                        SaveSelectedFont(fontDialog.Font);
+                    }
+                    finally
+                    {
+                        dataGridView.ResumeLayout();
+                    }
                 }
             }
-
-            button.Enabled = true;
         }
 
         private void ApplyFontToDataGridViewRows(Font font)
         {
-            // Loop through all rows in the DataGridView and set the font
-            foreach (DataGridViewRow row in dataGridView.Rows)
-            {
-                row.DefaultCellStyle.Font = font;
-            }
+            // Set the font for all rows using the default style - much more efficient than looping
+            dataGridView.RowsDefaultCellStyle.Font = font;
         }
 
         private void SaveInventoryReportToolStripMenuItem_Click(object? sender, EventArgs e)
