@@ -377,7 +377,7 @@ namespace grace
             // 
             // addRowButton
             // 
-            addRowButton.BackColor = Color.FromArgb(245, 245, 245);
+            addRowButton.BackColor = Color.FromArgb(234, 221, 202);
             addRowButton.FlatAppearance.BorderColor = Color.FromArgb(207, 181, 59);
             addRowButton.FlatStyle = FlatStyle.Flat;
             addRowButton.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 0);
@@ -392,7 +392,7 @@ namespace grace
             // clearFilterButton
             // 
             clearFilterButton.AutoSize = true;
-            clearFilterButton.BackColor = Color.FromArgb(245, 245, 245);
+            clearFilterButton.BackColor = Color.FromArgb(234, 221, 202);
             clearFilterButton.FlatAppearance.BorderColor = Color.FromArgb(207, 181, 59);
             clearFilterButton.FlatStyle = FlatStyle.Flat;
             clearFilterButton.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 0);
@@ -499,7 +499,7 @@ namespace grace
             // 
             coResetButton.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             coResetButton.AutoSize = true;
-            coResetButton.BackColor = Color.FromArgb(245, 245, 245);
+            coResetButton.BackColor = Color.FromArgb(234, 221, 202);
             coResetButton.FlatAppearance.BorderColor = Color.FromArgb(207, 181, 59);
             coResetButton.FlatStyle = FlatStyle.Flat;
             coResetButton.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 0);
@@ -632,7 +632,7 @@ namespace grace
             // 
             applyChangesButton.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             applyChangesButton.AutoSize = true;
-            applyChangesButton.BackColor = Color.FromArgb(245, 245, 245);
+            applyChangesButton.BackColor = Color.FromArgb(234, 221, 202);
             applyChangesButton.FlatAppearance.BorderColor = Color.FromArgb(207, 181, 59);
             applyChangesButton.FlatStyle = FlatStyle.Flat;
             applyChangesButton.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 0);
@@ -753,7 +753,7 @@ namespace grace
             // 
             // refreshButton
             // 
-            refreshButton.BackColor = Color.FromArgb(245, 245, 245);
+            refreshButton.BackColor = Color.FromArgb(234, 221, 202);
             refreshButton.FlatAppearance.BorderColor = Color.FromArgb(207, 181, 59);
             refreshButton.FlatStyle = FlatStyle.Flat;
             refreshButton.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 0);
@@ -825,7 +825,7 @@ namespace grace
             // 
             // clearComboButton
             // 
-            clearComboButton.BackColor = Color.FromArgb(245, 245, 245);
+            clearComboButton.BackColor = Color.FromArgb(234, 221, 202);
             clearComboButton.FlatAppearance.BorderColor = Color.FromArgb(207, 181, 59);
             clearComboButton.FlatStyle = FlatStyle.Flat;
             clearComboButton.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 0);
@@ -979,7 +979,7 @@ namespace grace
             // 
             // deleteUserButton
             // 
-            deleteUserButton.BackColor = Color.FromArgb(245, 245, 245);
+            deleteUserButton.BackColor = Color.FromArgb(234, 221, 202);
             deleteUserButton.FlatAppearance.BorderColor = Color.FromArgb(207, 181, 59);
             deleteUserButton.FlatStyle = FlatStyle.Flat;
             deleteUserButton.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 0);
@@ -1005,7 +1005,7 @@ namespace grace
             // 
             // resetPasswordButton
             // 
-            resetPasswordButton.BackColor = Color.FromArgb(245, 245, 245);
+            resetPasswordButton.BackColor = Color.FromArgb(234, 221, 202);
             resetPasswordButton.FlatAppearance.BorderColor = Color.FromArgb(207, 181, 59);
             resetPasswordButton.FlatStyle = FlatStyle.Flat;
             resetPasswordButton.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 0);
@@ -1020,7 +1020,7 @@ namespace grace
             // addUserButton
             // 
             addUserButton.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            addUserButton.BackColor = Color.FromArgb(245, 245, 245);
+            addUserButton.BackColor = Color.FromArgb(234, 221, 202);
             addUserButton.FlatAppearance.BorderColor = Color.FromArgb(207, 181, 59);
             addUserButton.FlatStyle = FlatStyle.Flat;
             addUserButton.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 0);
@@ -1050,7 +1050,7 @@ namespace grace
             // restoreDatabaseButton
             // 
             restoreDatabaseButton.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            restoreDatabaseButton.BackColor = Color.FromArgb(245, 245, 245);
+            restoreDatabaseButton.BackColor = Color.FromArgb(234, 221, 202);
             restoreDatabaseButton.FlatAppearance.BorderColor = Color.FromArgb(207, 181, 59);
             restoreDatabaseButton.FlatStyle = FlatStyle.Flat;
             restoreDatabaseButton.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 0);
@@ -1066,7 +1066,7 @@ namespace grace
             // backupButton
             // 
             backupButton.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            backupButton.BackColor = Color.FromArgb(245, 245, 245);
+            backupButton.BackColor = Color.FromArgb(234, 221, 202);
             backupButton.FlatAppearance.BorderColor = Color.FromArgb(207, 181, 59);
             backupButton.FlatStyle = FlatStyle.Flat;
             backupButton.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 0);
@@ -1108,7 +1108,7 @@ namespace grace
             // 
             // deleteArrangementButton
             //
-            deleteArrangementButton.BackColor = Color.FromArgb(245, 245, 245);
+            deleteArrangementButton.BackColor = Color.FromArgb(234, 221, 202);
             deleteArrangementButton.FlatAppearance.BorderColor = Color.FromArgb(207, 181, 59);
             deleteArrangementButton.FlatStyle = FlatStyle.Flat;
             deleteArrangementButton.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 0);
@@ -1179,7 +1179,7 @@ namespace grace
             // 
             // createArrangementButton
             //
-            createArrangementButton.BackColor = Color.FromArgb(245, 245, 245);
+            createArrangementButton.BackColor = Color.FromArgb(234, 221, 202);
             createArrangementButton.FlatAppearance.BorderColor = Color.FromArgb(207, 181, 59);
             createArrangementButton.FlatStyle = FlatStyle.Flat;
             createArrangementButton.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 0);

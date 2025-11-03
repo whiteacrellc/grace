@@ -140,7 +140,7 @@
             // saveButton
             // 
             saveButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-            saveButton.BackColor = System.Drawing.ColorTranslator.FromHtml("#F5F5F5");
+            saveButton.BackColor = System.Drawing.ColorTranslator.FromHtml("#EADDCA");
             saveButton.FlatAppearance.BorderColor = System.Drawing.ColorTranslator.FromHtml("#CFB53B");
             saveButton.FlatAppearance.BorderSize = 1;
             saveButton.FlatStyle = FlatStyle.Flat;
@@ -157,7 +157,7 @@
             // cancelButton
             // 
             cancelButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            cancelButton.BackColor = System.Drawing.ColorTranslator.FromHtml("#F5F5F5");
+            cancelButton.BackColor = System.Drawing.ColorTranslator.FromHtml("#EADDCA");
             cancelButton.FlatAppearance.BorderColor = System.Drawing.ColorTranslator.FromHtml("#CFB53B");
             cancelButton.FlatAppearance.BorderSize = 1;
             cancelButton.FlatStyle = FlatStyle.Flat;

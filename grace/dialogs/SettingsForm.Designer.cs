@@ -53,7 +53,7 @@
             // SettingsCancelButton
             // 
             SettingsCancelButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-            SettingsCancelButton.BackColor = System.Drawing.ColorTranslator.FromHtml("#F5F5F5");
+            SettingsCancelButton.BackColor = System.Drawing.ColorTranslator.FromHtml("#EADDCA");
             SettingsCancelButton.FlatAppearance.BorderColor = System.Drawing.ColorTranslator.FromHtml("#CFB53B");
             SettingsCancelButton.FlatAppearance.BorderSize = 1;
             SettingsCancelButton.FlatStyle = FlatStyle.Flat;
@@ -71,7 +71,7 @@
             // SaveButton
             // 
             SaveButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-            SaveButton.BackColor = System.Drawing.ColorTranslator.FromHtml("#F5F5F5");
+            SaveButton.BackColor = System.Drawing.ColorTranslator.FromHtml("#EADDCA");
             SaveButton.FlatAppearance.BorderColor = System.Drawing.ColorTranslator.FromHtml("#CFB53B");
             SaveButton.FlatAppearance.BorderSize = 1;
             SaveButton.FlatStyle = FlatStyle.Flat;
