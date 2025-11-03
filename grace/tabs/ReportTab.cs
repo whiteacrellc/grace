@@ -28,6 +28,11 @@ namespace grace.tabs
         private DataTable dataTable = new();
         private bool disposedValue = false;
 
+        // Smart caching fields
+        private DateTime? lastLoadTime;
+        private bool isDirty = true;
+        private bool isLoading = false;
+
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
         internal ReportTab(Vivian v)
@@ -55,9 +60,11 @@ namespace grace.tabs
 
         }
 
-        private void ReportTabPage_Enter(object? sender, EventArgs e)
+        private async void ReportTabPage_Enter(object? sender, EventArgs e)
         {
-            BindDataSource(true);
+            // Smart caching: only reload if data is stale or dirty
+            // Avoids unnecessary database hits when switching tabs
+            await BindDataSourceAsync(refresh: isDirty || lastLoadTime == null);
         }
 
         private void ChangeColumnNames()
@@ -87,6 +94,7 @@ namespace grace.tabs
 
         internal void BindDataSource(bool refresh = false)
         {
+            // Synchronous version for backward compatibility
             // Show the "working" cursor
             Cursor.Current = Cursors.WaitCursor;
 
@@ -100,9 +108,47 @@ namespace grace.tabs
             Cursor.Current = Cursors.Default;
         }
 
+        internal async Task BindDataSourceAsync(bool refresh = false)
+        {
+            // Prevent concurrent loads
+            if (isLoading) return;
+
+            try
+            {
+                isLoading = true;
+
+                // Show the "working" cursor
+                Cursor.Current = Cursors.WaitCursor;
+
+                if (refresh)
+                {
+                    await RefreshDataAsync();
+                }
+
+                // Update UI on main thread
+                UpdateDataGridView();
+
+                // Mark as clean and update timestamp
+                isDirty = false;
+                lastLoadTime = DateTime.Now;
+            }
+            finally
+            {
+                isLoading = false;
+                // Return the cursor to normal
+                Cursor.Current = Cursors.Default;
+            }
+        }
+
         internal void RefreshData()
         {
             dataTable = DataBase.GetCheckedOutReport();
+        }
+
+        internal async Task RefreshDataAsync()
+        {
+            // Run database query on background thread to keep UI responsive
+            dataTable = await Task.Run(() => DataBase.GetCheckedOutReport());
         }
         internal void UpdateDataGridView()
         {
@@ -112,22 +158,35 @@ namespace grace.tabs
             reportGridView.Sort(reportGridView.Columns["LastUpdated"], System.ComponentModel.ListSortDirection.Descending);
         }
 
-        private void RefreshButton_Click(object? sender, EventArgs e)
+        private async void RefreshButton_Click(object? sender, EventArgs e)
         {
             Button button = (Button)sender;
-
 
             // Disable the button to prevent multiple clicks
             button.Enabled = false;
 
-            // Clear the filter text box
-            filterTextBox.Clear();
+            try
+            {
+                // Clear the filter text box
+                filterTextBox.Clear();
 
-            // Bind the whole dataset
-            BindDataSource(false);
+                // Force refresh from database
+                await BindDataSourceAsync(refresh: true);
+            }
+            finally
+            {
+                // Enable the button
+                button.Enabled = true;
+            }
+        }
 
-            // Enable the button
-            button.Enabled = true;
+        /// <summary>
+        /// Marks the data as dirty, forcing a refresh on next tab entry.
+        /// Call this method when data is modified elsewhere in the application.
+        /// </summary>
+        internal void MarkDirty()
+        {
+            isDirty = true;
         }
 
         internal void FilterTextBox_TextChanged(object? sender, EventArgs e)

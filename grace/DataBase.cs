@@ -373,17 +373,22 @@ namespace grace
             table.Columns.Add("LastUpdated", typeof(DateTime));
             table.Columns.Add("Note", typeof(string));
 
-
             using GraceDbContext dbContext = new();
-            List<ReportData> result = [.. (
+
+            // OPTIMIZATION: Load all totals and group by GraceId to avoid N+1 queries
+            // This processes previous totals in a single database query instead of one per row
+            var allTotalsGrouped = dbContext.Totals
+                .OrderByDescending(t => t.LastUpdated)
+                .ToList() // Execute query once
+                .GroupBy(t => t.GraceId)
+                .ToDictionary(g => g.Key, g => g.OrderByDescending(t => t.LastUpdated).ToList());
+
+            // Build the result set with joins
+            var result = (
                 from gr in dbContext.GraceRows
-                join totals in dbContext.Totals on gr.GraceId equals totals.GraceId
-                let prevTotal = dbContext.Totals
-                    .Where(t => t.GraceId == gr.GraceId && t.LastUpdated < totals.LastUpdated)
-                    .OrderByDescending(t => t.LastUpdated)
-                    .Select(t => t.CurrentTotal)
-                    .FirstOrDefault()
-                orderby totals.LastUpdated descending, totals.CurrentTotal descending
+                where allTotalsGrouped.ContainsKey(gr.GraceId)
+                let totalsForGrace = allTotalsGrouped[gr.GraceId]
+                from totals in totalsForGrace
                 select new ReportData
                 {
                     Sku = gr.Sku,
@@ -391,32 +396,21 @@ namespace grace
                     Description = gr.Description,
                     User = totals.User,
                     Total = totals.CurrentTotal,
-                    PrevTotal = prevTotal,
+                    // Get previous total from the pre-grouped list (next item in ordered list)
+                    PrevTotal = totalsForGrace
+                        .Where(t => t.LastUpdated < totals.LastUpdated)
+                        .Select(t => t.CurrentTotal)
+                        .FirstOrDefault(),
                     LastUpdated = totals.LastUpdated,
                     Note = gr.Note,
                     GraceId = gr.GraceId
                 }
-            )];
+            )
+            .OrderByDescending(r => r.LastUpdated)
+            .ThenByDescending(r => r.Total)
+            .ToList();
 
-            /*
-            // Performing the join and projection
-            List<ReportData> result = [.. (
-                    from gr in dbContext.GraceRows
-                    join totals in dbContext.Totals on gr.GraceId equals totals.GraceId
-                    orderby totals.LastUpdated descending, totals.CurrentTotal descending
-                    select new ReportData
-                    {
-                        Sku = gr.Sku,
-                        Brand = gr.Brand,
-                        Description = gr.Description,
-                        User = totals.User,
-                        Total = totals.CurrentTotal,
-                        LastUpdated = totals.LastUpdated,
-                        Note = gr.Note,
-                        GraceId = gr.GraceId
-                    })];
-            */
-
+            // Populate DataTable
             foreach (ReportData? report in result)
             {
                 table.Rows.Add(report.Sku, report.Brand,
