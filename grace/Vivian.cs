@@ -186,12 +186,15 @@ namespace grace
             {
                 try
                 {
+                    // Suspend layout during initial data load for better performance
+                    this.SuspendLayout();
                     dataTab.Load();
-
+                    this.ResumeLayout();
                 }
                 catch (Exception ex)
                 {
                     logger.Error(ex);
+                    this.ResumeLayout(); // Ensure we always resume layout even on error
                 }
             }
 
