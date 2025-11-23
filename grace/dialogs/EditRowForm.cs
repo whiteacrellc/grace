@@ -696,21 +696,6 @@ namespace grace
             skuTextBox.SelectionStart = skuTextBox.Text.Length;
         }
 
-        private void textBox1_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-
-        }
-
-        private void label9_HelpRequested(object sender, HelpEventArgs hlpevent)
-        {
-
-        }
-
-        private void addCollectionTextBox_MouseHover(object sender, EventArgs e)
-        {
-
-        }
-
         private void addCollectionLabel_MouseHover(object sender, EventArgs e)
         {
             // Show help when mouse hovers over the TextBox
@@ -719,9 +704,5 @@ namespace grace
                 addCollectionTextBox, 0, -30, 2000);
         }
 
-        private void adjustInventoryLabel_Click(object sender, EventArgs e)
-        {
-
-        }
     }
 }
