@@ -146,7 +146,6 @@ namespace grace
             addCollectionLabel.Size = new Size(144, 19);
             addCollectionLabel.TabIndex = 29;
             addCollectionLabel.Text = "Assign New Collection";
-            addCollectionLabel.HelpRequested += label9_HelpRequested;
             addCollectionLabel.MouseHover += addCollectionLabel_MouseHover;
             // 
             // addCollectionTextBox
@@ -161,8 +160,6 @@ namespace grace
             addCollectionTextBox.Name = "addCollectionTextBox";
             addCollectionTextBox.Size = new Size(173, 25);
             addCollectionTextBox.TabIndex = 12;
-            addCollectionTextBox.HelpRequested += textBox1_HelpRequested;
-            addCollectionTextBox.MouseHover += addCollectionTextBox_MouseHover;
             // 
             // checkedListBox
             // 
@@ -235,7 +232,6 @@ namespace grace
             adjustInventoryLabel.Size = new Size(228, 19);
             adjustInventoryLabel.TabIndex = 25;
             adjustInventoryLabel.Text = "Adjust Inventory By This Amount";
-            adjustInventoryLabel.Click += adjustInventoryLabel_Click;
             // 
             // currentTextBox
             // 
