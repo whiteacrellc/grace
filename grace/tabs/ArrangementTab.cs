@@ -23,7 +23,7 @@ namespace grace.tabs
         private Label currentCollectionLabel;
         private StatusStrip statusStrip;
         private readonly string currentUser = Globals.GetInstance().CurrentUser;
-
+        private Button printButton;
         internal ArrangementTab(Vivian v)
         {
             this.vivian = v;
@@ -38,6 +38,7 @@ namespace grace.tabs
             collectionDropDown = vivian.collectionDropDown;
             currentCollectionLabel = vivian.currentCollectionLabel;
             statusStrip = vivian.statusStrip;
+            printButton = vivian.printButton;
         }
 
         public void Load()
@@ -45,6 +46,7 @@ namespace grace.tabs
             bindingSource = [];
             createArrangementButton.Click += CreateArrangementButton_Click;
             deleteArrangementButton.Click += DeleteArrangementButton_Click;
+            printButton.Click += PrintArrangementButton_Click;
             collectionDropDown.SelectedValueChanged += CollectionDropDown_SelectedValueChanged;
             arragementDataGrid.CellEndEdit += ArrangementDataGrid_CellEndEdit;
             arragementDataGrid.EditingControlShowing += ArrangementDataGrid_EditingControlShowing;
@@ -53,6 +55,34 @@ namespace grace.tabs
             SetTimeOfDayGreeting();
             // Set row height and font
             SetDataGridViewStyle();
+        }
+
+        private void PrintArrangementButton_Click(object? sender, EventArgs e)
+        {
+            ArrangementReport arrangementReport = new();
+            arrangementReport.GenerateReport();
+            using SaveFileDialog saveFileDialog = new()
+            {
+                Filter = "Excel Files|*.xlsx",
+                Title = "Save Arrangement Report",
+                FileName = "ArrangementReport.xlsx"
+            };
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    arrangementReport.WriteReport(saveFileDialog.FileName);
+                    if (statusStrip.Items["toolStripStatusLabel1"] is ToolStripStatusLabel statusLabel)
+                    {
+                        statusLabel.Text = $"Arrangement report saved to {saveFileDialog.FileName}";
+                    }
+                }
+                catch (Exception ex)
+                {
+                    logger.Error(ex, "Error saving arrangement report to {FileName}", saveFileDialog.FileName);
+                    MessageBox.Show($"Error saving report: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
         }
 
         private void SetDataGridViewStyle()
