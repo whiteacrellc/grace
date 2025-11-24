@@ -227,27 +227,7 @@ namespace grace
                     if (!string.IsNullOrEmpty(addCollectionTextBox.Text))
                     {
                         string cname = addCollectionTextBox.Text.Trim();
-                        if (DataBase.CheckCollectionExists(cname))
-                        {
-                            MessageBox.Show("Trying to add a new collection" + cname
-                                + " which already exists. Please use the Collections"
-                                + " widget above to choose this collection.",
-                            "Oh Noes!", MessageBoxButtons.OK,
-                            MessageBoxIcon.Information);
-                            addCollectionTextBox.Text = string.Empty;
-                            return true;
-                        }
-                        else
-                        {
-                            // Row does not exist, so insert a new row
-                            CollectionName newCol = new()
-                            {
-                                GraceId = grace.ID,
-                                Name = cname
-                                // Set other properties as needed
-                            };
-
-                            context.Collections.Add(newCol);
+                        if (DataBase.AddCollectionRow(grace.ID, cname)) { 
                             updateGraceRow = true;
                             Globals.GetInstance().CollectionDirty = true;
                         }

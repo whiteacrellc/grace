@@ -63,6 +63,7 @@ namespace grace.tabs
         private void ArrangementPage_Enter(object? sender, EventArgs e)
         {
             InitializeComboBox();
+            LoadData();
         }
 
         private void PrintArrangementButton_Click(object? sender, EventArgs e)

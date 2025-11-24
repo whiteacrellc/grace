@@ -1032,6 +1032,7 @@ namespace grace
 
         private static void UpdateArrangementWithNewCollection(string collectionName)
         {
+            string currentUser = Globals.GetInstance().CurrentUser;
             using GraceDbContext context = new();
             List<string> arrangementNames = [.. context.Arrangement
                     .Select(e => e.Name)
@@ -1046,6 +1047,16 @@ namespace grace
                     CollectionName = collectionName
                 };
                 context.Arrangement.Add(arrangement);
+                context.SaveChanges();
+
+                int insertId = arrangement.ID;
+                ArrangementTotal arrangementTotal = new()
+                {
+                    ArrangementId = insertId,
+                    CurrentTotal = 0,
+                    User = currentUser,
+                };
+                context.ArrangementTotals.Add(arrangementTotal);
                 context.SaveChanges();
             }
 
