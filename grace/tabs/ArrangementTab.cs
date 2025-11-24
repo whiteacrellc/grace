@@ -24,6 +24,7 @@ namespace grace.tabs
         private StatusStrip statusStrip;
         private readonly string currentUser = Globals.GetInstance().CurrentUser;
         private Button printButton;
+        private TabPage arrangementPage;
         internal ArrangementTab(Vivian v)
         {
             this.vivian = v;
@@ -39,11 +40,13 @@ namespace grace.tabs
             currentCollectionLabel = vivian.currentCollectionLabel;
             statusStrip = vivian.statusStrip;
             printButton = vivian.printButton;
+            arrangementPage = vivian.arrangementPage;
         }
 
         public void Load()
         {
             bindingSource = [];
+            arrangementPage.Enter += ArrangementPage_Enter;
             createArrangementButton.Click += CreateArrangementButton_Click;
             deleteArrangementButton.Click += DeleteArrangementButton_Click;
             printButton.Click += PrintArrangementButton_Click;
@@ -55,6 +58,11 @@ namespace grace.tabs
             SetTimeOfDayGreeting();
             // Set row height and font
             SetDataGridViewStyle();
+        }
+
+        private void ArrangementPage_Enter(object? sender, EventArgs e)
+        {
+            InitializeComboBox();
         }
 
         private void PrintArrangementButton_Click(object? sender, EventArgs e)

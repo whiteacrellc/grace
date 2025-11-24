@@ -1331,7 +1331,6 @@ namespace grace
         private Label filterSkuLabel;
         public TextBox skuFilterTextBox;
         private ToolStripMenuItem toolStripMenuItem2;
-        private TabPage arrangementPage;
         internal Button createArrangementButton;
         internal ComboBox collectionDropDown;
         internal DataGridView arrangementDataGrid;
@@ -1340,6 +1339,7 @@ namespace grace
         internal StatusStrip statusStrip;
         private ToolStripStatusLabel toolStripStatusLabel1;
         internal Button printButton;
+        internal TabPage arrangementPage;
         // private PictureBox pictureBox1; // Removed
     }
 }
