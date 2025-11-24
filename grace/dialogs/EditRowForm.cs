@@ -703,8 +703,8 @@ namespace grace
         {
             // Show help when mouse hovers over the TextBox
             toolTip.ToolTipTitle = "Add Collection";
-            toolTip.Show("Add a new collection and assign it to the current item.",
-                addCollectionTextBox, 0, -30, 2000);
+            toolTip.Show("All Collection Names must begin with a capital letter.",
+                addCollectionLabel, 0, -30, 2000);
         }
 
         private void addCollectionTextBox_TextChanged(object sender, EventArgs e)
