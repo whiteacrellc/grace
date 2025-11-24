@@ -155,6 +155,9 @@ namespace grace
             helpProvider.SetHelpString(addCollectionTextBox,
                 "Add a new collection and assign it to the current item.");
 
+            // Wire up the TextChanged event handler for addCollectionTextBox
+            addCollectionTextBox.TextChanged += addCollectionTextBox_TextChanged;
+
             toolTip.UseAnimation = true;
         }
 
@@ -702,6 +705,31 @@ namespace grace
             toolTip.ToolTipTitle = "Add Collection";
             toolTip.Show("Add a new collection and assign it to the current item.",
                 addCollectionTextBox, 0, -30, 2000);
+        }
+
+        private void addCollectionTextBox_TextChanged(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(addCollectionTextBox.Text))
+            {
+                return;
+            }
+
+            string text = addCollectionTextBox.Text;
+
+            // Capitalize the first letter of the first word
+            if (text.Length > 0 && char.IsLower(text[0]))
+            {
+                string capitalizedText = char.ToUpper(text[0], System.Globalization.CultureInfo.CurrentCulture) + text.Substring(1);
+
+                // Store the current cursor position
+                int selectionStart = addCollectionTextBox.SelectionStart;
+
+                // Update the text
+                addCollectionTextBox.Text = capitalizedText;
+
+                // Restore the cursor position
+                addCollectionTextBox.SelectionStart = selectionStart;
+            }
         }
 
     }
