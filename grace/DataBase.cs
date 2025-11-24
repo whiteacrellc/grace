@@ -1002,7 +1002,7 @@ namespace grace
         {
             using var context = new GraceDbContext();
             bool rowExists = context.Collections
-              .Any(c => c.Name == name);
+              .Any(c => c.Name.ToLower() == name.ToLower());
             return rowExists;
         }
 
