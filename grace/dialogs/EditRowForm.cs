@@ -155,6 +155,9 @@ namespace grace
             helpProvider.SetHelpString(addCollectionTextBox,
                 "Add a new collection and assign it to the current item.");
 
+            // Set cursor to help cursor for addCollectionLabel to indicate tooltip
+            addCollectionLabel.Cursor = Cursors.Help;
+
             // Wire up the TextChanged event handler for addCollectionTextBox
             addCollectionTextBox.TextChanged += addCollectionTextBox_TextChanged;
 
