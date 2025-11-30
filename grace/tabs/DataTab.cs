@@ -114,11 +114,18 @@ namespace grace.tabs
         }
         internal void BindDataSource(bool refresh = false)
         {
+            var startTime = DateTime.Now;
+
             // Show the "working" cursor
             Cursor.Current = Cursors.WaitCursor;
 
             // Suspend layout to prevent multiple repaints
             dataGridView.SuspendLayout();
+
+            // Temporarily disable visual updates for better performance
+            var originalAllowUserToAddRows = dataGridView.AllowUserToAddRows;
+            dataGridView.AllowUserToAddRows = false;
+
             try
             {
                 RefreshData(refresh);
@@ -126,9 +133,13 @@ namespace grace.tabs
             }
             finally
             {
+                dataGridView.AllowUserToAddRows = originalAllowUserToAddRows;
                 dataGridView.ResumeLayout();
                 Cursor.Current = Cursors.Default;
             }
+            var endTime = DateTime.Now;
+            var duration = endTime - startTime;
+            logger.Info($"Data binding completed in {duration.TotalSeconds} seconds.");
         }
         private void DataTabPage_Enter(object? sender, EventArgs e)
         {
