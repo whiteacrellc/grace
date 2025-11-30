@@ -20,10 +20,11 @@ namespace grace.dialogs
     {
         private readonly string oldName;
 
-        public RenameArrangementDialog(string currentName)
+        public RenameArrangementDialog(string oldName)
         {
             InitializeComponent();
-            oldName = currentName;
+            this.oldName = oldName;
+            currentNameLabel.Text = oldName;
         }
 
         private void CancelButton_Click(object sender, EventArgs e)
@@ -56,6 +57,7 @@ namespace grace.dialogs
                 DataBase.RenameArrangement(oldName, newName.Trim());
                 DialogResult = DialogResult.OK;
                 Close();
+                return;
             }
             catch (DbUpdateException)
             {
@@ -69,6 +71,8 @@ namespace grace.dialogs
                     "Error", MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
             }
+            DialogResult =  DialogResult.Retry;
+            Close();
         }
 
         private void RenameArrangementDialog_Load(object sender, EventArgs e)

@@ -28,7 +28,6 @@ namespace grace.dialogs
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RenameArrangementDialog));
             newNameTextBox = new TextBox();
             titleLabel = new Label();
             newNameLabel = new Label();
@@ -36,54 +35,42 @@ namespace grace.dialogs
             cancelButton = new Button();
             currentNameLabel = new Label();
             SuspendLayout();
-            //
+            // 
             // newNameTextBox
-            //
-            newNameTextBox.Location = new Point(115, 110);
-            newNameTextBox.Size = new Size(220, 23);
+            // 
             newNameTextBox.BackColor = Color.FromArgb(255, 250, 240);
             newNameTextBox.BorderStyle = BorderStyle.FixedSingle;
             newNameTextBox.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point, 0);
             newNameTextBox.ForeColor = Color.FromArgb(54, 69, 79);
+            newNameTextBox.Location = new Point(127, 110);
             newNameTextBox.Name = "newNameTextBox";
+            newNameTextBox.Size = new Size(220, 25);
             newNameTextBox.TabIndex = 0;
-            //
+            // 
             // titleLabel
-            //
+            // 
             titleLabel.AutoSize = true;
             titleLabel.Font = new Font("Segoe UI", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
             titleLabel.ForeColor = Color.FromArgb(54, 69, 79);
             titleLabel.Location = new Point(39, 28);
             titleLabel.Name = "titleLabel";
-            titleLabel.Size = new Size(166, 20);
+            titleLabel.Size = new Size(164, 20);
             titleLabel.TabIndex = 1;
             titleLabel.Text = "Rename Arrangement";
-            //
-            // currentNameLabel
-            //
-            currentNameLabel.AutoSize = true;
-            currentNameLabel.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            currentNameLabel.ForeColor = Color.FromArgb(54, 69, 79);
-            currentNameLabel.Location = new Point(42, 68);
-            currentNameLabel.Name = "currentNameLabel";
-            currentNameLabel.Size = new Size(100, 19);
-            currentNameLabel.TabIndex = 2;
-            currentNameLabel.Text = "Current Name:";
-            //
+            // 
             // newNameLabel
-            //
+            // 
             newNameLabel.AutoSize = true;
             newNameLabel.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point, 0);
             newNameLabel.ForeColor = Color.FromArgb(54, 69, 79);
-            newNameLabel.Location = new Point(42, 118);
+            newNameLabel.Location = new Point(35, 112);
             newNameLabel.Name = "newNameLabel";
-            newNameLabel.Size = new Size(79, 19);
+            newNameLabel.Size = new Size(76, 19);
             newNameLabel.TabIndex = 3;
             newNameLabel.Text = "New Name";
-            //
-
+            // 
             // saveButton
-            //
+            // 
             saveButton.BackColor = Color.FromArgb(234, 221, 202);
             saveButton.FlatAppearance.BorderColor = Color.FromArgb(207, 181, 59);
             saveButton.FlatStyle = FlatStyle.Flat;
@@ -96,9 +83,9 @@ namespace grace.dialogs
             saveButton.Text = "Save";
             saveButton.UseVisualStyleBackColor = false;
             saveButton.Click += SaveButton_Click;
-            //
+            // 
             // cancelButton
-            //
+            // 
             cancelButton.BackColor = Color.FromArgb(234, 221, 202);
             cancelButton.FlatAppearance.BorderColor = Color.FromArgb(207, 181, 59);
             cancelButton.FlatStyle = FlatStyle.Flat;
@@ -111,13 +98,24 @@ namespace grace.dialogs
             cancelButton.Text = "Cancel";
             cancelButton.UseVisualStyleBackColor = false;
             cancelButton.Click += CancelButton_Click;
-            //
+            // 
+            // currentNameLabel
+            // 
+            currentNameLabel.AutoSize = true;
+            currentNameLabel.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            currentNameLabel.ForeColor = Color.FromArgb(54, 69, 79);
+            currentNameLabel.Location = new Point(12, 69);
+            currentNameLabel.Name = "currentNameLabel";
+            currentNameLabel.Size = new Size(99, 19);
+            currentNameLabel.TabIndex = 2;
+            currentNameLabel.Text = "Current Name:";
+            // 
             // RenameArrangementDialog
-            //
-            AutoScaleDimensions = new SizeF(7F, 15F);
+            // 
+            AutoScaleDimensions = new SizeF(7F, 17F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(380, 240);
             BackColor = Color.FromArgb(255, 245, 238);
+            ClientSize = new Size(380, 240);
             Controls.Add(cancelButton);
             Controls.Add(saveButton);
             Controls.Add(newNameLabel);
@@ -126,7 +124,6 @@ namespace grace.dialogs
             Controls.Add(newNameTextBox);
             Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point, 0);
             ForeColor = Color.FromArgb(54, 69, 79);
-            Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "RenameArrangementDialog";
             StartPosition = FormStartPosition.CenterParent;
             Text = "Rename Arrangement Dialog";
@@ -136,12 +133,11 @@ namespace grace.dialogs
         }
 
         #endregion
-
-        private TextBox newNameTextBox;
         private Label titleLabel;
         private Label currentNameLabel;
-        private Label newNameLabel;
         private Button saveButton;
         private Button cancelButton;
+        internal Label newNameLabel;
+        internal TextBox newNameTextBox;
     }
 }

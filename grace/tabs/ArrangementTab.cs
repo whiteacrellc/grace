@@ -99,6 +99,7 @@ namespace grace.tabs
 
             if (result == DialogResult.OK)
             {
+                WriteToToolStrip($"Successfully renamed arrangement from '{name}' to '{renameDialog.newNameTextBox.Text}'.");
                 LoadData();
             }
         }
@@ -202,20 +203,23 @@ namespace grace.tabs
 
         }
 
+        private void WriteToToolStrip(string message)
+        {
+            if (statusStrip.Items["toolStripStatusLabel1"] is ToolStripStatusLabel statusLabel)
+            {
+                statusLabel.Text = message;
+            }
+        }
+
         private void SetTimeOfDayGreeting()
         {
-            // We will update the status label (assumed to be named 'toolStripStatusLabel1')
-            if (statusStrip.Items["toolStripStatusLabel1"] is not ToolStripStatusLabel statusLabel)
-            {
-                Console.WriteLine("Error: ToolStripStatusLabel 'toolStripStatusLabel1' not found.");
-                return; // Can't update if the label doesn't exist.
-            }
 
             DateTime currentTime = DateTime.Now;
             string greeting = currentTime.Hour is >= 0 and < 12 ? "Good Morning" : currentTime.Hour is >= 12 and < 17 ? "Good Afternoon" : "Good Evening";
 
             // Combine greeting with the currentUser variable (assumed to exist in Form1)
-            statusLabel.Text = $"{greeting}, {currentUser}!";
+           string message = $"{greeting}, {currentUser}!";
+           WriteToToolStrip(message);
         }
 
 
@@ -239,10 +243,7 @@ namespace grace.tabs
 
                     // Save the changes to the database
                     context.SaveChanges();
-                    if (statusStrip.Items["toolStripStatusLabel1"] is ToolStripStatusLabel statusLabel)
-                    {
-                        statusLabel.Text = $"Successfully updated total for '{name}' to {total}.";
-                    }
+                    WriteToToolStrip($"Successfully updated total for '{name}' to {total}.");
                 }
                 catch (Exception ex)
                 {
@@ -285,18 +286,12 @@ namespace grace.tabs
             DialogResult result = addArrangementDialog.ShowDialog();
             if (result == DialogResult.OK)
             {
-                if (statusStrip.Items["toolStripStatusLabel1"] is ToolStripStatusLabel statusLabel)
-                {
-                    statusLabel.Text = $"Successfully added arrangement";
-                }
+                WriteToToolStrip("Successfully added arrangement");
                 LoadData();
             }
             else if (result == DialogResult.Cancel)
             {
-                if (statusStrip.Items["toolStripStatusLabel1"] is ToolStripStatusLabel statusLabel)
-                {
-                    statusLabel.Text = $"Add arrangement cancelled.";
-                }
+                WriteToToolStrip("Add arrangement cancelled.");
             }
         }
         public void DeleteArrangementButton_Click(object? sender, EventArgs e)
@@ -331,6 +326,7 @@ namespace grace.tabs
 
             // Show confirmation dialog
             DialogResult result = MessageBox.Show(
+                "This will delete ALL arrangements with this name in the current collection. This action cannot be undone.\n\n" +
                 $"Are you sure you want to delete {name}?",
                 "Confirm Delete",
                 MessageBoxButtons.YesNo,
@@ -338,6 +334,7 @@ namespace grace.tabs
 
             if (result != DialogResult.Yes)
             {
+                WriteToToolStrip("Delete arrangement cancelled.");
                 return;
             }
 
@@ -364,10 +361,7 @@ namespace grace.tabs
                 context.SaveChanges();
 
                 // Update status label
-                if (statusStrip.Items["toolStripStatusLabel1"] is ToolStripStatusLabel statusLabel)
-                {
-                    statusLabel.Text = $"Successfully deleted arrangement '{name}'.";
-                }
+                WriteToToolStrip($"Successfully deleted arrangement '{name}'.");
 
                 // Reload the data to refresh the grid
                 LoadData();
