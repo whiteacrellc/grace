@@ -119,6 +119,11 @@ namespace grace.tabs
 
             // Suspend layout to prevent multiple repaints
             dataGridView.SuspendLayout();
+
+            // Temporarily disable visual updates for better performance
+            var originalAllowUserToAddRows = dataGridView.AllowUserToAddRows;
+            dataGridView.AllowUserToAddRows = false;
+
             try
             {
                 RefreshData(refresh);
@@ -126,6 +131,7 @@ namespace grace.tabs
             }
             finally
             {
+                dataGridView.AllowUserToAddRows = originalAllowUserToAddRows;
                 dataGridView.ResumeLayout();
                 Cursor.Current = Cursors.Default;
             }
