@@ -114,6 +114,8 @@ namespace grace
             restoreDatabaseButton = new Button();
             backupButton = new Button();
             arrangementPage = new TabPage();
+            statusStrip = new StatusStrip();
+            toolStripStatusLabel1 = new ToolStripStatusLabel();
             currentCollectionLabel = new Label();
             deleteArrangementButton = new Button();
             arrangementDataGrid = new DataGridView();
@@ -123,8 +125,7 @@ namespace grace
             checkoutBindingSource = new BindingSource(components);
             checkInBindingSource = new BindingSource(components);
             reportToolTip = new ToolTip(components);
-            statusStrip = new StatusStrip();
-            toolStripStatusLabel1 = new ToolStripStatusLabel();
+            renameArrangementButton = new Button();
             menuStrip1.SuspendLayout();
             tabControl.SuspendLayout();
             dataPage.SuspendLayout();
@@ -139,11 +140,11 @@ namespace grace
             ((System.ComponentModel.ISupportInitialize)collGridView).BeginInit();
             adminPage.SuspendLayout();
             arrangementPage.SuspendLayout();
+            statusStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)arrangementDataGrid).BeginInit();
             ((System.ComponentModel.ISupportInitialize)errorProvider1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)checkoutBindingSource).BeginInit();
             ((System.ComponentModel.ISupportInitialize)checkInBindingSource).BeginInit();
-            statusStrip.SuspendLayout();
             SuspendLayout();
             // 
             // openFileDialog
@@ -1081,8 +1082,9 @@ namespace grace
             // 
             // arrangementPage
             // 
-            arrangementPage.Controls.Add(statusStrip);
             arrangementPage.BackColor = Color.FromArgb(255, 245, 238);
+            arrangementPage.Controls.Add(renameArrangementButton);
+            arrangementPage.Controls.Add(statusStrip);
             arrangementPage.Controls.Add(currentCollectionLabel);
             arrangementPage.Controls.Add(deleteArrangementButton);
             arrangementPage.Controls.Add(arrangementDataGrid);
@@ -1095,8 +1097,21 @@ namespace grace
             arrangementPage.TabIndex = 7;
             arrangementPage.Text = "Arrangement";
             // 
+            // statusStrip
+            // 
+            statusStrip.Items.AddRange(new ToolStripItem[] { toolStripStatusLabel1 });
+            statusStrip.Location = new Point(0, 711);
+            statusStrip.Name = "statusStrip";
+            statusStrip.Size = new Size(1517, 22);
+            statusStrip.TabIndex = 6;
+            // 
+            // toolStripStatusLabel1
+            // 
+            toolStripStatusLabel1.Name = "toolStripStatusLabel1";
+            toolStripStatusLabel1.Size = new Size(0, 17);
+            // 
             // currentCollectionLabel
-            //
+            // 
             currentCollectionLabel.AutoSize = true;
             currentCollectionLabel.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 0);
             currentCollectionLabel.ForeColor = Color.FromArgb(54, 69, 79);
@@ -1107,7 +1122,7 @@ namespace grace
             currentCollectionLabel.Text = "label1";
             // 
             // deleteArrangementButton
-            //
+            // 
             deleteArrangementButton.BackColor = Color.FromArgb(234, 221, 202);
             deleteArrangementButton.FlatAppearance.BorderColor = Color.FromArgb(207, 181, 59);
             deleteArrangementButton.FlatStyle = FlatStyle.Flat;
@@ -1121,51 +1136,25 @@ namespace grace
             deleteArrangementButton.UseVisualStyleBackColor = false;
             // 
             // arrangementDataGrid
-            //
-            dataGridViewCellStyle18.BackColor = Color.FromArgb(248, 240, 227);
-            dataGridViewCellStyle18.Font = new Font("Segoe UI", 10F);
-            dataGridViewCellStyle18.ForeColor = Color.FromArgb(54, 69, 79);
-            dataGridViewCellStyle18.SelectionBackColor = Color.FromArgb(224, 201, 127);
-            dataGridViewCellStyle18.SelectionForeColor = Color.FromArgb(54, 69, 79);
+            // 
             arrangementDataGrid.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle18;
             arrangementDataGrid.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
             arrangementDataGrid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             arrangementDataGrid.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
             arrangementDataGrid.BackgroundColor = Color.FromArgb(255, 245, 238);
-            dataGridViewCellStyle19.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle19.BackColor = Color.FromArgb(234, 221, 202);
-            dataGridViewCellStyle19.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
-            dataGridViewCellStyle19.ForeColor = Color.FromArgb(54, 69, 79);
-            dataGridViewCellStyle19.SelectionBackColor = Color.FromArgb(234, 221, 202);
-            dataGridViewCellStyle19.SelectionForeColor = Color.FromArgb(54, 69, 79);
-            dataGridViewCellStyle19.WrapMode = DataGridViewTriState.True;
             arrangementDataGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle19;
             arrangementDataGrid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle20.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle20.BackColor = Color.FromArgb(255, 250, 240);
-            dataGridViewCellStyle20.Font = new Font("Segoe UI", 10F);
-            dataGridViewCellStyle20.ForeColor = Color.FromArgb(54, 69, 79);
-            dataGridViewCellStyle20.SelectionBackColor = Color.FromArgb(224, 201, 127);
-            dataGridViewCellStyle20.SelectionForeColor = Color.FromArgb(54, 69, 79);
-            dataGridViewCellStyle20.WrapMode = DataGridViewTriState.False;
             arrangementDataGrid.DefaultCellStyle = dataGridViewCellStyle20;
             arrangementDataGrid.EnableHeadersVisualStyles = false;
             arrangementDataGrid.GridColor = Color.FromArgb(211, 192, 177);
             arrangementDataGrid.Location = new Point(21, 64);
             arrangementDataGrid.Name = "arrangementDataGrid";
-            dataGridViewCellStyle21.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle21.BackColor = Color.FromArgb(234, 221, 202);
-            dataGridViewCellStyle21.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
-            dataGridViewCellStyle21.ForeColor = Color.FromArgb(54, 69, 79);
-            dataGridViewCellStyle21.SelectionBackColor = Color.FromArgb(224, 201, 127);
-            dataGridViewCellStyle21.SelectionForeColor = Color.FromArgb(54, 69, 79);
-            dataGridViewCellStyle21.WrapMode = DataGridViewTriState.True;
             arrangementDataGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle21;
             arrangementDataGrid.Size = new Size(509, 630);
             arrangementDataGrid.TabIndex = 3;
             // 
             // collectionDropDown
-            //
+            // 
             collectionDropDown.BackColor = Color.FromArgb(255, 250, 240);
             collectionDropDown.FlatStyle = FlatStyle.Flat;
             collectionDropDown.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point, 0);
@@ -1178,7 +1167,7 @@ namespace grace
             collectionDropDown.SelectedValueChanged += CollectionDropDown_SelectedValueChanged;
             // 
             // createArrangementButton
-            //
+            // 
             createArrangementButton.BackColor = Color.FromArgb(234, 221, 202);
             createArrangementButton.FlatAppearance.BorderColor = Color.FromArgb(207, 181, 59);
             createArrangementButton.FlatStyle = FlatStyle.Flat;
@@ -1201,18 +1190,19 @@ namespace grace
             reportToolTip.ToolTipIcon = ToolTipIcon.Info;
             reportToolTip.ToolTipTitle = "Report Info";
             // 
-            // statusStrip
+            // renameArrangementButton
             // 
-            statusStrip.Items.AddRange(new ToolStripItem[] { toolStripStatusLabel1 });
-            statusStrip.Location = new Point(0, 711);
-            statusStrip.Name = "statusStrip";
-            statusStrip.Size = new Size(1517, 22);
-            statusStrip.TabIndex = 6;
-            // 
-            // toolStripStatusLabel1
-            // 
-            toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            toolStripStatusLabel1.Size = new Size(0, 17);
+            renameArrangementButton.BackColor = Color.FromArgb(234, 221, 202);
+            renameArrangementButton.FlatAppearance.BorderColor = Color.FromArgb(207, 181, 59);
+            renameArrangementButton.FlatStyle = FlatStyle.Flat;
+            renameArrangementButton.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            renameArrangementButton.ForeColor = Color.FromArgb(54, 69, 79);
+            renameArrangementButton.Location = new Point(555, 298);
+            renameArrangementButton.Name = "renameArrangementButton";
+            renameArrangementButton.Size = new Size(177, 39);
+            renameArrangementButton.TabIndex = 7;
+            renameArrangementButton.Text = "Rename Arrangement";
+            renameArrangementButton.UseVisualStyleBackColor = false;
             // 
             // Vivian
             // 
@@ -1256,12 +1246,12 @@ namespace grace
             adminPage.PerformLayout();
             arrangementPage.ResumeLayout(false);
             arrangementPage.PerformLayout();
+            statusStrip.ResumeLayout(false);
+            statusStrip.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)arrangementDataGrid).EndInit();
             ((System.ComponentModel.ISupportInitialize)errorProvider1).EndInit();
             ((System.ComponentModel.ISupportInitialize)checkoutBindingSource).EndInit();
             ((System.ComponentModel.ISupportInitialize)checkInBindingSource).EndInit();
-            statusStrip.ResumeLayout(false);
-            statusStrip.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -1349,6 +1339,7 @@ namespace grace
         internal Label currentCollectionLabel;
         internal StatusStrip statusStrip;
         private ToolStripStatusLabel toolStripStatusLabel1;
+        internal Button renameArrangementButton;
         // private PictureBox pictureBox1; // Removed
     }
 }
