@@ -65,7 +65,44 @@ namespace grace.tabs
 
         private void RenameArrangementButton_Click(object? sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            // Check if a row is selected
+            if (arragementDataGrid.SelectedRows.Count == 0 && arragementDataGrid.CurrentRow == null)
+            {
+                MessageBox.Show("You must select a row to rename", "No Row Selected",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            // Get the selected row (prefer SelectedRows, fallback to CurrentRow)
+            DataGridViewRow selectedRow = arragementDataGrid.SelectedRows.Count > 0
+                ? arragementDataGrid.SelectedRows[0]
+                : arragementDataGrid.CurrentRow;
+
+            // Get the value of the Name column
+            string name = string.Empty;
+            if (arragementDataGrid.Columns.Contains("Name"))
+            {
+                object nameValue = selectedRow.Cells["Name"].Value;
+                name = nameValue?.ToString() ?? string.Empty;
+            }
+
+            if (string.IsNullOrEmpty(name))
+            {
+                MessageBox.Show("Cannot rename: Name is empty", "Invalid Name",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            // Open the RenameArrangementDialog with the current name
+            using dialogs.RenameArrangementDialog renameDialog = new(name);
+            DialogResult result = renameDialog.ShowDialog();
+
+            if (result == DialogResult.OK)
+            {
+                LoadData();
+            }
+        }
+
         private void ArrangementPage_Enter(object? sender, EventArgs e)
         {
             InitializeComboBox();
