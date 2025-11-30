@@ -22,6 +22,7 @@ namespace grace.tabs
         private BindingSource bindingSource;
         private Label currentCollectionLabel;
         private StatusStrip statusStrip;
+        private Button renameArrangmentButton;
         private readonly string currentUser = Globals.GetInstance().CurrentUser;
         private Button printButton;
         private TabPage arrangementPage;
@@ -39,6 +40,7 @@ namespace grace.tabs
             collectionDropDown = vivian.collectionDropDown;
             currentCollectionLabel = vivian.currentCollectionLabel;
             statusStrip = vivian.statusStrip;
+            renameArrangmentButton = vivian.renameArrangementButton;
             printButton = vivian.printButton;
             arrangementPage = vivian.arrangementPage;
         }
@@ -48,6 +50,7 @@ namespace grace.tabs
             bindingSource = [];
             arrangementPage.Enter += ArrangementPage_Enter;
             createArrangementButton.Click += CreateArrangementButton_Click;
+            renameArrangmentButton.Click += RenameArrangementButton_Click;
             deleteArrangementButton.Click += DeleteArrangementButton_Click;
             printButton.Click += PrintArrangementButton_Click;
             collectionDropDown.SelectedValueChanged += CollectionDropDown_SelectedValueChanged;
@@ -60,6 +63,9 @@ namespace grace.tabs
             SetDataGridViewStyle();
         }
 
+        private void RenameArrangementButton_Click(object? sender, EventArgs e)
+        {
+            throw new NotImplementedException();
         private void ArrangementPage_Enter(object? sender, EventArgs e)
         {
             InitializeComboBox();
