@@ -114,6 +114,8 @@ namespace grace
             restoreDatabaseButton = new Button();
             backupButton = new Button();
             arrangementPage = new TabPage();
+            label1 = new Label();
+            renameArrangementButton = new Button();
             printButton = new Button();
             statusStrip = new StatusStrip();
             toolStripStatusLabel1 = new ToolStripStatusLabel();
@@ -126,7 +128,6 @@ namespace grace
             checkoutBindingSource = new BindingSource(components);
             checkInBindingSource = new BindingSource(components);
             reportToolTip = new ToolTip(components);
-            renameArrangementButton = new Button();
             menuStrip1.SuspendLayout();
             tabControl.SuspendLayout();
             dataPage.SuspendLayout();
@@ -1084,6 +1085,7 @@ namespace grace
             // arrangementPage
             // 
             arrangementPage.BackColor = Color.FromArgb(255, 245, 238);
+            arrangementPage.Controls.Add(label1);
             arrangementPage.Controls.Add(renameArrangementButton);
             arrangementPage.Controls.Add(printButton);
             arrangementPage.Controls.Add(statusStrip);
@@ -1098,6 +1100,30 @@ namespace grace
             arrangementPage.Size = new Size(1517, 733);
             arrangementPage.TabIndex = 7;
             arrangementPage.Text = "Arrangement";
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.ForeColor = Color.Red;
+            label1.Location = new Point(750, 240);
+            label1.Name = "label1";
+            label1.Size = new Size(331, 38);
+            label1.TabIndex = 8;
+            label1.Text = "If you delete an arrangement it will delete it for \nALL collections, not just the one shown.";
+            // 
+            // renameArrangementButton
+            // 
+            renameArrangementButton.BackColor = Color.FromArgb(234, 221, 202);
+            renameArrangementButton.FlatAppearance.BorderColor = Color.FromArgb(207, 181, 59);
+            renameArrangementButton.FlatStyle = FlatStyle.Flat;
+            renameArrangementButton.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            renameArrangementButton.ForeColor = Color.FromArgb(54, 69, 79);
+            renameArrangementButton.Location = new Point(555, 359);
+            renameArrangementButton.Name = "renameArrangementButton";
+            renameArrangementButton.Size = new Size(177, 39);
+            renameArrangementButton.TabIndex = 7;
+            renameArrangementButton.Text = "Rename Arrangement";
+            renameArrangementButton.UseVisualStyleBackColor = false;
             // 
             // printButton
             // 
@@ -1205,20 +1231,6 @@ namespace grace
             reportToolTip.IsBalloon = true;
             reportToolTip.ToolTipIcon = ToolTipIcon.Info;
             reportToolTip.ToolTipTitle = "Report Info";
-            // 
-            // renameArrangementButton
-            // 
-            renameArrangementButton.BackColor = Color.FromArgb(234, 221, 202);
-            renameArrangementButton.FlatAppearance.BorderColor = Color.FromArgb(207, 181, 59);
-            renameArrangementButton.FlatStyle = FlatStyle.Flat;
-            renameArrangementButton.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            renameArrangementButton.ForeColor = Color.FromArgb(54, 69, 79);
-            renameArrangementButton.Location = new Point(555, 298);
-            renameArrangementButton.Name = "renameArrangementButton";
-            renameArrangementButton.Size = new Size(177, 39);
-            renameArrangementButton.TabIndex = 7;
-            renameArrangementButton.Text = "Rename Arrangement";
-            renameArrangementButton.UseVisualStyleBackColor = false;
             // 
             // Vivian
             // 
@@ -1357,6 +1369,7 @@ namespace grace
         internal Button renameArrangementButton;
         internal Button printButton;
         internal TabPage arrangementPage;
+        private Label label1;
         // private PictureBox pictureBox1; // Removed
     }
 }
