@@ -114,6 +114,8 @@ namespace grace.tabs
         }
         internal void BindDataSource(bool refresh = false)
         {
+            var startTime = DateTime.Now;
+
             // Show the "working" cursor
             Cursor.Current = Cursors.WaitCursor;
 
@@ -135,6 +137,9 @@ namespace grace.tabs
                 dataGridView.ResumeLayout();
                 Cursor.Current = Cursors.Default;
             }
+            var endTime = DateTime.Now;
+            var duration = endTime - startTime;
+            logger.Info($"Data binding completed in {duration.TotalSeconds} seconds.");
         }
         private void DataTabPage_Enter(object? sender, EventArgs e)
         {
