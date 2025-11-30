@@ -1062,6 +1062,21 @@ namespace grace
 
         }
 
+        public static void RenameArrangement(string oldName, string newName)
+        {
+            using var context = new GraceDbContext();
+            var arrangementsToRename = context.Arrangement
+                .Where(a => a.Name == oldName)
+                .ToList();
+
+            foreach (var arrangement in arrangementsToRename)
+            {
+                arrangement.Name = newName;
+            }
+
+            context.SaveChanges();
+        }
+
         public static int GetCollectionId(int graceId, string name)
         {
             using var context = new GraceDbContext();
