@@ -1002,7 +1002,7 @@ namespace grace
         {
             using var context = new GraceDbContext();
             bool rowExists = context.Collections
-              .Any(c => c.Name == name);
+              .Any(c => c.Name.ToLower() == name.ToLower());
             return rowExists;
         }
 
@@ -1032,6 +1032,7 @@ namespace grace
 
         private static void UpdateArrangementWithNewCollection(string collectionName)
         {
+            string currentUser = Globals.GetInstance().CurrentUser;
             using GraceDbContext context = new();
             List<string> arrangementNames = [.. context.Arrangement
                     .Select(e => e.Name)
@@ -1047,8 +1048,33 @@ namespace grace
                 };
                 context.Arrangement.Add(arrangement);
                 context.SaveChanges();
+
+                int insertId = arrangement.ID;
+                ArrangementTotal arrangementTotal = new()
+                {
+                    ArrangementId = insertId,
+                    CurrentTotal = 0,
+                    User = currentUser,
+                };
+                context.ArrangementTotals.Add(arrangementTotal);
+                context.SaveChanges();
             }
 
+        }
+
+        public static void RenameArrangement(string oldName, string newName)
+        {
+            using var context = new GraceDbContext();
+            var arrangementsToRename = context.Arrangement
+                .Where(a => a.Name == oldName)
+                .ToList();
+
+            foreach (var arrangement in arrangementsToRename)
+            {
+                arrangement.Name = newName;
+            }
+
+            context.SaveChanges();
         }
 
         public static int GetCollectionId(int graceId, string name)

@@ -510,5 +510,10 @@ namespace grace
 
 
         }
+
+        internal void PrintArrangementButton_Click(object? sender, EventArgs e)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

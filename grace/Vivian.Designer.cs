@@ -114,6 +114,7 @@ namespace grace
             restoreDatabaseButton = new Button();
             backupButton = new Button();
             arrangementPage = new TabPage();
+            printButton = new Button();
             statusStrip = new StatusStrip();
             toolStripStatusLabel1 = new ToolStripStatusLabel();
             currentCollectionLabel = new Label();
@@ -1084,6 +1085,7 @@ namespace grace
             // 
             arrangementPage.BackColor = Color.FromArgb(255, 245, 238);
             arrangementPage.Controls.Add(renameArrangementButton);
+            arrangementPage.Controls.Add(printButton);
             arrangementPage.Controls.Add(statusStrip);
             arrangementPage.Controls.Add(currentCollectionLabel);
             arrangementPage.Controls.Add(deleteArrangementButton);
@@ -1096,6 +1098,20 @@ namespace grace
             arrangementPage.Size = new Size(1517, 733);
             arrangementPage.TabIndex = 7;
             arrangementPage.Text = "Arrangement";
+            // 
+            // printButton
+            // 
+            printButton.BackColor = Color.FromArgb(234, 221, 202);
+            printButton.FlatAppearance.BorderColor = Color.FromArgb(207, 181, 59);
+            printButton.FlatStyle = FlatStyle.Flat;
+            printButton.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            printButton.ForeColor = Color.FromArgb(54, 69, 79);
+            printButton.Location = new Point(555, 302);
+            printButton.Name = "printButton";
+            printButton.Size = new Size(177, 39);
+            printButton.TabIndex = 7;
+            printButton.Text = "Save to Excel";
+            printButton.UseVisualStyleBackColor = false;
             // 
             // statusStrip
             // 
@@ -1331,7 +1347,6 @@ namespace grace
         private Label filterSkuLabel;
         public TextBox skuFilterTextBox;
         private ToolStripMenuItem toolStripMenuItem2;
-        private TabPage arrangementPage;
         internal Button createArrangementButton;
         internal ComboBox collectionDropDown;
         internal DataGridView arrangementDataGrid;
@@ -1340,6 +1355,8 @@ namespace grace
         internal StatusStrip statusStrip;
         private ToolStripStatusLabel toolStripStatusLabel1;
         internal Button renameArrangementButton;
+        internal Button printButton;
+        internal TabPage arrangementPage;
         // private PictureBox pictureBox1; // Removed
     }
 }

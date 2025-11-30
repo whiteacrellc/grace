@@ -100,7 +100,7 @@ namespace grace.dialogs
             progressBar.PerformStep();
 
             // Sleep so people see the progress
-            Thread.Sleep(250);
+            Thread.Sleep(100);
 
 
         }

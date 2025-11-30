@@ -155,6 +155,12 @@ namespace grace
             helpProvider.SetHelpString(addCollectionTextBox,
                 "Add a new collection and assign it to the current item.");
 
+            // Set cursor to help cursor for addCollectionLabel to indicate tooltip
+            addCollectionLabel.Cursor = Cursors.Help;
+
+            // Wire up the TextChanged event handler for addCollectionTextBox
+            addCollectionTextBox.TextChanged += addCollectionTextBox_TextChanged;
+
             toolTip.UseAnimation = true;
         }
 
@@ -221,27 +227,7 @@ namespace grace
                     if (!string.IsNullOrEmpty(addCollectionTextBox.Text))
                     {
                         string cname = addCollectionTextBox.Text.Trim();
-                        if (DataBase.CheckCollectionExists(cname))
-                        {
-                            MessageBox.Show("Trying to add a new collection" + cname
-                                + " which already exists. Please use the Collections"
-                                + " widget above to choose this collection.",
-                            "Oh Noes!", MessageBoxButtons.OK,
-                            MessageBoxIcon.Information);
-                            addCollectionTextBox.Text = string.Empty;
-                            return true;
-                        }
-                        else
-                        {
-                            // Row does not exist, so insert a new row
-                            CollectionName newCol = new()
-                            {
-                                GraceId = grace.ID,
-                                Name = cname
-                                // Set other properties as needed
-                            };
-
-                            context.Collections.Add(newCol);
+                        if (DataBase.AddCollectionRow(grace.ID, cname)) { 
                             updateGraceRow = true;
                             Globals.GetInstance().CollectionDirty = true;
                         }
@@ -700,8 +686,33 @@ namespace grace
         {
             // Show help when mouse hovers over the TextBox
             toolTip.ToolTipTitle = "Add Collection";
-            toolTip.Show("Add a new collection and assign it to the current item.",
-                addCollectionTextBox, 0, -30, 2000);
+            toolTip.Show("All Collection Names must begin with a capital letter.",
+                addCollectionLabel, 0, -30, 2000);
+        }
+
+        private void addCollectionTextBox_TextChanged(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(addCollectionTextBox.Text))
+            {
+                return;
+            }
+
+            string text = addCollectionTextBox.Text;
+
+            // Capitalize the first letter of the first word
+            if (text.Length > 0 && char.IsLower(text[0]))
+            {
+                string capitalizedText = char.ToUpper(text[0], System.Globalization.CultureInfo.CurrentCulture) + text.Substring(1);
+
+                // Store the current cursor position
+                int selectionStart = addCollectionTextBox.SelectionStart;
+
+                // Update the text
+                addCollectionTextBox.Text = capitalizedText;
+
+                // Restore the cursor position
+                addCollectionTextBox.SelectionStart = selectionStart;
+            }
         }
 
     }
