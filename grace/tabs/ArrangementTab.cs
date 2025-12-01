@@ -326,7 +326,7 @@ namespace grace.tabs
 
             // Show confirmation dialog
             DialogResult result = MessageBox.Show(
-                "This will delete ALL arrangements with this name in the current collection. This action cannot be undone.\n\n" +
+                "This will delete ALL arrangements with this name in every collection. This action cannot be undone.\n\n" +
                 $"Are you sure you want to delete {name}?",
                 "Confirm Delete",
                 MessageBoxButtons.YesNo,

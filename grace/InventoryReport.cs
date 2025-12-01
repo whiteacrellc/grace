@@ -128,7 +128,7 @@ namespace grace
                     for (int col = 0; col < dataTable.Columns.Count; col++)
                     {
                         var item = dataRow[col];
-                        if (col == 12)
+                        if (col == 13)
                         {
                             DateTime dateTime = (DateTime)item;
 
