@@ -102,6 +102,13 @@ namespace grace.tabs
             ChangeColumnNames();
             Utils.RemoveColumnByName(checkInDataGrid, "GraceId");
 
+            // Disable sorting on all columns to prevent data integrity issues
+            // when processing check-ins (see ApplyChangesButton_Click)
+            foreach (DataGridViewColumn column in checkInDataGrid.Columns)
+            {
+                column.SortMode = DataGridViewColumnSortMode.NotSortable;
+            }
+
         }
 
 
@@ -252,8 +259,8 @@ namespace grace.tabs
                     changed = true;
                     // Get the updated value
                     int updatedValue = Convert.ToInt32(value);
-                    // TODO: need to test if sorting or filtering breaks this.
-                    // for now don't allow sorting or filtering
+                    // Note: Sorting is disabled in LoadDataGrid() to prevent data integrity issues.
+                    // Filtering by SKU is supported and works correctly.
                     string sku = row.Cells["Sku"].Value.ToString();
                     int graceId = DataBase.GetGraceIdFromSku(sku);
                     if (graceId == 0)
