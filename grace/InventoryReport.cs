@@ -112,6 +112,17 @@ namespace grace
 
 
 
+                // Find the LastUpdated column index once before the loop for efficiency
+                int lastUpdatedColumnIndex = -1;
+                for (int i = 0; i < dataTable.Columns.Count; i++)
+                {
+                    if (dataTable.Columns[i].ColumnName == "LastUpdated")
+                    {
+                        lastUpdatedColumnIndex = i;
+                        break;
+                    }
+                }
+
                 // Add the data rows
                 foreach (DataRow dataRow in dataTable.Rows)
                 {
@@ -128,10 +139,8 @@ namespace grace
                     for (int col = 0; col < dataTable.Columns.Count; col++)
                     {
                         var item = dataRow[col];
-                        if (col == 12)
+                        if (col == lastUpdatedColumnIndex && item is DateTime dateTime)
                         {
-                            DateTime dateTime = (DateTime)item;
-
                             string formattedDate = dateTime.ToString("dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture);
                             worksheet.Cells[currentRow + 1, col + 1].Value = formattedDate;
                         }
