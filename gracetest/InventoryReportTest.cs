@@ -202,5 +202,232 @@ namespace gracetest
             Assert.IsTrue(string.IsNullOrEmpty(worksheet.Cells[3, 5].Text), "Data Collection2 for SKU001 should be empty.");
             Assert.IsTrue(string.IsNullOrEmpty(worksheet.Cells[3, 6].Text), "Data Collection3 for SKU001 should be empty.");
         }
+
+        [TestMethod]
+        public void WriteReport_FormatsLastUpdatedColumnCorrectly()
+        {
+            // Arrange
+            string programDirectory = Directory.GetCurrentDirectory();
+            string fullReportPath = Path.Combine(programDirectory, "test_lastupdated_format.xlsx");
+
+            InventoryReport inventoryReport = new(null);
+
+            // Act
+            inventoryReport.WriteReport(fullReportPath);
+
+            // Assert
+            Assert.IsTrue(File.Exists(fullReportPath), "Excel report file should be created.");
+
+            using var package = new ExcelPackage(new FileInfo(fullReportPath));
+            var worksheet = package.Workbook.Worksheets[0];
+
+            // Find the LastUpdated column index in the header row
+            int lastUpdatedColumnIndex = -1;
+            for (int col = 1; col <= worksheet.Dimension.Columns; col++)
+            {
+                if (worksheet.Cells[1, col].Text == "LastUpdated")
+                {
+                    lastUpdatedColumnIndex = col;
+                    break;
+                }
+            }
+
+            Assert.IsTrue(lastUpdatedColumnIndex > 0, "LastUpdated column should exist in the report.");
+
+            // Verify that the LastUpdated column contains formatted date strings (not DateTime objects)
+            // Row 2 is the first data row
+            string lastUpdatedValue = worksheet.Cells[2, lastUpdatedColumnIndex].Text;
+            Assert.IsFalse(string.IsNullOrEmpty(lastUpdatedValue), "LastUpdated value should not be empty.");
+
+            // Verify the date format: dd/MM/yyyy HH:mm
+            // Expected format: "06/01/2026 12:30" (day/month/year hour:minute)
+            Assert.IsTrue(lastUpdatedValue.Contains("/"), "LastUpdated should be formatted as a date string with '/'.");
+            Assert.IsTrue(lastUpdatedValue.Contains(":"), "LastUpdated should include time with ':'.");
+
+            // Verify the date can be parsed back (validation of format)
+            bool isParsable = DateTime.TryParseExact(
+                lastUpdatedValue,
+                "dd/MM/yyyy HH:mm",
+                System.Globalization.CultureInfo.InvariantCulture,
+                System.Globalization.DateTimeStyles.None,
+                out DateTime parsedDate);
+
+            Assert.IsTrue(isParsable, $"LastUpdated value '{lastUpdatedValue}' should be in 'dd/MM/yyyy HH:mm' format.");
+
+            // Cleanup
+            File.Delete(fullReportPath);
+        }
+
+        [TestMethod]
+        public void WriteReport_HandlesMultipleRowsWithDifferentDates()
+        {
+            // Arrange
+            string programDirectory = Directory.GetCurrentDirectory();
+            string fullReportPath = Path.Combine(programDirectory, "test_multiple_dates.xlsx");
+
+            InventoryReport inventoryReport = new(null);
+
+            // Act
+            inventoryReport.WriteReport(fullReportPath);
+
+            // Assert
+            Assert.IsTrue(File.Exists(fullReportPath), "Excel report file should be created.");
+
+            using var package = new ExcelPackage(new FileInfo(fullReportPath));
+            var worksheet = package.Workbook.Worksheets[0];
+
+            // Find the LastUpdated column index
+            int lastUpdatedColumnIndex = -1;
+            for (int col = 1; col <= worksheet.Dimension.Columns; col++)
+            {
+                if (worksheet.Cells[1, col].Text == "LastUpdated")
+                {
+                    lastUpdatedColumnIndex = col;
+                    break;
+                }
+            }
+
+            Assert.IsTrue(lastUpdatedColumnIndex > 0, "LastUpdated column should exist.");
+
+            // Verify that all data rows have formatted LastUpdated values
+            // We created 5 test items, so check rows 2-6
+            for (int row = 2; row <= 6; row++)
+            {
+                string lastUpdatedValue = worksheet.Cells[row, lastUpdatedColumnIndex].Text;
+                Assert.IsFalse(string.IsNullOrEmpty(lastUpdatedValue),
+                    $"Row {row} should have a LastUpdated value.");
+
+                bool isParsable = DateTime.TryParseExact(
+                    lastUpdatedValue,
+                    "dd/MM/yyyy HH:mm",
+                    System.Globalization.CultureInfo.InvariantCulture,
+                    System.Globalization.DateTimeStyles.None,
+                    out DateTime parsedDate);
+
+                Assert.IsTrue(isParsable,
+                    $"Row {row} LastUpdated value '{lastUpdatedValue}' should be in 'dd/MM/yyyy HH:mm' format.");
+            }
+
+            // Cleanup
+            File.Delete(fullReportPath);
+        }
+
+        [TestMethod]
+        public void WriteReport_DoesNotThrowExceptionWhenLastUpdatedColumnExists()
+        {
+            // Arrange
+            string programDirectory = Directory.GetCurrentDirectory();
+            string fullReportPath = Path.Combine(programDirectory, "test_no_exception.xlsx");
+
+            InventoryReport inventoryReport = new(null);
+
+            // Act & Assert - Should not throw any exceptions
+            Exception thrownException = null;
+            try
+            {
+                inventoryReport.WriteReport(fullReportPath);
+            }
+            catch (Exception ex)
+            {
+                thrownException = ex;
+            }
+
+            Assert.IsNull(thrownException,
+                $"WriteReport should not throw an exception when processing LastUpdated column. Exception: {thrownException?.Message}");
+
+            Assert.IsTrue(File.Exists(fullReportPath), "Report file should be created successfully.");
+
+            // Cleanup
+            File.Delete(fullReportPath);
+        }
+
+        [TestMethod]
+        public void WriteReport_HeadersAreCorrectlyMapped()
+        {
+            // Arrange
+            string programDirectory = Directory.GetCurrentDirectory();
+            string fullReportPath = Path.Combine(programDirectory, "test_headers.xlsx");
+
+            InventoryReport inventoryReport = new(null);
+
+            // Act
+            inventoryReport.WriteReport(fullReportPath);
+
+            // Assert
+            Assert.IsTrue(File.Exists(fullReportPath), "Excel report file should be created.");
+
+            using var package = new ExcelPackage(new FileInfo(fullReportPath));
+            var worksheet = package.Workbook.Worksheets[0];
+
+            // Verify all expected header mappings from InventoryReport.WriteHeader
+            var expectedHeaders = new Dictionary<int, string>
+            {
+                { 1, "Item #" },          // Sku -> Item #
+                { 2, "Description" },
+                { 3, "Brand" },
+                { 4, "Reorder Status" },  // Availability -> Reorder Status
+                { 5, "BarCode" },
+                { 6, "Collection 1" },    // Col1 -> Collection 1
+                { 7, "Collection 2" },    // Col2 -> Collection 2
+                { 8, "Collection 3" },    // Col3 -> Collection 3
+                { 9, "Collection 4" },    // Col4 -> Collection 4
+                { 10, "Collection 5" },   // Col5 -> Collection 5
+                { 11, "Collection 6" },   // Col6 -> Collection 6
+                { 12, "Current Inventory" }, // Total -> Current Inventory
+                { 13, "PrevTotal" },
+                { 14, "LastUpdated" },
+                { 15, "Note" }
+            };
+
+            foreach (var header in expectedHeaders)
+            {
+                Assert.AreEqual(header.Value, worksheet.Cells[1, header.Key].Text,
+                    $"Header at column {header.Key} should be '{header.Value}'.");
+            }
+
+            // Cleanup
+            File.Delete(fullReportPath);
+        }
+
+        [TestMethod]
+        public void WriteReport_ColumnWidthAndFormattingApplied()
+        {
+            // Arrange
+            string programDirectory = Directory.GetCurrentDirectory();
+            string fullReportPath = Path.Combine(programDirectory, "test_formatting.xlsx");
+
+            InventoryReport inventoryReport = new(null);
+
+            // Act
+            inventoryReport.WriteReport(fullReportPath);
+
+            // Assert
+            Assert.IsTrue(File.Exists(fullReportPath), "Excel report file should be created.");
+
+            using var package = new ExcelPackage(new FileInfo(fullReportPath));
+            var worksheet = package.Workbook.Worksheets[0];
+
+            // Verify column widths are set (should be 20 as per WriteReport logic)
+            for (int col = 1; col <= worksheet.Dimension.Columns; col++)
+            {
+                double columnWidth = worksheet.Column(col).Width;
+                Assert.IsTrue(columnWidth > 0, $"Column {col} should have a width set.");
+            }
+
+            // Verify font size for headers (should be 16)
+            Assert.AreEqual(16, worksheet.Cells[1, 1].Style.Font.Size,
+                "Header font size should be 16.");
+
+            // Verify headers are bold
+            Assert.IsTrue(worksheet.Cells[1, 1].Style.Font.Bold,
+                "Header should be bold.");
+
+            // Verify column 5 (BarCode) has text format
+            Assert.AreEqual("@", worksheet.Column(5).Style.Numberformat.Format,
+                "Column 5 should have text format.");
+
+            // Cleanup
+            File.Delete(fullReportPath);
+        }
     }
 }
