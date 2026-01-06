@@ -74,12 +74,9 @@ namespace grace
             optionsBuilder.UseSqlite(connectionString);
             using (var context = new GraceDbContext(optionsBuilder.Options))
             {
-                var created = context.Database.EnsureCreated();
-                if (!created)
-                {
-                    logger.Error("create database failed");
-                    throw new InvalidOperationException("Create database failed");
-                }
+                // EnsureCreated returns true if database was created, false if it already existed
+                // Both cases are acceptable - we just need the database to exist
+                context.Database.EnsureCreated();
             }
             using (var context = new GraceDbContext(optionsBuilder.Options))
             {
