@@ -104,68 +104,98 @@ namespace grace.data
 
         private static void CreateColumn(string columnName, string tableName)
         {
-            bool found = false;
             var connectionString = DataBase.ConnectionString;
 
             using var con = new SqliteConnection(connectionString);
-            using (var cmd = new SqliteCommand("PRAGMA table_info(" + tableName + ");"))
-            {
-                cmd.Connection = con;
-                cmd.Connection.Open();
+            con.Open();
 
+            // First check if table exists
+            bool tableExists = false;
+            using (var cmd = new SqliteCommand($"SELECT name FROM sqlite_master WHERE type='table' AND name='{tableName}';", con))
+            {
+                using var reader = cmd.ExecuteReader();
+                if (reader.Read())
+                {
+                    tableExists = true;
+                }
+            }
+
+            if (!tableExists)
+            {
+                // Table doesn't exist, skip column addition
+                return;
+            }
+
+            // Check if column exists
+            bool columnFound = false;
+            using (var cmd = new SqliteCommand("PRAGMA table_info(" + tableName + ");", con))
+            {
                 using var reader = cmd.ExecuteReader();
                 while (reader.Read())
                 {
                     string name = reader["name"].ToString();
                     if (name == columnName)
                     {
-                        found = true;
+                        columnFound = true;
                         break;
                     }
                 }
             }
-            if (!found)
+
+            if (!columnFound)
             {
-                var sql = $"alter table {tableName} ADD COLUMN {columnName} INT DEFAULT 0;";
-                using var cmd = new SqliteCommand(sql);
-                cmd.Connection = con;
-                //cmd.Connection.Open();
+                var sql = $"ALTER TABLE {tableName} ADD COLUMN {columnName} INTEGER DEFAULT 0;";
+                using var cmd = new SqliteCommand(sql, con);
                 cmd.ExecuteNonQuery();
             }
-            con.Close();
         }
 
         private static void CreateColumnString(string columnName, string tableName)
         {
-            bool found = false;
-            string connectionString = DataBase.ConnectionString;
+            var connectionString = DataBase.ConnectionString;
 
-            using SqliteConnection con = new(connectionString);
-            using (SqliteCommand cmd = new("PRAGMA table_info(" + tableName + ");"))
+            using var con = new SqliteConnection(connectionString);
+            con.Open();
+
+            // First check if table exists
+            bool tableExists = false;
+            using (var cmd = new SqliteCommand($"SELECT name FROM sqlite_master WHERE type='table' AND name='{tableName}';", con))
             {
-                cmd.Connection = con;
-                cmd.Connection.Open();
+                using var reader = cmd.ExecuteReader();
+                if (reader.Read())
+                {
+                    tableExists = true;
+                }
+            }
 
-                using SqliteDataReader reader = cmd.ExecuteReader();
+            if (!tableExists)
+            {
+                // Table doesn't exist, skip column addition
+                return;
+            }
+
+            // Check if column exists
+            bool columnFound = false;
+            using (var cmd = new SqliteCommand("PRAGMA table_info(" + tableName + ");", con))
+            {
+                using var reader = cmd.ExecuteReader();
                 while (reader.Read())
                 {
                     string name = reader["name"].ToString();
                     if (name == columnName)
                     {
-                        found = true;
+                        columnFound = true;
                         break;
                     }
                 }
             }
-            if (!found)
+
+            if (!columnFound)
             {
-                string sql = $"alter table {tableName} ADD COLUMN {columnName} TEXT DEFAULT ''";
-                using SqliteCommand cmd = new(sql);
-                cmd.Connection = con;
-                //cmd.Connection.Open();
+                var sql = $"ALTER TABLE {tableName} ADD COLUMN {columnName} TEXT DEFAULT ''";
+                using var cmd = new SqliteCommand(sql, con);
                 cmd.ExecuteNonQuery();
             }
-            con.Close();
         }
 
         /// <summary>

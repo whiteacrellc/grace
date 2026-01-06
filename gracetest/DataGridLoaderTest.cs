@@ -17,7 +17,7 @@ namespace gracetest
     [TestClass]
     public class DataGridLoaderTests
     {
-        private string testDbFile = "testgrid.db";
+        private string testDbFile = "datagridtest.db";
         private string connectionString = string.Empty;
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         private DataBase dataBase;
@@ -31,16 +31,6 @@ namespace gracetest
             // Create a mock SQLite connection and command
             dataBase = new DataBase(testDbFile);
 
-            string filename = "C:\\Users\\tom\\source\\repos\\grace\\gracetest\\"
-                + "test_file.xlsx";
-            try
-            {
-                DataBase.LoadFromExcel(filename);
-            }
-            catch (Exception ex)
-            {
-                Assert.Fail(ex.Message);
-            }
         }
 
         [TestCleanup]
