@@ -163,6 +163,10 @@ AutoTest.Net/
 # Web workbench (sass)
 .sass-cache/
 
+# Claude
+.claude/
+
+
 # Installshield output folder
 [Ee]xpress/
 
@@ -366,3 +370,4 @@ FodyWeavers.xsd
 *.db-shm
 *.db-wal
 
+/.claude/settings.local.json
