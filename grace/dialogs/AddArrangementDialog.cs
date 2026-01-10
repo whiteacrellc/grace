@@ -70,7 +70,7 @@ namespace grace.dialogs
             progressBar.Step = 1;
         }
 
-        private void InsertRow(string name, string collectionName)
+        void InsertRow(string name, string collectionName)
         {
             using GraceDbContext context = new();
 

@@ -207,7 +207,7 @@ namespace grace
         }
 #pragma warning disable CS8602
 #pragma warning disable CA1305
-        private bool UpdateRow()
+        bool UpdateRow()
         {
             bool ret = false;
             if (CheckFields(isReport))
@@ -440,7 +440,7 @@ namespace grace
             return ret;
         }
 
-        private bool AddRow()
+        bool AddRow()
         {
             bool ret = false;
             if (CheckFields())
