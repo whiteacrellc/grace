@@ -12,6 +12,7 @@
  */
 using grace.data;
 using grace.data.models;
+using Microsoft.Office.Interop.Excel;
 using NLog;
 using System.Data;
 
@@ -230,6 +231,7 @@ namespace grace
                         if (DataBase.AddCollectionRow(grace.ID, cname)) { 
                             updateGraceRow = true;
                             Globals.GetInstance().CollectionDirty = true;
+                            DataBase.UpdateArrangementWithNewCollection(cname);
                         }
                     }
                 }
@@ -569,6 +571,7 @@ namespace grace
                 string cName = addCollectionTextBox.Text.Trim();
                 DataBase.AddCollectionRow(graceId, cName);
                 Globals.GetInstance().CollectionDirty = true;
+                DataBase.UpdateArrangementWithNewCollection(cName);
             }
 
             // Now add the grace row. 
@@ -584,7 +587,7 @@ namespace grace
 
             if (e.KeyCode is Keys.Enter or Keys.Return)
             {
-                TextBox box = (TextBox)sender;
+                System.Windows.Forms.TextBox box = (System.Windows.Forms.TextBox)sender;
                 string str = box.Text.Trim();
                 if (string.IsNullOrEmpty(str))
                 {

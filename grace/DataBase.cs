@@ -1023,11 +1023,10 @@ namespace grace
 
             context.Collections.Add(newRow);
             context.SaveChanges();
-            UpdateArrangementWithNewCollection(name);
             return true;
         }
 
-        private static void UpdateArrangementWithNewCollection(string collectionName)
+        public static void UpdateArrangementWithNewCollection(string collectionName)
         {
             string currentUser = Globals.GetInstance().CurrentUser;
             using GraceDbContext context = new();
