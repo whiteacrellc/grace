@@ -262,9 +262,15 @@ namespace grace
                     }
                     updateGraceRow = true;
                 }
-                if (grace.Brand != (string)brandComboBox.SelectedItem)
+                bool brandAdded = false;
+                if (grace.Brand != (string)brandComboBox.SelectedItem || addBrandTextBox.Text != String.Empty)
                 {
                     string? brand = (string)brandComboBox.SelectedItem;
+                    if (addBrandTextBox.Text != string.Empty)
+                    {
+                        brandAdded = true;
+                        brand = addBrandTextBox.Text.Trim();
+                    }
                     if (!string.IsNullOrEmpty(brand))
                     {
                         brand = brand.Trim();
@@ -343,6 +349,10 @@ namespace grace
                 if (updateGraceRow)
                 {
                     context.SaveChanges();
+                }
+                if (brandAdded)
+                {
+                    brandComboBox.Items.Add(grace.Brand);
                 }
             }
 
@@ -453,8 +463,13 @@ namespace grace
             Grace grace = new();
 
             int graceId = 0;
+            bool updateBrandDropdown = false;
             // Update Graces DB
             string? brand = (string)brandComboBox.SelectedItem;
+            if (addBrandTextBox.Text != string.Empty) {
+                brand = addBrandTextBox.Text.Trim();
+                updateBrandDropdown = true;
+            }
             if (!string.IsNullOrEmpty(brand))
             {
                 brand = brand.Trim();
@@ -576,6 +591,11 @@ namespace grace
 
             // Now add the grace row. 
             DataBase.CreateGraceRow(graceId);
+
+            if (updateBrandDropdown)
+            {
+                brandComboBox.Items.Add(brand);
+            }
 
             return ret;
         }
