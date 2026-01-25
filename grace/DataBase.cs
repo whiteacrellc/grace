@@ -109,8 +109,8 @@ namespace grace
 
             using var dbContext = new GraceDbContext();
 
-            // Load all graces and totals in single queries, then join in memory
-            var graces = dbContext.Graces.AsNoTracking().ToList();
+            // Load all non-deleted graces and totals in single queries, then join in memory
+            var graces = dbContext.Graces.AsNoTracking().Where(g => !g.Deleted).ToList();
 
             // Get latest total for each GraceId by loading all totals once
             var latestTotals = dbContext.Totals
@@ -148,8 +148,8 @@ namespace grace
         {
             using var dbContext = new GraceDbContext();
 
-            // Load all graces and get latest totals in memory
-            var graces = dbContext.Graces.AsNoTracking().ToList();
+            // Load all non-deleted graces and get latest totals in memory
+            var graces = dbContext.Graces.AsNoTracking().Where(g => !g.Deleted).ToList();
 
             var latestTotals = dbContext.Totals
                 .AsNoTracking()
