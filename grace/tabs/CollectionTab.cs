@@ -46,10 +46,14 @@ namespace grace.tabs
                 .Distinct()
                 .OrderBy(name => name)];
 
+            // Clear existing items before adding to prevent duplicates
+            colReportComboBox.Items.Clear();
             foreach (string d in distinctCollectionNames)
             {
                 colReportComboBox.Items.Add(d);
             }
+            // Create a new Report to get fresh data (avoids duplicate rows)
+            this.report = new Report();
             this.dataTable = report.CreateCollectionTable();
             colReportComboBox.SelectedIndex = -1;
         }
@@ -68,6 +72,11 @@ namespace grace.tabs
             {
                 BuildCollectionInfo();
                 Globals.GetInstance().CollectionDirty = false;
+            }
+            else if (Globals.GetInstance().GraceDataDirty)
+            {
+                RefreshDataFromDatabase();
+                Globals.GetInstance().GraceDataDirty = false;
             }
             colReportComboBox.SelectedIndex = -1;
             RefreshData();
@@ -144,6 +153,13 @@ namespace grace.tabs
         internal void RefreshData()
         {
             collGridView.DataSource = dataTable;
+        }
+
+        private void RefreshDataFromDatabase()
+        {
+            // Create a new Report to get fresh data from the database
+            this.report = new Report();
+            this.dataTable = report.CreateCollectionTable();
         }
         internal void UpdateDataGridView()
         {
