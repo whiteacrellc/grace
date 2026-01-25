@@ -216,7 +216,7 @@ namespace grace
                 return true;
             }
             int graceId = 0;
-            // Update Graces DB
+            bool updateGrace = false;
             using (GraceDbContext context = new())
             {
                 Grace? grace =
@@ -229,7 +229,7 @@ namespace grace
                     {
                         string cname = addCollectionTextBox.Text.Trim();
                         if (DataBase.AddCollectionRow(grace.ID, cname)) { 
-                            updateGraceRow = true;
+                            updateGrace = true;
                             Globals.GetInstance().CollectionDirty = true;
                             DataBase.UpdateArrangementWithNewCollection(cname);
                         }
@@ -260,7 +260,7 @@ namespace grace
                             MessageBoxOptions.DefaultDesktopOnly);
                         return true;
                     }
-                    updateGraceRow = true;
+                    updateGrace = true;
                 }
                 bool brandAdded = false;
                 if (grace.Brand != (string)brandComboBox.SelectedItem || addBrandTextBox.Text != String.Empty)
@@ -270,12 +270,13 @@ namespace grace
                     {
                         brandAdded = true;
                         brand = addBrandTextBox.Text.Trim();
+                        Globals.GetInstance().CollectionDirty = true;
                     }
                     if (!string.IsNullOrEmpty(brand))
                     {
                         brand = brand.Trim();
                         grace.Brand = brand;
-                        updateGraceRow = true;
+                        updateGrace = true;
                     }
                     else
                     {
@@ -294,7 +295,7 @@ namespace grace
                     {
                         desc = desc.Trim();
                         grace.Description = desc;
-                        updateGraceRow = true;
+                        updateGrace = true;
                     }
                 }
                 if (grace.Availability != availabilityTextBox.Text)
@@ -305,7 +306,7 @@ namespace grace
                         availability = availability.Trim();
                     }
                     grace.Availability = availability;
-                    updateGraceRow = true;
+                    updateGrace = true;
                 }
                 if (!isReport)
                 {
@@ -330,7 +331,7 @@ namespace grace
                             return true;
                         }
                         grace.BarCode = barcode;
-                        updateGraceRow = true;
+                        updateGrace = true;
                     }
                 }
                 if (grace.Note != noteTextBox.Text)
@@ -344,11 +345,12 @@ namespace grace
                     {
                         grace.Note = noteTextBox.Text.Trim();
                     }
-                    updateGraceRow = true;
+                    updateGrace = true;
                 }
-                if (updateGraceRow)
+                if (updateGrace)
                 {
-                    context.SaveChanges();
+                    UpdateGraceTable(grace);
+                    updateGraceRow = true;
                 }
                 if (brandAdded)
                 {
@@ -417,6 +419,14 @@ namespace grace
             return ret;
         }
 
+        private void UpdateGraceTable(Grace grace)
+        {
+            using (GraceDbContext context = new())
+            {
+                context.Graces.Update(grace);
+                context.SaveChanges();
+            }
+        }
 
         private bool CheckFields(bool skipCollectionCheck = false)
         {
@@ -469,6 +479,7 @@ namespace grace
             if (addBrandTextBox.Text != string.Empty) {
                 brand = addBrandTextBox.Text.Trim();
                 updateBrandDropdown = true;
+                Globals.GetInstance().CollectionDirty = true;
             }
             if (!string.IsNullOrEmpty(brand))
             {
@@ -595,6 +606,7 @@ namespace grace
             if (updateBrandDropdown)
             {
                 brandComboBox.Items.Add(brand);
+                DataGridLoader.MakeGraceRowTableFresh();
             }
 
             return ret;
@@ -629,6 +641,8 @@ namespace grace
                 Grace? grace = context.Graces.FirstOrDefault(item => item.Sku == graceRow.Sku);
                 context.Graces.Remove(grace);
                 context.SaveChanges();
+                Globals.GetInstance().CollectionDirty = true;
+                DataGridLoader.MakeGraceRowTableFresh();
             }
             DialogResult = DialogResult.OK;
             Close();

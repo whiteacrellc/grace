@@ -89,6 +89,11 @@ namespace grace
             return view;
         }
 
+        public static void MakeGraceRowTableFresh()
+        {
+            LoadBindingTable(true);
+        }
+
         internal static void LoadBindingTable(bool refresh = false)
         {
             using GraceDbContext context = new();
