@@ -414,6 +414,7 @@ namespace grace
             if (!ret && updateGraceRow)
             {
                 DataBase.UpdateGraceRow(graceId);
+                Globals.GetInstance().GraceDataDirty = true;
             }
 
             return ret;
@@ -600,7 +601,7 @@ namespace grace
                 DataBase.UpdateArrangementWithNewCollection(cName);
             }
 
-            // Now add the grace row. 
+            // Now add the grace row.
             DataBase.CreateGraceRow(graceId);
 
             if (updateBrandDropdown)
@@ -608,6 +609,8 @@ namespace grace
                 brandComboBox.Items.Add(brand);
                 DataGridLoader.MakeGraceRowTableFresh();
             }
+
+            Globals.GetInstance().GraceDataDirty = true;
 
             return ret;
         }

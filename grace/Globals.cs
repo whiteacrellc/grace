@@ -21,10 +21,12 @@ namespace grace
 
         public string CurrentUser { get; set; }
         public bool CollectionDirty { get; set; }
+        public bool GraceDataDirty { get; set; }
 
         private Globals()
         {
             CollectionDirty = false;
+            GraceDataDirty = false;
         }
         public static Globals GetInstance()
         {
