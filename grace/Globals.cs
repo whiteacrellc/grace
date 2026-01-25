@@ -22,11 +22,27 @@ namespace grace
         public string CurrentUser { get; set; }
         public bool CollectionDirty { get; set; }
         public bool GraceDataDirty { get; set; }
+        public bool CheckOutDataDirty { get; set; }
+        public bool CheckInDataDirty { get; set; }
 
         private Globals()
         {
             CollectionDirty = false;
             GraceDataDirty = false;
+            CheckOutDataDirty = false;
+            CheckInDataDirty = false;
+        }
+
+        /// <summary>
+        /// Marks all data caches as dirty, forcing reload on next tab entry.
+        /// Call this after major data changes like Excel import.
+        /// </summary>
+        public void MarkAllDataDirty()
+        {
+            CollectionDirty = true;
+            GraceDataDirty = true;
+            CheckOutDataDirty = true;
+            CheckInDataDirty = true;
         }
         public static Globals GetInstance()
         {

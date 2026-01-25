@@ -23,6 +23,14 @@ namespace grace
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
+        /// <summary>
+        /// Async version of GetData for non-blocking UI updates.
+        /// </summary>
+        public static async Task<DataTable> GetDataAsync()
+        {
+            return await Task.Run(() => GetData());
+        }
+
         public static DataTable GetData()
         {
             System.Data.DataTable table = new();
