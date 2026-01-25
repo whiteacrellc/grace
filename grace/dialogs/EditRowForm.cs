@@ -361,6 +361,7 @@ namespace grace
                 {
                     UpdateGraceTable(graceEntity);
                     Globals.GetInstance().GraceDataDirty = true;
+                    Globals.GetInstance().CheckOutDataDirty = true;
                 }
                 if (brandAdded)
                 {
@@ -400,6 +401,7 @@ namespace grace
                     }
                     DataBase.AddTotal(newTotal, grace.ID);
                     Globals.GetInstance().GraceDataDirty = true;
+                    Globals.GetInstance().CheckOutDataDirty = true;
                 }
             }
             catch (Exception ex)
@@ -598,6 +600,7 @@ namespace grace
             }
 
             Globals.GetInstance().GraceDataDirty = true;
+            Globals.GetInstance().CheckOutDataDirty = true;
 
             return ret;
         }
@@ -631,8 +634,11 @@ namespace grace
                 Grace? graceEntity = context.Graces.FirstOrDefault(item => item.Sku == grace.Sku);
                 context.Graces.Remove(graceEntity);
                 context.SaveChanges();
+                // Mark all related tabs as dirty so they refresh
                 Globals.GetInstance().CollectionDirty = true;
                 Globals.GetInstance().GraceDataDirty = true;
+                Globals.GetInstance().CheckOutDataDirty = true;
+                Globals.GetInstance().CheckInDataDirty = true;
             }
             DialogResult = DialogResult.OK;
             Close();

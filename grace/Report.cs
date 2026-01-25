@@ -29,6 +29,10 @@ namespace grace
         private int currentPage;
         private DataTable dataTable;
 
+        // Cached data for bulk operations - avoids N+1 queries
+        private Dictionary<int, Total>? cachedTotals;
+        private Dictionary<int, List<CollectionName>>? cachedCollections;
+
         public Report()
         {
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
@@ -45,6 +49,28 @@ namespace grace
             dataTable.Columns.Add("Total", typeof(int));
             dataTable.Columns.Add("Note", typeof(string));
 
+        }
+
+        /// <summary>
+        /// Preloads all totals and collections for bulk operations.
+        /// Call this once before processing multiple Grace items.
+        /// </summary>
+        private void EnsureDataCached()
+        {
+            cachedTotals ??= DataBase.GetAllLatestTotals();
+            cachedCollections ??= DataBase.GetAllCollections();
+        }
+
+        private Total? GetCachedTotal(int graceId)
+        {
+            EnsureDataCached();
+            return cachedTotals!.TryGetValue(graceId, out var total) ? total : null;
+        }
+
+        private List<CollectionName> GetCachedCollections(int graceId)
+        {
+            EnsureDataCached();
+            return cachedCollections!.TryGetValue(graceId, out var collections) ? collections : [];
         }
 
 
@@ -67,7 +93,8 @@ namespace grace
 
         public DataTable CreateCollectionTable()
         {
-
+            // Preload all data once to avoid N+1 queries
+            EnsureDataCached();
 
             // get the collections
             Dictionary<string, List<Grace>> sortedKeys = DataBase.OrderedCollectionNames();
@@ -87,9 +114,11 @@ namespace grace
                         continue;
                     }
 
-                    Total total = DataBase.GetTotal(row.ID);
-                    List<CollectionName> collections = DataBase.GetCollections(row.ID).FindAll(p => p.Name != key);
-                    AddRow(row, total.CurrentTotal, key, collections);
+                    // Use cached data instead of individual queries
+                    var total = GetCachedTotal(row.ID);
+                    int totalValue = total?.CurrentTotal ?? 0;
+                    List<CollectionName> collections = GetCachedCollections(row.ID).FindAll(p => p.Name != key);
+                    AddRow(row, totalValue, key, collections);
                 }
 
             }
@@ -118,10 +147,8 @@ namespace grace
                 worksheet.Cells[currentRow, 3].Value = row.Description;
                 worksheet.Cells[currentRow, 4].Value = collection;
 
-                // Get the collections and fill them in except for the
-                // collection we are sorting on which is in the Col1 col1
-                // column
-                List<CollectionName> collections = DataBase.GetCollections(row.ID);
+                // Use cached collections instead of individual query
+                List<CollectionName> collections = GetCachedCollections(row.ID);
                 int i = 0;
                 foreach (CollectionName c in collections)
                 {
@@ -155,18 +182,20 @@ namespace grace
                 }
 
                 worksheet.Cells[currentRow, 10].Value = row.Availability;
-                Total total = DataBase.GetTotal(row.ID);
-                worksheet.Cells[currentRow, 11].Value = total.CurrentTotal;
+                // Use cached total instead of individual query
+                var total = GetCachedTotal(row.ID);
+                int totalValue = total?.CurrentTotal ?? 0;
+                worksheet.Cells[currentRow, 11].Value = totalValue;
 
                 // Highlight any negative totals by making the background
                 // yellow
-                if (total.CurrentTotal < 0)
+                if (totalValue < 0)
                 {
                     worksheet.Cells[currentRow, 11].Style.Fill.PatternType = ExcelFillStyle.Solid;
                     worksheet.Cells[currentRow, 11].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
                 }
 
-                // Put border around cells 
+                // Put border around cells
                 for (int columnIndex = 1; columnIndex < 12; columnIndex++)
                 {
                     worksheet.Cells[currentRow, columnIndex].Style.Border.BorderAround(ExcelBorderStyle.Thin);
@@ -241,6 +270,8 @@ namespace grace
         {
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
+            // Preload all data once to avoid N+1 queries
+            EnsureDataCached();
 
             // Sort the keys alphabetically
             Dictionary<string, List<Grace>> sortedKeys = DataBase.OrderedCollectionNames();

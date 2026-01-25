@@ -61,6 +61,12 @@ namespace grace.tabs
             LoadDataGrid();
         }
 
+        public async Task InitializeDataGridViewAsync()
+        {
+            checkOutDataGrid.DataSource = checkoutBindingSource;
+            await LoadDataGridAsync();
+        }
+
         private void SetDataGridViewStyle()
         {
             // Set the default cell style
@@ -76,10 +82,14 @@ namespace grace.tabs
             //checkOutDataGrid.RowTemplate.Height = 18;
         }
 
-        private void CheckOutTabPage_Enter(object? sender, EventArgs e)
+        private async void CheckOutTabPage_Enter(object? sender, EventArgs e)
         {
-            // Initialize the data grid when the user enters the page
-            InitializeDataGridView();
+            // Only reload if data has changed or this is the first load
+            if (Globals.GetInstance().CheckOutDataDirty || dataTable == null || dataTable.Rows.Count == 0)
+            {
+                await InitializeDataGridViewAsync();
+                Globals.GetInstance().CheckOutDataDirty = false;
+            }
         }
 
         private void CheckOutDataGrid_CellMouseDoubleClick(object? sender,
@@ -130,6 +140,21 @@ namespace grace.tabs
             dataTable = DataBase.GetPulledGrid();
             checkoutBindingSource.DataSource = dataTable;
             ChangeColumnNames();
+        }
+
+        internal async Task LoadDataGridAsync()
+        {
+            Cursor.Current = Cursors.WaitCursor;
+            try
+            {
+                dataTable = await DataBase.GetPulledGridAsync();
+                checkoutBindingSource.DataSource = dataTable;
+                ChangeColumnNames();
+            }
+            finally
+            {
+                Cursor.Current = Cursors.Default;
+            }
         }
 
         internal void CoResetButton_Click(object? sender, EventArgs e)

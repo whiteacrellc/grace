@@ -114,6 +114,12 @@ namespace grace.tabs
         }
         internal void BindDataSource(bool refresh = false)
         {
+            // Use async version for better UI responsiveness
+            _ = BindDataSourceAsync(refresh);
+        }
+
+        internal async Task BindDataSourceAsync(bool refresh = false)
+        {
             var startTime = DateTime.Now;
 
             // Show the "working" cursor
@@ -128,7 +134,7 @@ namespace grace.tabs
 
             try
             {
-                RefreshData(refresh);
+                await RefreshDataAsync(refresh);
                 UpdateDataGridView();
             }
             finally
@@ -141,10 +147,16 @@ namespace grace.tabs
             var duration = endTime - startTime;
             logger.Info($"Data binding completed in {duration.TotalSeconds} seconds.");
         }
-        private void DataTabPage_Enter(object? sender, EventArgs e)
+
+        private async void DataTabPage_Enter(object? sender, EventArgs e)
         {
             filterSkuTextBox.Clear();
-            BindDataSource(true);
+            // Only reload if data has changed or this is the first load
+            if (Globals.GetInstance().GraceDataDirty || dataTable.Rows.Count == 0)
+            {
+                await BindDataSourceAsync(true);
+                Globals.GetInstance().GraceDataDirty = false;
+            }
         }
 
         internal void RefreshData(bool refresh = false)
@@ -159,6 +171,29 @@ namespace grace.tabs
             try
             {
                 dataTable = DataGridLoader.GetData();
+                dataGridView.DataSource = dataTable;
+            }
+            finally
+            {
+                // Restore auto-size settings
+                dataGridView.AutoSizeColumnsMode = originalAutoSizeColumnsMode;
+                dataGridView.AutoSizeRowsMode = originalAutoSizeRowsMode;
+            }
+        }
+
+        internal async Task RefreshDataAsync(bool refresh = false)
+        {
+            // Temporarily disable auto-size for better performance
+            var originalAutoSizeColumnsMode = dataGridView.AutoSizeColumnsMode;
+            var originalAutoSizeRowsMode = dataGridView.AutoSizeRowsMode;
+
+            dataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
+            dataGridView.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.None;
+
+            try
+            {
+                // Load data asynchronously to keep UI responsive
+                dataTable = await DataGridLoader.GetDataAsync();
                 dataGridView.DataSource = dataTable;
             }
             finally

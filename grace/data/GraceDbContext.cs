@@ -114,6 +114,11 @@ namespace grace.data
                   .OnDelete(DeleteBehavior.Cascade);
                 entity.Property(e => e.User)
                    .HasDefaultValue("");
+
+                // Performance indexes for common queries
+                entity.HasIndex(e => e.GraceId);
+                entity.HasIndex(e => e.LastUpdated);
+                entity.HasIndex(e => new { e.GraceId, e.LastUpdated });
             });
 
             modelBuilder.Entity<CollectionName>(entity =>
@@ -130,6 +135,10 @@ namespace grace.data
                   .HasForeignKey(e => e.GraceId)
                   .OnDelete(DeleteBehavior.Cascade);
 
+                // Performance indexes for common queries
+                entity.HasIndex(e => e.GraceId);
+                entity.HasIndex(e => e.Name);
+                entity.HasIndex(e => new { e.GraceId, e.Name });
             });
 
             modelBuilder.Entity<Pulled>(entity =>
@@ -159,6 +168,12 @@ namespace grace.data
                 entity.HasOne(e => e.Collection)
                     .WithMany()
                     .HasForeignKey(e => e.CollectionId); // Choose the appropriate delete behavior
+
+                // Performance indexes for common queries
+                entity.HasIndex(e => e.UserId);
+                entity.HasIndex(e => e.GraceId);
+                entity.HasIndex(e => e.IsCompleted);
+                entity.HasIndex(e => new { e.UserId, e.IsCompleted });
             });
 
             modelBuilder.Entity<Inventory>(entity =>
@@ -211,13 +226,19 @@ namespace grace.data
                   .WithMany()
                   .HasForeignKey(e => e.ArrangementId)
                   .OnDelete(DeleteBehavior.Cascade);
+
+                // Performance indexes for common queries
+                entity.HasIndex(e => e.ArrangementId);
+                entity.HasIndex(e => new { e.ArrangementId, e.LastUpdated });
             });
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite(ConnectionString).EnableSensitiveDataLogging();
-
+            optionsBuilder.UseSqlite(ConnectionString);
+#if DEBUG
+            optionsBuilder.EnableSensitiveDataLogging();
+#endif
         }
     }
 

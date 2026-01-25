@@ -109,24 +109,30 @@ namespace grace
 
             using var dbContext = new GraceDbContext();
 
-            var result = (
-                from graces in dbContext.Graces
-                join total in dbContext.Totals on graces.ID equals total.GraceId
-                where total.LastUpdated == dbContext.Totals
-                                              .Where(t => t.GraceId == graces.ID)
-                                              .OrderByDescending(t => t.ID)
-                                              .Max(t => t.LastUpdated)
-                orderby graces.Sku ascending
-                select new CheckOut
+            // Load all non-deleted graces and totals in single queries, then join in memory
+            var graces = dbContext.Graces.AsNoTracking().Where(g => !g.Deleted).ToList();
+
+            // Get latest total for each GraceId by loading all totals once
+            var latestTotals = dbContext.Totals
+                .AsNoTracking()
+                .OrderByDescending(t => t.ID)
+                .ToList()
+                .GroupBy(t => t.GraceId)
+                .ToDictionary(g => g.Key, g => g.First());
+
+            var result = graces
+                .Where(g => latestTotals.ContainsKey(g.ID))
+                .OrderBy(g => g.Sku)
+                .Select(g => new CheckOut
                 {
-                    Sku = graces.Sku,
-                    Description = graces.Description,
-                    Brand = graces.Brand,
-                    BarCode = graces.BarCode,
-                    Total = total.CurrentTotal,
-                    GraceId = graces.ID
-                }
-            ).ToList();
+                    Sku = g.Sku,
+                    Description = g.Description,
+                    Brand = g.Brand,
+                    BarCode = g.BarCode,
+                    Total = latestTotals[g.ID].CurrentTotal,
+                    GraceId = g.ID
+                })
+                .ToList();
 
             foreach (CheckOut? checkOut in result)
             {
@@ -142,23 +148,30 @@ namespace grace
         {
             using var dbContext = new GraceDbContext();
 
-            var result = (
-                from graces in dbContext.Graces
-                join total in dbContext.Totals on graces.ID equals total.GraceId
-                where total == dbContext.Totals
-                                              .Where(t => t.GraceId == graces.ID)
-                                              .OrderByDescending(t => t.ID)
-                orderby graces.Sku ascending
-                select new CheckOut
+            // Load all non-deleted graces and get latest totals in memory
+            var graces = dbContext.Graces.AsNoTracking().Where(g => !g.Deleted).ToList();
+
+            var latestTotals = dbContext.Totals
+                .AsNoTracking()
+                .OrderByDescending(t => t.ID)
+                .ToList()
+                .GroupBy(t => t.GraceId)
+                .ToDictionary(g => g.Key, g => g.First());
+
+            var result = graces
+                .Where(g => latestTotals.ContainsKey(g.ID))
+                .OrderBy(g => g.Sku)
+                .Select(g => new CheckOut
                 {
-                    Sku = graces.Sku,
-                    Description = graces.Description,
-                    Brand = graces.Brand,
-                    BarCode = graces.BarCode,
-                    Total = total.CurrentTotal,
-                    GraceId = graces.ID
-                }
-            ).ToList();
+                    Sku = g.Sku,
+                    Description = g.Description,
+                    Brand = g.Brand,
+                    BarCode = g.BarCode,
+                    Total = latestTotals[g.ID].CurrentTotal,
+                    GraceId = g.ID
+                })
+                .ToList();
+
             return result;
         }
 
@@ -321,21 +334,29 @@ namespace grace
 
             using GraceDbContext dbContext = new();
 
-            List<ArrangementData> result = [.. (
-                from arrangements in dbContext.Arrangement
-                join arrangemtntTotal in dbContext.ArrangementTotals on arrangements.ID equals arrangemtntTotal.ArrangementId
-                where arrangements.CollectionName == collectionName &&
-                      arrangemtntTotal.LastUpdated == dbContext.ArrangementTotals
-                                              .Where(t => t.ArrangementId == arrangements.ID)
-                                              .OrderByDescending(t => t.ID)
-                                              .Max(t => t.LastUpdated)
-                orderby arrangements.Name ascending
-                select new ArrangementData
+            // Load arrangements for this collection
+            var arrangements = dbContext.Arrangement
+                .AsNoTracking()
+                .Where(a => a.CollectionName == collectionName)
+                .ToList();
+
+            // Load all arrangement totals once and get latest for each
+            var latestTotals = dbContext.ArrangementTotals
+                .AsNoTracking()
+                .OrderByDescending(t => t.ID)
+                .ToList()
+                .GroupBy(t => t.ArrangementId)
+                .ToDictionary(g => g.Key, g => g.First());
+
+            var result = arrangements
+                .Where(a => latestTotals.ContainsKey(a.ID))
+                .OrderBy(a => a.Name)
+                .Select(a => new ArrangementData
                 {
-                    Name = arrangements.Name,
-                    Total = arrangemtntTotal.CurrentTotal
-                }
-            )];
+                    Name = a.Name,
+                    Total = latestTotals[a.ID].CurrentTotal
+                })
+                .ToList();
 
             foreach (ArrangementData? at in result)
             {
@@ -373,28 +394,44 @@ namespace grace
 
 
             using GraceDbContext dbContext = new();
-            List<ReportData> result = [.. (
-                from grace in dbContext.Graces
-                join totals in dbContext.Totals on grace.ID equals totals.GraceId
-                let prevTotal = dbContext.Totals
-                    .Where(t => t.GraceId == grace.ID && t.LastUpdated < totals.LastUpdated)
-                    .OrderByDescending(t => t.LastUpdated)
-                    .Select(t => t.CurrentTotal)
-                    .FirstOrDefault()
-                orderby totals.LastUpdated descending, totals.CurrentTotal descending
-                select new ReportData
+
+            // Load all data in single queries
+            var graces = dbContext.Graces.AsNoTracking().ToDictionary(g => g.ID);
+            var allTotals = dbContext.Totals.AsNoTracking().ToList();
+
+            // Group totals by GraceId and order by LastUpdated descending
+            var totalsByGrace = allTotals
+                .GroupBy(t => t.GraceId)
+                .ToDictionary(g => g.Key, g => g.OrderByDescending(t => t.LastUpdated).ToList());
+
+            // Build result with previous totals calculated in memory
+            var result = new List<ReportData>();
+            foreach (var total in allTotals.OrderByDescending(t => t.LastUpdated).ThenByDescending(t => t.CurrentTotal))
+            {
+                if (!graces.TryGetValue(total.GraceId, out var grace))
+                    continue;
+
+                // Find previous total in memory
+                int prevTotal = 0;
+                if (totalsByGrace.TryGetValue(total.GraceId, out var graceTotals))
+                {
+                    var prev = graceTotals.FirstOrDefault(t => t.LastUpdated < total.LastUpdated);
+                    prevTotal = prev?.CurrentTotal ?? 0;
+                }
+
+                result.Add(new ReportData
                 {
                     Sku = grace.Sku,
                     Brand = grace.Brand,
                     Description = grace.Description,
-                    User = totals.User,
-                    Total = totals.CurrentTotal,
+                    User = total.User,
+                    Total = total.CurrentTotal,
                     PrevTotal = prevTotal,
-                    LastUpdated = totals.LastUpdated,
+                    LastUpdated = total.LastUpdated,
                     Note = grace.Note,
                     GraceId = grace.ID
-                }
-            )];
+                });
+            }
 
             foreach (ReportData? report in result)
             {
@@ -446,12 +483,8 @@ namespace grace
 
         public static bool HaveData()
         {
-            int numrows = 0;
-            using (GraceDbContext context = new())
-            {
-                numrows = context.Graces.ToList().Count;
-            }
-            return numrows > 0;
+            using GraceDbContext context = new();
+            return context.Graces.Any();
         }
 
         public static void LoadFromExcel(string filename)
@@ -470,14 +503,19 @@ namespace grace
 
                 int rowCount = worksheet.Dimension.Rows;
                 int colCount = worksheet.Dimension.Columns;
-                int insertId = 0;
+
+                string currentUser = Globals.GetInstance().CurrentUser ?? "System";
+
+                // Use a single context for batched operations
+                using var context = new GraceDbContext();
+
+                // Collect all entities first
+                var gracesToAdd = new List<Grace>();
+                var rowData = new List<(int index, int total, string[] collections)>();
 
                 for (int row = 2; row <= rowCount; row++)
                 {
-                    ExcelRange rowobj = worksheet.Cells[row, 1, row, worksheet.Dimension.Columns];
-
-                    // if the first column is not null we assume we have a
-                    // valid row
+                    // if the first column is not null we assume we have a valid row
                     var firstCol = worksheet.Cells[row, 1].Value;
                     if (firstCol != null)
                     {
@@ -489,32 +527,70 @@ namespace grace
                         string availability = (a == null) ? string.Empty : a as string;
                         int total = Convert.ToInt32(worksheet.Cells[row, 13].Value);
 
+                        var grace = new Grace
+                        {
+                            Sku = sku?.Trim() ?? string.Empty,
+                            Description = description?.Trim() ?? string.Empty,
+                            Brand = brand?.Trim() ?? string.Empty,
+                            Availability = availability?.Trim() ?? string.Empty,
+                            BarCode = barcode?.Trim() ?? string.Empty
+                        };
+                        gracesToAdd.Add(grace);
 
+                        // Collect collection names for this row
+                        string[] collections = [
+                            (string)worksheet.Cells[row, 5].Value,
+                            (string)worksheet.Cells[row, 6].Value,
+                            (string)worksheet.Cells[row, 7].Value,
+                            (string)worksheet.Cells[row, 8].Value,
+                            (string)worksheet.Cells[row, 9].Value,
+                            (string)worksheet.Cells[row, 10].Value,
+                            "Other"
+                        ];
 
-                        insertId = InsertRow(sku, description, brand,
-                             availability, barcode);
-                        AddTotal(total, insertId);
-                        var col1 = (string)worksheet.Cells[row, 5].Value;
-                        AddCollection(col1, insertId);
-
-                        var col2 = (string)worksheet.Cells[row, 6].Value;
-                        AddCollection(col2, insertId);
-
-                        var col3 = (string)worksheet.Cells[row, 7].Value;
-                        AddCollection(col3, insertId);
-
-                        var col4 = (string)worksheet.Cells[row, 8].Value;
-                        AddCollection(col4, insertId);
-
-                        var col5 = (string)worksheet.Cells[row, 9].Value;
-                        AddCollection(col5, insertId);
-
-                        var col6 = (string)worksheet.Cells[row, 10].Value;
-                        AddCollection(col6, insertId);
+                        rowData.Add((gracesToAdd.Count - 1, total, collections));
                     }
-                    // we need to add Other into the collection 
-                    AddCollection("Other", insertId);
                 }
+
+                // Batch insert all Grace entities
+                context.Graces.AddRange(gracesToAdd);
+                context.SaveChanges();
+
+                // Now add totals and collections with the generated IDs
+                var totalsToAdd = new List<Total>();
+                var collectionsToAdd = new List<CollectionName>();
+
+                foreach (var (index, total, collections) in rowData)
+                {
+                    int graceId = gracesToAdd[index].ID;
+
+                    // Add total
+                    totalsToAdd.Add(new Total
+                    {
+                        LastUpdated = DateTime.Now,
+                        CurrentTotal = total,
+                        GraceId = graceId,
+                        User = currentUser
+                    });
+
+                    // Add collections
+                    foreach (var col in collections)
+                    {
+                        if (!string.IsNullOrEmpty(col))
+                        {
+                            collectionsToAdd.Add(new CollectionName
+                            {
+                                Name = col.Trim(),
+                                GraceId = graceId
+                            });
+                        }
+                    }
+                }
+
+                // Batch insert all totals and collections
+                context.Totals.AddRange(totalsToAdd);
+                context.Collections.AddRange(collectionsToAdd);
+                context.SaveChanges();
             }
             catch (Exception ex)
             {
@@ -751,33 +827,36 @@ namespace grace
         public static Dictionary<string, List<Grace>> OrderedCollectionNames()
         {
             using GraceDbContext dbContext = new();
-            Dictionary<string, List<Grace>> dict = new();
-            IOrderedQueryable<string> distinctNames = dbContext.Collections
-                 .Where(c => c.Name != "Other")
-                .Select(c => c.Name)
-                .Distinct()
-                .OrderBy(name => name);
 
-            foreach (string collectionName in distinctNames)
-            {
-                List<Grace> graces = [.. dbContext.Graces
-                        .Join(
-                            dbContext.Collections.Where(c => c.Name == collectionName),
-                            graces => graces.ID,
-                            collection => collection.GraceId,
-                            (graces, collection) => new Grace
-                            {
-                                ID = graces.ID,
-                                Sku = graces.Sku,
-                                Description = graces.Description,
-                                Brand = graces.Brand,
-                                Availability = graces.Availability,
-                                BarCode = graces.BarCode,
-                                Note = graces.Note
-                            })];
+            // Load all data in single queries
+            var allGraces = dbContext.Graces.AsNoTracking().ToDictionary(g => g.ID);
+            var allCollections = dbContext.Collections
+                .AsNoTracking()
+                .Where(c => c.Name != "Other")
+                .ToList();
 
-                dict.Add(collectionName, graces);
-            }
+            // Group in memory instead of querying per collection
+            Dictionary<string, List<Grace>> dict = allCollections
+                .GroupBy(c => c.Name)
+                .OrderBy(g => g.Key)
+                .ToDictionary(
+                    g => g.Key,
+                    g => g.Where(c => allGraces.ContainsKey(c.GraceId))
+                          .Select(c => {
+                              var grace = allGraces[c.GraceId];
+                              return new Grace
+                              {
+                                  ID = grace.ID,
+                                  Sku = grace.Sku,
+                                  Description = grace.Description,
+                                  Brand = grace.Brand,
+                                  Availability = grace.Availability,
+                                  BarCode = grace.BarCode,
+                                  Note = grace.Note
+                              };
+                          })
+                          .ToList()
+                );
 
             foreach (KeyValuePair<string, List<Grace>> kvp in dict)
             {
@@ -840,34 +919,37 @@ namespace grace
 
         public static void UpdateArrangementWithNewCollection(string collectionName)
         {
-            string currentUser = Globals.GetInstance().CurrentUser;
+            string currentUser = Globals.GetInstance().CurrentUser ?? "System";
             using GraceDbContext context = new();
             List<string> arrangementNames = [.. context.Arrangement
                     .Select(e => e.Name)
                     .Distinct()
                     .OrderBy(name => name)];
 
+            // First, add all arrangements
+            var arrangementsToAdd = new List<Arrangement>();
             foreach (string arrangementName in arrangementNames)
             {
-                Arrangement arrangement = new()
+                arrangementsToAdd.Add(new Arrangement
                 {
                     Name = arrangementName,
                     CollectionName = collectionName
-                };
-                context.Arrangement.Add(arrangement);
-                context.SaveChanges();
-
-                int insertId = arrangement.ID;
-                ArrangementTotal arrangementTotal = new()
-                {
-                    ArrangementId = insertId,
-                    CurrentTotal = 0,
-                    User = currentUser,
-                };
-                context.ArrangementTotals.Add(arrangementTotal);
-                context.SaveChanges();
+                });
             }
 
+            context.Arrangement.AddRange(arrangementsToAdd);
+            context.SaveChanges();
+
+            // Now add all arrangement totals with the generated IDs
+            var totalsToAdd = arrangementsToAdd.Select(a => new ArrangementTotal
+            {
+                ArrangementId = a.ID,
+                CurrentTotal = 0,
+                User = currentUser,
+            }).ToList();
+
+            context.ArrangementTotals.AddRange(totalsToAdd);
+            context.SaveChanges();
         }
 
         public static void RenameArrangement(string oldName, string newName)
@@ -913,6 +995,73 @@ namespace grace
             var currentTotal = total[0];
             return currentTotal;
         }
+
+        /// <summary>
+        /// Gets all latest totals indexed by GraceId for bulk operations.
+        /// Much more efficient than calling GetTotal() in a loop.
+        /// </summary>
+        public static Dictionary<int, Total> GetAllLatestTotals()
+        {
+            using var context = new GraceDbContext();
+            return context.Totals
+                .AsNoTracking()
+                .OrderByDescending(t => t.ID)
+                .ToList()
+                .GroupBy(t => t.GraceId)
+                .ToDictionary(g => g.Key, g => g.First());
+        }
+
+        /// <summary>
+        /// Gets all collections indexed by GraceId for bulk operations.
+        /// Much more efficient than calling GetCollections() in a loop.
+        /// </summary>
+        public static Dictionary<int, List<CollectionName>> GetAllCollections()
+        {
+            using var context = new GraceDbContext();
+            return context.Collections
+                .AsNoTracking()
+                .Where(c => c.Name != "Other")
+                .OrderBy(c => c.Name)
+                .ToList()
+                .GroupBy(c => c.GraceId)
+                .ToDictionary(g => g.Key, g => g.ToList());
+        }
+
+        #region Async Methods for UI Responsiveness
+
+        /// <summary>
+        /// Async version of GetPulledGrid for non-blocking UI updates.
+        /// </summary>
+        public static async Task<System.Data.DataTable> GetPulledGridAsync()
+        {
+            return await Task.Run(() => GetPulledGrid());
+        }
+
+        /// <summary>
+        /// Async version of GetCheckedOutGrid for non-blocking UI updates.
+        /// </summary>
+        public static async Task<System.Data.DataTable> GetCheckedOutGridAsync(int user_id)
+        {
+            return await Task.Run(() => GetCheckedOutGrid(user_id));
+        }
+
+        /// <summary>
+        /// Async version of GetCheckedOutGridAll for non-blocking UI updates.
+        /// </summary>
+        public static async Task<System.Data.DataTable> GetCheckedOutGridAllAsync()
+        {
+            return await Task.Run(() => GetCheckedOutGridAll());
+        }
+
+        /// <summary>
+        /// Async version of HaveData for non-blocking startup.
+        /// </summary>
+        public static async Task<bool> HaveDataAsync()
+        {
+            return await Task.Run(() => HaveData());
+        }
+
+        #endregion
 
     }
 #pragma warning restore CS8601

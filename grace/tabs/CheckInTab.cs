@@ -13,6 +13,7 @@
 using grace.data;
 using grace.data.models;
 using grace.utils;
+using Microsoft.EntityFrameworkCore;
 using NLog;
 using System.Data;
 
@@ -72,6 +73,15 @@ namespace grace.tabs
             LoadDataGrid();
         }
 
+        public async Task InitializeDataGridViewAsync()
+        {
+            checkInDataGrid.DataSource = checkInBindingSource;
+            var username = Globals.GetInstance().CurrentUser;
+            user_id = DataBase.GetUserIdFromName(username);
+
+            await LoadDataGridAsync();
+        }
+
         internal void LoadDataGrid()
         {
             checkInDataGrid.DataSource = checkInBindingSource;
@@ -89,7 +99,39 @@ namespace grace.tabs
 
             }
 
-            // Make all but UserTotal column have a gray background. 
+            ApplyGridStyling();
+        }
+
+        internal async Task LoadDataGridAsync()
+        {
+            Cursor.Current = Cursors.WaitCursor;
+            try
+            {
+                checkInDataGrid.DataSource = checkInBindingSource;
+
+                if (allUsersCheckBox.Checked)
+                {
+                    // Bind data to the DataGridView asynchronously
+                    dataTable = await DataBase.GetCheckedOutGridAllAsync();
+                    checkInBindingSource.DataSource = dataTable;
+                }
+                else
+                {
+                    dataTable = await DataBase.GetCheckedOutGridAsync(user_id);
+                    checkInBindingSource.DataSource = dataTable;
+                }
+
+                ApplyGridStyling();
+            }
+            finally
+            {
+                Cursor.Current = Cursors.Default;
+            }
+        }
+
+        private void ApplyGridStyling()
+        {
+            // Make all but UserTotal column have a gray background.
             checkInDataGrid.Columns["Sku"].DefaultCellStyle.BackColor = Color.LightGray;
             checkInDataGrid.Columns["Brand"].DefaultCellStyle.BackColor = Color.LightGray;
             checkInDataGrid.Columns["Collection"].DefaultCellStyle.BackColor = Color.LightGray;
@@ -108,7 +150,6 @@ namespace grace.tabs
             {
                 column.SortMode = DataGridViewColumnSortMode.NotSortable;
             }
-
         }
 
 
@@ -161,10 +202,14 @@ namespace grace.tabs
                 }
             }
         }
-        private void CheckInTabPage_Enter(object? sender, EventArgs e)
+        private async void CheckInTabPage_Enter(object? sender, EventArgs e)
         {
-            // Initialize the data grid when the user enters the page
-            InitializeDataGridView();
+            // Only reload if data has changed or this is the first load
+            if (Globals.GetInstance().CheckInDataDirty || dataTable == null || dataTable.Rows.Count == 0)
+            {
+                await InitializeDataGridViewAsync();
+                Globals.GetInstance().CheckInDataDirty = false;
+            }
         }
 
         // Only allow positive integers in the text box
@@ -251,55 +296,148 @@ namespace grace.tabs
             // Check if the edit is in the "Total" column
             int numrows = checkInDataGrid.Rows.Count;
             bool changed = false;
+
+            // Collect all changes first, then batch process
+            var changesToApply = new List<(string sku, int updatedValue, string collectionName, string username, DateTime dateTime)>();
+
             for (int i = 0; i < numrows; i++)
             {
                 DataGridViewRow row = checkInDataGrid.Rows[i];
                 if (row.Cells["CheckIn"].Value is string value && value != string.Empty)
                 {
                     changed = true;
-                    // Get the updated value
                     int updatedValue = Convert.ToInt32(value);
-                    // Note: Sorting is disabled in LoadDataGrid() to prevent data integrity issues.
-                    // Filtering by SKU is supported and works correctly.
-                    string sku = row.Cells["Sku"].Value.ToString();
-                    int graceId = DataBase.GetGraceIdFromSku(sku);
-                    if (graceId == 0)
-                    {
-                        MessageBox.Show("Processing error for SKU " + sku, "Error",
-                             MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        logger.Error("GraceId not found for SKU: " + sku);
-                        continue;
-                    }
-                    string collectionName = row.Cells["Collection"].Value.ToString();
-                    string username = row.Cells["Username"].Value.ToString();
+                    string sku = row.Cells["Sku"].Value.ToString() ?? string.Empty;
+                    string collectionName = row.Cells["Collection"].Value.ToString() ?? string.Empty;
+                    string username = row.Cells["Username"].Value.ToString() ?? string.Empty;
                     DateTime dateTime = (DateTime)row.Cells["LastUpdated"].Value;
-                    int user_id = DataBase.GetUserIdFromName(username);
-                    int col_id = DataBase.GetCollectionId(graceId, collectionName);
-                    int currentTotal = DataBase.GetTotal(graceId).CurrentTotal;
-                    int newTotal = currentTotal + updatedValue;
 
-                    DataBase.AddTotal(newTotal, graceId);
-                    PulledEntrySetComplete(dateTime, user_id, col_id, graceId, updatedValue);
+                    changesToApply.Add((sku, updatedValue, collectionName, username, dateTime));
                 }
             }
+
             if (changed)
             {
-                LoadDataGrid();
+                Cursor.Current = Cursors.WaitCursor;
+                try
+                {
+                    // Batch process all changes with preloaded lookups
+                    ApplyChangesBatched(changesToApply);
+
+                    // Mark related data as dirty for other tabs
+                    Globals.GetInstance().GraceDataDirty = true;
+                    Globals.GetInstance().CheckOutDataDirty = true;
+
+                    LoadDataGrid();
+                }
+                finally
+                {
+                    Cursor.Current = Cursors.Default;
+                }
             }
         }
-        private void PulledEntrySetComplete(DateTime dateTime, int userId,
-            int collectionId, int graceId, int updatedValue)
+
+        private void ApplyChangesBatched(List<(string sku, int updatedValue, string collectionName, string username, DateTime dateTime)> changes)
         {
             using var context = new GraceDbContext();
-            Pulled? pulled = context.PulledDb.SingleOrDefault(e => e.UserId
-                == userId && e.CollectionId == collectionId
-                && e.GraceId == graceId && e.LastUpdated == dateTime);
-            if (pulled != null)
+
+            // Preload all needed data in bulk
+            var skus = changes.Select(c => c.sku).Distinct().ToList();
+            var usernames = changes.Select(c => c.username).Distinct().ToList();
+
+            // Load all graces by SKU
+            var gracesBySku = context.Graces
+                .Where(g => skus.Contains(g.Sku))
+                .ToDictionary(g => g.Sku, g => g.ID);
+
+            // Load all users by name
+            var usersByName = context.Users
+                .Where(u => usernames.Contains(u.Username))
+                .ToDictionary(u => u.Username, u => u.ID);
+
+            // Load all latest totals
+            var latestTotals = context.Totals
+                .OrderByDescending(t => t.ID)
+                .ToList()
+                .GroupBy(t => t.GraceId)
+                .ToDictionary(g => g.Key, g => g.First().CurrentTotal);
+
+            // Load all collections for the graces
+            var graceIds = gracesBySku.Values.ToList();
+            var collectionsLookup = context.Collections
+                .Where(c => graceIds.Contains(c.GraceId))
+                .ToList()
+                .GroupBy(c => (c.GraceId, c.Name))
+                .ToDictionary(g => g.Key, g => g.First().ID);
+
+            string currentUser = Globals.GetInstance().CurrentUser ?? "System";
+            var totalsToAdd = new List<Total>();
+            var pulledToUpdate = new List<(DateTime dateTime, int userId, int collectionId, int graceId, int updatedValue)>();
+
+            foreach (var (sku, updatedValue, collectionName, username, dateTime) in changes)
             {
-                pulled.IsCompleted = true;
-                pulled.CheckedInAmount = updatedValue;
-                context.SaveChanges();
+                if (!gracesBySku.TryGetValue(sku, out int graceId))
+                {
+                    logger.Error("GraceId not found for SKU: " + sku);
+                    continue;
+                }
+
+                if (!usersByName.TryGetValue(username, out int userId))
+                {
+                    logger.Error("UserId not found for username: " + username);
+                    continue;
+                }
+
+                if (!collectionsLookup.TryGetValue((graceId, collectionName), out int colId))
+                {
+                    logger.Error($"Collection not found for GraceId {graceId}, Collection {collectionName}");
+                    continue;
+                }
+
+                int currentTotal = latestTotals.GetValueOrDefault(graceId, 0);
+                int newTotal = currentTotal + updatedValue;
+
+                // Check if total actually changed before adding
+                if (currentTotal != newTotal)
+                {
+                    totalsToAdd.Add(new Total
+                    {
+                        LastUpdated = DateTime.Now,
+                        CurrentTotal = newTotal,
+                        GraceId = graceId,
+                        User = currentUser
+                    });
+                    // Update the cached value for subsequent calculations
+                    latestTotals[graceId] = newTotal;
+                }
+
+                pulledToUpdate.Add((dateTime, userId, colId, graceId, updatedValue));
             }
+
+            // Batch add all totals
+            if (totalsToAdd.Count > 0)
+            {
+                context.Totals.AddRange(totalsToAdd);
+            }
+
+            // Batch update all pulled entries
+            foreach (var (dateTime, userId, collectionId, graceId, updatedValue) in pulledToUpdate)
+            {
+                var pulled = context.PulledDb.SingleOrDefault(e =>
+                    e.UserId == userId &&
+                    e.CollectionId == collectionId &&
+                    e.GraceId == graceId &&
+                    e.LastUpdated == dateTime);
+
+                if (pulled != null)
+                {
+                    pulled.IsCompleted = true;
+                    pulled.CheckedInAmount = updatedValue;
+                }
+            }
+
+            // Single SaveChanges for all operations
+            context.SaveChanges();
         }
     }
 }
