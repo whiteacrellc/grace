@@ -442,7 +442,7 @@ namespace grace
                 if (checkedListBox.CheckedItems.Count == 0 &&
                     string.IsNullOrEmpty(addCollectionTextBox.Text))
                 {
-                    MessageBox.Show("You need to select at least one category," +
+                    MessageBox.Show("You need to select at least one collection," +
                         "Or enter a new one. ",
                         "Information", MessageBoxButtons.OK,
                         MessageBoxIcon.Information);
