@@ -114,8 +114,6 @@ namespace grace
                     {
                         DataBase.AddTotal(newCurrentTotal, graceId);
                     }
-                    // newRow the GraceRow
-                    DataBase.UpdateGraceRow(graceId);
 
                 }
             }

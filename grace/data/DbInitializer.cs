@@ -15,25 +15,15 @@ namespace grace.data
             EnsureArrangementTable();
             EnsureArrangementTotalTable();
             EnsureCheckedInColumn(context);
-            EnsureLastUpdatedColumn(context);
             EnsureGraceNoteColumn(context);
-            EnsureGraceDbNoteColumn(context);
             EnsureIsDeletedColumn(context);
             EnsureTotalsUsereColumn(context);
-            EnsurePrevTotalColumn(context);
         }
 
         private static void EnsureIsDeletedColumn(GraceDbContext context)
         {
             const string columnName = "IsDeleted";
             const string tableName = "Collections";
-            CreateColumn(columnName, tableName);
-        }
-
-        private static void EnsureLastUpdatedColumn(GraceDbContext context)
-        {
-            const string columnName = "LastUpdated";
-            const string tableName = "GraceRows";
             CreateColumn(columnName, tableName);
         }
 
@@ -56,21 +46,6 @@ namespace grace.data
             const string columnName = "User";
             const string tableName = "Totals";
             CreateColumnString(columnName, tableName);
-        }
-
-        private static void EnsureGraceDbNoteColumn(GraceDbContext context)
-        {
-            const string columnName = "Note";
-            const string tableName = "GraceRows";
-
-            CreateColumnString(columnName, tableName);
-        }
-
-        private static void EnsurePrevTotalColumn(GraceDbContext context)
-        {
-            const string columnName = "PrevTotal";
-            const string tableName = "GraceRows";
-            CreateColumn(columnName, tableName);
         }
 
         private static void EnsureArrangementTable()

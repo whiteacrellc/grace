@@ -23,16 +23,22 @@ namespace grace
             numCheckOutTextBox.Text = "0";
             using var context = new GraceDbContext();
             // Fetch data from the DbContext
-            var graceRowsData =
-                context.GraceRows.FirstOrDefault(item => item.Sku == sku);
-            if (graceRowsData != null)
+            var graceData =
+                context.Graces.FirstOrDefault(item => item.Sku == sku);
+            if (graceData != null)
             {
-                skuLabel.Text = graceRowsData.Sku;
-                brandLabel.Text = graceRowsData.Brand;
-                descriptionLabel.Text = graceRowsData.Description;
-                totalLabel.Text = graceRowsData.Total.ToString();
-                currentTotal = graceRowsData.Total;
-                graceId = graceRowsData.GraceId;
+                skuLabel.Text = graceData.Sku;
+                brandLabel.Text = graceData.Brand;
+                descriptionLabel.Text = graceData.Description;
+                graceId = graceData.ID;
+
+                // Get the current total from the Totals table
+                var latestTotal = context.Totals
+                    .Where(t => t.GraceId == graceId)
+                    .OrderByDescending(t => t.ID)
+                    .FirstOrDefault();
+                currentTotal = latestTotal?.CurrentTotal ?? 0;
+                totalLabel.Text = currentTotal.ToString();
             }
             else
             {
@@ -140,8 +146,6 @@ namespace grace
                     context.SaveChanges();
                 }
                 DataBase.AddTotal(newTotal, graceId);
-                // newRow the GraceRow
-                DataBase.UpdateGraceRow(graceId);
             }
             catch (Exception ex)
             {

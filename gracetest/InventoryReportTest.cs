@@ -137,9 +137,6 @@ namespace gracetest
                 context.Collections.Add(collection);
 
                 context.SaveChanges();
-
-                // Create GraceRow
-                DataBase.CreateGraceRow(grace.ID);
             }
         }
 
@@ -438,8 +435,6 @@ namespace gracetest
             };
             context.Totals.Add(total);
             context.SaveChanges();
-
-            DataBase.CreateGraceRow(grace.ID);
 
             var report = new InventoryReport(testDataGridView);
             string outputFile = Path.Combine(testOutputPath, "test_special_chars.xlsx");

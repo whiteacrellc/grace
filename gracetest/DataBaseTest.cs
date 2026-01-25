@@ -135,9 +135,8 @@ namespace gracetest
                 // Always add "Other" collection
                 DataBase.AddCollection("Other", graceId);
 
-                // Create the denormalized GraceRow
-                int graceRowId = DataBase.CreateGraceRow(graceId);
-                rowHash.Add(graceRowId, graceId);
+                // Store graceId for later tests
+                rowHash.Add(graceId, graceId);
 
                 // Create some pulled records for checkout testing
                 if (i % 5 == 0)
@@ -161,38 +160,20 @@ namespace gracetest
         }
 
         [TestMethod]
-        public void TestMethod_CreateGraceRow()
+        public void TestMethod_CascadeDelete()
         {
             CreateTestData();
             Assert.AreEqual(20, rowHash.Keys.Count);
 
-            // Verify GraceRow was created correctly
             using var context = new GraceDbContext();
             var firstElement = rowHash.FirstOrDefault();
             int graceId = firstElement.Value;
             var grace = context.Graces.Find(graceId);
             Assert.IsNotNull(grace);
 
-            var sku = grace.Sku;
-            Assert.IsNotNull(sku);
-
-            var graceRow = DataBase.GetGraceRowFromSku(sku);
-            Assert.IsNotNull(graceRow);
-            Assert.IsTrue(graceRow.Total > 0);
-            Assert.IsTrue(graceRow.Description.Contains("Description"));
-            Assert.IsNotNull(graceRow.Col1);
-            Assert.IsTrue(graceRow.Col1.Contains("Collection") || graceRow.Col1.Contains("Premium") || graceRow.Col1.Contains("Special"));
-            Assert.IsNull(graceRow.Col4);
-            Assert.IsNull(graceRow.Col5);
-            Assert.IsNull(graceRow.Col6);
-
             // Test cascade deletion
             context.Graces.Remove(grace);
             context.SaveChanges();
-
-            // Make sure grace row is deleted
-            graceRow = context.GraceRows.FirstOrDefault(item => item.GraceId == graceId);
-            Assert.IsNull(graceRow);
 
             // Make sure collection rows are deleted
             var collectionRows = context.Collections
@@ -205,32 +186,6 @@ namespace gracetest
                    .Where(e => e.GraceId == graceId)
                    .ToList();
             Assert.AreEqual(0, totalRows.Count);
-        }
-
-        [TestMethod]
-        public void TestMethod_UpdateGraceRow()
-        {
-            CreateTestData();
-
-            using var context = new GraceDbContext();
-            var firstElement = rowHash.FirstOrDefault();
-            int graceId = firstElement.Value;
-
-            // Update the Grace entity
-            var grace = context.Graces.Find(graceId);
-            Assert.IsNotNull(grace);
-            grace.Description = "Updated Description";
-            grace.Note = "Updated Note";
-            context.SaveChanges();
-
-            // Update the GraceRow
-            DataBase.UpdateGraceRow(graceId);
-
-            // Verify the update
-            var graceRow = context.GraceRows.FirstOrDefault(gr => gr.GraceId == graceId);
-            Assert.IsNotNull(graceRow);
-            Assert.AreEqual("Updated Description", graceRow.Description);
-            Assert.AreEqual("Updated Note", graceRow.Note);
         }
 
         [TestMethod]
@@ -405,16 +360,15 @@ namespace gracetest
         }
 
         [TestMethod]
-        public void TestMethod_GetGraceRowFromSku()
+        public void TestMethod_GetGraceFromSku()
         {
             CreateTestData();
 
             var sku = "SKU0001";
-            var graceRow = DataBase.GetGraceRowFromSku(sku);
+            var grace = DataBase.GetGraceFromSku(sku);
 
-            Assert.IsNotNull(graceRow);
-            Assert.AreEqual(sku, graceRow.Sku);
-            Assert.IsTrue(graceRow.Total > 0);
+            Assert.IsNotNull(grace);
+            Assert.AreEqual(sku, grace.Sku);
         }
 
         [TestMethod]

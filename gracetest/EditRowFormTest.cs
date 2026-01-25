@@ -112,9 +112,6 @@ namespace gracetest
             };
             context.Totals.Add(total);
             context.SaveChanges();
-
-            // Create GraceRow
-            DataBase.CreateGraceRow(grace.ID);
         }
 
         #region AddRow Tests
@@ -227,7 +224,7 @@ namespace gracetest
         }
 
         [TestMethod]
-        public void TestMethod_AddRow_CreatesGraceRow()
+        public void TestMethod_AddRow_CreatesGraceWithTotalAndCollection()
         {
             using var context = new GraceDbContext();
 
@@ -236,7 +233,7 @@ namespace gracetest
             {
                 Sku = "GRACEROWTEST",
                 Brand = "Brand1",
-                Description = "GraceRow Test",
+                Description = "Grace Test",
                 Availability = "Available",
                 BarCode = "33333333"
             };
@@ -249,18 +246,18 @@ namespace gracetest
             DataBase.AddTotal(25, graceId);
             DataBase.AddCollectionRow(graceId, "Collection1");
 
-            // Create GraceRow (simulating AddRow final step)
-            int graceRowId = DataBase.CreateGraceRow(graceId);
+            // Verify Grace, Total, and Collection were created
+            var savedGrace = context.Graces.Find(graceId);
+            Assert.IsNotNull(savedGrace);
+            Assert.AreEqual("GRACEROWTEST", savedGrace.Sku);
+            Assert.AreEqual("Brand1", savedGrace.Brand);
 
-            // Verify GraceRow was created
-            Assert.IsTrue(graceRowId > 0);
+            var total = context.Totals.FirstOrDefault(t => t.GraceId == graceId);
+            Assert.IsNotNull(total);
+            Assert.AreEqual(25, total.CurrentTotal);
 
-            var graceRow = context.GraceRows.FirstOrDefault(gr => gr.GraceId == graceId);
-            Assert.IsNotNull(graceRow);
-            Assert.AreEqual("GRACEROWTEST", graceRow.Sku);
-            Assert.AreEqual("Brand1", graceRow.Brand);
-            Assert.AreEqual(25, graceRow.Total);
-            Assert.AreEqual("Collection1", graceRow.Col1);
+            var collection = context.Collections.FirstOrDefault(c => c.GraceId == graceId && c.Name == "Collection1");
+            Assert.IsNotNull(collection);
         }
 
         [TestMethod]
@@ -602,7 +599,7 @@ namespace gracetest
         }
 
         [TestMethod]
-        public void TestMethod_UpdateRow_UpdatesGraceRow()
+        public void TestMethod_UpdateRow_UpdatesGrace()
         {
             using var context = new GraceDbContext();
 
@@ -616,14 +613,11 @@ namespace gracetest
             grace.Note = "Updated Note";
             context.SaveChanges();
 
-            // Update GraceRow (simulating UpdateRow)
-            DataBase.UpdateGraceRow(graceId);
-
-            // Verify GraceRow was updated
-            var graceRow = context.GraceRows.FirstOrDefault(gr => gr.GraceId == graceId);
-            Assert.IsNotNull(graceRow);
-            Assert.AreEqual("Updated via UpdateRow", graceRow.Description);
-            Assert.AreEqual("Updated Note", graceRow.Note);
+            // Verify Grace was updated
+            var updatedGrace = context.Graces.Find(graceId);
+            Assert.IsNotNull(updatedGrace);
+            Assert.AreEqual("Updated via UpdateRow", updatedGrace.Description);
+            Assert.AreEqual("Updated Note", updatedGrace.Note);
         }
 
         [TestMethod]
