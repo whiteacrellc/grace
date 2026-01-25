@@ -22,7 +22,6 @@ namespace grace.data
         public virtual DbSet<Grace> Graces { get; set; }
         public virtual DbSet<CollectionName> Collections { get; set; }
         public virtual DbSet<Total> Totals { get; set; }
-        public virtual DbSet<GraceRow> GraceRows { get; set; }
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<Pulled> PulledDb { get; set; }
         public virtual DbSet<Prefs> PrefsDb { get; set; }
@@ -130,23 +129,6 @@ namespace grace.data
                   .WithMany()
                   .HasForeignKey(e => e.GraceId)
                   .OnDelete(DeleteBehavior.Cascade);
-
-            });
-
-            modelBuilder.Entity<GraceRow>(entity =>
-            {
-                entity.ToTable("GraceRows");
-                // Primary key
-                entity.HasKey(e => e.ID);
-
-                entity.Property(e => e.Note)
-                    .HasDefaultValue("");
-
-                entity.HasOne(e => e.Grace)
-                  .WithMany()
-                  .HasForeignKey(e => e.GraceId)
-                  .OnDelete(DeleteBehavior.Cascade);
-
 
             });
 

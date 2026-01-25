@@ -81,7 +81,6 @@ The application uses **Entity Framework Core** with SQLite. The database is stor
 **Core Entity Models** (in `grace/data/models/`):
 - **Grace**: Main inventory item (SKU, Brand, Description, BarCode, Availability)
 - **Total**: Historical totals for inventory items with timestamps
-- **GraceRow**: Denormalized view combining Grace + collections + latest totals (used for grid display)
 - **CollectionName**: Collections associated with each Grace item
 - **User**: User accounts with password and admin role
 - **Pulled**: Check-out records tracking who took what and when
@@ -90,7 +89,7 @@ The application uses **Entity Framework Core** with SQLite. The database is stor
 - **Prefs**: Application preferences (row height, barcode auto-open, etc.)
 
 **Key Database Patterns**:
-1. **Two-table approach**: `Grace` table stores inventory items, `GraceRow` table is a denormalized cache for UI grids. When data changes, update both `Grace` and then call `DataBase.UpdateGraceRow()` to sync `GraceRow`.
+1. **Direct query approach**: `DataGridLoader.GetData()` builds the DataTable for UI grids directly from Grace, Total, and CollectionName tables using efficient batch loading with dictionaries. No denormalized cache table is needed.
 2. **Historical totals**: Never update totals in place. Insert new `Total` records with timestamps to maintain history.
 3. **Connection string**: Set once at startup via `DataBase.ConnectionString` and accessed through `GraceDbContext.ConnectionString`.
 
@@ -112,7 +111,7 @@ The `DataBase.cs` class is the **central data access layer**:
   - `GetCheckedOutGrid(userId)`: Returns items checked out by a specific user
   - `InsertRow()`: Adds new inventory item
   - `AddTotal()`: Records a new total (checks if value changed to avoid duplicates)
-  - `UpdateGraceRow()`: Syncs `GraceRow` denormalized table after changes
+  - `GetGraceFromSku()`: Retrieves a Grace item by SKU
 
 ### Authentication & Authorization
 
@@ -141,7 +140,7 @@ Each tab class receives a reference to the main `Vivian` form in its constructor
 1. Modify entity models in `grace/data/models/`
 2. Update `GraceDbContext.OnModelCreating()` if changing indexes or constraints
 3. Update `DbInitializer.CheckDbSchemaCurrent()` to handle migrations for existing databases
-4. If adding denormalized columns to `GraceRow`, update `DataBase.CreateGraceRow()` and `DataBase.UpdateGraceRow()`
+4. If adding columns for display, update `DataGridLoader.GetData()` to include the new data
 
 ### Adding a New Tab
 

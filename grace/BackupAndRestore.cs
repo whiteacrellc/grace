@@ -190,7 +190,6 @@ namespace grace
                             sourceConn.BackupDatabase(destinationConn);
                         }
                         logger.Info("done restoring database");
-                        DataGridLoader.LoadBindingTable(true);
                     }
                     catch (IOException ex)
                     {

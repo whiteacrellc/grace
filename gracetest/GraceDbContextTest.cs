@@ -368,79 +368,6 @@ namespace gracetest
 
         #endregion
 
-        #region GraceRow Entity Tests
-
-        [TestMethod]
-        public void TestMethod_GraceRow_CanCreate()
-        {
-            var grace = CreateTestGrace("SKU_ROW_001");
-            var graceRow = new GraceRow
-            {
-                GraceId = grace.ID,
-                Sku = grace.Sku,
-                Description = grace.Description,
-                Brand = grace.Brand,
-                Total = 100,
-                PrevTotal = 50,
-                LastUpdated = DateTime.Now,
-                Note = "Test note"
-            };
-
-            context.GraceRows.Add(graceRow);
-            context.SaveChanges();
-
-            Assert.IsTrue(graceRow.ID > 0);
-            Assert.AreEqual(1, context.GraceRows.Count());
-        }
-
-        [TestMethod]
-        public void TestMethod_GraceRow_CascadeDelete()
-        {
-            var grace = CreateTestGrace("SKU_ROW_002");
-            var graceRow = new GraceRow
-            {
-                GraceId = grace.ID,
-                Sku = grace.Sku,
-                Description = grace.Description,
-                Brand = grace.Brand,
-                Total = 100,
-                PrevTotal = 50,
-                LastUpdated = DateTime.Now
-            };
-            context.GraceRows.Add(graceRow);
-            context.SaveChanges();
-
-            context.Graces.Remove(grace);
-            context.SaveChanges();
-
-            Assert.AreEqual(0, context.GraceRows.Count(),
-                "GraceRow should be cascade deleted when Grace is deleted");
-        }
-
-        [TestMethod]
-        public void TestMethod_GraceRow_DefaultNoteValue()
-        {
-            var grace = CreateTestGrace("SKU_ROW_003");
-            var graceRow = new GraceRow
-            {
-                GraceId = grace.ID,
-                Sku = grace.Sku,
-                Description = grace.Description,
-                Brand = grace.Brand,
-                Total = 100,
-                PrevTotal = 50,
-                LastUpdated = DateTime.Now
-                // Note not set
-            };
-            context.GraceRows.Add(graceRow);
-            context.SaveChanges();
-
-            var retrieved = context.GraceRows.Find(graceRow.ID);
-            Assert.AreEqual("", retrieved.Note, "Note should default to empty string");
-        }
-
-        #endregion
-
         #region User Entity Tests
 
         [TestMethod]
@@ -886,7 +813,6 @@ namespace gracetest
             Assert.IsNotNull(context.Graces, "Graces DbSet should exist");
             Assert.IsNotNull(context.Collections, "Collections DbSet should exist");
             Assert.IsNotNull(context.Totals, "Totals DbSet should exist");
-            Assert.IsNotNull(context.GraceRows, "GraceRows DbSet should exist");
             Assert.IsNotNull(context.Users, "Users DbSet should exist");
             Assert.IsNotNull(context.PulledDb, "PulledDb DbSet should exist");
             Assert.IsNotNull(context.PrefsDb, "PrefsDb DbSet should exist");
@@ -963,25 +889,11 @@ namespace gracetest
             };
             context.Collections.AddRange(collection1, collection2);
 
-            // Add GraceRow
-            var graceRow = new GraceRow
-            {
-                GraceId = grace.ID,
-                Sku = grace.Sku,
-                Description = grace.Description,
-                Brand = grace.Brand,
-                Total = 150,
-                PrevTotal = 100,
-                LastUpdated = DateTime.Now
-            };
-            context.GraceRows.Add(graceRow);
-
             context.SaveChanges();
 
             // Verify all related entities exist
             Assert.AreEqual(2, context.Totals.Count(t => t.GraceId == grace.ID));
             Assert.AreEqual(2, context.Collections.Count(c => c.GraceId == grace.ID));
-            Assert.AreEqual(1, context.GraceRows.Count(gr => gr.GraceId == grace.ID));
 
             // Delete Grace and verify cascade
             context.Graces.Remove(grace);
@@ -989,7 +901,6 @@ namespace gracetest
 
             Assert.AreEqual(0, context.Totals.Count(t => t.GraceId == grace.ID));
             Assert.AreEqual(0, context.Collections.Count(c => c.GraceId == grace.ID));
-            Assert.AreEqual(0, context.GraceRows.Count(gr => gr.GraceId == grace.ID));
         }
 
         [TestMethod]

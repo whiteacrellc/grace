@@ -158,7 +158,6 @@ namespace grace.tabs
 
             try
             {
-                DataGridLoader.LoadBindingTable(refresh);
                 dataTable = DataGridLoader.GetData();
                 dataGridView.DataSource = dataTable;
             }
